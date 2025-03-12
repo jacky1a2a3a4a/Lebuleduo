@@ -54,8 +54,27 @@ const GlobalStyles = createGlobalStyle`
   /* For dark mode */
   --image-grayscale: 0;
   --image-opacity: 100%;
+
+
+   /* 字體大小 */
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+
+  /* 間距 */
+  --spacing-xs: 0.25rem;  /* 4px */
+  --spacing-sm: 0.5rem;   /* 8px */
+  --spacing-md: 1rem;     /* 16px */
+  --spacing-lg: 1.5rem;   /* 24px */
+  --spacing-xl: 2rem;     /* 32px */
+  --spacing-2xl: 3rem;    /* 48px */
 }
 
+/* 全局 */
 *,
 *::before,
 *::after {
@@ -67,64 +86,35 @@ const GlobalStyles = createGlobalStyle`
   transition: background-color 0.3s, border 0.3s;
 }
 
-html {
-  font-size: 62.5%;
-}
-
-body {
+/* 全局 */
+html,body {
   font-family: "Poppins", sans-serif;
   color: var(--color-grey-700);
 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
   line-height: 1.5;
-  font-size: 1.6rem;
+  font-size: 16px;
 }
 
-input,
-button,
-textarea,
-select {
-  font: inherit;
-  color: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-*:disabled {
-  cursor: not-allowed;
-}
-
-select:disabled,
-input:disabled {
-  background-color: var(--color-grey-200);
-  color: var(--color-grey-500);
-}
-
-input:focus,
-button:focus,
-textarea:focus,
-select:focus {
-  outline: 2px solid var(--color-brand-600);
-  outline-offset: -1px;
-}
-
-/* Parent selector, finally 😃 */
-button:has(svg) {
-  line-height: 0;
-}
-
+/* 連接 */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-ul {
+/* 列表 */
+ol, ul {
   list-style: none;
 }
 
+/* 表格 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 段落 */
 p,
 h1,
 h2,
@@ -136,12 +126,79 @@ h6 {
   hyphens: auto;
 }
 
+/* 圖片 */
 img {
   max-width: 100%;
+  height: auto;
+  display: block;
 
   /* For dark mode */
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
 }
-`;
+
+/* 輸入框 */
+input,
+button,
+textarea,
+select {
+  color: inherit;
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+/* 按鈕 */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Parent selector, finally 😃 */
+button:has(svg) {
+  line-height: 0;
+}
+
+/* 聚焦 */  
+input:focus,
+button:focus,
+textarea:focus,
+select:focus {
+  appearance: none;
+  outline: 2px solid var(--color-brand-600);
+  outline-offset: -1px;
+}
+
+/* 禁用 */
+*:disabled {
+  cursor: not-allowed;
+}
+
+/* 禁用 */
+select:disabled,
+input:disabled {
+  background-color: var(--color-grey-200);
+  color: var(--color-grey-500);
+}
+
+/* 滾動條 */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-grey-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-grey-300);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-grey-400);
+}
+`
 
 export default GlobalStyles;

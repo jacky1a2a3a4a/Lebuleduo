@@ -1,18 +1,29 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import GlobalStyles from './styles/GlobalStyles';
+import GlobalStyles from './styles/GlobalStyles.js';
+import AppLayout from './ui/AppLayout.jsx';
+
+// 临时页面组件
+const Home = () => <div>首页</div>;
+const Subscribe = () => <div>订阅页面</div>;
+const CheckoutPlan = () => <div>结账计划页面</div>;
+const CheckoutUserData = () => <div>用户数据页面</div>;
+const CheckoutPayment = () => <div>支付页面</div>;
+const CheckoutSuccess = () => <div>支付成功页面</div>;
+const Account = () => <div>账户页面</div>;
+const Register = () => <div>注册页面</div>;
+const Login = () => <div>登录页面</div>;
+const PageNotFound = () => <div>404 - 页面未找到</div>;
 
 function App() {
   return (
-    <div>
-      <h1>Hello World</h1>
-
+    <>
       <GlobalStyles />
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<Navigate replace to="/" />} />
+            <Route index element={<Navigate replace to="home" />} />
 
-            <Route path="/" element={<Home />} />
+            <Route path="home" element={<Home />} />
             <Route path="subscribe" element={<Subscribe />} />
             <Route path="checkoutPlan" element={<CheckoutPlan />} />
 
@@ -28,7 +39,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </div>
+    </>
   );
 }
 
