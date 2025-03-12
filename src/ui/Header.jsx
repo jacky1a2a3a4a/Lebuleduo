@@ -12,14 +12,18 @@ const HeaderStyled = styled.header`
   justify-content: space-between;
 `;
 
+const HeaderTitle = styled.h1`
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+`;
+
 const BurgerButton = styled.button`
-  background: transparent;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 2rem;
-  height: 2rem;
-  border: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: var(--spacing-md);
   cursor: pointer;
   z-index: 10;
 
@@ -28,7 +32,7 @@ const BurgerButton = styled.button`
   }
 
   div {
-    width: 2rem;
+    width: 1.5rem;
     height: 0.25rem;
     background: var(--color-grey-700);
     border-radius: 10px;
@@ -62,7 +66,7 @@ function Header() {
         <div />
         <div />
       </BurgerButton>
-      <h1>Header</h1>
+      <HeaderTitle>Lebu-leduo</HeaderTitle>
     </HeaderStyled>
   );
 }
