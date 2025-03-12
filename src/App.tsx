@@ -1,17 +1,29 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import GlobalStyles from "./styles/GlobalStyles";
 
 
 function App() {
   return (
     <div>
-      <GlobalStyles />
       <h1>Hello World</h1>
-      <h2>test</h2>
 
-      <h2>test3</h2>
-      <h2>test4</h2>
-      <h2>test5</h2>
-      <h2>test6</h2>
+      <GlobalStyles />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Navigate to="home" />} />
+
+          <Route path="/" element={<Home />} /> 
+          <Route path="subscribe" element={<Subscribe />} />
+          <Route path="checkoutPlan" element={<CheckoutPlan  />} />
+          <Route path="checkoutUserData" element={<CheckoutUserData />}  /> 
+          <Route path="checkoutPayment" element={<CheckoutPayment />} />
+          <Route path="checkoutSuccess" element={<CheckoutSuccess />} />
+
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
