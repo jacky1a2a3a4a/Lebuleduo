@@ -11,6 +11,7 @@ function App() {
       <h2>test3</h2>
       <h2>test4</h2>
       <h2>test5</h2>
+      <h2>test6</h2>
     </div>
   );
 }
