@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 
+import Sidebar from './Sidebar';
+
 const HeaderStyled = styled.header`
   background-color: var(--color-grey-200);
   color: var(--color-grey-700);
@@ -46,8 +48,7 @@ const BurgerButton = styled.button`
 
     &:nth-child(2) {
       opacity: ${({ isOpen }) => (isOpen ? '0' : '1')};
-      transform: ${({ isOpen }) =>
-        isOpen ? 'translateX(20px)' : 'translateX(0)'};
+      
     }
 
     &:nth-child(3) {
@@ -57,6 +58,7 @@ const BurgerButton = styled.button`
 `;
 
 function Header() {
+  // 側邊欄是否開啟(預設不開啟)
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -67,6 +69,7 @@ function Header() {
         <div />
       </BurgerButton>
       <HeaderTitle>Lebu-leduo</HeaderTitle>
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
     </HeaderStyled>
   );
 }
