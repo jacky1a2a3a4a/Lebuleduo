@@ -18,7 +18,7 @@ const AppLayoutStyled = styled.section`
 `;
 
 const Main = styled.main`
-  background-color: var(--color-grey-100);
+  background-color: var(--color-gray-100);
 `;
 
 function AppLayout() {

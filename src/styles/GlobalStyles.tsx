@@ -12,18 +12,18 @@ const GlobalStyles = createGlobalStyle`
   --color-brand-800: #3730a3;
   --color-brand-900: #312e81;
 
-  /* Grey */
-  --color-grey-0: #fff;
-  --color-grey-50: #f9fafb;
-  --color-grey-100: #f3f4f6;
-  --color-grey-200: #e5e7eb;
-  --color-grey-300: #d1d5db;
-  --color-grey-400: #9ca3af;
-  --color-grey-500: #6b7280;
-  --color-grey-600: #4b5563;
-  --color-grey-700: #374151;
-  --color-grey-800: #1f2937;
-  --color-grey-900: #111827;
+  /* Gray */
+  --color-gray-0: #fff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
 
   --color-blue-100: #e0f2fe;
   --color-blue-700: #0369a1;
@@ -50,6 +50,7 @@ const GlobalStyles = createGlobalStyle`
   --border-radius-sm: 5px;
   --border-radius-md: 7px;
   --border-radius-lg: 9px;
+  --border-radius-round: 9999px;
 
   /* For dark mode */
   --image-grayscale: 0;
@@ -88,8 +89,8 @@ const GlobalStyles = createGlobalStyle`
 
 /* 全局 */
 html,body {
-  font-family: "Poppins", sans-serif;
-  color: var(--color-grey-700);
+  font-family: "Poppins", "Noto Sans", sans-serif;
+  color: var(--color-gray-700);
 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
@@ -162,12 +163,15 @@ button:has(svg) {
 
 /* 聚焦 */  
 input:focus,
-button:focus,
 textarea:focus,
 select:focus {
   appearance: none;
   outline: 2px solid var(--color-brand-600);
   outline-offset: -1px;
+}
+
+button:focus {
+  outline: none;
 }
 
 /* 禁用 */
@@ -178,8 +182,8 @@ select:focus {
 /* 禁用 */
 select:disabled,
 input:disabled {
-  background-color: var(--color-grey-200);
-  color: var(--color-grey-500);
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-500);
 }
 
 /* 滾動條 */
@@ -188,17 +192,17 @@ input:disabled {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-grey-100);
+  background: var(--color-gray-100);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-grey-300);
+  background: var(--color-gray-300);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-grey-400);
+  background: var(--color-gray-400);
 }
-`
+`;
 
 export default GlobalStyles;
