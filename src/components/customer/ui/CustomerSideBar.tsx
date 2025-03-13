@@ -54,7 +54,7 @@ const MenuItem = styled.div`
 `;
 
 //從Header傳入isOpen和setIsOpen
-function Sidebar({ isOpen, setIsOpen }) {
+function CustomerSideBar({ isOpen, setIsOpen }) {
   // 當側邊欄打開時，禁止body滾動
   useEffect(() => {
     if (isOpen) {
@@ -83,4 +83,4 @@ function Sidebar({ isOpen, setIsOpen }) {
   );
 }
 
-export default Sidebar;
+export default CustomerSideBar;

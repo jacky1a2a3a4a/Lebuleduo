@@ -3,7 +3,7 @@ import { HiMiniPlus } from 'react-icons/hi2';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Sidebar from './Sidebar';
+import CustomerSideBar from './CustomerSideBar';
 
 const HeaderStyled = styled.header`
   background-color: var(--color-gray-200);
@@ -116,7 +116,7 @@ const SubscribeButton = styled.button`
   }
 `;
 
-function Header() {
+function CustomerHeader() {
   const navigate = useNavigate();
   // 側邊欄是否開啟(預設不開啟)
   const [isOpen, setIsOpen] = useState(false);
@@ -133,9 +133,9 @@ function Header() {
         <StyledIcon />
         立即預訂
       </SubscribeButton>
-      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+      <CustomerSideBar isOpen={isOpen} setIsOpen={setIsOpen} />
     </HeaderStyled>
   );
 }
 
-export default Header;
+export default CustomerHeader;

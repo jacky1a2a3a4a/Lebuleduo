@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Header from './Header';
-import Footer from './Footer';
-import Sidebar from './Sidebar';
+import CustomerHeader from '../components/customer/ui/CustomerHeader';
+import CustomerFooter from '../components/customer/ui/CustomerFooter';
+import CustomerSideBar from '../components/customer/ui/CustomerSideBar';
 
 const AppLayoutStyled = styled.section`
   display: grid;
@@ -21,17 +21,17 @@ const Main = styled.main`
   background-color: var(--color-gray-100);
 `;
 
-function AppLayout() {
+function CustomerLayout() {
   return (
     <AppLayoutStyled>
-      <Header />
-      <Sidebar />
+      <CustomerHeader />
+      <CustomerSideBar />
       <Main>
         <Outlet />
       </Main>
-      <Footer />
+      <CustomerFooter />
     </AppLayoutStyled>
   );
 }
 
-export default AppLayout;
+export default CustomerLayout;

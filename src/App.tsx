@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import GlobalStyles from './styles/GlobalStyles.js';
-import AppLayout from './ui/AppLayout.jsx';
+import GlobalStyles from './styles/GlobalStyles';
+
+import ProtectedRoute from './layouts/ProtectedRoute';
+import CustomerLayout from './layouts/CustomerLayout';
+import DelivererLayout from './layouts/DelivererLayout';
 
 // 临时页面组件
 const Home = () => <div>首页</div>;
@@ -15,28 +18,64 @@ const Login = () => <div>登录页面</div>;
 const PageNotFound = () => <div>404 - 页面未找到</div>;
 
 function App() {
+  // 假設這是從認證系統獲取的用戶角色
+  const userRole = 'customer'; // 或 "deliverer"
+
   return (
     <>
       <GlobalStyles />
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />}>
-            <Route index element={<Navigate replace to="home" />} />
-
-            <Route path="home" element={<Home />} />
-            <Route path="subscribe" element={<Subscribe />} />
-            <Route path="checkoutPlan" element={<CheckoutPlan />} />
-
-            <Route path="checkoutUserData" element={<CheckoutUserData />} />
-            <Route path="checkoutPayment" element={<CheckoutPayment />} />
-            <Route path="checkoutSuccess" element={<CheckoutSuccess />} />
-
-            <Route path="account" element={<Account />} />
-
-            <Route path="register" element={<Register />} />
+          {/* 公共路由 */}
+          <Route path="/auth">
             <Route path="login" element={<Login />} />
-            <Route path="*" element={<PageNotFound />} />
+            <Route path="register" element={<Register />} />
           </Route>
+
+          {/* 顧客路由 */}
+          <Route
+            path="/customer"
+            element={
+              <ProtectedRoute role="customer">
+                <CustomerLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Home />} />
+            <Route path="subscribe" element={<Subscribe />} />
+            <Route path="account" element={<Account />} />
+            <Route path="checkout">
+              <Route path="plan" element={<CheckoutPlan />} />
+              <Route path="user-data" element={<CheckoutUserData />} />
+              <Route path="payment" element={<CheckoutPayment />} />
+              <Route path="success" element={<CheckoutSuccess />} />
+            </Route>
+          </Route>
+
+          {/* DOG路由 */}
+          <Route
+            path="/deliverer"
+            element={
+              <ProtectedRoute role="deliverer">
+                <DelivererLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Home />} />
+            <Route path="account" element={<Account />} />
+          </Route>
+
+          {/* 重定向和404路由 */}
+          <Route
+            path="/"
+            element={
+              <Navigate
+                to={userRole === 'customer' ? '/customer' : '/deliverer'}
+                replace
+              />
+            }
+          />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
     </>
