@@ -105,7 +105,7 @@ a {
 }
 
 /* 列表 */
-ol, ul {
+ol, ul, li {
   list-style: none;
 }
 
