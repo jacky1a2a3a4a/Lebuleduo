@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 // 側邊欄容器主體
 const SidebarContainer = styled.div`
-  background-color: var(--color-grey-100);
+  background-color: var(--color-gray-100);
   box-shadow: ${({ isOpen }) =>
     isOpen ? '2px 0 5px rgba(0, 0, 0, 0.1)' : 'none'};
 
@@ -44,7 +44,7 @@ const NavMenu = styled.nav`
 
 const MenuItem = styled.div`
   padding: 1rem 0;
-  border-bottom: 1px solid var(--color-grey-200);
+  border-bottom: 1px solid var(--color-gray-200);
   font-size: 1.2rem;
   cursor: pointer;
 
@@ -55,7 +55,6 @@ const MenuItem = styled.div`
 
 //從Header傳入isOpen和setIsOpen
 function Sidebar({ isOpen, setIsOpen }) {
-  
   // 當側邊欄打開時，禁止body滾動
   useEffect(() => {
     if (isOpen) {
