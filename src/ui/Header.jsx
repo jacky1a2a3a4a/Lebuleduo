@@ -70,6 +70,12 @@ const BurgerButton = styled.button`
   }
 `;
 
+const StyledIcon = styled(HiMiniPlus)`
+  width: 1.2rem;
+  height: 1.2rem;
+  flex-shrink: 0;
+`;
+
 const SubscribeButton = styled.button`
   background-color: var(--color-gray-800);
   color: var(--color-gray-0);
@@ -124,7 +130,7 @@ function Header() {
       </BurgerButton>
       <HeaderTitle onClick={() => navigate('/')}>Lebu-leduo</HeaderTitle>
       <SubscribeButton onClick={() => navigate('/subscribe')}>
-        <HiMiniPlus />
+        <StyledIcon />
         立即預訂
       </SubscribeButton>
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
