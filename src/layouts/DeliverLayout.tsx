@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
+import Header from '../components/deliver/layout/Header/index';
 import Footer from '../components/deliver/layout/Footer/index';
 
 const AppLayoutStyled = styled.section`
@@ -18,7 +19,7 @@ const Main = styled.main`
 function DeliverLayout() {
   return (
     <AppLayoutStyled>
-      {/* 未來可以添加 DeliverHeader 和 DeliverSideBar */}
+      <Header />
       <Main>
         <Outlet />
       </Main>
