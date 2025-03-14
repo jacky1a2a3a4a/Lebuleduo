@@ -129,7 +129,7 @@ function CustomerHeader() {
         <div />
       </BurgerButton>
       <HeaderTitle onClick={() => navigate('/')}>Lebu-leduo</HeaderTitle>
-      <SubscribeButton onClick={() => navigate('/subscribe')}>
+      <SubscribeButton onClick={() => navigate('subscribe')}>
         <StyledIcon />
         立即預訂
       </SubscribeButton>

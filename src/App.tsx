@@ -3,10 +3,10 @@ import GlobalStyles from './styles/GlobalStyles';
 
 import ProtectedRoute from './layouts/ProtectedRoute';
 import CustomerLayout from './layouts/CustomerLayout';
-import DelivererLayout from './layouts/DelivererLayout';
+import DeliverLayout from './layouts/DeliverLayout';
 
 // 临时页面组件
-const Home = () => <div>首页</div>;
+const Home = () => <div>首页(我的訂單)</div>;
 const Subscribe = () => <div>订阅页面</div>;
 const CheckoutPlan = () => <div>结账计划页面</div>;
 const CheckoutUserData = () => <div>用户数据页面</div>;
@@ -57,7 +57,7 @@ function App() {
             path="/deliverer"
             element={
               <ProtectedRoute role="deliverer">
-                <DelivererLayout />
+                <DeliverLayout />
               </ProtectedRoute>
             }
           >

@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import CustomerHeader from '../components/customer/ui/CustomerHeader';
-import CustomerFooter from '../components/customer/ui/CustomerFooter';
-import CustomerSideBar from '../components/customer/ui/CustomerSideBar';
+import CustomerHeader from '../components/customer/layout/CustomerHeader';
+import CustomerFooter from '../components/customer/layout/CustomerFooter';
+import CustomerSideBar from '../components/customer/layout/CustomerSideBar';
 
 const AppLayoutStyled = styled.section`
   display: grid;
