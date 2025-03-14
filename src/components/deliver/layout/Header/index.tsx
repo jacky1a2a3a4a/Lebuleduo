@@ -1,13 +1,8 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { HiBell } from 'react-icons/hi2';
 
-import CommonHeader, {
-  ActionButton,
-  BurgerButton,
-} from '../../../common/Header';
-import SideBar from '../../../common/Header/SideBar';
+import CommonHeader, { ActionButton } from '../../../common/Header';
 
 // 送貨員專用通知按鈕
 const NotificationButton = styled(ActionButton)`
@@ -28,19 +23,6 @@ const StyledBellIcon = styled(HiBell)`
 
 function DeliverHeader() {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
-
-  // 側邊欄組件
-  const sideBarComponent = (
-    <>
-      <BurgerButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
-        <div />
-        <div />
-        <div />
-      </BurgerButton>
-      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
-    </>
-  );
 
   // 通知按鈕
   const notificationButtonComponent = (
@@ -52,9 +34,8 @@ function DeliverHeader() {
   return (
     <CommonHeader
       title="Lebu-Dog"
-      titlePath="/"
-      sideBar={sideBarComponent}
-      rightAction={notificationButtonComponent}
+      titlePath="/deliver"
+      actionButton={notificationButtonComponent}
     />
   );
 }

@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import BurgerButton from './BuggerButton';
+
 // 定義Header可自定義的屬性
 export interface HeaderProps {
   title: string;
   titlePath?: string;
-  rightAction?: ReactNode;
-  sideBar?: ReactNode;
+  actionButton?: ReactNode;
 }
 
 // Header 容器
@@ -35,53 +36,11 @@ const HeaderTitle = styled.button`
   }
 `;
 
-// 漢堡按鈕
-export const BurgerButton = styled.button<{ isOpen: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: var(--spacing-md);
-  cursor: pointer;
-  z-index: 10;
-
-  &:focus {
-    outline: none;
-  }
-
-  div {
-    width: 1.5rem;
-    height: 0.25rem;
-    background: var(--color-gray-700);
-    border-radius: 10px;
-    transition: all 0.3s linear;
-    position: relative;
-    transform-origin: 1px;
-
-    &:first-child {
-      transform: ${({ isOpen }) => (isOpen ? 'rotate(45deg)' : 'rotate(0)')};
-    }
-
-    &:nth-child(2) {
-      opacity: ${({ isOpen }) => (isOpen ? '0' : '1')};
-    }
-
-    &:nth-child(3) {
-      transform: ${({ isOpen }) => (isOpen ? 'rotate(-45deg)' : 'rotate(0)')};
-    }
-  }
-
-  &:hover div {
-    background: var(--color-gray-500);
-  }
-`;
-
 // 通用按鈕樣式
 export const ActionButton = styled.button`
   padding: 0.8rem 0.8rem;
   border-radius: var(--border-radius-round);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--btn-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,7 +50,7 @@ export const ActionButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--btn-shadow-hover);
   }
 
   &:active {
@@ -99,20 +58,17 @@ export const ActionButton = styled.button`
   }
 `;
 
-function CommonHeader({
-  title,
-  titlePath = '/',
-  rightAction,
-  sideBar,
-}: HeaderProps) {
+function CommonHeader({ title, titlePath = '/', actionButton }: HeaderProps) {
   const navigate = useNavigate();
 
   return (
-    <HeaderContainer>
-      {sideBar}
-      <HeaderTitle onClick={() => navigate(titlePath)}>{title}</HeaderTitle>
-      {rightAction}
-    </HeaderContainer>
+    <>
+      <HeaderContainer>
+        <BurgerButton />
+        <HeaderTitle onClick={() => navigate(titlePath)}>{title}</HeaderTitle>
+        {actionButton}
+      </HeaderContainer>
+    </>
   );
 }
 

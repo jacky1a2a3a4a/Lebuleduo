@@ -1,14 +1,9 @@
 // CustomerHeader.tsx
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { HiMiniPlus } from 'react-icons/hi2';
 
-import CommonHeader, {
-  ActionButton,
-  BurgerButton,
-} from '../../../common/Header';
-import SideBar from '../../../common/Header/SideBar';
+import CommonHeader, { ActionButton } from '../../../common/Header';
 
 // 客戶專用訂閱按鈕
 const SubscribeButton = styled(ActionButton)`
@@ -29,19 +24,6 @@ const StyledPlusIcon = styled(HiMiniPlus)`
 
 function CustomerHeader() {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
-
-  // 側邊欄組件
-  const sideBarComponent = (
-    <>
-      <BurgerButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
-        <div />
-        <div />
-        <div />
-      </BurgerButton>
-      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
-    </>
-  );
 
   // 訂閱按鈕
   const subscribeButtonComponent = (
@@ -54,9 +36,8 @@ function CustomerHeader() {
   return (
     <CommonHeader
       title="Lebu-leduo"
-      titlePath="/"
-      sideBar={sideBarComponent}
-      rightAction={subscribeButtonComponent}
+      titlePath="/customer"
+      actionButton={subscribeButtonComponent}
     />
   );
 }
