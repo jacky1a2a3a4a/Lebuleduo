@@ -3,7 +3,7 @@ import { HiMiniPlus } from 'react-icons/hi2';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Sidebar from './Sidebar';
+import SideBar from '../SideBar/index';
 
 const HeaderStyled = styled.header`
   background-color: var(--color-gray-200);
@@ -116,7 +116,7 @@ const SubscribeButton = styled.button`
   }
 `;
 
-function Header() {
+function CustomerHeader() {
   const navigate = useNavigate();
   // 側邊欄是否開啟(預設不開啟)
   const [isOpen, setIsOpen] = useState(false);
@@ -129,13 +129,13 @@ function Header() {
         <div />
       </BurgerButton>
       <HeaderTitle onClick={() => navigate('/')}>Lebu-leduo</HeaderTitle>
-      <SubscribeButton onClick={() => navigate('/subscribe')}>
+      <SubscribeButton onClick={() => navigate('subscribe')}>
         <StyledIcon />
         立即預訂
       </SubscribeButton>
-      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
     </HeaderStyled>
   );
 }
 
-export default Header;
+export default CustomerHeader;
