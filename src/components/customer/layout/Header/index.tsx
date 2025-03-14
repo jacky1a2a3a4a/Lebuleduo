@@ -3,7 +3,7 @@ import { HiMiniPlus } from 'react-icons/hi2';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import CustomerSideBar from './CustomerSideBar';
+import SideBar from '../SideBar/index';
 
 const HeaderStyled = styled.header`
   background-color: var(--color-gray-200);
@@ -133,7 +133,7 @@ function CustomerHeader() {
         <StyledIcon />
         立即預訂
       </SubscribeButton>
-      <CustomerSideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
     </HeaderStyled>
   );
 }

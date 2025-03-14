@@ -1,9 +1,9 @@
+//CustomerLayout 顧客頁面佈局
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import CustomerHeader from '../components/customer/layout/CustomerHeader';
-import CustomerFooter from '../components/customer/layout/CustomerFooter';
-import CustomerSideBar from '../components/customer/layout/CustomerSideBar';
+import Header from '../components/customer/layout/Header/index';
+import Footer from '../components/customer/layout/Footer/index';
 
 const AppLayoutStyled = styled.section`
   display: grid;
@@ -24,12 +24,11 @@ const Main = styled.main`
 function CustomerLayout() {
   return (
     <AppLayoutStyled>
-      <CustomerHeader />
-      <CustomerSideBar />
+      <Header />
       <Main>
         <Outlet />
       </Main>
-      <CustomerFooter />
+      <Footer />
     </AppLayoutStyled>
   );
 }

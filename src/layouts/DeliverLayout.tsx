@@ -1,14 +1,29 @@
-// 測試
 import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
+
+import Footer from '../components/deliver/layout/Footer/index';
+
+const AppLayoutStyled = styled.section`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+`;
+
+const Main = styled.main`
+  background-color: var(--color-gray-100);
+  padding: 1rem;
+`;
 
 function DeliverLayout() {
   return (
-    <div className="deliverer-layout">
-      {/* 之後可以添加導航欄、側邊欄等 */}
-      <main>
+    <AppLayoutStyled>
+      {/* 未來可以添加 DeliverHeader 和 DeliverSideBar */}
+      <Main>
         <Outlet />
-      </main>
-    </div>
+      </Main>
+      <Footer />
+    </AppLayoutStyled>
   );
 }
 
