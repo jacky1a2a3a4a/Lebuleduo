@@ -5,6 +5,11 @@ import ProtectedRoute from './layouts/ProtectedRoute';
 import CustomerLayout from './layouts/CustomerLayout';
 import DeliverLayout from './layouts/DeliverLayout';
 
+// 顧客(customer) 頁面組件
+
+// 外送員(deliver) 頁面組件
+import Task from './pages/deliver/Task';
+
 // 臨時頁面組件
 // 顧客(customer) 頁面組件
 const Register = () => <div>註冊頁面</div>;
@@ -20,10 +25,10 @@ const ContactUs = () => <div>聯絡我們</div>;
 const PageNotFound = () => <div>404 - 頁面未找到</div>;
 
 // 送貨員(DOG)頁面組件
-const Task = () => <div>任務清單</div>;
+// const Task = () => <div>任務清單</div>;
 const ScanOrder = () => <div>掃描訂單</div>;
 const Settlement = () => <div>結算</div>;
-const Report = () => <div>回報後台</div>;
+const ReportBackend = () => <div>回報後台</div>;
 
 function App() {
   // 用戶角色類型
@@ -77,7 +82,7 @@ function App() {
             <Route index element={<Task />} />
             <Route path="scan-order" element={<ScanOrder />} />
             <Route path="settlement" element={<Settlement />} />
-            <Route path="report" element={<Report />} />
+            <Route path="report" element={<ReportBackend />} />
           </Route>
 
           {/* 重新導向和404路由 */}

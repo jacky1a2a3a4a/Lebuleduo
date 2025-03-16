@@ -77,6 +77,18 @@ const GlobalStyles = createGlobalStyle`
   --spacing-lg: 1.5rem;   /* 24px */
   --spacing-xl: 2rem;     /* 32px */
   --spacing-2xl: 3rem;    /* 48px */
+
+  /* RWD */
+  --min-width-mobile: 403px;  /* iphone 16 pro */
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* 全局 */
