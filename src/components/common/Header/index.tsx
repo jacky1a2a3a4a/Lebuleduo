@@ -12,6 +12,13 @@ export interface HeaderProps {
   actionButton?: ReactNode;
 }
 
+// Header 外層容器，用於延伸背景色
+const HeaderWrapper = styled.div`
+  width: 100%;
+  background-color: var(--color-gray-200);
+  z-index: 999;
+`;
+
 // Header 容器
 const HeaderContainer = styled.header`
   background-color: var(--color-gray-200);
@@ -21,6 +28,11 @@ const HeaderContainer = styled.header`
   grid-template-columns: auto 1.75fr 1fr;
   align-items: center;
   justify-content: space-between;
+
+  /* 最大寬度限制 */
+  width: 100%;
+  max-width: calc(var(--min-width-mobile) + 10rem);
+  margin: 0 auto;
 `;
 
 // Header 標題
@@ -62,13 +74,13 @@ function CommonHeader({ title, titlePath = '/', actionButton }: HeaderProps) {
   const navigate = useNavigate();
 
   return (
-    <>
+    <HeaderWrapper>
       <HeaderContainer>
         <BurgerButton />
         <HeaderTitle onClick={() => navigate(titlePath)}>{title}</HeaderTitle>
         {actionButton}
       </HeaderContainer>
-    </>
+    </HeaderWrapper>
   );
 }
 

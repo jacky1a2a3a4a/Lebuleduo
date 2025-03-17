@@ -36,7 +36,7 @@ function App() {
 
   // 假設這是從認證系統獲取的用戶角色
   // const userRole: UserRole = 'customer';
-  const userRole: UserRole = 'deliver'; 
+  const userRole: UserRole = 'deliver';
 
   return (
     <>

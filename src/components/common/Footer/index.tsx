@@ -15,12 +15,22 @@ interface FooterProps {
   navItems: FooterNavItem[];
 }
 
+const FooterWrapper = styled.div`
+  width: 100%;
+  background-color: var(--color-gray-200);
+  z-index: 999;
+`;
+
 // footer容器
 const FooterContainer = styled.footer`
   background-color: var(--color-gray-200);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   height: 64px;
+  width: 100%;
+  max-width: calc(var(--min-width-mobile) + 10rem);
+  margin: 0 auto;
+  z-index: 999;
 `;
 
 // 列表項目
@@ -68,16 +78,18 @@ const IconContainer = styled.div`
 
 function Footer({ navItems }: FooterProps) {
   return (
-    <FooterContainer>
-      {navItems.map((item, index) => (
-        <ListItem key={index}>
-          <FooterNavLink to={item.path} end>
-            <IconContainer>{<item.icon />}</IconContainer>
-            <span>{item.label}</span>
-          </FooterNavLink>
-        </ListItem>
-      ))}
-    </FooterContainer>
+    <FooterWrapper>
+      <FooterContainer>
+        {navItems.map((item, index) => (
+          <ListItem key={index}>
+            <FooterNavLink to={item.path} end>
+              <IconContainer>{<item.icon />}</IconContainer>
+              <span>{item.label}</span>
+            </FooterNavLink>
+          </ListItem>
+        ))}
+      </FooterContainer>
+    </FooterWrapper>
   );
 }
 
