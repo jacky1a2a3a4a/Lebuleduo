@@ -1,13 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  HiDocumentText,
-  HiMiniUser,
-  HiMiniPhone,
-  HiMapPin,
-  HiCamera,
-} from 'react-icons/hi2';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { HiDocumentText, HiCamera } from 'react-icons/hi2';
 import { useState } from 'react';
 
 // 最外層容器
@@ -144,33 +137,6 @@ const DetailValue = styled.div`
   text-align: right;
 `;
 
-const DetailAddress = styled.div`
-  color: var(--color-gray-500);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  text-decoration: underline;
-  letter-spacing: 0.05em;
-`;
-
-// 地圖容器
-const MapContainer = styled.div`
-  width: 100%;
-  height: 100px;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-`;
-
-const PlanTitle = styled.div`
-  font-size: var(--font-size-md);
-  font-weight: 600;
-`;
-
-const PlanContent = styled.div`
-  color: var(--color-gray-400);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-`;
-
 // 按鈕容器
 const DetailButtons = styled.div`
   display: flex;
@@ -240,12 +206,6 @@ function TaskRecord() {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  // 初始化的地圖位置(我設定為高雄市寶成世紀大樓)
-  const location = {
-    lat: 22.62796401977539,
-    lng: 120.31047821044922,
   };
 
   const handleSubmit = () => {

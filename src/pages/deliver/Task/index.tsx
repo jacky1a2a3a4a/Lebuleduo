@@ -1,16 +1,16 @@
 import styled from 'styled-components';
-import { HiCalendar, HiCalendarDateRange, HiTruck } from 'react-icons/hi2';
-import { useState } from 'react';
+import { HiTruck, HiCalendar } from 'react-icons/hi2';
+import { useRef, useEffect, useState } from 'react';
 
 import TaskCard from './TaskCard';
-import DeliverCalendar from './Calender';
 
 // 任務大容器
-const DeliverTaskSectionStyled = styled.section`
+const TaskSectionStyled = styled.section`
   position: relative;
+
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 100vh;
@@ -18,22 +18,20 @@ const DeliverTaskSectionStyled = styled.section`
 
 // 外送員卡片容器
 const DeliverContainer = styled.div`
-  background-color: var(--color-gray-0);
-  border: 1.5px solid var(--color-gray-300);
+  background-color: var(--color-gray-100);
   border-radius: var(--border-radius-lg);
 
   position: fixed;
-  top: 6rem;
+  z-index: 20;
 
   width: 100%;
   max-width: calc(var(--min-width-mobile) - 2rem);
-  z-index: 20;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
+  padding: var(--spacing-sm);
 `;
 
 const DeliverGreeting = styled.div`
@@ -62,22 +60,14 @@ const DeliverDate = styled.div`
 
   width: 100%;
   font-weight: 500;
-  margin-bottom: 1rem;
-`;
-
-const HiCalendarStyled = styled(HiCalendar)`
-  width: 1.5rem;
-  height: 1.5rem;
-
-  margin-right: 0.5rem;
+  margin-bottom: var(--spacing-sm);
 `;
 
 const DeliverProgress = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-xs);
 `;
 
 const DeliverProgressHeader = styled.div`
@@ -95,10 +85,15 @@ const ProgressTitle = styled.div`
   font-weight: 600;
 `;
 
-const HiTruckStyled = styled(HiTruck)`
+// icon容器
+const IconWrapper = styled.div`
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ProgressStatus = styled.div`
@@ -123,7 +118,7 @@ const DeliverProgressBarContainer = styled.div`
   height: 8px;
   background-color: var(--color-gray-200);
   border-radius: 4px;
-  margin: 0.5rem 0 1rem 0;
+  margin: 0.5rem 0;
   overflow: hidden;
 `;
 
@@ -136,47 +131,52 @@ const DeliverProgressBarFill = styled.div<{ progress: number }>`
   transition: width 0.3s ease;
 `;
 
-// 詳細班表按鈕
-const DeliverDetailButton = styled.button`
-  background-color: var(--color-gray-300);
-  color: var(--color-gray-700);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
+// 任務類型標籤 容器
+const TaskCategoryWrapper = styled.div<{ topPosition: number }>`
+  position: fixed;
+  z-index: 15;
+  top: ${(props) => `${props.topPosition}px`};
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  padding: 0.75rem;
-  border-radius: var(--border-radius-round);
-  font-weight: 500;
-  cursor: pointer;
+  max-width: calc(var(--min-width-mobile) - 2rem);
+  transition: top 0.3s ease;
+  background-color: var(--color-gray-100);
 
-  &:hover {
-    background-color: var(--color-gray-400);
-    color: var(--color-gray-0);
+  // 左側淡入效果
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1rem;
+    background: linear-gradient(to right, var(--color-gray-100), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  // 右側淡出效果
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 3rem;
+    background: linear-gradient(to right, transparent, var(--color-gray-100));
+    pointer-events: none;
+    z-index: 1;
   }
 `;
 
-const HiCalendarDateRangeStyled = styled(HiCalendarDateRange)`
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.5rem;
-`;
-
-// 任務類型標籤容器
-const TaskCategoryContainer = styled.div<{ calendarVisible: boolean }>`
+const TaskCategoryContainer = styled.div`
+  position: relative;
   background-color: transparent;
-  position: fixed;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  padding: 0.75rem var(--spacing-sm);
   width: 100%;
-  max-width: calc(var(--min-width-mobile) - 2rem);
-  left: 50%;
-  transform: translateX(-50%);
-  top: ${(props) =>
-    props.calendarVisible ? 'calc(6rem + 330px)' : 'calc(6rem + 270px)'};
-  padding: 0.5rem 0;
-  transition: top 0.3s ease;
-  z-index: 15;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -185,6 +185,12 @@ const TaskCategoryContainer = styled.div<{ calendarVisible: boolean }>`
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  /* 確保最後一個標籤有足夠空間 */
+  &::after {
+    content: '';
+    padding-right: 2rem;
   }
 `;
 
@@ -200,25 +206,30 @@ const CategoryTab = styled.button<{ isActive?: boolean }>`
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
 
   &:hover {
     background-color: ${(props) =>
       props.isActive ? 'var(--color-gray-800)' : 'var(--color-gray-300)'};
   }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
-const TaskCardsContainer = styled.div<{ calendarVisible: boolean }>`
-  position: fixed;
-  top: ${(props) =>
-    props.calendarVisible ? 'calc(6rem + 380px)' : 'calc(6rem + 320px)'};
+// 修改任務卡片容器的定位方式
+const TaskCardsContainer = styled.div<{ topPosition: number }>`
+  position: absolute;
   left: 0;
   right: 0;
+  top: ${(props) => `${props.topPosition + 50}px`}; // 加上標籤容器的高度
   bottom: 0;
   width: 100%;
   transition: top 0.3s ease;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; /* 改善行動裝置滾動體驗 */
+  -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -251,43 +262,68 @@ const TaskCardsContainer = styled.div<{ calendarVisible: boolean }>`
     left: 0;
     right: 0;
     height: 20px;
-    background: linear-gradient(to top, var(--color-gray-0), transparent);
+    background: linear-gradient(to top, var(--color-gray-100), transparent);
     pointer-events: none;
   }
 `;
 
 function Task() {
+  const deliverContainerRef = useRef<HTMLDivElement>(null);
+  const [topPosition, setTopPosition] = useState(96); // 6rem 的預設值
+
+  useEffect(() => {
+    const updatePosition = () => {
+      if (deliverContainerRef.current) {
+        const height = deliverContainerRef.current.offsetHeight;
+        setTopPosition(96 + height); // 6rem + 容器高度
+      }
+    };
+
+    // 初始更新
+    updatePosition();
+
+    // 監聽視窗大小變化
+    window.addEventListener('resize', updatePosition);
+
+    // 清理函數
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, []);
+
   // 計算進度百分比
   const totalItems = 15;
   const completedItems = 4;
   const progressPercentage = (completedItems / totalItems) * 100;
 
-  // 添加日曆顯示狀態
-  const [showCalendar, setShowCalendar] = useState(false);
-
-  // 切換日曆顯示/隱藏
-  const toggleCalendar = () => {
-    setShowCalendar((prev) => !prev);
-  };
+  const currentDate = new Date().toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
 
   return (
-    <DeliverTaskSectionStyled>
+    <TaskSectionStyled>
       {/* 外送員卡片 */}
-      <DeliverContainer>
+      <DeliverContainer ref={deliverContainerRef}>
         <DeliverGreeting>
           <TaskGreetingItem>早安，汪汪員</TaskGreetingItem>
           <TaskId>ID-158673</TaskId>
         </DeliverGreeting>
 
         <DeliverDate>
-          <HiCalendarStyled />
-          <div>2025/03/12</div>
+          <IconWrapper>
+            <HiCalendar />
+          </IconWrapper>
+          <div>{currentDate}</div>
         </DeliverDate>
 
         <DeliverProgress>
           <DeliverProgressHeader>
             <ProgressTitle>
-              <HiTruckStyled />
+              <IconWrapper>
+                <HiTruck />
+              </IconWrapper>
               <div>今日收運進度</div>
             </ProgressTitle>
 
@@ -304,37 +340,32 @@ function Task() {
             </ProgressStatus>
           </DeliverProgressHeader>
 
-          {/* 新增的進度條 */}
+          {/* 進度條 */}
           <DeliverProgressBarContainer>
             <DeliverProgressBarFill progress={progressPercentage} />
           </DeliverProgressBarContainer>
         </DeliverProgress>
-
-        {/* 詳細按鈕 */}
-        <DeliverDetailButton onClick={toggleCalendar}>
-          <HiCalendarDateRangeStyled />
-          詳細班表
-        </DeliverDetailButton>
-
-        {/* 外送行事曆 */}
-        <DeliverCalendar isVisible={showCalendar} />
       </DeliverContainer>
 
       {/* 任務類型標籤 */}
-      <TaskCategoryContainer calendarVisible={showCalendar}>
-        <CategoryTab isActive>全部</CategoryTab>
-        <CategoryTab>未完成(11)</CategoryTab>
-        <CategoryTab>已完成(4)</CategoryTab>
-        <CategoryTab>異常回報(0)</CategoryTab>
-      </TaskCategoryContainer>
+      <TaskCategoryWrapper topPosition={topPosition}>
+        <TaskCategoryContainer>
+          <CategoryTab isActive>全部</CategoryTab>
+          <CategoryTab>未完成(11)</CategoryTab>
+          <CategoryTab>已完成(4)</CategoryTab>
+          <CategoryTab>異常回報(0)</CategoryTab>
+        </TaskCategoryContainer>
+      </TaskCategoryWrapper>
 
       {/* 任務卡片 */}
-      <TaskCardsContainer calendarVisible={showCalendar}>
+      <TaskCardsContainer topPosition={topPosition}>
+        <TaskCard />
+        <TaskCard />
         <TaskCard />
         <TaskCard />
         <TaskCard />
       </TaskCardsContainer>
-    </DeliverTaskSectionStyled>
+    </TaskSectionStyled>
   );
 }
 

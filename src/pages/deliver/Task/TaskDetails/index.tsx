@@ -199,10 +199,6 @@ function TaskDetails() {
     navigate(-1);
   };
 
-  const handleConfirm = () => {
-    navigate(`/deliver/task/${taskId}/record`);
-  };
-
   // 初始化的地圖位置(我設定為高雄市寶成世紀大樓)
   const location = {
     lat: 22.62796401977539,
@@ -310,7 +306,7 @@ function TaskDetails() {
 
       <DetailButtons>
         <Button onClick={handleBack}>返回任務</Button>
-        <Button onClick={handleConfirm}>確認前往</Button>
+        <Button>確認前往</Button>
       </DetailButtons>
     </FullHeightContainer>
   );
