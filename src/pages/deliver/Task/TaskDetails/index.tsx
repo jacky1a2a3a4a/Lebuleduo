@@ -110,13 +110,19 @@ const DetailImgContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: var(--spacing-sm);
+  width: 100%;
+  margin-top: var(--spacing-sm);
 `;
 
 const DetailImg = styled.div`
   background-color: var(--color-gray-200);
   border-radius: var(--border-radius-lg);
-  width: 100%;
-  height: 100%;
+  width: 80px;
+  height: 100px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const DetailAddress = styled.div`
@@ -130,7 +136,7 @@ const DetailAddress = styled.div`
 // 地圖容器
 const MapContainer = styled.div`
   width: 100%;
-  height: 150px;
+  height: 100px;
   border-radius: var(--border-radius-lg);
   overflow: hidden;
 `;
@@ -247,13 +253,18 @@ function TaskDetails() {
           </DetailLabel>
           <DetailValue>門口左側鞋櫃上</DetailValue>
         </DetailRow>
-        
+
         <Divider />
 
         {/* 放置點圖片 */}
         <DetailImgContainer>
-          <DetailImg />
-          <DetailImg />
+          <DetailImg>
+            {/* 可以在這裡添加實際的圖片標籤 */}
+            {/* <img src="/路徑/到/圖片.jpg" alt="放置點" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> */}
+          </DetailImg>
+          <DetailImg>
+            {/* <img src="/路徑/到/圖片2.jpg" alt="放置點" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> */}
+          </DetailImg>
         </DetailImgContainer>
       </DetailCard>
 
