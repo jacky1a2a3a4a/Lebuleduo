@@ -70,6 +70,12 @@ const GlobalStyles = createGlobalStyle`
   --font-size-2xl: 1.5rem;   /* 24px */
   --font-size-3xl: 1.875rem; /* 30px */
 
+  /* 字體粗細 */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extra-bold: 800;
+
   /* 間距 */
   --spacing-xs: 0.25rem;  /* 4px */
   --spacing-sm: 0.5rem;   /* 8px */
@@ -112,6 +118,7 @@ html,body {
   min-height: 100vh;
   line-height: 1.5;
   font-size: 16px;
+  font-weight: var(--font-weight-normal);
 }
 
 /* 連接 */
