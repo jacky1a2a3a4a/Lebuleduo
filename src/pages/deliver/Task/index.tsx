@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { HiCalendar, HiCalendarDateRange, HiTruck } from 'react-icons/hi2';
+import { useState } from 'react';
 
 import TaskCard from './TaskCard';
+import DeliverCalendar from './Calender';
 
 // 任務大容器
 const DeliverTaskSectionStyled = styled.section`
@@ -19,14 +21,13 @@ const DeliverContainer = styled.div`
   background-color: var(--color-gray-0);
   border: 1.5px solid var(--color-gray-300);
   border-radius: var(--border-radius-lg);
-  box-sizing: border-box;
 
   position: fixed;
   top: 6rem;
 
   width: 100%;
   max-width: calc(var(--min-width-mobile) - 2rem);
-  z-index: 10;
+  z-index: 20;
 
   display: flex;
   flex-direction: column;
@@ -162,18 +163,20 @@ const HiCalendarDateRangeStyled = styled(HiCalendarDateRange)`
 `;
 
 // 任務類型標籤容器
-const TaskCategoryContainer = styled.div`
+const TaskCategoryContainer = styled.div<{ calendarVisible: boolean }>`
   background-color: transparent;
-
   position: fixed;
   display: flex;
   gap: 0.5rem;
   width: 100%;
   max-width: calc(var(--min-width-mobile) - 2rem);
-  top: calc(6rem + 275px); /* 根據 DeliverContainer 調整位置 */
+  left: 50%;
+  transform: translateX(-50%);
+  top: ${(props) =>
+    props.calendarVisible ? 'calc(6rem + 330px)' : 'calc(6rem + 270px)'};
   padding: 0.5rem 0;
-
-  z-index: 10;
+  transition: top 0.3s ease;
+  z-index: 15;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -204,13 +207,15 @@ const CategoryTab = styled.button<{ isActive?: boolean }>`
   }
 `;
 
-const TaskCardsContainer = styled.div`
+const TaskCardsContainer = styled.div<{ calendarVisible: boolean }>`
   position: fixed;
-  top: calc(6rem + 330px); /* 調整高度確保在標籤下方 */
+  top: ${(props) =>
+    props.calendarVisible ? 'calc(6rem + 380px)' : 'calc(6rem + 320px)'};
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
+  transition: top 0.3s ease;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch; /* 改善行動裝置滾動體驗 */
@@ -219,6 +224,7 @@ const TaskCardsContainer = styled.div`
   align-items: center;
   padding: 1rem;
   padding-top: 0.5rem;
+  z-index: 10;
 
   /* 隱藏原生滾動條但保留功能 */
   scrollbar-width: thin;
@@ -255,6 +261,14 @@ function Task() {
   const totalItems = 15;
   const completedItems = 4;
   const progressPercentage = (completedItems / totalItems) * 100;
+
+  // 添加日曆顯示狀態
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  // 切換日曆顯示/隱藏
+  const toggleCalendar = () => {
+    setShowCalendar((prev) => !prev);
+  };
 
   return (
     <DeliverTaskSectionStyled>
@@ -297,14 +311,17 @@ function Task() {
         </DeliverProgress>
 
         {/* 詳細按鈕 */}
-        <DeliverDetailButton>
+        <DeliverDetailButton onClick={toggleCalendar}>
           <HiCalendarDateRangeStyled />
           詳細班表
         </DeliverDetailButton>
+
+        {/* 外送行事曆 */}
+        <DeliverCalendar isVisible={showCalendar} />
       </DeliverContainer>
 
       {/* 任務類型標籤 */}
-      <TaskCategoryContainer>
+      <TaskCategoryContainer calendarVisible={showCalendar}>
         <CategoryTab isActive>全部</CategoryTab>
         <CategoryTab>未完成(11)</CategoryTab>
         <CategoryTab>已完成(4)</CategoryTab>
@@ -312,7 +329,7 @@ function Task() {
       </TaskCategoryContainer>
 
       {/* 任務卡片 */}
-      <TaskCardsContainer>
+      <TaskCardsContainer calendarVisible={showCalendar}>
         <TaskCard />
         <TaskCard />
         <TaskCard />

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 //容器
 const TaskCardWrapper = styled.div`
@@ -89,16 +90,6 @@ const TaskCardButton = styled.button`
   border: none;
 
   &:first-child {
-    background-color: var(--color-gray-700);
-    color: var(--color-gray-0);
-    flex: 2;
-
-    &:hover {
-      background-color: var(--color-gray-800);
-    }
-  }
-
-  &:last-child {
     background-color: var(--color-gray-200);
     color: var(--color-gray-600);
     flex: 1;
@@ -107,9 +98,28 @@ const TaskCardButton = styled.button`
       background-color: var(--color-gray-300);
     }
   }
+
+  &:last-child {
+    background-color: var(--color-gray-700);
+    color: var(--color-gray-0);
+    flex: 2;
+
+    &:hover {
+      background-color: var(--color-gray-800);
+    }
+  }
 `;
 
 function TaskCard() {
+  const navigate = useNavigate();
+
+  // 假設這是任務的唯一ID
+  const taskId = '12345';
+
+  const handleOrderDetail = () => {
+    navigate(`/deliver/task/${taskId}`);
+  };
+
   return (
     <TaskCardWrapper>
       <TaskCardItem>
@@ -126,8 +136,8 @@ function TaskCard() {
         </TaskCardContent>
 
         <TaskCardButtons>
+          <TaskCardButton onClick={handleOrderDetail}>訂單詳情</TaskCardButton>
           <TaskCardButton>確認前往</TaskCardButton>
-          <TaskCardButton>訂單詳情</TaskCardButton>
         </TaskCardButtons>
       </TaskCardItem>
     </TaskCardWrapper>

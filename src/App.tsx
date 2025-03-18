@@ -9,6 +9,7 @@ import DeliverLayout from './layouts/DeliverLayout';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
+import TaskDetails from './pages/deliver/Task/TaskDetails';
 
 // 臨時頁面組件
 // 顧客(customer) 頁面組件
@@ -37,6 +38,11 @@ function App() {
   // 假設這是從認證系統獲取的用戶角色
   // const userRole: UserRole = 'customer';
   const userRole: UserRole = 'deliver';
+
+  // 導航路徑選擇函數
+  const getRedirectPath = (role: UserRole): string => {
+    return role === 'customer' ? '/customer' : '/deliver';
+  };
 
   return (
     <>
@@ -85,15 +91,20 @@ function App() {
             <Route path="report" element={<ReportBackend />} />
           </Route>
 
+          {/* 訂單詳情頁面 - 獨立路由，不使用 DeliverLayout */}
+          <Route
+            path="/deliver/task/:taskId"
+            element={
+              <ProtectedRoute role="deliver">
+                <TaskDetails />
+              </ProtectedRoute>
+            }
+          />
+
           {/* 重新導向和404路由 */}
           <Route
             path="/"
-            element={
-              <Navigate
-                to={userRole === 'customer' ? '/customer' : '/deliver'}
-                replace
-              />
-            }
+            element={<Navigate to={getRedirectPath(userRole)} replace />}
           />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

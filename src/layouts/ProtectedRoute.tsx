@@ -1,7 +1,13 @@
 // 測試
 import { Navigate } from 'react-router-dom';
+import { ReactNode } from 'react';
 
-function ProtectedRoute({ children, role }) {
+interface ProtectedRouteProps {
+  children: ReactNode;
+  role: 'customer' | 'deliver';
+}
+
+function ProtectedRoute({ children, role }: ProtectedRouteProps) {
   // 這裡之後可以添加認證和授權邏輯
   // 暫時返回子元素，不做任何保護
   return children;
