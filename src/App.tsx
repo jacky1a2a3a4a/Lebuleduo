@@ -10,6 +10,7 @@ import DeliverLayout from './layouts/DeliverLayout';
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
 import TaskDetails from './pages/deliver/Task/TaskDetails';
+import TaskRecord from './pages/deliver/Task/TaskRecord';
 import Calendar from './pages/deliver/Calendar';
 
 // 臨時頁面組件
@@ -98,6 +99,16 @@ function App() {
             element={
               <ProtectedRoute role="deliver">
                 <TaskDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 任務記錄頁面 */}
+          <Route
+            path="/deliver/task/:taskId/record"
+            element={
+              <ProtectedRoute role="deliver">
+                <TaskRecord />
               </ProtectedRoute>
             }
           />
