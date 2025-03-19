@@ -1,7 +1,7 @@
 import {
+  HiDocumentText,
   HiCalendarDays,
   HiMiniQrCode,
-  HiMiniCurrencyDollar,
   HiUserGroup,
 } from 'react-icons/hi2';
 
@@ -10,8 +10,8 @@ import Footer, { FooterNavItem } from '../../../common/Footer';
 // 任務相關導航項目
 const taskNavItems: FooterNavItem[] = [
   {
-    icon: HiCalendarDays,
-    label: '任務班表',
+    icon: HiDocumentText,
+    label: '今日任務',
     path: '/deliver',
   },
   {
@@ -20,9 +20,9 @@ const taskNavItems: FooterNavItem[] = [
     path: '/deliver/scan-order',
   },
   {
-    icon: HiMiniCurrencyDollar,
-    label: '報表結算',
-    path: '/deliver/settlement',
+    icon: HiCalendarDays,
+    label: '行事曆',
+    path: '/deliver/calendar',
   },
   {
     icon: HiUserGroup,

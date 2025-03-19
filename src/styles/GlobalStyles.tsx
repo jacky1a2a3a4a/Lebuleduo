@@ -47,6 +47,9 @@ const GlobalStyles = createGlobalStyle`
   --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
 
+  --btn-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  --btn-shadow-hover: 0 7px 14px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+
   /* border-radius */
   --border-radius-tiny: 3px;
   --border-radius-sm: 5px;
@@ -61,11 +64,17 @@ const GlobalStyles = createGlobalStyle`
    /* 字體大小 */
   --font-size-xs: 0.75rem;   /* 12px */
   --font-size-sm: 0.875rem;  /* 14px */
-  --font-size-base: 1rem;    /* 16px */
+  --font-size-md: 1rem;    /* 16px */
   --font-size-lg: 1.125rem;  /* 18px */
   --font-size-xl: 1.25rem;   /* 20px */
   --font-size-2xl: 1.5rem;   /* 24px */
   --font-size-3xl: 1.875rem; /* 30px */
+
+  /* 字體粗細 */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extra-bold: 800;
 
   /* 間距 */
   --spacing-xs: 0.25rem;  /* 4px */
@@ -74,6 +83,18 @@ const GlobalStyles = createGlobalStyle`
   --spacing-lg: 1.5rem;   /* 24px */
   --spacing-xl: 2rem;     /* 32px */
   --spacing-2xl: 3rem;    /* 48px */
+
+  /* RWD */
+  --min-width-mobile: 403px;  /* iphone 16 pro */
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* 全局 */
@@ -97,6 +118,7 @@ html,body {
   min-height: 100vh;
   line-height: 1.5;
   font-size: 16px;
+  font-weight: var(--font-weight-normal);
 }
 
 /* 連接 */
