@@ -9,8 +9,8 @@ import DeliverLayout from './layouts/DeliverLayout';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
-import TaskDetails from './pages/deliver/Task/TaskDetails';
-import TaskRecord from './pages/deliver/Task/TaskRecord';
+import TaskDetails from './pages/deliver/Task/Details';
+import TaskRecord from './pages/deliver/Task/Record';
 import Calendar from './pages/deliver/Calendar';
 
 // 臨時頁面組件

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { HiTruck, HiCalendar } from 'react-icons/hi2';
 import { useRef, useEffect, useState } from 'react';
 
-import TaskCard from './TaskCard';
+import TaskCard, { TaskStatus } from './Card';
 
 // 任務大容器
 const TaskSectionStyled = styled.section`
@@ -13,7 +13,14 @@ const TaskSectionStyled = styled.section`
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  //height:100vh會有Y軸
+  height: 100%;
+
+  /* 隱藏滾動條 */
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 // 外送員卡片容器
@@ -67,7 +74,6 @@ const DeliverProgress = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: var(--spacing-xs);
 `;
 
 const DeliverProgressHeader = styled.div`
@@ -131,7 +137,7 @@ const DeliverProgressBarFill = styled.div<{ progress: number }>`
   transition: width 0.3s ease;
 `;
 
-// 任務類型標籤 容器
+// 分類標籤 容器 淡出效果
 const TaskCategoryWrapper = styled.div<{ topPosition: number }>`
   position: fixed;
   z-index: 15;
@@ -142,19 +148,6 @@ const TaskCategoryWrapper = styled.div<{ topPosition: number }>`
   max-width: calc(var(--min-width-mobile) - 2rem);
   transition: top 0.3s ease;
   background-color: var(--color-gray-100);
-
-  // 左側淡入效果
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 1rem;
-    background: linear-gradient(to right, var(--color-gray-100), transparent);
-    pointer-events: none;
-    z-index: 1;
-  }
 
   // 右側淡出效果
   &::after {
@@ -170,9 +163,9 @@ const TaskCategoryWrapper = styled.div<{ topPosition: number }>`
   }
 `;
 
+//分類標籤 容器
 const TaskCategoryContainer = styled.div`
   position: relative;
-  background-color: transparent;
   display: flex;
   gap: 0.75rem;
   padding: 0.75rem var(--spacing-sm);
@@ -182,7 +175,6 @@ const TaskCategoryContainer = styled.div`
   -webkit-overflow-scrolling: touch;
 
   /* 隱藏水平滾動條 */
-  scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -194,6 +186,7 @@ const TaskCategoryContainer = styled.div`
   }
 `;
 
+//分類標籤
 const CategoryTab = styled.button<{ isActive?: boolean }>`
   background-color: ${(props) =>
     props.isActive ? 'var(--color-gray-700)' : 'var(--color-gray-200)'};
@@ -218,14 +211,17 @@ const CategoryTab = styled.button<{ isActive?: boolean }>`
   }
 `;
 
-// 修改任務卡片容器的定位方式
+// 任務卡片容器 - 移除底部淡出效果的 ::after 偽元素
 const TaskCardsContainer = styled.div<{ topPosition: number }>`
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: ${(props) => `${props.topPosition + 50}px`}; // 加上標籤容器的高度
-  bottom: 0;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: ${(props) => `${props.topPosition + 56}px`}; // 標籤容器高度約為 56px
   width: 100%;
+  max-width: calc(var(--min-width-mobile) - 2rem);
+  height: calc(
+    100vh - ${(props) => `${props.topPosition + 56}px`} - 4rem
+  ); // 減去底部空間
   transition: top 0.3s ease;
   overflow-y: auto;
   overflow-x: hidden;
@@ -233,43 +229,76 @@ const TaskCardsContainer = styled.div<{ topPosition: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  padding-top: 0.5rem;
+  padding: 0.5rem 0.4rem;
+  padding-bottom: 5rem; // 增加底部內邊距
   z-index: 10;
 
-  /* 隱藏原生滾動條但保留功能 */
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-
   &::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--color-gray-300);
-    border-radius: 20px;
-  }
-
-  /* 添加淡入陰影效果 */
-  &::after {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 20px;
-    background: linear-gradient(to top, var(--color-gray-100), transparent);
-    pointer-events: none;
+    display: none;
   }
 `;
 
+// 創建一個新的固定在底部的淡出效果組件
+const BottomFadeEffect = styled.div<{ topPosition: number }>`
+  position: fixed;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: calc(var(--min-width-mobile) - 2rem);
+  height: 8rem;
+  background: linear-gradient(to top, var(--color-gray-100) 30%, transparent);
+  pointer-events: none;
+  z-index: 11;
+`;
+
+// 新增進行中任務容器
+const OngoingTaskContainer = styled.div`
+  width: 100%;
+  margin-top: var(--spacing-sm);
+`;
+
+interface TaskItem {
+  id: string;
+  status: TaskStatus;
+  time: string;
+  address: string;
+  customer: string;
+}
+
 function Task() {
   const deliverContainerRef = useRef<HTMLDivElement>(null);
-  const [topPosition, setTopPosition] = useState(96); // 6rem 的預設值
+  const [topPosition, setTopPosition] = useState(96);
+  const [tasks, setTasks] = useState<TaskItem[]>([
+    {
+      id: '1',
+      status: 'waiting',
+      time: '10:00am',
+      address: '高雄市三民區和平一路124號5F',
+      customer: '林先生',
+    },
+    {
+      id: '2',
+      status: 'waiting',
+      time: '11:00am',
+      address: '高雄市三民區和平一路126號3F',
+      customer: '王先生',
+    },
+    {
+      id: '3',
+      status: 'waiting',
+      time: '13:00pm',
+      address: '高雄市三民區和平一路128號2F',
+      customer: '張先生',
+    },
+    {
+      id: '4',
+      status: 'completed',
+      time: '09:00am',
+      address: '高雄市三民區和平一路130號1F',
+      customer: '李先生',
+    },
+  ]);
 
   useEffect(() => {
     const updatePosition = () => {
@@ -291,10 +320,17 @@ function Task() {
     };
   }, []);
 
-  // 計算進度百分比
-  const totalItems = 15;
-  const completedItems = 4;
-  const progressPercentage = (completedItems / totalItems) * 100;
+  const handleTaskStatusChange = (taskId: string, newStatus: TaskStatus) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, status: newStatus } : task,
+      ),
+    );
+  };
+
+  const ongoingTask = tasks.find((task) => task.status === 'ongoing');
+  const waitingTasks = tasks.filter((task) => task.status === 'waiting');
+  const completedTasks = tasks.filter((task) => task.status === 'completed');
 
   const currentDate = new Date().toLocaleDateString('zh-TW', {
     year: 'numeric',
@@ -304,7 +340,6 @@ function Task() {
 
   return (
     <TaskSectionStyled>
-      {/* 外送員卡片 */}
       <DeliverContainer ref={deliverContainerRef}>
         <DeliverGreeting>
           <TaskGreetingItem>早安，汪汪員</TaskGreetingItem>
@@ -330,7 +365,9 @@ function Task() {
             <ProgressStatus>
               <StatusItem>
                 <Label>已完成:</Label>
-                <span>4/15</span>
+                <span>
+                  {completedTasks.length}/{tasks.length}
+                </span>
               </StatusItem>
 
               <StatusItem>
@@ -340,31 +377,55 @@ function Task() {
             </ProgressStatus>
           </DeliverProgressHeader>
 
-          {/* 進度條 */}
           <DeliverProgressBarContainer>
-            <DeliverProgressBarFill progress={progressPercentage} />
+            <DeliverProgressBarFill
+              progress={(completedTasks.length / tasks.length) * 100}
+            />
           </DeliverProgressBarContainer>
+
+          {/* 顯示進行中的任務 */}
+          {ongoingTask && (
+            <OngoingTaskContainer>
+              <TaskCard
+                taskId={ongoingTask.id}
+                status={ongoingTask.status}
+                onStatusChange={handleTaskStatusChange}
+              />
+            </OngoingTaskContainer>
+          )}
         </DeliverProgress>
       </DeliverContainer>
 
-      {/* 任務類型標籤 */}
       <TaskCategoryWrapper topPosition={topPosition}>
         <TaskCategoryContainer>
-          <CategoryTab isActive>全部</CategoryTab>
-          <CategoryTab>未完成(11)</CategoryTab>
-          <CategoryTab>已完成(4)</CategoryTab>
+          <CategoryTab isActive>全部({tasks.length})</CategoryTab>
+          <CategoryTab>未完成({waitingTasks.length})</CategoryTab>
+          <CategoryTab>已完成({completedTasks.length})</CategoryTab>
           <CategoryTab>異常回報(0)</CategoryTab>
         </TaskCategoryContainer>
       </TaskCategoryWrapper>
 
-      {/* 任務卡片 */}
       <TaskCardsContainer topPosition={topPosition}>
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
+        {waitingTasks.map((task) => (
+          <TaskCard
+            key={task.id}
+            taskId={task.id}
+            status={task.status}
+            onStatusChange={handleTaskStatusChange}
+            disabled={!!ongoingTask}
+          />
+        ))}
+        {completedTasks.map((task) => (
+          <TaskCard
+            key={task.id}
+            taskId={task.id}
+            status={task.status}
+            onStatusChange={handleTaskStatusChange}
+          />
+        ))}
       </TaskCardsContainer>
+
+      <BottomFadeEffect topPosition={topPosition} />
     </TaskSectionStyled>
   );
 }
