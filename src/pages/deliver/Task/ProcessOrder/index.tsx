@@ -158,6 +158,7 @@ const WeightInput = styled.input`
 `;
 
 // 照片拍攝區域
+//區域容器
 const PhotoSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -165,15 +166,65 @@ const PhotoSection = styled.div`
   width: 100%;
 `;
 
-const PhotoButton = styled.button`
+//全部照片容器
+const PhotoContainer = styled.div<{ hasPhotos: boolean }>`
+  display: flex;
+  gap: var(--spacing-sm);
+  width: 100%;
+  margin: ${({ hasPhotos }) => (hasPhotos ? '20px 0' : '20px 0 0 0')};
+`;
+
+//照片框
+const PhotoBox = styled.div`
+  background-color: var(--color-gray-200);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(50% - var(--spacing-xs));
+  aspect-ratio: 9/16;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+`;
+
+//照片本體
+const PhotoImage = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-lg);
+  object-fit: cover;
+`;
+
+//照片刪除按鈕
+const DeleteButton = styled.button`
+  background-color: var(--color-gray-900);
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: var(--color-gray-0);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
+//照片拍攝按鈕
+const PhotoButton = styled.button`
+  background-color: var(--color-gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   padding: var(--spacing-md);
-  background-color: var(--color-gray-200);
-  border: 1.5px solid var(--color-gray-300);
   border-radius: var(--border-radius-round);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -185,6 +236,8 @@ const PhotoButton = styled.button`
 
 const PhotoButtonText = styled.div`
   color: var(--color-gray-700);
+  display: flex;
+  align-items: center;
   font-size: var(--font-size-sm);
   font-weight: 500;
 `;
@@ -321,6 +374,15 @@ const CameraButtonInner = styled.div`
   border: 2px solid var(--color-gray-700);
 `;
 
+const ErrorText = styled.div`
+  color: var(--color-red-600);
+  opacity: 0.7;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  margin-top: var(--spacing-xs);
+  margin-left: var(--spacing-sm);
+`;
+
 // 定義任務類型
 type TaskItem = {
   id: string;
@@ -337,6 +399,10 @@ function ProcessOrder() {
   const [weight, setWeight] = useState<string>('');
   const [photos, setPhotos] = useState<string[]>([]);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [errors, setErrors] = useState({
+    weight: false,
+    photos: false,
+  });
   const webcamRef = useRef<Webcam>(null);
 
   // 從 localStorage 讀取任務資訊
@@ -357,7 +423,13 @@ function ProcessOrder() {
 
   // 處理完成收運
   const handleComplete = () => {
-    if (!weight || photos.length === 0) return;
+    const newErrors = {
+      weight: !weight,
+      photos: photos.length < 2,
+    };
+    setErrors(newErrors);
+
+    if (!weight || photos.length < 2) return;
 
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
@@ -387,13 +459,18 @@ function ProcessOrder() {
 
   // 處理拍照
   const handleCapture = () => {
-    if (webcamRef.current) {
+    if (webcamRef.current && photos.length < 2) {
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc) {
         setPhotos([...photos, imageSrc]);
+        setErrors((prev) => ({ ...prev, photos: false }));
         setIsCameraOpen(false);
       }
     }
+  };
+
+  const handleDeletePhoto = (index: number) => {
+    setPhotos(photos.filter((_, i) => i !== index));
   };
 
   // 初始化的地圖位置
@@ -418,7 +495,7 @@ function ProcessOrder() {
       {isCameraOpen && (
         <CameraContainer>
           <CameraHeader>
-            <CameraTitle>拍攝收運照片</CameraTitle>
+            <CameraTitle>拍攝收運照片 ({photos.length}/2)</CameraTitle>
             <CameraCloseButton onClick={handleCloseCamera}>
               <HiXMark size={24} />
             </CameraCloseButton>
@@ -430,11 +507,11 @@ function ProcessOrder() {
               screenshotFormat="image/jpeg"
               width="100%"
               height="100%"
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'cover', aspectRatio: '4/5' }}
             />
           </CameraView>
           <CameraControls>
-            <CameraButton onClick={handleCapture}>
+            <CameraButton onClick={handleCapture} disabled={photos.length >= 2}>
               <CameraButtonInner />
             </CameraButton>
           </CameraControls>
@@ -528,46 +605,58 @@ function ProcessOrder() {
       </HeaderContainer>
 
       <DetailCard>
-        <PlanTitle>標準方案(50公升 / 10公斤)</PlanTitle>
-        <PlanContent>一般垃圾+回收+廚餘 = 50公升</PlanContent>
+        <PlanTitle>標準方案 (50公升 / 10公斤)</PlanTitle>
+        <PlanContent>一般垃圾 + 回收 + 廚餘 = 50公升</PlanContent>
 
         <Divider />
 
         <HeaderContainer>
-          <PageTitle>實際重量</PageTitle>
+          <PageTitle>實際重量 (公斤)</PageTitle>
         </HeaderContainer>
 
         <WeightInputContainer>
           <WeightInput
             type="number"
             value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-            placeholder="請輸入收運時的實際重量(公斤/kg)"
+            onChange={(e) => {
+              setWeight(e.target.value);
+              setErrors((prev) => ({ ...prev, weight: false }));
+            }}
+            placeholder="請輸入收運時的實際重量"
           />
+          {errors.weight && <ErrorText>*請輸入實際重量*</ErrorText>}
         </WeightInputContainer>
-      </DetailCard>
 
-      <HeaderContainer>
-        <PageTitle>收運照片</PageTitle>
-      </HeaderContainer>
-
-      <DetailCard>
         <PhotoSection>
-          <PhotoButton onClick={handleTakePhoto}>
-            <HiCamera size={20} />
-            <PhotoButtonText>開啟相機拍攝</PhotoButtonText>
+          <PhotoContainer hasPhotos={photos.length > 0}>
+            {photos.map((photo, index) => (
+              <PhotoBox key={index}>
+                <PhotoImage src={photo} alt="收運照片" />
+                <DeleteButton onClick={() => handleDeletePhoto(index)}>
+                  <HiXMark size={16} />
+                </DeleteButton>
+              </PhotoBox>
+            ))}
+          </PhotoContainer>
+          <PhotoButton onClick={handleTakePhoto} disabled={photos.length >= 2}>
+            <DetailSign>
+              <HiCamera size={20} />
+            </DetailSign>
+            <PhotoButtonText>
+              {photos.length >= 2
+                ? '已達最大拍攝數量'
+                : '請拍攝2張現場收運照片'}
+            </PhotoButtonText>
           </PhotoButton>
+          {photos.length < 2 && errors.photos && (
+            <ErrorText>*請拍攝2張現場收運照片*</ErrorText>
+          )}
         </PhotoSection>
       </DetailCard>
 
       <DetailButtons>
         <Button onClick={handleBack}>返回</Button>
-        <Button
-          onClick={handleComplete}
-          disabled={!weight || photos.length === 0}
-        >
-          完成收運
-        </Button>
+        <Button onClick={handleComplete}>完成收運</Button>
       </DetailButtons>
     </FullHeightContainer>
   );
