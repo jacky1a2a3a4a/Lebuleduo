@@ -7,6 +7,8 @@ import {
   HiMapPin,
 } from 'react-icons/hi2';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { useEffect, useState } from 'react';
+import { TaskStatus } from '../Card';
 
 // 最外層容器
 const FullHeightContainer = styled.div`
@@ -163,12 +165,13 @@ const DetailButtons = styled.div`
 `;
 
 // 確認按鈕
-const Button = styled.button`
+const Button = styled.button<{ disabled?: boolean; isCancel?: boolean }>`
   padding: 0.75rem 1rem;
   border-radius: var(--border-radius-round);
   font-weight: 500;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border: none;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 
   &:first-child {
     background-color: var(--color-gray-200);
@@ -176,26 +179,78 @@ const Button = styled.button`
     flex: 1;
 
     &:hover {
-      background-color: var(--color-gray-300);
+      background-color: ${(props) =>
+        props.disabled ? 'var(--color-gray-200)' : 'var(--color-gray-300)'};
     }
   }
 
   &:last-child {
-    background-color: var(--color-gray-700);
-    color: var(--color-gray-0);
+    background-color: ${(props) =>
+      props.isCancel ? 'var(--color-gray-200)' : 'var(--color-gray-600)'};
+    color: ${(props) =>
+      props.isCancel ? 'var(--color-gray-600)' : 'var(--color-gray-0)'};
     flex: 2;
 
     &:hover {
-      background-color: var(--color-gray-800);
+      background-color: ${(props) =>
+        props.disabled
+          ? props.isCancel
+            ? 'var(--color-gray-300)'
+            : 'var(--color-gray-700)'
+          : props.isCancel
+            ? 'var(--color-gray-400)'
+            : 'var(--color-gray-800)'};
     }
   }
 `;
 
+// 定義任務類型
+type TaskItem = {
+  id: string;
+  status: TaskStatus;
+  time: string;
+  address: string;
+  customer: string;
+};
+
 function TaskDetails() {
   const navigate = useNavigate();
   const { taskId } = useParams();
+  const [task, setTask] = useState<TaskItem | null>(null);
+
+  // 從 localStorage 讀取任務資訊
+  useEffect(() => {
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      const tasks: TaskItem[] = JSON.parse(savedTasks);
+      const currentTask = tasks.find((t) => t.id === taskId);
+      if (currentTask) {
+        setTask(currentTask);
+      }
+    }
+  }, [taskId]);
 
   const handleBack = () => {
+    navigate(-1);
+  };
+
+  // 處理確認前往/取消前往按鈕點擊
+  const handleStatusChange = () => {
+    if (task?.status === 'completed') return;
+
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      const tasks: TaskItem[] = JSON.parse(savedTasks);
+      const updatedTasks = tasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              status: task.status === 'ongoing' ? 'waiting' : 'ongoing',
+            }
+          : task,
+      );
+      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+    }
     navigate(-1);
   };
 
@@ -204,6 +259,17 @@ function TaskDetails() {
     lat: 22.62796401977539,
     lng: 120.31047821044922,
   };
+
+  // 如果找不到任務，顯示載入中或錯誤訊息
+  if (!task) {
+    return (
+      <FullHeightContainer>
+        <HeaderContainer>
+          <PageTitle>載入中...</PageTitle>
+        </HeaderContainer>
+      </FullHeightContainer>
+    );
+  }
 
   return (
     <FullHeightContainer>
@@ -214,7 +280,7 @@ function TaskDetails() {
 
       <DetailCard>
         <DetailRow>
-          <DetailTime>09:00 am</DetailTime>
+          <DetailTime>{task.time}</DetailTime>
           <DetailStatus>代收運</DetailStatus>
         </DetailRow>
         <DetailRow>
@@ -224,7 +290,7 @@ function TaskDetails() {
             </DetailSign>
             訂單編號
           </DetailLabel>
-          <DetailValue>{taskId || 'ORD-12345'}</DetailValue>
+          <DetailValue>{task.id}</DetailValue>
         </DetailRow>
         <DetailRow>
           <DetailLabel>
@@ -233,25 +299,16 @@ function TaskDetails() {
             </DetailSign>
             聯絡人
           </DetailLabel>
-          <DetailValue>林先生</DetailValue>
-        </DetailRow>
-        <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiMiniPhone />
-            </DetailSign>
-            電話
-          </DetailLabel>
-          <DetailValue>0912-456-789</DetailValue>
+          <DetailValue>{task.customer}</DetailValue>
         </DetailRow>
         <DetailRow>
           <DetailLabel>
             <DetailSign>
               <HiMapPin />
             </DetailSign>
-            放置點
+            地址
           </DetailLabel>
-          <DetailValue>門口左側鞋櫃上</DetailValue>
+          <DetailValue>{task.address}</DetailValue>
         </DetailRow>
 
         <Divider />
@@ -278,7 +335,7 @@ function TaskDetails() {
             <DetailSign>
               <HiMapPin />
             </DetailSign>
-            <DetailAddress>測試高雄市和平區和平一路124號5F</DetailAddress>
+            <DetailAddress>{task.address}</DetailAddress>
           </DetailLabel>
         </DetailRow>
 
@@ -306,7 +363,17 @@ function TaskDetails() {
 
       <DetailButtons>
         <Button onClick={handleBack}>返回任務</Button>
-        <Button>確認前往</Button>
+        <Button
+          onClick={handleStatusChange}
+          disabled={task.status === 'completed'}
+          isCancel={task.status === 'ongoing'}
+        >
+          {task.status === 'completed'
+            ? '已完成'
+            : task.status === 'ongoing'
+              ? '取消前往'
+              : '確認前往'}
+        </Button>
       </DetailButtons>
     </FullHeightContainer>
   );
