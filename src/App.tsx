@@ -12,6 +12,8 @@ import Task from './pages/deliver/Task';
 import TaskDetails from './pages/deliver/Task/Details';
 import TaskRecord from './pages/deliver/Task/Record';
 import Calendar from './pages/deliver/Calendar';
+import ScanOrder from './pages/deliver/ScanOrder';
+import ProcessOrder from './pages/deliver/Task/ProcessOrder';
 
 // 臨時頁面組件
 // 顧客(customer) 頁面組件
@@ -29,7 +31,7 @@ const PageNotFound = () => <div>404 - 頁面未找到</div>;
 
 // 送貨員(DOG)頁面組件
 // const Task = () => <div>任務清單</div>;
-const ScanOrder = () => <div>掃描訂單</div>;
+// const ScanOrder = () => <div>掃描訂單</div>;
 // const Settlement = () => <div>行事曆</div>;
 const ReportBackend = () => <div>回報後台</div>;
 
@@ -99,6 +101,16 @@ function App() {
             element={
               <ProtectedRoute role="deliver">
                 <TaskDetails />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 訂單處理頁面 - 獨立路由，不使用 DeliverLayout */}
+          <Route
+            path="/deliver/task/:taskId/process-order"
+            element={
+              <ProtectedRoute role="deliver">
+                <ProcessOrder />
               </ProtectedRoute>
             }
           />
