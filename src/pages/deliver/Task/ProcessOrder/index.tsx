@@ -1,14 +1,20 @@
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { HiDocumentText, HiMiniUser, HiMapPin } from 'react-icons/hi2';
+import {
+  HiDocumentText,
+  HiMiniUser,
+  HiMapPin,
+  HiCamera,
+  HiXMark,
+} from 'react-icons/hi2';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { TaskStatus } from '../Card';
+import Webcam from 'react-webcam';
 
 // 最外層容器
 const FullHeightContainer = styled.div`
   background-color: var(--color-gray-100);
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,12 +41,11 @@ const PageTitle = styled.div`
 
 const PageSubtitle = styled.div`
   color: var(--color-gray-400);
-
   font-size: var(--font-size-xs);
   font-weight: 500;
 `;
 
-//訂單詳情 卡片
+// 訂單詳情卡片
 const DetailCard = styled.div`
   background-color: var(--color-gray-0);
   border: 1.5px solid var(--color-gray-300);
@@ -51,7 +56,7 @@ const DetailCard = styled.div`
   margin-bottom: 1rem;
 `;
 
-//訂單詳情 容器 均分排列
+// 訂單詳情容器
 const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
@@ -59,7 +64,6 @@ const DetailRow = styled.div`
   margin-bottom: var(--spacing-xs);
 `;
 
-//訂單詳情 卡片 時間
 const DetailTime = styled.div`
   font-size: var(--font-size-2xl);
   font-weight: 600;
@@ -69,10 +73,8 @@ const DetailStatus = styled.div`
   background-color: var(--color-gray-300);
   color: var(--color-gray-700);
   border-radius: var(--border-radius-round);
-
   font-size: var(--font-size-xs);
   font-weight: 500;
-
   padding: var(--spacing-xs) var(--spacing-sm);
 `;
 
@@ -122,12 +124,69 @@ const DetailImg = styled.div`
   align-items: center;
 `;
 
-const DetailAddress = styled.div`
-  color: var(--color-gray-500);
+const PlanTitle = styled.div`
+  font-size: var(--font-size-md);
+  font-weight: 600;
+`;
+
+const PlanContent = styled.div`
+  color: var(--color-gray-400);
   font-size: var(--font-size-sm);
   font-weight: 500;
-  text-decoration: underline;
-  letter-spacing: 0.05em;
+`;
+
+// 重量輸入區域
+const WeightInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  width: 100%;
+`;
+
+const WeightInput = styled.input`
+  padding: var(--spacing-sm);
+  padding-left: var(--spacing-md);
+  border: 1.5px solid var(--color-gray-300);
+  border-radius: var(--border-radius-round);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  height: 100%;
+
+  &::placeholder {
+    color: var(--color-gray-300);
+  }
+`;
+
+// 照片拍攝區域
+const PhotoSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+`;
+
+const PhotoButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-md);
+  background-color: var(--color-gray-200);
+  border: 1.5px solid var(--color-gray-300);
+  border-radius: var(--border-radius-round);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-gray-300);
+  }
+`;
+
+const PhotoButtonText = styled.div`
+  color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
 `;
 
 // 地圖容器
@@ -138,15 +197,12 @@ const MapContainer = styled.div`
   overflow: hidden;
 `;
 
-const PlanTitle = styled.div`
-  font-size: var(--font-size-md);
-  font-weight: 600;
-`;
-
-const PlanContent = styled.div`
-  color: var(--color-gray-400);
+const DetailAddress = styled.div`
+  color: var(--color-gray-500);
   font-size: var(--font-size-sm);
   font-weight: 500;
+  text-decoration: underline;
+  letter-spacing: 0.05em;
 `;
 
 // 按鈕容器
@@ -159,8 +215,8 @@ const DetailButtons = styled.div`
   margin-top: auto;
 `;
 
-// 確認按鈕
-const Button = styled.button<{ disabled?: boolean; isCancel?: boolean }>`
+// 按鈕
+const Button = styled.button<{ disabled?: boolean }>`
   padding: 0.75rem 1rem;
   border-radius: var(--border-radius-round);
   font-weight: 500;
@@ -180,23 +236,89 @@ const Button = styled.button<{ disabled?: boolean; isCancel?: boolean }>`
   }
 
   &:last-child {
-    background-color: ${(props) =>
-      props.isCancel ? 'var(--color-gray-200)' : 'var(--color-gray-600)'};
-    color: ${(props) =>
-      props.isCancel ? 'var(--color-gray-600)' : 'var(--color-gray-0)'};
+    background-color: var(--color-gray-700);
+    color: var(--color-gray-0);
     flex: 2;
 
     &:hover {
       background-color: ${(props) =>
-        props.disabled
-          ? props.isCancel
-            ? 'var(--color-gray-300)'
-            : 'var(--color-gray-700)'
-          : props.isCancel
-            ? 'var(--color-gray-400)'
-            : 'var(--color-gray-800)'};
+        props.disabled ? 'var(--color-gray-700)' : 'var(--color-gray-800)'};
     }
   }
+`;
+
+// 相機容器
+const CameraContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-gray-900);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+`;
+
+const CameraHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--color-gray-800);
+`;
+
+const CameraTitle = styled.div`
+  color: var(--color-gray-0);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+`;
+
+const CameraCloseButton = styled.button`
+  background: none;
+  border: none;
+  color: var(--color-gray-0);
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CameraView = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+`;
+
+const CameraControls = styled.div`
+  padding: var(--spacing-md);
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+`;
+
+const CameraButton = styled.button`
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--color-gray-0);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+`;
+
+const CameraButtonInner = styled.div`
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--color-gray-0);
+  border: 2px solid var(--color-gray-700);
 `;
 
 // 定義任務類型
@@ -208,10 +330,14 @@ type TaskItem = {
   customer: string;
 };
 
-function TaskDetails() {
+function ProcessOrder() {
   const navigate = useNavigate();
   const { taskId } = useParams();
   const [task, setTask] = useState<TaskItem | null>(null);
+  const [weight, setWeight] = useState<string>('');
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const webcamRef = useRef<Webcam>(null);
 
   // 從 localStorage 讀取任務資訊
   useEffect(() => {
@@ -229,9 +355,9 @@ function TaskDetails() {
     navigate(-1);
   };
 
-  // 處理確認前往/取消前往按鈕點擊
-  const handleStatusChange = () => {
-    if (task?.status === 'completed') return;
+  // 處理完成收運
+  const handleComplete = () => {
+    if (!weight || photos.length === 0) return;
 
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
@@ -240,7 +366,7 @@ function TaskDetails() {
         task.id === taskId
           ? {
               ...task,
-              status: task.status === 'ongoing' ? 'waiting' : 'ongoing',
+              status: 'completed',
             }
           : task,
       );
@@ -249,13 +375,34 @@ function TaskDetails() {
     navigate(-1);
   };
 
-  // 初始化的地圖位置(我設定為高雄市寶成世紀大樓)
+  // 處理開啟相機
+  const handleTakePhoto = () => {
+    setIsCameraOpen(true);
+  };
+
+  // 處理關閉相機
+  const handleCloseCamera = () => {
+    setIsCameraOpen(false);
+  };
+
+  // 處理拍照
+  const handleCapture = () => {
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      if (imageSrc) {
+        setPhotos([...photos, imageSrc]);
+        setIsCameraOpen(false);
+      }
+    }
+  };
+
+  // 初始化的地圖位置
   const location = {
     lat: 22.62796401977539,
     lng: 120.31047821044922,
   };
 
-  // 如果找不到任務，顯示載入中或錯誤訊息
+  // 如果找不到任務，顯示載入中
   if (!task) {
     return (
       <FullHeightContainer>
@@ -268,9 +415,35 @@ function TaskDetails() {
 
   return (
     <FullHeightContainer>
+      {isCameraOpen && (
+        <CameraContainer>
+          <CameraHeader>
+            <CameraTitle>拍攝收運照片</CameraTitle>
+            <CameraCloseButton onClick={handleCloseCamera}>
+              <HiXMark size={24} />
+            </CameraCloseButton>
+          </CameraHeader>
+          <CameraView>
+            <Webcam
+              ref={webcamRef}
+              audio={false}
+              screenshotFormat="image/jpeg"
+              width="100%"
+              height="100%"
+              style={{ objectFit: 'cover' }}
+            />
+          </CameraView>
+          <CameraControls>
+            <CameraButton onClick={handleCapture}>
+              <CameraButtonInner />
+            </CameraButton>
+          </CameraControls>
+        </CameraContainer>
+      )}
+
       <HeaderContainer>
-        <PageTitle>訂單詳情</PageTitle>
-        <PageSubtitle>請務必核對用戶資料及訂單內容</PageSubtitle>
+        <PageTitle>汪汪員作業中</PageTitle>
+        <PageSubtitle>請填寫實際重量並拍攝收運照片</PageSubtitle>
       </HeaderContainer>
 
       <DetailCard>
@@ -330,11 +503,11 @@ function TaskDetails() {
             <DetailSign>
               <HiMapPin />
             </DetailSign>
-              地址
+            地址
           </DetailLabel>
-            <DetailValue>
-              <DetailAddress>{task.address}</DetailAddress>
-            </DetailValue>
+          <DetailValue>
+            <DetailAddress>{task.address}</DetailAddress>
+          </DetailValue>
         </DetailRow>
 
         <MapContainer>
@@ -357,24 +530,47 @@ function TaskDetails() {
       <DetailCard>
         <PlanTitle>標準方案(50公升 / 10公斤)</PlanTitle>
         <PlanContent>一般垃圾+回收+廚餘 = 50公升</PlanContent>
+
+        <Divider />
+
+        <HeaderContainer>
+          <PageTitle>實際重量</PageTitle>
+        </HeaderContainer>
+
+        <WeightInputContainer>
+          <WeightInput
+            type="number"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            placeholder="請輸入收運時的實際重量(公斤/kg)"
+          />
+        </WeightInputContainer>
+      </DetailCard>
+
+      <HeaderContainer>
+        <PageTitle>收運照片</PageTitle>
+      </HeaderContainer>
+
+      <DetailCard>
+        <PhotoSection>
+          <PhotoButton onClick={handleTakePhoto}>
+            <HiCamera size={20} />
+            <PhotoButtonText>開啟相機拍攝</PhotoButtonText>
+          </PhotoButton>
+        </PhotoSection>
       </DetailCard>
 
       <DetailButtons>
-        <Button onClick={handleBack}>返回任務</Button>
+        <Button onClick={handleBack}>返回</Button>
         <Button
-          onClick={handleStatusChange}
-          disabled={task.status === 'completed'}
-          isCancel={task.status === 'ongoing'}
+          onClick={handleComplete}
+          disabled={!weight || photos.length === 0}
         >
-          {task.status === 'completed'
-            ? '已完成'
-            : task.status === 'ongoing'
-              ? '取消前往'
-              : '確認前往'}
+          完成收運
         </Button>
       </DetailButtons>
     </FullHeightContainer>
   );
 }
 
-export default TaskDetails;
+export default ProcessOrder;

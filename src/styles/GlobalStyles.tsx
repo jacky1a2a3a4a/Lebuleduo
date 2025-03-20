@@ -79,6 +79,8 @@ const GlobalStyles = createGlobalStyle`
   /* 間距 */
   --spacing-xs: 0.25rem;  /* 4px */
   --spacing-sm: 0.5rem;   /* 8px */
+  --spacing-12: 0.75rem;  /* 12px */
+  --spacing-14: 0.875rem; /* 14px */
   --spacing-md: 1rem;     /* 16px */
   --spacing-lg: 1.5rem;   /* 24px */
   --spacing-xl: 2rem;     /* 32px */

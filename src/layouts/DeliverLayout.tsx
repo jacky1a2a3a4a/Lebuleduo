@@ -20,7 +20,7 @@ const AppLayoutStyled = styled.section`
 
 const Main = styled.main`
   background-color: var(--color-gray-100);
-  padding: 0.5rem 1rem;
+  padding: 0.5rem var(--spacing-14);
   overflow-y: auto;
   overflow-x: hidden;
 `;

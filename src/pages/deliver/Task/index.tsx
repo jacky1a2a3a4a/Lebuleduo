@@ -55,7 +55,6 @@ const DeliverContainer = styled.div`
   z-index: 20;
   width: 100%;
   max-width: calc(var(--min-width-mobile) - 2rem);
-  padding: var(--spacing-sm);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -221,7 +220,7 @@ const TaskCategoryWrapper = styled.div<CategoryPositionProps>`
 const TaskCategoryContainer = styled.div`
   position: relative;
   width: 100%;
-  padding: 0.75rem var(--spacing-sm);
+  padding: 0.75rem 0;
   display: flex;
   gap: 0.75rem;
 
@@ -282,7 +281,7 @@ const TaskCardsContainer = styled.div<TaskCardsContainerProps>`
   max-width: calc(var(--min-width-mobile) - 2rem);
   /* 動態計算容器高度，確保底部留有空間 */
   height: calc(100vh - ${({ topPosition }) => `${topPosition + 56}px`} - 4rem);
-  padding: 0.5rem 0.4rem;
+  padding: 0.5rem 0;
   padding-bottom: 5rem;
   display: flex;
   flex-direction: column;
