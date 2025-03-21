@@ -10,7 +10,17 @@ import {
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useEffect, useState, useRef } from 'react';
 import { TaskStatus } from '../Card';
+// 引用相機套件
 import Webcam from 'react-webcam';
+
+// 定義任務類型
+type TaskItem = {
+  id: string;
+  status: TaskStatus;
+  time: string;
+  address: string;
+  customer: string;
+};
 
 // 最外層容器
 const FullHeightContainer = styled.div`
@@ -224,7 +234,7 @@ const PhotoButton = styled.button`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: var(--spacing-md);
+  padding: 10px 20px;
   border-radius: var(--border-radius-round);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -383,15 +393,6 @@ const ErrorText = styled.div`
   margin-left: var(--spacing-sm);
 `;
 
-// 定義任務類型
-type TaskItem = {
-  id: string;
-  status: TaskStatus;
-  time: string;
-  address: string;
-  customer: string;
-};
-
 function ProcessOrder() {
   const navigate = useNavigate();
   const { taskId } = useParams();
@@ -399,17 +400,21 @@ function ProcessOrder() {
   const [weight, setWeight] = useState<string>('');
   const [photos, setPhotos] = useState<string[]>([]);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  // 重量/照片沒有附上 > 設置錯誤訊息
   const [errors, setErrors] = useState({
     weight: false,
     photos: false,
   });
+  //連接 React 組件和 Webcam 功能的橋樑，使得代碼能夠在用戶點擊拍照按鈕時獲取並保存當前攝像頭的畫面。
   const webcamRef = useRef<Webcam>(null);
 
   // 從 localStorage 讀取任務資訊
   useEffect(() => {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
+      // 將localStorage的字串轉換成JS陣列
       const tasks: TaskItem[] = JSON.parse(savedTasks);
+      // 找到對應的任務
       const currentTask = tasks.find((t) => t.id === taskId);
       if (currentTask) {
         setTask(currentTask);
@@ -645,11 +650,11 @@ function ProcessOrder() {
             <PhotoButtonText>
               {photos.length >= 2
                 ? '已達最大拍攝數量'
-                : '請拍攝2張現場收運照片'}
+                : '請拍攝 2 張現場收運照片'}
             </PhotoButtonText>
           </PhotoButton>
           {photos.length < 2 && errors.photos && (
-            <ErrorText>*請拍攝2張現場收運照片*</ErrorText>
+            <ErrorText>*請拍攝 2 張現場收運照片*</ErrorText>
           )}
         </PhotoSection>
       </DetailCard>
