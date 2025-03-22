@@ -13,6 +13,7 @@ export type TaskCardProps = {
   time: string;
   address: string;
   customer: string;
+  //void 表示沒有回傳值
   onStatusChange?: (taskId: string, newStatus: TaskStatus) => void;
   disabled?: boolean;
 };
@@ -149,7 +150,7 @@ const TaskCardButtons = styled.div`
 const TaskCardButton = styled.button<{
   //waiting 使用 primary 樣式
   //ongoing 使用 secondary 樣式
-  variant?: 'primary' | 'secondary';
+  styledType?: 'primary' | 'secondary';
   disabled?: boolean;
 }>`
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
@@ -177,19 +178,19 @@ const TaskCardButton = styled.button<{
 
   /* 最後一個按鈕樣式 前往/取消前往 */
   &:last-child {
-    background-color: ${({ variant }) =>
-      variant === 'primary'
+    background-color: ${({ styledType }) =>
+      styledType === 'primary'
         ? 'var(--color-gray-700)'
         : 'var(--color-gray-200)'};
-    color: ${({ variant }) =>
-      variant === 'primary' ? 'var(--color-gray-0)' : 'var(--color-gray-600)'};
+    color: ${({ styledType }) =>
+      styledType === 'primary' ? 'var(--color-gray-0)' : 'var(--color-gray-600)'};
 
     flex: 2;
 
     &:hover {
-      background-color: ${({ disabled, variant }) =>
+      background-color: ${({ disabled, styledType }) =>
         !disabled &&
-        (variant === 'primary'
+        (styledType === 'primary'
           ? 'var(--color-gray-800)'
           : 'var(--color-gray-300)')};
     }
@@ -271,7 +272,7 @@ function TaskCard({
         <TaskCardButtons>
           <TaskCardButton onClick={handleOrderDetail}>訂單詳情</TaskCardButton>
           <TaskCardButton
-            variant={status === 'ongoing' ? 'secondary' : 'primary'}
+            styledType={status === 'ongoing' ? 'secondary' : 'primary'}
             onClick={handleStatusChange}
             disabled={disabled || status === 'completed'}
           >

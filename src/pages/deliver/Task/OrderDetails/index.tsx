@@ -357,7 +357,7 @@ function TaskDetails() {
       </HeaderContainer>
 
       <DetailCard>
-        <PlanTitle>標準方案(50公升 / 10公斤)</PlanTitle>
+        <PlanTitle>標準方案(50L / 10kg)</PlanTitle>
         <PlanContent>一般垃圾+回收+廚餘 = 50公升</PlanContent>
 
         {task.status === 'completed' && (
