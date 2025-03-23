@@ -55,12 +55,32 @@ function TaskCard({
     //返回檢查。如果 disabled 屬性為 true（表示該卡片被禁用），函數會立即返回，不執行後續操作。這防止在卡片被禁用時改變其狀態。
     if (disabled) return;
 
-    //如果狀態為等待中，則改為進行中
+    // 從 localStorage 獲取當前任務列表
+    const savedTasks = localStorage.getItem('tasks');
+    const tasks = savedTasks ? JSON.parse(savedTasks) : [];
+
+    // 更新任務狀態
+    const updatedTasks = tasks.map((task: any) => {
+      if (task.id === taskId) {
+        //如果狀態為等待中，則改為進行中
+        if (status === 'waiting') {
+          return { ...task, status: 'ongoing' };
+        } else if (status === 'ongoing') {
+          //如果狀態為進行中，則改為已完成
+          return { ...task, status: 'completed' };
+        }
+      }
+      return task;
+    });
+
+    // 保存更新後的任務列表到 localStorage
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+
+    // 通知父組件狀態已更新
     if (status === 'waiting') {
       onStatusChange?.(taskId, 'ongoing');
     } else if (status === 'ongoing') {
-      //如果狀態為進行中，則改為等待中
-      onStatusChange?.(taskId, 'waiting');
+      onStatusChange?.(taskId, 'completed');
     }
   };
 
