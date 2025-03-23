@@ -9,11 +9,11 @@ import DeliverLayout from './layouts/DeliverLayout';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
-import TaskDetails from './pages/deliver/Task/Details';
-import TaskRecord from './pages/deliver/Task/Record';
+import TaskDetails from './pages/deliver/Task/OrderDetails';
+import TaskRecord from './pages/deliver/Task/OrderCompleted';
 import Calendar from './pages/deliver/Calendar';
 import ScanOrder from './pages/deliver/ScanOrder';
-import ProcessOrder from './pages/deliver/Task/ProcessOrder';
+import ProcessOrder from './pages/deliver/Task/OrderInProcess';
 
 // 臨時頁面組件
 // 顧客(customer) 頁面組件
