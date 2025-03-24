@@ -258,17 +258,18 @@ export const TaskCardsContainer = styled.div<TaskCardsContainerProps>`
   }
 `;
 
-export const BottomFadeEffect = styled.div`
-  background: linear-gradient(to top, var(--color-gray-100) 30%, transparent);
+//底部淡出效果
+// export const BottomFadeEffect = styled.div`
+//   background: linear-gradient(to top, var(--color-gray-100) 30%, transparent);
 
-  position: fixed;
-  z-index: 11;
-  bottom: 4rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: calc(var(--min-width-mobile) - 2rem);
-  height: 8rem;
+//   position: fixed;
+//   z-index: 11;
+//   bottom: 4rem;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   width: 100%;
+//   max-width: calc(var(--min-width-mobile) - 2rem);
+//   height: 8rem;
 
-  pointer-events: none;
-`;
+//   pointer-events: none;
+// `;

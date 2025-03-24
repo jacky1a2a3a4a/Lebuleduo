@@ -70,7 +70,7 @@ function ScanOrder() {
     <ScanOrderSectionStyled>
       <TestButton onClick={handleTestScan}>模擬掃描</TestButton>
       {onGoingTask ? (
-        <StatusMessage>已找到前往中的訂單，可以掃秒</StatusMessage>
+        <StatusMessage>已找到前往中的訂單，可以掃描</StatusMessage>
       ) : (
         <StatusMessage>目前沒有確認前往的訂單，無法掃描</StatusMessage>
       )}

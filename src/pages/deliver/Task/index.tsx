@@ -28,6 +28,14 @@ import {
 import TaskCard, { TaskStatus } from './Card';
 
 // API 回傳的資料結構
+type ApiResponse = {
+  statusCode: number;
+  status: boolean;
+  message: string;
+  result: ApiTask[];
+};
+
+// API 個別任務資料結構
 type ApiTask = {
   OrdersID: number;
   OrderName: string;
@@ -45,21 +53,20 @@ type ApiTask = {
   ReportedAt: string;
 };
 
-type ApiResponse = {
-  statusCode: number;
-  status: boolean;
-  message: string;
-  result: ApiTask[];
-};
-
-// 修改現有的 TaskItem 型別
+// TaskItem 型別
 type TaskItem = {
   id: string;
   status: TaskStatus;
   time: string;
   address: string;
-  customer: string;
+  notes: string;
+  customerName: string;
   phone?: string;
+
+  //重量 暫存localStorage
+  weight?: string;
+  //照片 暫存localStorage
+  photos?: string[];
 };
 
 // 分類型別定義
@@ -73,11 +80,11 @@ function Task() {
   const deliverContainerRef = useRef<HTMLDivElement>(null);
   const [topPosition, setTopPosition] = useState(TOP_OFFSET);
 
-  // 新增 API 資料的狀態
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // API 資料的狀態
+  const [isLoading, setIsLoading] = useState(false); // 是否正在載入
+  const [error, setError] = useState<string | null>(null); // 錯誤訊息
 
-  // 修改任務列表的初始化和更新邏輯
+  // 初始化 tasks 狀態變數，並從本地存儲（localStorage）中讀取之前保存的任務資料。
   const [tasks, setTasks] = useState<TaskItem[]>(() => {
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
@@ -86,46 +93,69 @@ function Task() {
     return [];
   });
 
-  const [activeCategory, setActiveCategory] = useState<CategoryType>('all');
+  // 從 localStorage 讀取保存的分類，如果沒有則默認為 'all'
+  const [activeCategory, setActiveCategory] = useState<CategoryType>(() => {
+    const savedCategory = localStorage.getItem('activeCategory');
+    return (savedCategory as CategoryType) || 'all';
+  });
 
-  // 新增 API 呼叫函數 - 使用 fetch
+  // 當分類改變時，保存到 localStorage
+  useEffect(() => {
+    localStorage.setItem('activeCategory', activeCategory);
+  }, [activeCategory]);
+
+  // API 呼叫函數 (fetch)
   const fetchTasks = async () => {
     try {
-      setIsLoading(true);
-      setError(null);
+      //// 1. 請求前置作業
+      setIsLoading(true); //告訴UI顯示「載入中」的狀態
+      setError(null); //清除先前的錯誤訊息
 
-      // 設置請求超時
+      //// 2. 處理請求超時
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
+      ////3. 發送請求
       const response = await fetch('/api/locations', {
         method: 'GET',
-        signal: controller.signal,
+        signal: controller.signal, //參數連接到AbortController，允許超時中止
       });
+      console.log(response); //測試 了解response回傳內容
 
+      //清除超時計時器，因為請求已完成
       clearTimeout(timeoutId);
 
+      ////4. 檢查回應
+      //驗證請求是否成功，如果狀態碼不是2xx（例如404、500），拋出錯誤中斷流程
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      //將回應主體解析為JSON格式，使用TypeScript類型ApiResponse確保正確的類型檢查
       const data: ApiResponse = await response.json();
-      console.log('API 回傳資料:', data);
+      console.log('API 回傳資料:', data); //測試
 
+      ////5. 處理回應資料
+      //條件式判斷回傳資料符合陣列結構
       if (data.status && Array.isArray(data.result)) {
         // 從 localStorage 獲取已保存的任務狀態
         const savedTasks = localStorage.getItem('tasks');
         const savedTaskStates = savedTasks ? JSON.parse(savedTasks) : [];
 
+        // 將回應資料轉換為任務列表
         const newTasks = data.result.map((apiTask: ApiTask) => {
           // 查找是否有已保存的任務狀態
           const savedTask = savedTaskStates.find(
             (task: TaskItem) => task.id === apiTask.OrdersID.toString(),
           );
 
+          // 建立任務物件，將API資料轉換為應用程式需要的格式
           return {
             id: apiTask.OrdersID.toString(),
             status: savedTask ? savedTask.status : 'waiting',
+            customerName: apiTask.OrderName || '',
+            phone: apiTask.OrderPhone || '',
+            address: apiTask.Addresses || '',
+            notes: apiTask.Notes || '',
             time: new Date(apiTask.StartDate || new Date()).toLocaleTimeString(
               'zh-TW',
               {
@@ -133,24 +163,34 @@ function Task() {
                 minute: '2-digit',
               },
             ),
-            address: apiTask.Addresses || '',
-            customer: apiTask.OrderName || '',
-            phone: apiTask.OrderPhone || '',
+            // 保留本地端已儲存的 weight 和 photos
+            weight: savedTask?.weight || undefined,
+            photos: savedTask?.photos || undefined,
           };
         });
+        console.log(newTasks); //測試 了解newTasks回傳內容
 
+        // 更新任務列表
         setTasks(newTasks);
+
+        // 保存到localStorage以便後續使用
         localStorage.setItem('tasks', JSON.stringify(newTasks));
       } else {
         throw new Error(data.message || 'API 回傳格式錯誤');
       }
+
+      ////6. 處理錯誤
     } catch (error) {
       console.error('取得任務資料失敗:', error);
+
+      // 區分錯誤類型
       if (error.name === 'AbortError') {
         setError('請求超時，請稍後再試');
       } else {
         setError(error instanceof Error ? error.message : '取得任務資料失敗');
       }
+
+      ////7. 結束載入狀態，完成清理
     } finally {
       setIsLoading(false);
     }
@@ -318,7 +358,9 @@ function Task() {
                 status={ongoingTask.status}
                 time={ongoingTask.time}
                 address={ongoingTask.address}
-                customer={ongoingTask.customer}
+                notes={ongoingTask.notes}
+                customerName={ongoingTask.customerName}
+                phone={ongoingTask.phone}
                 onStatusChange={handleTaskStatusChange}
               />
             </OngoingTaskContainer>
@@ -367,9 +409,13 @@ function Task() {
             status={task.status}
             time={task.time}
             address={task.address}
-            customer={task.customer}
+            notes={task.notes}
+            customerName={task.customerName}
+            phone={task.phone}
             onStatusChange={handleTaskStatusChange}
             disabled={!!ongoingTask}
+            weight={task.weight}
+            photos={task.photos}
           />
         ))}
       </TaskCardsContainer>

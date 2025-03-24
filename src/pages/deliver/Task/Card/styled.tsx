@@ -77,6 +77,8 @@ export const TaskCardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 0.25rem;
+
+  margin-bottom: 0.5rem;
 `;
 
 // 任務標題
@@ -110,19 +112,22 @@ export const TaskTag = styled.div<{ status: TaskStatus }>`
   border-radius: var(--border-radius-round);
 `;
 
-// 任務地址
-export const TaskAddress = styled.div`
-  margin-top: 0.25rem;
-
-  font-size: 0.875rem;
-  font-weight: 400;
+// 任務地址+姓名容器
+export const TaskUserContent = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
-// 任務用戶
-export const TaskUser = styled.div`
-  font-size: 0.875rem;
-  font-weight: 500;
+export const MainContent = styled.div`
+  font-size: var(--font-size-sm);
 `;
+
+export const SubContent = styled.div`
+  color: var(--color-gray-400);
+
+  font-size: var(--font-size-xs);
+`;
+
 
 // 任務卡片按鈕容器
 export const TaskCardButtons = styled.div`

@@ -8,8 +8,9 @@ import {
   TaskCardHeader,
   TaskTitle,
   TaskTag,
-  TaskAddress,
-  TaskUser,
+  TaskUserContent,
+  MainContent,
+  SubContent,
   TaskCardButtons,
   TaskCardButton,
 } from './styled';
@@ -25,10 +26,17 @@ export type TaskCardProps = {
   status: TaskStatus;
   time: string;
   address: string;
-  customer: string;
+  notes: string;
+  customerName: string;
+  phone: string;
   //void 表示沒有回傳值
   onStatusChange?: (taskId: string, newStatus: TaskStatus) => void;
   disabled?: boolean;
+
+  //重量 暫存localStorage
+  weight?: string;
+  //照片 暫存localStorage
+  photos?: string[];
 };
 
 //函式本體
@@ -38,9 +46,12 @@ function TaskCard({
   status = 'waiting',
   time,
   address,
-  customer,
+  notes,
+  customerName,
   onStatusChange,
   disabled = false,
+  weight,
+  photos,
 }: TaskCardProps) {
   // 路由 跳轉
   const navigate = useNavigate();
@@ -66,8 +77,8 @@ function TaskCard({
         if (status === 'waiting') {
           return { ...task, status: 'ongoing' };
         } else if (status === 'ongoing') {
-          //如果狀態為進行中，則改為已完成
-          return { ...task, status: 'completed' };
+          //如果狀態為進行中，則改為等待中（取消前往）
+          return { ...task, status: 'waiting' };
         }
       }
       return task;
@@ -80,7 +91,7 @@ function TaskCard({
     if (status === 'waiting') {
       onStatusChange?.(taskId, 'ongoing');
     } else if (status === 'ongoing') {
-      onStatusChange?.(taskId, 'completed');
+      onStatusChange?.(taskId, 'waiting');
     }
   };
 
@@ -118,8 +129,15 @@ function TaskCard({
               <TaskTitle>{time}</TaskTitle>
               <TaskTag status={status}>{getStatusText()}</TaskTag>
             </TaskCardHeader>
-            <TaskAddress>{address}</TaskAddress>
-            <TaskUser>{customer}</TaskUser>
+            <TaskUserContent>
+              <MainContent>{address}</MainContent>
+              <SubContent>固定放置點: {notes}</SubContent>
+            </TaskUserContent>
+
+            <TaskUserContent>
+              <MainContent>{customerName}</MainContent>
+              <SubContent>訂單編號: {taskId}</SubContent>
+            </TaskUserContent>
           </TaskDetailContainer>
         </TaskCardContent>
 
