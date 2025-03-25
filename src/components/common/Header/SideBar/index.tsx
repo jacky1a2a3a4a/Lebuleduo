@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 import { useEffect } from 'react';
 
+type SideBarProps = {
+  isOpen: boolean;
+};
+
 // 側邊欄容器主體
-const SidebarContainer = styled.div`
+const SidebarContainer = styled.div<SideBarProps>`
   background-color: var(--color-gray-100);
   box-shadow: ${({ isOpen }) =>
     isOpen ? '2px 0 5px rgba(0, 0, 0, 0.1)' : 'none'};
@@ -21,7 +25,7 @@ const SidebarContainer = styled.div`
 `;
 
 // 灰色遮色片
-const SidebarOverlay = styled.div`
+const SidebarOverlay = styled.div<SideBarProps>`
   background-color: rgba(0, 0, 0, 0.5);
 
   position: fixed;
