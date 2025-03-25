@@ -8,8 +8,9 @@ import {
   TaskCardHeader,
   TaskTitle,
   TaskTag,
-  TaskAddress,
-  TaskUser,
+  TaskUserContent,
+  MainContent,
+  SubContent,
   TaskCardButtons,
   TaskCardButton,
 } from './styled';
@@ -25,10 +26,17 @@ export type TaskCardProps = {
   status: TaskStatus;
   time: string;
   address: string;
-  customer: string;
+  notes: string;
+  customerName: string;
+  phone: string;
   //void 表示沒有回傳值
   onStatusChange?: (taskId: string, newStatus: TaskStatus) => void;
   disabled?: boolean;
+
+  //重量 暫存localStorage
+  weight?: string;
+  //照片 暫存localStorage
+  photos?: string[];
 };
 
 //函式本體
@@ -38,9 +46,12 @@ function TaskCard({
   status = 'waiting',
   time,
   address,
-  customer,
+  notes,
+  customerName,
   onStatusChange,
   disabled = false,
+  weight,
+  photos,
 }: TaskCardProps) {
   // 路由 跳轉
   const navigate = useNavigate();
@@ -55,11 +66,31 @@ function TaskCard({
     //返回檢查。如果 disabled 屬性為 true（表示該卡片被禁用），函數會立即返回，不執行後續操作。這防止在卡片被禁用時改變其狀態。
     if (disabled) return;
 
-    //如果狀態為等待中，則改為進行中
+    // 從 localStorage 獲取當前任務列表
+    const savedTasks = localStorage.getItem('tasks');
+    const tasks = savedTasks ? JSON.parse(savedTasks) : [];
+
+    // 更新任務狀態
+    const updatedTasks = tasks.map((task: any) => {
+      if (task.id === taskId) {
+        //如果狀態為等待中，則改為進行中
+        if (status === 'waiting') {
+          return { ...task, status: 'ongoing' };
+        } else if (status === 'ongoing') {
+          //如果狀態為進行中，則改為等待中（取消前往）
+          return { ...task, status: 'waiting' };
+        }
+      }
+      return task;
+    });
+
+    // 保存更新後的任務列表到 localStorage
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+
+    // 通知父組件狀態已更新
     if (status === 'waiting') {
       onStatusChange?.(taskId, 'ongoing');
     } else if (status === 'ongoing') {
-      //如果狀態為進行中，則改為等待中
       onStatusChange?.(taskId, 'waiting');
     }
   };
@@ -98,8 +129,15 @@ function TaskCard({
               <TaskTitle>{time}</TaskTitle>
               <TaskTag status={status}>{getStatusText()}</TaskTag>
             </TaskCardHeader>
-            <TaskAddress>{address}</TaskAddress>
-            <TaskUser>{customer}</TaskUser>
+            <TaskUserContent>
+              <MainContent>{address}</MainContent>
+              <SubContent>固定放置點: {notes}</SubContent>
+            </TaskUserContent>
+
+            <TaskUserContent>
+              <MainContent>{customerName}</MainContent>
+              <SubContent>訂單編號: {taskId}</SubContent>
+            </TaskUserContent>
           </TaskDetailContainer>
         </TaskCardContent>
 

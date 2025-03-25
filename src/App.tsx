@@ -9,11 +9,10 @@ import DeliverLayout from './layouts/DeliverLayout';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
-import TaskDetails from './pages/deliver/Task/OrderDetails';
-import TaskRecord from './pages/deliver/Task/OrderCompleted';
-import Calendar from './pages/deliver/Calendar';
+import OrderDetails from './pages/deliver/Task/OrderDetails';
+import OrderInProcess from './pages/deliver/Task/OrderInProcess';
 import ScanOrder from './pages/deliver/ScanOrder';
-import ProcessOrder from './pages/deliver/Task/OrderInProcess';
+import Calendar from './pages/deliver/Calendar';
 
 // 臨時頁面組件
 // 顧客(customer) 頁面組件
@@ -100,7 +99,7 @@ function App() {
             path="/deliver/task/:taskId"
             element={
               <ProtectedRoute role="deliver">
-                <TaskDetails />
+                <OrderDetails />
               </ProtectedRoute>
             }
           />
@@ -110,17 +109,7 @@ function App() {
             path="/deliver/task/:taskId/process-order"
             element={
               <ProtectedRoute role="deliver">
-                <ProcessOrder />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* 任務記錄頁面 */}
-          <Route
-            path="/deliver/task/:taskId/record"
-            element={
-              <ProtectedRoute role="deliver">
-                <TaskRecord />
+                <OrderInProcess />
               </ProtectedRoute>
             }
           />
