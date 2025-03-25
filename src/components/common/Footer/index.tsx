@@ -15,6 +15,8 @@ interface FooterProps {
   navItems: FooterNavItem[];
 }
 
+const minWidthMobilePlus = 403;
+
 const FooterWrapper = styled.div`
   width: 100%;
   background-color: var(--color-gray-200);
@@ -28,7 +30,7 @@ const FooterContainer = styled.footer`
   grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   height: 64px;
   width: 100%;
-  max-width: calc(var(--min-width-mobile) + 10rem);
+  max-width: ${minWidthMobilePlus}px;
   margin: 0 auto;
   z-index: 999;
 `;

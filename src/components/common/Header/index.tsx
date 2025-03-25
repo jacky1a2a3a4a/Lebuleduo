@@ -12,6 +12,8 @@ export interface HeaderProps {
   actionButton?: ReactNode;
 }
 
+const minWidthMobilePlus = 403;
+
 // Header 外層容器，用於延伸背景色
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -31,7 +33,7 @@ const HeaderContainer = styled.header`
 
   /* 最大寬度限制 */
   width: 100%;
-  max-width: calc(var(--min-width-mobile) + 10rem);
+  max-width: ${minWidthMobilePlus}px;
   margin: 0 auto;
 `;
 

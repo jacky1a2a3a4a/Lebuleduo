@@ -88,7 +88,8 @@ const GlobalStyles = createGlobalStyle`
   --spacing-2xl: 3rem;    /* 48px */
 
   /* RWD */
-  --min-width-mobile: 403px;  /* iphone 16 pro */
+  --min-width-mobile: 402px;  /* iphone 16 pro */
+  --min-width-mobile-plus: 403px;
 }
 
 html {
