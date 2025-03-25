@@ -139,6 +139,15 @@ export const PlanContent = styled.div`
   font-weight: 500;
 `;
 
+export const ErrorMessage = styled.div`
+  background-color: var(--color-gray-100);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 // 按鈕容器
 export const DetailButtons = styled.div`
   display: flex;

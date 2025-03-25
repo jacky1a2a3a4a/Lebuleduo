@@ -23,7 +23,7 @@ import {
   TaskCategoryContainer,
   CategoryTab,
   TaskCardsContainer,
-  BottomFadeEffect,
+  // BottomFadeEffect,
 } from './styled';
 import TaskCard, { TaskStatus } from './Card';
 
@@ -269,7 +269,7 @@ function Task() {
       case 'error':
         filteredTasks = []; //暫定 目前沒有異常任務的處理邏輯
         break;
-      default:
+      default: {
         // 分別對待等待中和已完成的任務，進行時間排序
         const sortedWaitingTasks = [...waitingTasks].sort((a, b) => {
           const timeA = new Date(`2024-01-01 ${a.time}`).getTime();
@@ -283,6 +283,7 @@ function Task() {
           return timeA - timeB; // 升序排列（早 -> 晚）
         });
         return [...sortedWaitingTasks, ...sortedCompletedTasks];
+        }
     }
 
     return filteredTasks.sort((a, b) => {
@@ -420,7 +421,7 @@ function Task() {
         ))}
       </TaskCardsContainer>
 
-      <BottomFadeEffect />
+      {/* <BottomFadeEffect /> */}
     </TaskSectionStyled>
   );
 }
