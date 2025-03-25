@@ -48,6 +48,12 @@ function OrderDetails() {
   const { taskId } = useParams();
   const [task, setTask] = useState<TaskItem | null>(null);
 
+  // 使用 useJsApiLoader 來處理 Google Maps API 載入
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: 'AIzaSyABHP7-CH4b-cyZaARmoUI9OwOGi3e6Whg',
+    libraries: libraries as any,
+  });
+
   // 定義地圖中心位置和載入狀態
   const [mapCenter, setMapCenter] = useState<{
     lat: number;
@@ -57,12 +63,6 @@ function OrderDetails() {
   const [mapLoaded, setMapLoaded] = useState(false);
   //追蹤是否已嘗試過地理編碼，避免重複操作
   const [geocodeAttempted, setGeocodeAttempted] = useState(false);
-
-  // 使用 useJsApiLoader 來處理 Google Maps API 載入
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyABHP7-CH4b-cyZaARmoUI9OwOGi3e6Whg',
-    libraries: libraries as any,
-  });
 
   // 從 localStorage 讀取任務資訊
   useEffect(() => {
@@ -76,8 +76,9 @@ function OrderDetails() {
     }
   }, [taskId]);
 
-  // 地理編碼函數 - 使用 useCallback 以避免不必要的重新創建
+  // 地理編碼函數 使用 useCallback 以避免不必要的重新創建
   const geocodeAddress = useCallback(async (address: string) => {
+    //API可用性檢查
     if (!window.google || !window.google.maps || !window.google.maps.Geocoder) {
       console.error('Google Maps API 尚未完全載入');
       return false;
@@ -95,6 +96,7 @@ function OrderDetails() {
             });
             setMapLoaded(true);
             resolve(true);
+            console.log(results,status);
           } else {
             console.error('地理編碼失敗:', status);
             setMapLoaded(true); // 即使失敗也標記為已載入，使用默認位置
