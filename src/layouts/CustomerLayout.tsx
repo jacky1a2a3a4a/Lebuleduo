@@ -10,11 +10,6 @@ const AppLayoutStyled = styled.section`
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
-
-  @media (min-width: calc(var(--min-width-mobile) + 1px)) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-  }
 `;
 
 const Main = styled.main`

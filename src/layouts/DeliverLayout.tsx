@@ -11,16 +11,12 @@ const AppLayoutStyled = styled.section`
   width: 100%;
   height: 100vh;
   overflow-x: hidden;
-
-  @media (min-width: calc(var(--min-width-mobile) + 1px)) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-  }
 `;
 
 const Main = styled.main`
   background-color: var(--color-gray-100);
   padding: 0.5rem var(--spacing-14);
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
 `;
