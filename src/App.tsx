@@ -6,6 +6,7 @@ import CustomerLayout from './layouts/CustomerLayout';
 import DeliverLayout from './layouts/DeliverLayout';
 
 // 顧客(customer) 頁面組件
+import MyOrder from './pages/customer/MyOrder';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -18,7 +19,7 @@ import Calendar from './pages/deliver/Calendar';
 // 顧客(customer) 頁面組件
 const Register = () => <div>註冊頁面</div>;
 const Login = () => <div>登入頁面</div>;
-const MyOrder = () => <div>我的訂單</div>;
+// const MyOrder = () => <div>我的訂單</div>;
 const Subscribe = () => <div>開始訂閱</div>;
 const CheckoutPlan = () => <div>結帳計劃頁面</div>;
 const CheckoutUserData = () => <div>使用者數據頁面</div>;
@@ -39,8 +40,8 @@ function App() {
   type UserRole = 'customer' | 'deliver';
 
   // 假設這是從認證系統獲取的用戶角色
-  // const userRole: UserRole = 'customer';
-  const userRole: UserRole = 'deliver';
+  const userRole: UserRole = 'customer';
+  // const userRole: UserRole = 'deliver';
 
   // 導航路徑選擇函數
   const getRedirectPath = (role: UserRole): string => {
