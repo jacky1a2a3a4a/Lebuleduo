@@ -71,7 +71,7 @@ function TaskCard({
     const tasks = savedTasks ? JSON.parse(savedTasks) : [];
 
     // 更新任務狀態
-    const updatedTasks = tasks.map((task: any) => {
+    const updatedTasks = tasks.map((task) => {
       if (task.id === taskId) {
         //如果狀態為等待中，則改為進行中
         if (status === 'waiting') {

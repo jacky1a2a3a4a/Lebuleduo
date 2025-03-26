@@ -75,7 +75,7 @@ const GlobalStyles = createGlobalStyle`
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
-  --font-weight-extra-bold: 800;
+  --font-weight-extra-bold: 900;
 
   /* 間距 */
   --spacing-xs: 0.25rem;  /* 4px */
@@ -115,7 +115,7 @@ body {
 
 /* 全局 */
 html,body {
-  font-family: "Poppins", "Noto Sans", sans-serif;
+  font-family: "Poppins", "Noto Sans",'Noto Sans TC', sans-serif;
   color: var(--color-gray-700);
 
   transition: color 0.3s, background-color 0.3s;
