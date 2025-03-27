@@ -6,7 +6,8 @@ import CustomerLayout from './layouts/CustomerLayout';
 import DeliverLayout from './layouts/DeliverLayout';
 
 // 顧客(customer) 頁面組件
-import MyOrder from './pages/customer/MyOrder';
+import MyOrder from './pages/customer/MyOrder/index';
+import OrderDetail from './pages/customer/OrderDetail/index';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -79,6 +80,16 @@ function App() {
             <Route path="account" element={<Account />} />
             <Route path="contact-us" element={<ContactUs />} />
           </Route>
+
+          {/* 查看訂單詳情 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/order-detail/:orderId"
+            element={
+              <ProtectedRoute role="customer">
+                <OrderDetail />
+              </ProtectedRoute>
+            }
+          />
 
           {/* DOG路由 */}
           <Route

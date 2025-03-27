@@ -16,8 +16,7 @@ const Main = styled.main`
   background-color: var(--color-gray-200);
   padding: 0.5rem var(--spacing-14);
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 `;
 
 function CustomerLayout() {

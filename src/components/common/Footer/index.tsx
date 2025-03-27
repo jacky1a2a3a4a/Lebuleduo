@@ -52,7 +52,7 @@ const FooterNavLink = styled(NavLink)`
   justify-content: center;
 
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
 
   transition: color 0.1s ease;
 
