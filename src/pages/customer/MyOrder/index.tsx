@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { HiCalendar, HiTruck } from 'react-icons/hi2';
+import { HiCalendar, HiTruck, HiExclamationCircle } from 'react-icons/hi2';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -232,12 +232,28 @@ const OrderList = styled.div`
 // 訂單卡片 容器
 const OrderCard = styled.div`
   background-color: var(--color-gray-0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
   border: 1px solid var(--color-gray-200);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-12);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  cursor: pointer;
   width: 100%;
+  padding: var(--spacing-12);
+  border-radius: var(--border-radius-lg);
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-gray-300);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+  }
+
+  &:active {
+    background-color: var(--color-gray-50);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px) scale(0.98);
+  }
 `;
 
 // 訂單卡片 排版
@@ -253,25 +269,29 @@ const OrderPhotoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
-  margin-right: var(--spacing-12);
+  padding-right: var(--spacing-12);
+  width: 100%;
 `;
 
 // 訂單照片 - 無圖片時的佔位元素
 const OrderPhoto = styled.div`
   background-color: var(--color-gray-200);
-  border-radius: var(--border-radius-lg);
+  color: var(--color-gray-400);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   aspect-ratio: 3/4;
-  overflow: hidden;
+  border-radius: var(--border-radius-lg);
+  font-size: var(--font-size-xl);
 `;
 
 // 訂單照片圖片
 const OrderPhotoImage = styled.img`
+  object-fit: cover;
   width: 100%;
   aspect-ratio: 3/4;
   border-radius: var(--border-radius-lg);
-  object-fit: cover;
 `;
 
 // 訂單 文字資訊
@@ -280,8 +300,8 @@ const OrderCardData = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  width: 100%;
   overflow: hidden;
+  width: 100%;
 `;
 
 // 訂單卡片 標題
@@ -296,8 +316,8 @@ const OrderCardTitle = styled.p`
 const OrderCardItems = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
   width: 100%;
+  gap: var(--spacing-xs);
 `;
 
 // 訂單卡片 項目
@@ -321,34 +341,13 @@ const OrderCardSubtitle = styled.p<{ light?: boolean }>`
 const OrderCardDetail = styled.p<{ light?: boolean }>`
   color: ${({ light }) =>
     light ? 'var(--color-gray-400)' : 'var(--color-gray-600)'};
+  text-align: right;
+  overflow: hidden;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   flex: 1;
-  text-align: right;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
-`;
-
-// 訂單卡片 按鈕
-const OrderCardButton = styled.button`
-  background-color: var(--color-gray-600);
-  color: var(--color-gray-0);
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  width: 100%;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-gray-800);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
 `;
 
 // ===== 標籤相關組件 =====
@@ -428,7 +427,8 @@ function MyOrder() {
   ];
 
   // 假設這是圖片URL，實際開發時可從API獲取
-  const productImageUrl = '../../public/user_trash_photo_test.jpg';
+  const productImageUrl1 = '../../public/user_trash_photo_test.jpg';
+  const productImageUrl2 = '../../public/user_trash_photo_test.jpg';
 
   // 標籤狀態管理
   const [activeTab, setActiveTab] = useState<'current' | 'completed'>(
@@ -456,7 +456,7 @@ function MyOrder() {
       endDate: '2025/02/25',
       lastPickup: '2025/02/25',
       remainingPickups: 0,
-      imageUrl: productImageUrl,
+      imageUrl: productImageUrl1,
     },
     {
       id: 2,
@@ -465,7 +465,7 @@ function MyOrder() {
       endDate: '2024/12/10',
       lastPickup: '2024/12/10',
       remainingPickups: 0,
-      imageUrl: null,
+      imageUrl: productImageUrl2,
     },
     {
       id: 3,
@@ -562,13 +562,15 @@ function MyOrder() {
         <OrderListSection>
           <OrderList>
             {activeTab === 'current' ? (
-              <OrderCard>
+              <OrderCard onClick={() => handleOrderDetailClick(0)}>
                 <OrderCardLayout>
                   <OrderPhotoContainer>
-                    {productImageUrl ? (
-                      <OrderPhotoImage src={productImageUrl} alt="訂單商品" />
+                    {productImageUrl1 ? (
+                      <OrderPhotoImage src={productImageUrl1} alt="訂單商品" />
+                    ) : productImageUrl2 ? (
+                      <OrderPhotoImage src={productImageUrl2} alt="訂單商品" />
                     ) : (
-                      <OrderPhoto />
+                      <OrderPhoto>無照片</OrderPhoto>
                     )}
                   </OrderPhotoContainer>
 
@@ -597,10 +599,6 @@ function MyOrder() {
                     </OrderCardItems>
                   </OrderCardData>
                 </OrderCardLayout>
-
-                <OrderCardButton onClick={() => handleOrderDetailClick(0)}>
-                  查看訂單
-                </OrderCardButton>
               </OrderCard>
             ) : (
               // 顯示已完成訂單
@@ -608,13 +606,14 @@ function MyOrder() {
                 <OrderCard
                   key={order.id}
                   style={{ marginBottom: 'var(--spacing-md)' }}
+                  onClick={() => handleOrderDetailClick(order.id)}
                 >
                   <OrderCardLayout>
                     <OrderPhotoContainer>
                       {order.imageUrl ? (
                         <OrderPhotoImage src={order.imageUrl} alt="訂單商品" />
                       ) : (
-                        <OrderPhoto />
+                        <OrderPhoto><HiExclamationCircle /></OrderPhoto>
                       )}
                     </OrderPhotoContainer>
 
@@ -647,12 +646,6 @@ function MyOrder() {
                       </OrderCardItems>
                     </OrderCardData>
                   </OrderCardLayout>
-
-                  <OrderCardButton
-                    onClick={() => handleOrderDetailClick(order.id)}
-                  >
-                    查看訂單
-                  </OrderCardButton>
                 </OrderCard>
               ))
             )}

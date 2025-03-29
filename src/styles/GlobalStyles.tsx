@@ -50,6 +50,7 @@ const GlobalStyles = createGlobalStyle`
 
   --btn-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   --btn-shadow-hover: 0 7px 14px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+  --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   /* border-radius */
   --border-radius-tiny: 3px;

@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { HiArrowLeft, HiCalendar, HiTruck, HiPhoto } from 'react-icons/hi2';
+import { HiChevronLeft, HiExclamationCircle } from 'react-icons/hi2';
+import OrderListCard from './OrderListCard';
 
 // 頁面容器
 const OrderDetailContainer = styled.div`
-  background-color: var(--color-gray-200);
+  background-color: var(--color-gray-0);
   width: 100%;
   height: 100vh;
   display: flex;
@@ -23,10 +24,10 @@ const OrderDetailContainer = styled.div`
 // 導航欄
 const NavHeader = styled.div`
   background-color: var(--color-gray-0);
-  padding: var(--spacing-md) var(--spacing-12);
+  padding: var(--spacing-12);
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 `;
 
 // 返回按鈕
@@ -39,7 +40,6 @@ const BackButton = styled.button`
   color: var(--color-gray-800);
   font-size: var(--font-size-xl);
   padding: var(--spacing-xs);
-  margin-right: var(--spacing-md);
   border-radius: 50%;
 
   &:hover {
@@ -58,9 +58,15 @@ const PageTitle = styled.h1`
   font-weight: var(--font-weight-medium);
 `;
 
-// 內容區域
+const OrderID = styled.h2`
+  color: var(--color-gray-800);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+`;
+
+//// 內容區域 最外層容器
 const ContentArea = styled.div`
-  padding: var(--spacing-lg);
+  padding: 0 var(--spacing-12);
   flex: 1;
   overflow-y: auto;
 
@@ -83,16 +89,17 @@ const ContentArea = styled.div`
 // 訂單卡片
 const OrderCard = styled.div`
   background-color: var(--color-gray-0);
+  border: 1px solid var(--color-gray-300);
   border-radius: var(--border-radius-lg);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  padding: var(--spacing-12);
+  box-shadow: var(--card-shadow);
+  padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
 `;
 
 // 訂單標題
 const OrderTitle = styled.h2`
   color: var(--color-gray-800);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-sm);
@@ -105,64 +112,80 @@ const OrderPhotoArea = styled.div`
 `;
 
 // 訂單照片標題
-const PhotoTitle = styled.h3`
-  color: var(--color-gray-600);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-sm);
-  display: flex;
-  align-items: center;
-
-  svg {
-    margin-right: var(--spacing-sm);
-  }
-`;
+// const PhotoTitle = styled.h3`
+//   color: var(--color-gray-600);
+//   font-size: var(--font-size-sm);
+//   font-weight: var(--font-weight-medium);
+//   margin-bottom: var(--spacing-sm);
+//   display: flex;
+//   align-items: center;
+// `;
 
 // 照片容器
 const PhotoContainer = styled.div`
-  width: 100%;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  aspect-ratio: 4/3;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 50%;
+`;
+
+// 單張照片容器
+const SinglePhotoContainer = styled.div`
   background-color: var(--color-gray-200);
+  border-radius: var(--border-radius-lg);
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: 3/4;
 `;
 
 // 照片
 const Photo = styled.img`
+  object-fit: cover;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+`;
+
+// 無照片時的佔位元素
+const NoPhotoPlaceholder = styled.div`
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-400);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: var(--font-size-xl);
 `;
 
 // 訂單詳情列表
 const DetailList = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-md);
-`;
-
-// 詳情項
-const DetailItem = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-// 詳情標籤
+// 收運 詳情項
+const DetailItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+// 收運 詳情標籤
 const DetailLabel = styled.div`
   color: var(--color-gray-500);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   margin-bottom: var(--spacing-xs);
 `;
 
-// 詳情值
+// 收運 詳情值
 const DetailValue = styled.div`
   color: var(--color-gray-800);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
 `;
 
-// 狀態卡片
-const StatusCard = styled.div`
+// 收運列表區塊
+const OrderListSection = styled.div`
   background-color: var(--color-gray-0);
   border-radius: var(--border-radius-lg);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -170,45 +193,35 @@ const StatusCard = styled.div`
   margin-bottom: var(--spacing-md);
 `;
 
-// 狀態標題
-const StatusTitle = styled.h2`
-  color: var(--color-gray-800);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-medium);
+// 收運列表標題區塊
+const OrderListHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--spacing-md);
   padding-bottom: var(--spacing-sm);
   border-bottom: 1px solid var(--color-gray-200);
+`;
+
+// 收運列表標題
+const OrderListTitle = styled.h2`
+  color: var(--color-gray-800);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+`;
+
+// 收運次數
+const OrderListCal = styled.div`
+  color: var(--color-gray-600);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+`;
+
+// 收運列表
+const OrderList = styled.div`
   display: flex;
-  align-items: center;
-
-  svg {
-    margin-right: var(--spacing-sm);
-  }
-`;
-
-// 狀態項目
-const StatusItem = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--spacing-sm);
-`;
-
-// 狀態指示器
-const StatusIndicator = styled.div<{ isActive: boolean }>`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: ${({ isActive }) =>
-    isActive ? 'var(--color-gray-800)' : 'var(--color-gray-300)'};
-  margin-right: var(--spacing-sm);
-`;
-
-// 狀態文字
-const StatusText = styled.div<{ isActive: boolean }>`
-  color: ${({ isActive }) =>
-    isActive ? 'var(--color-gray-800)' : 'var(--color-gray-500)'};
-  font-weight: ${({ isActive }) =>
-    isActive ? 'var(--font-weight-medium)' : 'var(--font-weight-normal)'};
+  flex-direction: column;
+  gap: var(--spacing-12);
 `;
 
 function OrderDetail() {
@@ -222,40 +235,56 @@ function OrderDetail() {
     title: '標準方案 50L/10kg',
     startDate: '2025/03/25',
     endDate: '2025/04/25',
+    pickupDay: ['每週一', '每週三', '每週五'],
     nextPickup: '2025/04/04',
     remainingPickups: 7,
     status: '前往中', // 待收運, 前往中, 已完成
-    imageUrl: '../../public/user_trash_photo_test.jpg',
+    imageUrl1: '../../public/user_trash_photo_test.jpg',
+    imageUrl2: '../../public/user_trash_photo_test.jpg',
+    address: '高雄市三民區和平一路 123 號 5F',
   };
-
-  // 根據訂單狀態決定當前步驟
-  const getCurrentStep = (status: string) => {
-    switch (status) {
-      case '待收運':
-        return 0;
-      case '前往中':
-        return 1;
-      case '已完成':
-        return 2;
-      default:
-        return 0;
-    }
-  };
-
-  const currentStep = getCurrentStep(orderData.status);
 
   // 返回上一頁
   const handleBack = () => {
     navigate(-1);
   };
 
+  // 計算剩餘收運次數
+  const calculateRemainingPickups = () => {
+    const startDate = new Date(orderData.startDate);
+    const endDate = new Date(orderData.endDate);
+    const today = new Date();
+
+    // 計算總收運日數
+    const totalDays = Math.ceil(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    const weeks = Math.ceil(totalDays / 7);
+    const totalPickups = weeks * orderData.pickupDay.length;
+
+    // 計算已過收運日數
+    const passedDays = Math.ceil(
+      (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    const passedWeeks = Math.floor(passedDays / 7);
+    const passedPickups = passedWeeks * orderData.pickupDay.length;
+
+    // 計算剩餘次數
+    const remaining = totalPickups - passedPickups;
+
+    return Math.max(0, remaining);
+  };
+
+  const remainingPickups = calculateRemainingPickups();
+
   return (
     <OrderDetailContainer>
       <NavHeader>
         <BackButton onClick={handleBack}>
-          <HiArrowLeft />
+          <HiChevronLeft />
+          <PageTitle>訂單詳情</PageTitle>
         </BackButton>
-        <PageTitle>訂單詳情</PageTitle>
+        <OrderID>訂單編號: {orderData.id}</OrderID>
       </NavHeader>
 
       <ContentArea>
@@ -263,63 +292,97 @@ function OrderDetail() {
           <OrderTitle>{orderData.title}</OrderTitle>
 
           <OrderPhotoArea>
-            <PhotoTitle>
-              <HiPhoto />
-              垃圾照片
-            </PhotoTitle>
+            <DetailLabel>放置定點</DetailLabel>
             <PhotoContainer>
-              {orderData.imageUrl ? (
-                <Photo src={orderData.imageUrl} alt="垃圾照片" />
-              ) : (
-                <div>無照片</div>
-              )}
+              <SinglePhotoContainer>
+                {orderData.imageUrl1 ? (
+                  <Photo src={orderData.imageUrl1} alt="垃圾照片 1" />
+                ) : (
+                  <NoPhotoPlaceholder>
+                    <HiExclamationCircle />
+                  </NoPhotoPlaceholder>
+                )}
+              </SinglePhotoContainer>
+              <SinglePhotoContainer>
+                {orderData.imageUrl2 ? (
+                  <Photo src={orderData.imageUrl2} alt="垃圾照片 2" />
+                ) : (
+                  <NoPhotoPlaceholder>
+                    <HiExclamationCircle />
+                  </NoPhotoPlaceholder>
+                )}
+              </SinglePhotoContainer>
             </PhotoContainer>
           </OrderPhotoArea>
 
           <DetailList>
             <DetailItem>
-              <DetailLabel>下次收運</DetailLabel>
-              <DetailValue>{orderData.nextPickup}</DetailValue>
+              <DetailLabel>方案期間</DetailLabel>
+              <DetailValue>
+                {orderData.startDate} - {orderData.endDate}
+              </DetailValue>
             </DetailItem>
 
             <DetailItem>
-              <DetailLabel>剩餘次數</DetailLabel>
-              <DetailValue>{orderData.remainingPickups}</DetailValue>
+              <DetailLabel>每周收運日</DetailLabel>
+              <DetailValue>{orderData.pickupDay.join('、')}</DetailValue>
             </DetailItem>
 
             <DetailItem>
-              <DetailLabel>開始時間</DetailLabel>
-              <DetailValue>{orderData.startDate}</DetailValue>
-            </DetailItem>
-
-            <DetailItem>
-              <DetailLabel>結束時間</DetailLabel>
-              <DetailValue>{orderData.endDate}</DetailValue>
+              <DetailLabel>收運地址</DetailLabel>
+              <DetailValue>{orderData.address}</DetailValue>
             </DetailItem>
           </DetailList>
         </OrderCard>
 
-        <StatusCard>
-          <StatusTitle>
-            <HiTruck />
-            收運狀態
-          </StatusTitle>
+        {/* 已排定收運 */}
+        <OrderListSection>
+          <OrderListHeader>
+            <OrderListTitle>已排定收運</OrderListTitle>
+            <OrderListCal>剩餘次數: {remainingPickups}</OrderListCal>
+          </OrderListHeader>
 
-          <StatusItem>
-            <StatusIndicator isActive={currentStep >= 0} />
-            <StatusText isActive={currentStep === 0}>待收運</StatusText>
-          </StatusItem>
+          <OrderList>
+            <OrderListCard
+              date={orderData.nextPickup}
+              time="10:00-11:00"
+              status="已排定"
+              isActive={true}
+            />
+            <OrderListCard
+              date={orderData.nextPickup}
+              time="10:00-11:00"
+              status="已排定"
+              isActive={true}
+            />
+            <OrderListCard
+              date={orderData.nextPickup}
+              time="10:00-11:00"
+              status="已排定"
+              isActive={true}
+            />
+            <OrderListCard
+              date={orderData.nextPickup}
+              time="10:00-11:00"
+              status="已排定"
+              isActive={true}
+            />
+            <OrderListCard
+              date={orderData.nextPickup}
+              time="10:00-11:00"
+              status="已排定"
+              isActive={true}
+            />
+            <OrderListCard
+              date={orderData.nextPickup}
+              time="10:00-11:00"
+              status="已排定"
+              isActive={true}
+            />
 
-          <StatusItem>
-            <StatusIndicator isActive={currentStep >= 1} />
-            <StatusText isActive={currentStep === 1}>前往中</StatusText>
-          </StatusItem>
 
-          <StatusItem>
-            <StatusIndicator isActive={currentStep >= 2} />
-            <StatusText isActive={currentStep === 2}>已完成</StatusText>
-          </StatusItem>
-        </StatusCard>
+          </OrderList>
+        </OrderListSection>
       </ContentArea>
     </OrderDetailContainer>
   );
