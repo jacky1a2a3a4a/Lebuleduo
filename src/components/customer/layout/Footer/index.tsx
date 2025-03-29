@@ -13,7 +13,7 @@ const customerFooterNavItems: FooterNavItem[] = [
   {
     icon: HiInboxStack,
     label: '我的訂單',
-    path: '/customer',
+    path: '/customer/my-order',
   },
   {
     icon: HiShoppingCart,

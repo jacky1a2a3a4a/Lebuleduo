@@ -613,7 +613,9 @@ function MyOrder() {
                       {order.imageUrl ? (
                         <OrderPhotoImage src={order.imageUrl} alt="訂單商品" />
                       ) : (
-                        <OrderPhoto><HiExclamationCircle /></OrderPhoto>
+                        <OrderPhoto>
+                          <HiExclamationCircle />
+                        </OrderPhoto>
                       )}
                     </OrderPhotoContainer>
 

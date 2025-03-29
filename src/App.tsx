@@ -61,6 +61,7 @@ function App() {
           </Route>
 
           {/* 顧客路由 */}
+          {/* 路由容器 */}
           <Route
             path="/customer"
             element={
@@ -69,9 +70,18 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<MyOrder />} />
+            {/* 首頁 */}
+            <Route
+              index
+              element={<Navigate to="/customer/my-order" replace />}
+            />
+            <Route path="my-order" element={<MyOrder />} />
             <Route path="subscribe" element={<Subscribe />} />
             <Route path="checkout">
+              <Route
+                index
+                element={<Navigate to="/customer/checkout/plan" replace />}
+              />
               <Route path="plan" element={<CheckoutPlan />} />
               <Route path="user-data" element={<CheckoutUserData />} />
               <Route path="payment" element={<CheckoutPayment />} />

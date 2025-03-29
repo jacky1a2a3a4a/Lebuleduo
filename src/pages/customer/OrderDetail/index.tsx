@@ -64,26 +64,13 @@ const OrderID = styled.h2`
   font-weight: var(--font-weight-medium);
 `;
 
-//// 內容區域 最外層容器
+// 內容區域 最外層容器
 const ContentArea = styled.div`
   padding: 0 var(--spacing-12);
   flex: 1;
-  overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-    display: block;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--color-gray-300);
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: var(--color-gray-100);
-    border-radius: 3px;
-  }
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 // 訂單卡片
@@ -92,6 +79,7 @@ const OrderCard = styled.div`
   border: 1px solid var(--color-gray-300);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--card-shadow);
+
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
 `;
@@ -191,6 +179,10 @@ const OrderListSection = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   padding: var(--spacing-12);
   margin-bottom: var(--spacing-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 // 收運列表標題區塊
@@ -222,6 +214,13 @@ const OrderList = styled.div`
   display: flex;
   flex-direction: column;
   gap: var(--spacing-12);
+  overflow-y: auto;
+  flex: 1;
+
+  //有滾動軸但不顯示
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 function OrderDetail() {
@@ -288,6 +287,7 @@ function OrderDetail() {
       </NavHeader>
 
       <ContentArea>
+        {/* 方案卡片 */}
         <OrderCard>
           <OrderTitle>{orderData.title}</OrderTitle>
 
@@ -379,8 +379,6 @@ function OrderDetail() {
               status="已排定"
               isActive={true}
             />
-
-
           </OrderList>
         </OrderListSection>
       </ContentArea>

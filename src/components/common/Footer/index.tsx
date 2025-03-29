@@ -2,18 +2,18 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { IconType } from 'react-icons';
 
-// ts interface定義屬性類型
+// ts type定義屬性類型
 // 需要導出是因為它定義了外部組件（如 CustomerFooter）需要提供的數據結構
-export interface FooterNavItem {
+export type FooterNavItem = {
   icon: IconType;
   label: string;
   path: string;
-}
+};
 
 // 通用組件內部使用，接收上方定義的導航項目
-interface FooterProps {
+type FooterProps = {
   navItems: FooterNavItem[];
-}
+};
 
 const minWidthMobilePlus = 403;
 
@@ -84,7 +84,7 @@ function Footer({ navItems }: FooterProps) {
       <FooterContainer>
         {navItems.map((item, index) => (
           <ListItem key={index}>
-            <FooterNavLink to={item.path} end>
+            <FooterNavLink to={item.path}>
               <IconContainer>{<item.icon />}</IconContainer>
               <span>{item.label}</span>
             </FooterNavLink>
