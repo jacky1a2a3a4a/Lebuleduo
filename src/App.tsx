@@ -6,8 +6,9 @@ import CustomerLayout from './layouts/CustomerLayout';
 import DeliverLayout from './layouts/DeliverLayout';
 
 // 顧客(customer) 頁面組件
-import MyOrder from './pages/customer/MyOrder/index';
-import OrderDetail from './pages/customer/OrderDetail/index';
+import MyOrder from './pages/customer/MyOrder';
+import OrderDetail from './pages/customer/OrderDetail';
+import Plan from './pages/customer/Plan';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -21,7 +22,7 @@ import Calendar from './pages/deliver/Calendar';
 const Register = () => <div>註冊頁面</div>;
 const Login = () => <div>登入頁面</div>;
 // const MyOrder = () => <div>我的訂單</div>;
-const Subscribe = () => <div>開始訂閱</div>;
+// const Subscribe = () => <div>開始訂閱</div>;
 const CheckoutPlan = () => <div>結帳計劃頁面</div>;
 const CheckoutUserData = () => <div>使用者數據頁面</div>;
 const CheckoutPayment = () => <div>支付頁面</div>;
@@ -76,13 +77,13 @@ function App() {
               element={<Navigate to="/customer/my-order" replace />}
             />
             <Route path="my-order" element={<MyOrder />} />
-            <Route path="subscribe" element={<Subscribe />} />
+            <Route path="Plan" element={<Plan />} />
             <Route path="checkout">
               <Route
                 index
-                element={<Navigate to="/customer/checkout/plan" replace />}
+                element={<Navigate to="/customer/Checkout/Checkout-plan" replace />}
               />
-              <Route path="plan" element={<CheckoutPlan />} />
+              <Route path="Checkout-plan" element={<CheckoutPlan />} />
               <Route path="user-data" element={<CheckoutUserData />} />
               <Route path="payment" element={<CheckoutPayment />} />
               <Route path="success" element={<CheckoutSuccess />} />

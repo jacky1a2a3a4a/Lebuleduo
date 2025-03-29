@@ -18,7 +18,7 @@ const customerFooterNavItems: FooterNavItem[] = [
   {
     icon: HiShoppingCart,
     label: '訂閱方案',
-    path: '/customer/subscribe',
+    path: '/customer/Plan',
   },
   {
     icon: HiMiniUserCircle,
