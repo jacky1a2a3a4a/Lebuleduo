@@ -25,6 +25,9 @@ const GlobalStyles = createGlobalStyle`
   --color-gray-800: #1f2937;
   --color-gray-900: #111827;
 
+  --color-green-line-0: #06c755;
+   --color-green-line-100: #05b54c;
+
   --color-blue-100: #e0f2fe;
   --color-blue-700: #0369a1;
   --color-green-100: #dcfce7;
@@ -87,6 +90,8 @@ const GlobalStyles = createGlobalStyle`
   --spacing-lg: 1.5rem;   /* 24px */
   --spacing-xl: 2rem;     /* 32px */
   --spacing-2xl: 3rem;    /* 48px */
+  --spacing-3xl: 4rem;    /* 64px */
+  --spacing-4xl: 5rem;    /* 80px */
 
   /* RWD */
   --min-width-mobile: 402px;  /* iphone 16 pro */

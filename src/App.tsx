@@ -1,9 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import GlobalStyles from './styles/GlobalStyles';
 
+//頁面 排版
 import ProtectedRoute from './layouts/ProtectedRoute';
 import CustomerLayout from './layouts/CustomerLayout';
 import DeliverLayout from './layouts/DeliverLayout';
+
+//line登入 頁面組件
+import LineLogin from './pages/auth/LineLogin';
+import LineCallback from './pages/auth/LineCallBack';
 
 // 顧客(customer) 頁面組件
 import MyOrder from './pages/customer/MyOrder';
@@ -18,9 +23,11 @@ import ScanOrder from './pages/deliver/ScanOrder';
 import Calendar from './pages/deliver/Calendar';
 
 // 臨時頁面組件
+// line登入 頁面組件
+// const Register = () => <div>註冊頁面</div>;
+// const Login = () => <div>登入頁面</div>;
+
 // 顧客(customer) 頁面組件
-const Register = () => <div>註冊頁面</div>;
-const Login = () => <div>登入頁面</div>;
 // const MyOrder = () => <div>我的訂單</div>;
 // const Subscribe = () => <div>開始訂閱</div>;
 const CheckoutPlan = () => <div>結帳計劃頁面</div>;
@@ -57,8 +64,9 @@ function App() {
         <Routes>
           {/* 登入/註冊 */}
           <Route path="/auth">
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
+            <Route index element={<Navigate to="/auth/line-login" replace />} />
+            <Route path="line-login" element={<LineLogin />} />
+            <Route path="line-callback" element={<LineCallback />} />
           </Route>
 
           {/* 顧客路由 */}
@@ -81,7 +89,9 @@ function App() {
             <Route path="checkout">
               <Route
                 index
-                element={<Navigate to="/customer/Checkout/Checkout-plan" replace />}
+                element={
+                  <Navigate to="/customer/Checkout/Checkout-plan" replace />
+                }
               />
               <Route path="Checkout-plan" element={<CheckoutPlan />} />
               <Route path="user-data" element={<CheckoutUserData />} />

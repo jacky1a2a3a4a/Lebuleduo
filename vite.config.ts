@@ -6,6 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      '/GET': {
+        target: 'http://4.240.61.223',
+        changeOrigin: true,
+      },
       '/api': {
         target: 'http://4.240.61.223',
         changeOrigin: true,
