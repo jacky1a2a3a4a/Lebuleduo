@@ -116,7 +116,7 @@ function Task() {
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
       ////3. 發送請求
-      const response = await fetch('/api/locations', {
+      const response = await fetch('/GET/user/orders', {
         method: 'GET',
         signal: controller.signal, //參數連接到AbortController，允許超時中止
       });

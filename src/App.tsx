@@ -8,7 +8,7 @@ import DeliverLayout from './layouts/DeliverLayout';
 
 //line登入 頁面組件
 import LineLogin from './pages/auth/LineLogin';
-import LineCallback from './pages/auth/LineCallBack';
+import LineCallback from './pages/auth/LineCallback';
 
 // 顧客(customer) 頁面組件
 import MyOrder from './pages/customer/MyOrder';
@@ -45,23 +45,14 @@ const PageNotFound = () => <div>404 - 頁面未找到</div>;
 const ReportBackend = () => <div>回報後台</div>;
 
 function App() {
-  // 用戶角色類型
-  type UserRole = 'customer' | 'deliver';
-
-  // 假設這是從認證系統獲取的用戶角色
-  const userRole: UserRole = 'customer';
-  // const userRole: UserRole = 'deliver';
-
-  // 導航路徑選擇函數
-  const getRedirectPath = (role: UserRole): string => {
-    return role === 'customer' ? '/customer' : '/deliver';
-  };
-
   return (
     <>
       <GlobalStyles />
       <BrowserRouter>
         <Routes>
+          {/* 根路徑重定向到 auth 登入頁面 */}
+          <Route path="/" element={<Navigate to="/auth" replace />} />
+
           {/* 登入/註冊 */}
           <Route path="/auth">
             <Route index element={<Navigate to="/auth/line-login" replace />} />
@@ -70,7 +61,6 @@ function App() {
           </Route>
 
           {/* 顧客路由 */}
-          {/* 路由容器 */}
           <Route
             path="/customer"
             element={
@@ -147,11 +137,7 @@ function App() {
             }
           />
 
-          {/* 重新導向和404路由 */}
-          <Route
-            path="/"
-            element={<Navigate to={getRedirectPath(userRole)} replace />}
-          />
+          {/* 404路由 */}
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>

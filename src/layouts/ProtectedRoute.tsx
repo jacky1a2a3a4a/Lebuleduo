@@ -8,23 +8,25 @@ interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({ children, role }: ProtectedRouteProps) {
-  // 這裡之後可以添加認證和授權邏輯
-  // 暫時返回子元素，不做任何保護
-  return children;
+  // 檢查用戶是否已登入（檢查 token 是否存在）
+  const token = localStorage.getItem('token');
+  // 檢查用戶角色是否與路由要求的角色匹配
+  const userRole = localStorage.getItem('userRole');
 
-  // 完整邏輯大概會像這樣：
-  // const isAuthenticated = true; // 之後改為實際檢查
-  // const userRole = 'customer'; // 之後改為從認證系統獲取
+  // 用戶未登入，跳轉到登入頁面
+  if (!token) {
+    return <Navigate to="/auth/line-login" replace />;
+  }
 
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/auth/login" replace />;
-  // }
+  // 用戶角色與路由要求的角色不匹配，跳轉到對應頁面
+  if (role === 'customer' && userRole !== 'customer') {
+    return <Navigate to="/deliver" replace />;
+  } else if (role === 'deliver' && userRole !== 'deliver') {
+    return <Navigate to="/customer/my-order" replace />;
+  }
 
-  // if (role && role !== userRole) {
-  //   return <Navigate to="/" replace />;
-  // }
-
-  // return children;
+  // 一切正常，渲染子組件
+  return <>{children}</>;
 }
 
 export default ProtectedRoute;

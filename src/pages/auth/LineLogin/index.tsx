@@ -1,8 +1,8 @@
 // 登入頁面 切版
 import styled from 'styled-components';
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
-import { getLineLoginUrl } from '../../../services/lineAuth';
 import { useState } from 'react';
+import { getLineLoginUrl } from '../../../services/lineAuth';
 
 const LineLogin = () => {
   const [selectedRole, setSelectedRole] = useState<
@@ -26,6 +26,20 @@ const LineLogin = () => {
     }, 200);
   };
 
+  // 登入功能
+  const handleLogin = () => {
+    if (!selectedRole) return;
+    const loginUrl = getLineLoginUrl(selectedRole);
+
+    // 直接重定向到 LINE 登入頁面
+    window.location.href = loginUrl;
+
+    // 註意：之後系統會返回包含 token 和用戶數據的 JSON 響應
+    // 這個響應需要在回調頁面處理，但目前看起來後端已經處理了回調
+    // 如果後端提供了 redirectUrl，系統應自動重定向到該 URL
+  };
+
+  // 返回功能
   const handleBack = () => {
     setIsExiting(true);
     setTimeout(() => {
@@ -36,11 +50,6 @@ const LineLogin = () => {
         setIsAnimating(false);
       }, 200);
     }, 200);
-  };
-
-  const handleLogin = () => {
-    if (!selectedRole) return;
-    window.location.href = getLineLoginUrl(selectedRole);
   };
 
   return (
@@ -61,7 +70,7 @@ const LineLogin = () => {
             isAnimating={isAnimating}
             isExiting={isExiting}
           >
-            我是客戶
+            我是顧客
           </RoleButton>
           <RoleButton
             selected={selectedRole === 'deliver'}
@@ -108,7 +117,6 @@ const LineLogin = () => {
 // 登入頁面 最外層容器
 const LoginSectionStyled = styled.div`
   background-color: var(--color-gray-50);
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -120,7 +128,6 @@ const LoginSectionStyled = styled.div`
 const Logo = styled.img`
   width: 120px;
   height: 120px;
-
   margin-bottom: var(--spacing-4);
 `;
 
@@ -135,7 +142,6 @@ const WelcomeText = styled.h1`
 // 登入頁面 歡迎文字 主要文字
 const TextMain = styled.span`
   color: var(--color-gray-700);
-
   font-size: var(--font-size-2xl);
   font-weight: bold;
 `;
@@ -143,16 +149,13 @@ const TextMain = styled.span`
 // 登入頁面 歡迎文字 副文字
 const TextSub = styled.span`
   color: var(--color-gray-700);
-
   font-size: var(--font-size-xl);
-
   margin-bottom: var(--spacing-14);
 `;
 
 // 登入頁面 歡迎文字 內容文字
 const TextContent = styled.span`
   color: var(--color-gray-400);
-
   font-size: 1rem;
 `;
 
