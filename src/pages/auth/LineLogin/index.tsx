@@ -29,6 +29,10 @@ const LineLogin = () => {
   // 登入功能
   const handleLogin = () => {
     if (!selectedRole) return;
+
+    // 清除重定向標記和任何舊的登入狀態
+    sessionStorage.removeItem('is_redirecting');
+
     const loginUrl = getLineLoginUrl(selectedRole);
 
     // 直接重定向到 LINE 登入頁面

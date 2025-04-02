@@ -5,12 +5,12 @@
 //state=2 deliver 汪汪員
 //https:access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=2007121127&redirect_uri=http://4.240.61.223/auth/line-login&state=2&scope=profile%20openid%20email
 
-//4.240.61.223/auth/line-login
-//localhost:44388/auth/line-login
+//4.240.61.223/auth/line-login //虛擬機 環境
+//localhost:44388/auth/line-login //後端 本機
 
 // LINE 登入相關設定
-const LINE_CLIENT_ID = '2007121127';
-const LINE_AUTH_URL = 'https://access.line.me/oauth2/v2.1/authorize';
+const LINE_CLIENT_ID = '2007121127'; //line channel id
+const LINE_AUTH_URL = 'https://access.line.me/oauth2/v2.1/authorize'; //line 登入 url
 
 // 使用固定的 redirect_uri，與 LINE 開發者後台設定一致
 // 開發環境使用 localhost URL
@@ -20,52 +20,98 @@ const REDIRECT_URI = import.meta.env.DEV
 
 // 用戶登入後的最終目標頁面
 export const FINAL_REDIRECT = {
-  customer: '/customer/my-order',
+  customer: '/customer',
   deliver: '/deliver',
 };
 
+// 生成 LINE 登入 URL
 export const getLineLoginUrl = (role: 'customer' | 'deliver') => {
+  // 清除所有之前的登入相關標記
+  sessionStorage.removeItem('is_redirecting');
+  sessionStorage.removeItem('line_login_role');
+
+  // 儲存角色信息到 sessionStorage，以便回調頁面使用
+  sessionStorage.setItem('line_login_role', role);
+
+  // 構建 LINE 登入 URL 的必要參數
   const params = new URLSearchParams({
-    response_type: 'code',
-    client_id: LINE_CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
+    response_type: 'code', //指定授權類型為授權碼流程（Authorization Code Flow）
+    client_id: LINE_CLIENT_ID, //line channel id
+    redirect_uri: REDIRECT_URI, //line 登入後的回調 url
     state: role === 'customer' ? '1' : '2', // 簡單使用1表示客戶，2表示汪汪員
-    scope: 'profile openid email',
+    scope: 'profile openid email', //指定授權範圍
   });
 
   return `${LINE_AUTH_URL}?${params.toString()}`;
 };
 
-export const isLineCallback = (url: string): boolean => {
-  try {
-    const urlObj = new URL(url);
-    const params = new URLSearchParams(urlObj.search);
-    return params.has('code') && params.has('state');
-  } catch (error) {
-    console.error('URL解析錯誤:', error);
-    return false;
-  }
+// 從 state 中提取角色
+export const extractRoleFromState = (
+  state: string | null,
+): 'customer' | 'deliver' | null => {
+  if (!state) return null;
+
+  return state === '1' ? 'customer' : state === '2' ? 'deliver' : null;
 };
 
-/**
- * 從頁面內容中提取JSON數據
- * 用於處理後端返回的JSON響應
- * @returns 提取到的JSON對象或null
- */
-export const extractJsonFromPage = () => {
-  try {
-    // 尋找前後有大括號的JSON字符串
-    const bodyText = document.body.textContent || '';
-    const jsonRegex = /\{.*\}/s; // s標誌允許匹配多行
-    const match = bodyText.match(jsonRegex);
+// 處理 LINE 登入結果
+export const handleLoginResult = (data: {
+  state?: string;
+  status?: boolean;
+  message?: string;
+  profileData?: unknown;
+  userProfile?: unknown;
+  token?: string;
+  role?: string;
+  roleName?: 'customer' | 'deliver';
+  redirectUrl?: string;
+}) => {
+  // 1. 保存 token
+  if (data.token) {
+    sessionStorage.setItem('token', data.token);
+  }
 
-    if (match && match[0]) {
-      return JSON.parse(match[0]);
+  // 2. 保存用戶角色
+  // 從回傳的JSON 確定用戶角色
+  let role = data.roleName;
+
+  // 如果沒有從JSON拿到角色，嘗試從 state 獲取角色
+  if (!role) {
+    // 嘗試從 state 獲取角色
+    if (data.state) {
+      role = extractRoleFromState(data.state);
     }
 
-    return null;
-  } catch (error) {
-    console.error('從頁面提取JSON時出錯:', error);
-    return null;
+    // 如果還是沒有，嘗試從之前保存的角色獲取
+    if (!role) {
+      const savedRole = sessionStorage.getItem('line_login_role');
+      role =
+        savedRole === 'customer' || savedRole === 'deliver'
+          ? savedRole
+          : 'customer';
+    }
   }
+  sessionStorage.setItem('userRole', role);
+
+  // 3. 保存用戶資料
+  const profileData = data.profileData || data.userProfile;
+  if (profileData) {
+    sessionStorage.setItem(
+      'profileData',
+      typeof profileData === 'string'
+        ? profileData
+        : JSON.stringify(profileData),
+    );
+  }
+
+  // 4. 設置重定向標記以防止重複重定向
+  sessionStorage.setItem('is_redirecting', 'true');
+
+  // 回傳結果
+  return {
+    success: true,
+    role,
+    redirectUrl:
+      data.redirectUrl || FINAL_REDIRECT[role as keyof typeof FINAL_REDIRECT],
+  };
 };
