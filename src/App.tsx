@@ -14,7 +14,7 @@ import MyOrder from './pages/customer/MyOrder';
 import OrderDetail from './pages/customer/OrderDetail';
 import Plan from './pages/customer/Plan';
 import Subscribe from './pages/customer/Subscribe';
-import SubscribeData from './pages/customer/SubcribeData';
+import SubscribeData from './pages/customer/SubscribeData';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';

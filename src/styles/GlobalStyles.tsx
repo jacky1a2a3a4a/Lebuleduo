@@ -128,7 +128,7 @@ html,body {
 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
-  line-height: 1.5;
+  line-height: 1.2;
   font-size: 16px;
   font-weight: var(--font-weight-normal);
 }

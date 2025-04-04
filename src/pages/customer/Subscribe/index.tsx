@@ -342,16 +342,17 @@ const Subscribe = () => {
         {/* 總計金額與下一步 */}
         <TotalPrice>
           <TotalPriceText>總金額</TotalPriceText>
-          <TotalPriceDetails>
-            {discount > 0 && (
-              <>
-                <OriginalPriceText>NT${originalPrice}</OriginalPriceText>
-                <DiscountText>-NT${discount}</DiscountText>
-              </>
-            )}
+          <TotalPriceContainer>
             <TotalPriceTCount>NT${totalPrice}</TotalPriceTCount>
-          </TotalPriceDetails>
+            {discount > 0 && (
+              <PriceDetails>
+                <OriginalPriceText>NT${originalPrice}</OriginalPriceText>
+                <DiscountText>節省 NT${discount}</DiscountText>
+              </PriceDetails>
+            )}
+          </TotalPriceContainer>
         </TotalPrice>
+
         <NextButton onClick={handleNext} $active={hasSelectedDays}>
           下一步
         </NextButton>
@@ -711,48 +712,56 @@ const DateInput = styled.input`
   font-size: var(--font-size-md);
 `;
 
-// 總計價格
+//// 總計價格 最外容器
 const TotalPrice = styled.div`
   font-weight: var(--font-weight-bold);
+
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 // 總計價格 文字
 const TotalPriceText = styled.div`
   font-size: var(--font-size-sm);
   line-height: 1;
-  margin-right: var(--spacing-sm);
-  margin-top: 8px;
+  margin-right: var(--spacing-md);
 `;
 
-// 價格詳情容器
-const TotalPriceDetails = styled.div`
+// 價格容器
+const TotalPriceContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
 `;
 
-// 原始價格（有刪除線）
-const OriginalPriceText = styled.div`
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-400);
-  text-decoration: line-through;
-  margin-bottom: 2px;
-`;
-
-// 折扣金額
-const DiscountText = styled.div`
-  font-size: var(--font-size-sm);
-  color: var(--color-red-500);
-  margin-bottom: 2px;
+// 價格折扣容器
+const PriceDetails = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 // 總計價格 數字
 const TotalPriceTCount = styled.div`
   font-size: var(--font-size-2xl);
 `;
+
+// 原始價格（有刪除線）
+const OriginalPriceText = styled.div`
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+  text-decoration: line-through;
+  
+  margin-right: var(--spacing-xs);
+`;
+
+// 折扣金額
+const DiscountText = styled.div`
+  font-size: var(--font-size-xs);
+  color: var(--color-red-500);
+`;
+
+
 
 // 下一步按鈕
 const NextButton = styled.button<StyledProps>`
