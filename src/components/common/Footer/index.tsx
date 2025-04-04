@@ -84,7 +84,7 @@ function Footer({ navItems }: FooterProps) {
       <FooterContainer>
         {navItems.map((item, index) => (
           <ListItem key={index}>
-            <FooterNavLink to={item.path}>
+            <FooterNavLink to={item.path} end={item.path === '/deliver'}>
               <IconContainer>{<item.icon />}</IconContainer>
               <span>{item.label}</span>
             </FooterNavLink>

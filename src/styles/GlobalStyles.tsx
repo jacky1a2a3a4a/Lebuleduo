@@ -40,11 +40,16 @@ const GlobalStyles = createGlobalStyle`
   --color-indigo-700: #4338ca;
 
   --color-red-100: #fee2e2;
+  --color-red-500: #dc2626;
   --color-red-600: #dc2626;
   --color-red-700: #b91c1c;
   --color-red-800: #991b1b;
 
   --backdrop-color: rgba(255, 255, 255, 0.1);
+
+  /* For dark mode */
+  --image-grayscale: 0;
+  --image-opacity: 100%;
 
   /* 陰影 */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -54,17 +59,6 @@ const GlobalStyles = createGlobalStyle`
   --btn-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   --btn-shadow-hover: 0 7px 14px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
   --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-  /* border-radius */
-  --border-radius-tiny: 3px;
-  --border-radius-sm: 5px;
-  --border-radius-md: 7px;
-  --border-radius-lg: 9px;
-  --border-radius-round: 9999px;
-
-  /* For dark mode */
-  --image-grayscale: 0;
-  --image-opacity: 100%;
 
    /* 字體大小 */
   --font-size-xs: 0.75rem;   /* 12px */
@@ -92,6 +86,14 @@ const GlobalStyles = createGlobalStyle`
   --spacing-2xl: 3rem;    /* 48px */
   --spacing-3xl: 4rem;    /* 64px */
   --spacing-4xl: 5rem;    /* 80px */
+
+  /* border-radius */
+  --border-radius-tiny: 3px;
+  --border-radius-sm: 5px;
+  --border-radius-md: 7px;
+  --border-radius-lg: 9px;
+  --border-radius-xl: 11px;
+  --border-radius-round: 9999px;  
 
   /* RWD */
   --min-width-mobile: 402px;  /* iphone 16 pro */

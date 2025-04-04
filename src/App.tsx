@@ -7,13 +7,14 @@ import CustomerLayout from './layouts/CustomerLayout';
 import DeliverLayout from './layouts/DeliverLayout';
 
 //line登入 頁面組件
-import LineLogin from './pages/auth/LineLogin';
-import LineCallback from './pages/auth/LineCallback';
+import LineLogin from './pages/auth/LineLogin/index';
 
 // 顧客(customer) 頁面組件
 import MyOrder from './pages/customer/MyOrder';
 import OrderDetail from './pages/customer/OrderDetail';
 import Plan from './pages/customer/Plan';
+import Subscribe from './pages/customer/Subscribe';
+import SubscribeData from './pages/customer/SubcribeData';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -57,7 +58,6 @@ function App() {
           <Route path="/auth">
             <Route index element={<Navigate to="/auth/line-login" replace />} />
             <Route path="line-login" element={<LineLogin />} />
-            <Route path="line-callback" element={<LineCallback />} />
           </Route>
 
           {/* 顧客路由 */}
@@ -98,6 +98,26 @@ function App() {
             element={
               <ProtectedRoute role="customer">
                 <OrderDetail />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 訂閱方案詳情 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/subscribe"
+            element={
+              <ProtectedRoute role="customer">
+                <Subscribe />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 訂閱資料填寫 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/SubscribeData"
+            element={
+              <ProtectedRoute role="customer">
+                <SubscribeData />
               </ProtectedRoute>
             }
           />

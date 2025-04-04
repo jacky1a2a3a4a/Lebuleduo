@@ -12,11 +12,11 @@
 const LINE_CLIENT_ID = '2007121127'; //line channel id
 const LINE_AUTH_URL = 'https://access.line.me/oauth2/v2.1/authorize'; //line 登入 url
 
-// 使用固定的 redirect_uri，與 LINE 開發者後台設定一致
-// 開發環境使用 localhost URL
+// 根據環境選擇已註冊的 redirect_uri
+// 使用與 LINE 開發者控制台中註冊的完全一致的 URL
 const REDIRECT_URI = import.meta.env.DEV
-  ? 'http://localhost:5173/auth/line-callback'
-  : 'http://4.240.61.223/auth/line-login';
+  ? 'http://localhost:5173/auth/line-callback' // 已在 LINE 開發者控制台註冊的本地開發 URL
+  : 'http://4.240.61.223/auth/line-login'; // 生產環境 URL
 
 // 用戶登入後的最終目標頁面
 export const FINAL_REDIRECT = {
@@ -55,7 +55,7 @@ export const extractRoleFromState = (
 };
 
 // 處理 LINE 登入結果
-export const handleLoginResult = (data: {
+export const handleLoginResult = async (data: {
   state?: string;
   status?: boolean;
   message?: string;

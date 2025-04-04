@@ -2,7 +2,6 @@
 import styled from 'styled-components';
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
 import { useState } from 'react';
-import { getLineLoginUrl } from '../../../services/lineAuth';
 
 const LineLogin = () => {
   const [selectedRole, setSelectedRole] = useState<
@@ -26,21 +25,41 @@ const LineLogin = () => {
     }, 200);
   };
 
-  // 登入功能
+  // 登入功能 (暫時移除實際登入功能)
   const handleLogin = () => {
     if (!selectedRole) return;
 
-    // 清除重定向標記和任何舊的登入狀態
-    sessionStorage.removeItem('is_redirecting');
+    // 移除實際登入功能，改為顯示提示
+    const role = selectedRole;
+    console.log(`模擬${role === 'customer' ? '顧客' : '外送員'}登入`);
 
-    const loginUrl = getLineLoginUrl(selectedRole);
+    // 添加模擬登入功能
+    const mockLogin = () => {
+      // 創建模擬數據
+      const mockToken = `mock_token_${Date.now()}`;
+      const mockProfileData = {
+        userId: `user_${Date.now()}`,
+        displayName: `${role === 'customer' ? '測試顧客' : '測試外送員'}_${Math.floor(Math.random() * 1000)}`,
+        pictureUrl: 'https://profile.line-scdn.net/placeholder-profile.png',
+      };
 
-    // 直接重定向到 LINE 登入頁面
-    window.location.href = loginUrl;
+      // 存儲到 sessionStorage
+      sessionStorage.setItem('token', mockToken);
+      sessionStorage.setItem('userRole', role);
+      sessionStorage.setItem('profileData', JSON.stringify(mockProfileData));
 
-    // 註意：之後系統會返回包含 token 和用戶數據的 JSON 響應
-    // 這個響應需要在回調頁面處理，但目前看起來後端已經處理了回調
-    // 如果後端提供了 redirectUrl，系統應自動重定向到該 URL
+      // 跳轉到對應頁面
+      window.location.href = role === 'customer' ? '/customer' : '/deliver';
+    };
+
+    // 顯示確認對話框
+    if (
+      confirm(
+        `確定要以${role === 'customer' ? '顧客' : '外送員'}身份模擬登入嗎？`,
+      )
+    ) {
+      mockLogin();
+    }
   };
 
   // 返回功能
