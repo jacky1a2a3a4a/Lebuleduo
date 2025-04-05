@@ -180,7 +180,7 @@ select {
   color: inherit;
   font-family: inherit;
   font-size: 100%;
-  line-height: 1.15;
+  line-height: 1.2;
   margin: 0;
 }
 

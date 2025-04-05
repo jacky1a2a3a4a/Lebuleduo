@@ -14,6 +14,7 @@ import {
   StepLine,
   ScrollableContent,
   SectionTitle,
+  SectionMainTitle,
   SectionSubtitle,
   PlanSelector,
   PlanSelectorHeader,
@@ -48,14 +49,6 @@ import {
 // 週期天數選項
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
 
-// 為styled-components定義類型
-interface StyledProps {
-  $active?: boolean; // 定義元件是否處於活動狀態
-  $light?: boolean; // 定義元件是否使用淺色樣式
-  $open?: boolean; // 定義元件（如下拉選單）是否展開
-  $error?: boolean; // 定義元件是否顯示錯誤狀態
-}
-
 //組件本體
 const Subscribe = () => {
   const navigate = useNavigate(); // 獲取導航功能
@@ -89,9 +82,9 @@ const Subscribe = () => {
 
     // 套用折扣：3個月95折，5個月9折
     if (freq === 3) {
-      discountRate = 0.95;
-    } else if (freq === 5) {
       discountRate = 0.9;
+    } else if (freq === 6) {
+      discountRate = 0.85;
     }
 
     // 計算折扣後價格
@@ -272,7 +265,7 @@ const Subscribe = () => {
       <ScrollableContent>
         {/* 已選方案 */}
         <SectionTitle>
-          已選方案
+          <SectionMainTitle>已選方案</SectionMainTitle> 
           <SectionSubtitle>請選擇您要訂閱的方案</SectionSubtitle>
         </SectionTitle>
 
@@ -336,19 +329,19 @@ const Subscribe = () => {
               <FrequencyText>3 個月</FrequencyText>
               <FrequencySubtext>(共收運12週)</FrequencySubtext>
             </FrequencyTextContainer>
-            <DiscountTag>95 折優惠</DiscountTag>
+            <DiscountTag>9 折優惠</DiscountTag>
           </FrequencyOption>
 
           <FrequencyOption
-            $active={selectedFrequency === '5'}
-            onClick={() => handleFrequencyChange('5')}
+            $active={selectedFrequency === '6'}
+            onClick={() => handleFrequencyChange('6')}
           >
-            <RadioButton $active={selectedFrequency === '5'} />
+            <RadioButton $active={selectedFrequency === '6'} />
             <FrequencyTextContainer>
-              <FrequencyText>5 個月</FrequencyText>
+              <FrequencyText>6 個月</FrequencyText>
               <FrequencySubtext>(共收運24週)</FrequencySubtext>
             </FrequencyTextContainer>
-            <DiscountTag>9 折優惠</DiscountTag>
+            <DiscountTag>85 折優惠</DiscountTag>
           </FrequencyOption>
         </FrequencyOptions>
 

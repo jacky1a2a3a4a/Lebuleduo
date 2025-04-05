@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
-import AddressAutocomplete from './AddressAutocomplete'; // 引入地址自動完成組件
+import { IoLocationSharp } from 'react-icons/io5';
+import { BsPencil } from 'react-icons/bs';
 
 // 為styled-components定義類型
 interface StyledProps {
@@ -20,38 +21,19 @@ const SubscribeData = () => {
     location.state || {};
 
   //// 狀態管理
-  const [isLoading, setIsLoading] = useState(false); // 載入狀態
-
-  const [name, setName] = useState(''); // 聯絡人姓名
-  const [phone, setPhone] = useState(''); // 聯絡電話
-  const [address, setAddress] = useState(''); // 收運地址
-  const [mapLocation, setMapLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null); // google map位置
-  const [notes, setNotes] = useState(''); // 附加備註
-
-  const [deliveryMethod, setDeliveryMethod] = useState('delivery'); // 收據方式
-
-  // 檢查 API 金鑰是否設置
-  useEffect(() => {
-    if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
-      console.error('Google Maps API 金鑰未設置！請檢查 .env 檔案。');
-    }
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [notes, setNotes] = useState('');
+  const [deliveryMethod, setDeliveryMethod] = useState('delivery'); // 'delivery' 或 'ereceipt'
 
   // 載入中
   if (isLoading) {
     return <LoadingMessage>載入中...</LoadingMessage>;
   }
 
-  // 處理地址選擇
-  const handleLocationSelect = (location: { lat: number; lng: number }) => {
-    setMapLocation(location);
-  };
-
   // 處理下一步按鈕
-  //將狀態傳遞到結帳頁面
   const handleNext = () => {
     navigate('/customer/checkout', {
       state: {
@@ -130,12 +112,29 @@ const SubscribeData = () => {
 
           <FormGroup>
             <InputLabel>收運地址</InputLabel>
-            {/* 使用自動完成地址組件 */}
-            <AddressAutocomplete
+            <StyledInput
+              type="text"
+              placeholder="請輸入收運地址"
               value={address}
-              onChange={setAddress}
-              onLocationSelect={handleLocationSelect}
+              onChange={(e) => setAddress(e.target.value)}
             />
+            <MapContainer>
+              <MapIframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.0027965864907!2d121.51840807617604!3d25.04781513972173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a9727e339109%3A0xc34a31ce3a4abecb!2z5Y-w5YyX6LuK56uZ!5e0!3m2!1szh-TW!2stw!4v1682865618561!5m2!1szh-TW!2stw"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></MapIframe>
+              <MapOverlay>
+                <MapMarker>
+                  <IoLocationSharp />
+                </MapMarker>
+                <EditButton>
+                  <BsPencil />
+                  <span>編輯地址</span>
+                </EditButton>
+              </MapOverlay>
+            </MapContainer>
           </FormGroup>
 
           <FormGroup>
@@ -390,6 +389,61 @@ const StyledTextarea = styled.textarea`
   &::placeholder {
     color: var(--color-gray-400);
     font-size: var(--font-size-sm);
+  }
+`;
+
+// 地圖容器
+const MapContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+  margin: var(--spacing-md) 0;
+`;
+
+// 地圖iframe
+const MapIframe = styled.iframe`
+  width: 100%;
+  height: 100%;
+  border: none;
+`;
+
+// 地圖覆蓋層
+const MapOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+`;
+
+// 地圖標記
+const MapMarker = styled.div`
+  color: var(--color-red-500);
+  font-size: 32px;
+  margin-top: 30px;
+`;
+
+// 編輯按鈕
+const EditButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-gray-0);
+  border: 1px solid var(--color-gray-300);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-gray-100);
   }
 `;
 

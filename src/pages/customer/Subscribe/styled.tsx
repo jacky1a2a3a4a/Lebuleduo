@@ -116,13 +116,19 @@ export const ScrollableContent = styled.div`
 
 // 區段標題 模板
 export const SectionTitle = styled.h2`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
   margin-bottom: var(--spacing-sm);
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`;
+
+// 區段主標題 模板
+export const SectionMainTitle = styled.h2`
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+
+  margin-bottom: var(--spacing-xs);
 `;
 
 // 區段副標題 模板
