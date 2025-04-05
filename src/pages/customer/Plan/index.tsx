@@ -43,8 +43,18 @@ const Plan = () => {
 
   // 處理點擊"立即預定"按鈕的函數
   //儲存planId到state，方便訂閱畫面使用，能夠顯示同樣的方案
-  const handleSubscribe = (planId: number) => {
-    navigate('/customer/subscribe', { state: { planId } });
+  const handleSubscribe = (plan) => {
+    const { PlanID, PlanName, Liter, Price, PlanKG, PlanPeople } = plan;
+    navigate('/customer/subscribe', {
+      state: {
+        planId: PlanID,
+        planName: PlanName,
+        liter: Liter,
+        price: Price,
+        planKg: PlanKG,
+        planPeople: PlanPeople,
+      },
+    });
   };
 
   return (
@@ -103,26 +113,37 @@ const Plan = () => {
         {/* 方案卡片列表 */}
         {plans.map((plan, index) => {
           // 使用解構賦值簡化plan對象的處理
-          const { PlanID, PlanName, Liter, Price } = plan;
+          const {
+            PlanID,
+            PlanName,
+            Liter,
+            Price,
+            PlanKG,
+            PlanDescription,
+            PlanPeople,
+          } = plan;
 
           return (
             <PlanCard key={PlanID || index}>
               <PlanCardHeader>
-                <PlanCardTitle>{PlanName || '錯誤'}</PlanCardTitle>
+                <PlanCardTitle>
+                  {PlanName || '錯誤'} ({PlanPeople || '錯誤'})
+                </PlanCardTitle>
                 <PlanCardPrice>NT$ {Price || '錯誤'}起/月</PlanCardPrice>
               </PlanCardHeader>
               <Divider />
               <PlanCardDescription>
                 <PlanCardDescriptionItem>
-                  ．每次收運: 一般垃圾 + 回收 + 廚餘 = {Liter || '錯誤'}公升
+                  ．每次收運: 一般垃圾 + 回收 + 廚餘 = {Liter || '錯誤'}公升 /{' '}
+                  {PlanKG || '錯誤'}公斤
                 </PlanCardDescriptionItem>
                 <PlanCardDescriptionItem>
-                  ．適合租屋族 / 小家庭 / 低垃圾量用戶
+                  ．{PlanDescription || '錯誤'}
                 </PlanCardDescriptionItem>
               </PlanCardDescription>
 
               <PlanButtons>
-                <PlanButton onClick={() => handleSubscribe(PlanID)}>
+                <PlanButton onClick={() => handleSubscribe(plan)}>
                   <IconStyled>
                     <IoMdCart />
                   </IconStyled>

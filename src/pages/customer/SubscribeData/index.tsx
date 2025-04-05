@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { IoLocationSharp } from 'react-icons/io5';
 import { BsPencil } from 'react-icons/bs';
 
@@ -16,7 +15,9 @@ interface StyledProps {
 const SubscribeData = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { planId, frequency, days, startDate, totalPrice } =
+
+  // 從上一頁獲取方案數據
+  const { planId, planName, frequency, days, startDate, totalPrice } =
     location.state || {};
 
   //// 狀態管理
@@ -37,6 +38,7 @@ const SubscribeData = () => {
     navigate('/customer/checkout', {
       state: {
         planId,
+        planName,
         frequency,
         days,
         startDate,
