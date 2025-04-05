@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import SideBar from '../SideBar';
 
-const Button = styled.button<{ isOpen: boolean }>`
+const Button = styled.button<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -27,15 +27,15 @@ const Button = styled.button<{ isOpen: boolean }>`
     transform-origin: 1px;
 
     &:first-child {
-      transform: ${({ isOpen }) => (isOpen ? 'rotate(45deg)' : 'rotate(0)')};
+      transform: ${({ $isOpen }) => ($isOpen ? 'rotate(45deg)' : 'rotate(0)')};
     }
 
     &:nth-child(2) {
-      opacity: ${({ isOpen }) => (isOpen ? '0' : '1')};
+      opacity: ${({ $isOpen }) => ($isOpen ? '0' : '1')};
     }
 
     &:nth-child(3) {
-      transform: ${({ isOpen }) => (isOpen ? 'rotate(-45deg)' : 'rotate(0)')};
+      transform: ${({ $isOpen }) => ($isOpen ? 'rotate(-45deg)' : 'rotate(0)')};
     }
   }
 
@@ -49,7 +49,7 @@ function BurgerButton() {
 
   return (
     <>
-      <Button isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
+      <Button $isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
         <div />
         <div />
         <div />

@@ -25,6 +25,9 @@ const GlobalStyles = createGlobalStyle`
   --color-gray-800: #1f2937;
   --color-gray-900: #111827;
 
+  --color-green-line-0: #06c755;
+   --color-green-line-100: #05b54c;
+
   --color-blue-100: #e0f2fe;
   --color-blue-700: #0369a1;
   --color-green-100: #dcfce7;
@@ -37,11 +40,16 @@ const GlobalStyles = createGlobalStyle`
   --color-indigo-700: #4338ca;
 
   --color-red-100: #fee2e2;
+  --color-red-500: #dc2626;
   --color-red-600: #dc2626;
   --color-red-700: #b91c1c;
   --color-red-800: #991b1b;
 
   --backdrop-color: rgba(255, 255, 255, 0.1);
+
+  /* For dark mode */
+  --image-grayscale: 0;
+  --image-opacity: 100%;
 
   /* 陰影 */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -50,17 +58,7 @@ const GlobalStyles = createGlobalStyle`
 
   --btn-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   --btn-shadow-hover: 0 7px 14px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
-
-  /* border-radius */
-  --border-radius-tiny: 3px;
-  --border-radius-sm: 5px;
-  --border-radius-md: 7px;
-  --border-radius-lg: 9px;
-  --border-radius-round: 9999px;
-
-  /* For dark mode */
-  --image-grayscale: 0;
-  --image-opacity: 100%;
+  --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
    /* 字體大小 */
   --font-size-xs: 0.75rem;   /* 12px */
@@ -75,7 +73,7 @@ const GlobalStyles = createGlobalStyle`
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
-  --font-weight-extra-bold: 800;
+  --font-weight-extra-bold: 900;
 
   /* 間距 */
   --spacing-xs: 0.25rem;  /* 4px */
@@ -86,6 +84,16 @@ const GlobalStyles = createGlobalStyle`
   --spacing-lg: 1.5rem;   /* 24px */
   --spacing-xl: 2rem;     /* 32px */
   --spacing-2xl: 3rem;    /* 48px */
+  --spacing-3xl: 4rem;    /* 64px */
+  --spacing-4xl: 5rem;    /* 80px */
+
+  /* border-radius */
+  --border-radius-tiny: 3px;
+  --border-radius-sm: 5px;
+  --border-radius-md: 7px;
+  --border-radius-lg: 9px;
+  --border-radius-xl: 11px;
+  --border-radius-round: 9999px;  
 
   /* RWD */
   --min-width-mobile: 402px;  /* iphone 16 pro */
@@ -115,12 +123,12 @@ body {
 
 /* 全局 */
 html,body {
-  font-family: "Poppins", "Noto Sans", sans-serif;
+  font-family: "Poppins", "Noto Sans",'Noto Sans TC', sans-serif;
   color: var(--color-gray-700);
 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
-  line-height: 1.5;
+  line-height: 1.2;
   font-size: 16px;
   font-weight: var(--font-weight-normal);
 }
@@ -172,7 +180,7 @@ select {
   color: inherit;
   font-family: inherit;
   font-size: 100%;
-  line-height: 1.15;
+  line-height: 1.2;
   margin: 0;
 }
 
