@@ -21,7 +21,8 @@ interface StyledProps {
 interface AddressAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
-  onLocationSelect: (location: { lat: number; lng: number }) => void;
+  onLocationSelect?: (location: { lat: number; lng: number }) => void;
+  error?: boolean;
 }
 
 // 地址建議介面
@@ -34,6 +35,7 @@ const AddressAutocomplete = ({
   value,
   onChange,
   onLocationSelect,
+  error,
 }: AddressAutocompleteProps) => {
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -180,7 +182,8 @@ const AddressAutocomplete = ({
   };
 
   // 加載中或出錯時顯示
-  if (!isLoaded) return <StatusMessageItem>載入Google Maps中...</StatusMessageItem>;
+  if (!isLoaded)
+    return <StatusMessageItem>載入Google Maps中...</StatusMessageItem>;
   if (loadError) return <StatusMessageItem>無法載入地圖服務</StatusMessageItem>;
 
   const mapContainerStyle = {
@@ -200,6 +203,7 @@ const AddressAutocomplete = ({
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => value.trim().length > 0 && setIsOpen(true)}
           ref={inputRef}
+          $error={error}
         />
         <InputIcon
           $open={isOpen}
@@ -262,7 +266,6 @@ const Container = styled.div`
   width: 100%;
 `;
 
-
 // 狀態訊息
 const StatusMessageItem = styled.div`
   padding: var(--spacing-sm) var(--spacing-md);
@@ -281,11 +284,13 @@ const InputGroup = styled.div`
 `;
 
 // 帶有圖標的輸入框
-const StyledInputWithIcon = styled.input`
+const StyledInputWithIcon = styled.input<{ $error?: boolean }>`
   width: 100%;
   padding: var(--spacing-md);
   padding-right: 40px; /* 為圖標預留空間 */
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid
+    ${(props) =>
+      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-round);
   font-size: var(--font-size-md);
 
@@ -295,7 +300,9 @@ const StyledInputWithIcon = styled.input`
   }
 
   &:focus {
-    outline: 1px solid var(--color-gray-400);
+    outline: 1px solid
+      ${(props) =>
+        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
     outline-offset: 0px;
   }
 `;
@@ -398,6 +405,5 @@ const EditButton = styled.button`
     background-color: var(--color-gray-100);
   }
 `;
-
 
 export default AddressAutocomplete;
