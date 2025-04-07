@@ -14,4 +14,5 @@ export interface Plan {
   kg: number;
   Price: number;
   PlanPeople?: string; // 收運方案適用人數
+  PlanDescription?: string; // 方案描述
 }

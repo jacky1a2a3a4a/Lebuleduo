@@ -31,8 +31,19 @@ const SubscribeData = () => {
   const navigate = useNavigate();
 
   // 從上一頁獲取方案數據
-  const { planId, planName, frequency, days, startDate, totalPrice } =
-    location.state || {};
+  const {
+    planId,
+    planName,
+    liter,
+    price,
+    planKg,
+    planPeople,
+    planDescription,
+    frequency,
+    days,
+    startDate,
+    totalPrice,
+  } = location.state || {};
 
   //// 狀態管理
   // 載入狀態，暫未使用但可能在未來用於API整合
@@ -60,7 +71,7 @@ const SubscribeData = () => {
   };
 
   ////收運方式 + 照片上傳
-  const [deliveryMethod, setDeliveryMethod] = useState('delivery'); // 如果選擇放置固定點收運方式 則會顯示照片上傳區域
+  const [deliveryMethod, setDeliveryMethod] = useState('fixedpoint'); // 如果選擇放置固定點收運方式 則會顯示照片上傳區域
   // 陣列儲存已上傳照片
   const [fixedPointImages, setFixedPointImages] = useState<FixedPointImage[]>(
     [],
@@ -183,7 +194,7 @@ const SubscribeData = () => {
       !!phone.trim() &&
       phoneError === null &&
       // 如果選擇了固定點收運，則需要有兩張照片
-      (deliveryMethod !== 'delivery' || fixedPointImages.length === 2)
+      (deliveryMethod !== 'fixedpoint' || fixedPointImages.length === 2)
     );
   };
 
@@ -200,28 +211,33 @@ const SubscribeData = () => {
       nameRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
-
     if (!isPhoneValid) {
       phoneRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
-
     if (!isAddressValid) {
       addressRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
 
-    // 如果選擇了固定點收運但沒有上傳兩張照片，顯示錯誤
-    if (deliveryMethod === 'delivery' && fixedPointImages.length < 2) {
-      setPhotoError('*請上傳兩張固定點照片');
-      return;
+    // 如果選擇了固定點收運方式，檢查是否上傳了兩張照片
+    if (deliveryMethod === 'fixedpoint') {
+      if (fixedPointImages.length < 2) {
+        setPhotoError('*請上傳兩張固定點照片');
+        return;
+      }
     }
 
-    // 所有驗證通過後才導航
-    navigate('/customer/checkout', {
+    // 將選擇的數據傳遞到下一個頁面
+    navigate('/customer/SubscribeCheckout', {
       state: {
         planId,
         planName,
+        liter,
+        price,
+        planKg,
+        planPeople,
+        planDescription,
         frequency,
         days,
         startDate,
@@ -231,8 +247,10 @@ const SubscribeData = () => {
         address,
         notes,
         deliveryMethod,
-        // 只傳遞文件對象，不傳URL
-        fixedPointImages: fixedPointImages.map((img) => img.file),
+        fixedPointImages: fixedPointImages.map((img) => ({
+          id: img.id,
+          url: img.url,
+        })),
       },
     });
   };
@@ -262,7 +280,7 @@ const SubscribeData = () => {
           </StepItem>
 
           <StepConnector>
-            <StepLine />
+            <StepLine $active={isFormValid()} />
           </StepConnector>
 
           <StepItem>
@@ -339,10 +357,10 @@ const SubscribeData = () => {
         <FormSection>
           <DeliveryOptions>
             <DeliveryOption
-              $active={deliveryMethod === 'delivery'}
-              onClick={() => setDeliveryMethod('delivery')}
+              $active={deliveryMethod === 'fixedpoint'}
+              onClick={() => setDeliveryMethod('fixedpoint')}
             >
-              <RadioButton $active={deliveryMethod === 'delivery'} />
+              <RadioButton $active={deliveryMethod === 'fixedpoint'} />
               <DeliveryOptionContent>
                 <DeliveryOptionText>
                   <DeliveryOptionTitle>放置固定點</DeliveryOptionTitle>
@@ -353,7 +371,7 @@ const SubscribeData = () => {
                 </DeliveryOptionText>
 
                 {/* 固定點照片上傳區域 */}
-                {deliveryMethod === 'delivery' && (
+                {deliveryMethod === 'fixedpoint' && (
                   <DeliveryOptionImageContainer>
                     <DeliveryOptionImages>
                       {fixedPointImages.map((image) => (
