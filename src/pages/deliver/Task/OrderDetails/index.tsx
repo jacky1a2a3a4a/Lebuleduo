@@ -262,7 +262,6 @@ function OrderDetails() {
               center={mapCenter || { lat: 25.033, lng: 121.5654 }} // 默認台北市中心
               zoom={15}
               onLoad={() => console.log('地圖已成功載入')}
-              onError={(error) => console.error('地圖載入錯誤:', error)}
             >
               {mapCenter && <Marker position={mapCenter} />}
             </GoogleMap>
