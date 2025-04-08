@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/:match*",
-      "destination": "http://4.240.61.223/:match*"
+      "source": "/api/:path*",
+      "destination": "http://4.240.61.223/:path*"
     }
   ],
   "headers": [

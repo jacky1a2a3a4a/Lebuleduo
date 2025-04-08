@@ -115,7 +115,8 @@ function Task() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-      ////3. 發送請求 這支api是舊的
+      ////3. 發送請求
+      //佈署時需要使用 vercel.json 定義路徑
       const response = await fetch('/api/GET/user/orders', {
         method: 'GET',
         signal: controller.signal, //參數連接到AbortController，允許超時中止
