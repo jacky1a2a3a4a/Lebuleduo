@@ -6,10 +6,16 @@
   <link rel="icon" type="image/svg+xml" href="/Lebuleduo.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- 內容安全策略 - 允許Google Maps API -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; connect-src 'self' http://4.240.61.223 https://*.googleapis.com https://*.gstatic.com https://maps.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.googleapis.com https://*.gstatic.com https://maps.googleapis.com https://maps.gstatic.com; frame-src 'self' https://*.googleapis.com; worker-src 'self' blob:;">
+
   <!-- google fonts -->
   <!-- 通用 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://maps.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://maps.gstatic.com" crossorigin />
   <!-- 字體類型 -->
   <!-- Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
