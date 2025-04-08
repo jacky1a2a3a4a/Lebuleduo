@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import GlobalStyles from './styles/GlobalStyles';
 
 //頁面 排版
@@ -51,7 +51,7 @@ function App() {
   return (
     <>
       <GlobalStyles />
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           {/* 根路徑重定向到 auth 登入頁面 */}
           <Route path="/" element={<Navigate to="/auth" replace />} />
@@ -166,7 +166,7 @@ function App() {
           {/* 404路由 */}
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
