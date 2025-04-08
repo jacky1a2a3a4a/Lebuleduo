@@ -76,16 +76,31 @@ const SubscribeCheckout = () => {
 
   // 支付方式
   const [paymentMethod, setPaymentMethod] = useState('linepay'); // 預設使用Line Pay
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   // 處理結帳按鈕
   const handleCheckout = () => {
+    // 驗證支付方式
+    if (!paymentMethod) {
+      // 顯示錯誤提示
+      setShowErrorMessage(true);
+      return;
+    }
+
     // 這裡可以實現實際的支付邏輯
     // 例如呼叫支付API等
+
+    // 生成訂單號碼
+    const timestamp = new Date().getTime();
+    // 生成6位隨機數字
+    const randomNum = Math.floor(Math.random() * 900000) + 100000;
+    // 組合訂單號
+    const newOrderId = `LBL${timestamp}${randomNum}`;
 
     // 模擬完成後導航到訂閱成功頁面
     navigate('/customer/SubscribeSuccess', {
       state: {
-        orderId: 'ORD' + Date.now(),
+        orderId: newOrderId,
         planName,
         liter,
         planKg,
@@ -94,6 +109,17 @@ const SubscribeCheckout = () => {
         totalPrice,
         paymentMethod,
       },
+    });
+
+    console.log('訂單資訊:', {
+      orderId: newOrderId,
+      planName,
+      liter,
+      planKg,
+      planPeople,
+      frequency,
+      totalPrice,
+      paymentMethod,
     });
   };
 
@@ -184,7 +210,7 @@ const SubscribeCheckout = () => {
 
             <InfoLine>
               <InfoLabel>• 每周收運日</InfoLabel>
-              <InfoValue>{days?.join('、') || '週一'}</InfoValue>
+              <InfoValue>星期{days?.join('、') || '錯誤'}</InfoValue>
             </InfoLine>
           </InfoSubsection>
 
@@ -207,14 +233,14 @@ const SubscribeCheckout = () => {
               <InfoValue>{address || '錯誤'}</InfoValue>
             </InfoLine>
             <InfoLine>
-              <InfoLabel>• 備註</InfoLabel>
-              <InfoValue>{notes || '錯誤'}</InfoValue>
-            </InfoLine>
-            <InfoLine>
               <InfoLabel>• 收運方式</InfoLabel>
               <InfoValue>
                 {deliveryMethod === 'fixedpoint' ? '放置固定點' : '面交收運'}
               </InfoValue>
+            </InfoLine>
+            <InfoLine>
+              <InfoLabel>• 地點備註</InfoLabel>
+              <InfoValue>{notes || '無'}</InfoValue>
             </InfoLine>
 
             {/* 如果選擇固定點且有照片則顯示照片 */}
@@ -473,6 +499,7 @@ const InfoSubtitle = styled.h4`
 // 訊息行
 const InfoLine = styled.div`
   display: flex;
+  justify-content: space-between;
   margin-bottom: var(--spacing-sm);
   &:last-child {
     margin-bottom: 0;
@@ -615,6 +642,7 @@ const CheckoutButton = styled.button`
 const FixedPointImagesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: var(--spacing-md);
   margin-top: var(--spacing-sm);
   margin-left: var(--spacing-sm);

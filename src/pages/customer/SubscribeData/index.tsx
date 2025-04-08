@@ -25,6 +25,7 @@ const SubscribeData = () => {
   const nameRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const addressRef = useRef<HTMLDivElement>(null);
+  const notesRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   // 啟用路由方法
   const location = useLocation();
@@ -57,6 +58,7 @@ const SubscribeData = () => {
   const [address, setAddress] = useState(''); // 收運地址
   const [addressError, setAddressError] = useState<string | null>(null); // 地址錯誤提示
   const [notes, setNotes] = useState(''); // 附加備註
+  const [notesError, setNotesError] = useState<string | null>(null); // 備註錯誤提示
 
   //// 處理Google Map位置資料
   const [, setMapLocation] = useState<{
@@ -186,12 +188,23 @@ const SubscribeData = () => {
     return true;
   };
 
+  // 備註驗證函數
+  const validateNotes = (notes: string): boolean => {
+    if (!notes.trim()) {
+      setNotesError('*請填寫地點備註');
+      return false;
+    }
+    setNotesError(null);
+    return true;
+  };
+
   // 檢查所有欄位是否填寫完整，才能進行下一步
   const isFormValid = () => {
     return (
       !!name.trim() &&
       !!address.trim() &&
       !!phone.trim() &&
+      !!notes.trim() &&
       phoneError === null &&
       // 如果選擇了固定點收運，則需要有兩張照片
       (deliveryMethod !== 'fixedpoint' || fixedPointImages.length === 2)
@@ -205,6 +218,7 @@ const SubscribeData = () => {
     const isNameValid = validateName(name);
     const isPhoneValid = validatePhone(phone);
     const isAddressValid = validateAddress(address);
+    const isNotesValid = validateNotes(notes);
 
     // 如果某欄位無效，滾動到該欄位
     if (!isNameValid) {
@@ -217,6 +231,11 @@ const SubscribeData = () => {
     }
     if (!isAddressValid) {
       addressRef.current?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    if (!isNotesValid) {
+      // 備註區域滾動
+      notesRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
 
@@ -338,15 +357,6 @@ const SubscribeData = () => {
             />
             {addressError && <ErrorMessage>{addressError}</ErrorMessage>}
           </FormGroup>
-
-          <FormGroup>
-            <InputLabel>附加備註</InputLabel>
-            <StyledTextarea
-              placeholder="如有特殊收運需求，請在此備註"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </FormGroup>
         </FormSection>
 
         {/* 收運方式 */}
@@ -436,6 +446,18 @@ const SubscribeData = () => {
                 </DeliveryOptionDescription>
               </DeliveryOptionText>
             </DeliveryOption>
+
+            <FormGroup ref={notesRef}>
+              <InputLabel>地點備註</InputLabel>
+              <StyledTextarea
+                placeholder="請備註放置固定點或面交收運的詳細位置"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                onBlur={() => validateNotes(notes)}
+                $error={notesError !== null}
+              />
+              {notesError && <ErrorMessage>{notesError}</ErrorMessage>}
+            </FormGroup>
           </DeliveryOptions>
         </FormSection>
 
@@ -650,10 +672,12 @@ const StyledInput = styled.input<StyledProps>`
 `;
 
 // 樣式化文本區域
-const StyledTextarea = styled.textarea`
+const StyledTextarea = styled.textarea<StyledProps>`
   width: 100%;
   padding: var(--spacing-md);
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid
+    ${(props) =>
+      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-md);
   min-height: 100px;
@@ -662,6 +686,14 @@ const StyledTextarea = styled.textarea`
   &::placeholder {
     color: var(--color-gray-400);
     font-size: var(--font-size-sm);
+  }
+
+  // 注目框
+  &:focus {
+    outline: 1px solid
+      ${(props) =>
+        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
+    outline-offset: 0px;
   }
 `;
 

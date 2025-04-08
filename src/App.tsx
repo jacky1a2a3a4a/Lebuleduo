@@ -16,6 +16,7 @@ import Plan from './pages/customer/Plan';
 import Subscribe from './pages/customer/Subscribe';
 import SubscribeData from './pages/customer/SubscribeData';
 import SubscribeCheckout from './pages/customer/SubscribeCheckout';
+import SubscribeSuccess from './pages/customer/SubscribeSuccess';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -119,6 +120,12 @@ function App() {
                 <SubscribeCheckout />
               </ProtectedRoute>
             }
+          />
+
+          {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/SubscribeSuccess"
+            element={<SubscribeSuccess />}
           />
 
           {/* DOG路由 */}
