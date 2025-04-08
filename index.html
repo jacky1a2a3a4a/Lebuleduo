@@ -3,13 +3,19 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="icon" type="image/svg+xml" href="/Lebuleduo.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 內容安全策略 - 完全放寬圖片和地圖限制 -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; connect-src 'self' http://4.240.61.223 https://*.googleapis.com https://*.gstatic.com https://maps.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://maps.googleapis.com https://*.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src * data: blob:; frame-src 'self' https://*.googleapis.com; worker-src 'self' blob:;">
 
   <!-- google fonts -->
   <!-- 通用 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://maps.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://maps.gstatic.com" crossorigin />
   <!-- 字體類型 -->
   <!-- Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -17,6 +23,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Sono:wght@400;500;600&display=swap" rel="stylesheet" />
   <!-- Noto Sans -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <!-- Noto Sans TC 支援繁體中文的不同粗細 -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap"
     rel="stylesheet">
 
   <title>Lebuleduo</title>

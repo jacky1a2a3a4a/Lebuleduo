@@ -1,11 +1,22 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import GlobalStyles from './styles/GlobalStyles';
 
+//頁面 排版
 import ProtectedRoute from './layouts/ProtectedRoute';
 import CustomerLayout from './layouts/CustomerLayout';
 import DeliverLayout from './layouts/DeliverLayout';
 
+//line登入 頁面組件
+import LineLogin from './pages/auth/LineLogin/index';
+
 // 顧客(customer) 頁面組件
+import MyOrder from './pages/customer/MyOrder';
+import OrderDetail from './pages/customer/OrderDetail';
+import Plan from './pages/customer/Plan';
+import Subscribe from './pages/customer/Subscribe';
+import SubscribeData from './pages/customer/SubscribeData';
+import SubscribeCheckout from './pages/customer/SubscribeCheckout';
+import SubscribeSuccess from './pages/customer/SubscribeSuccess';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -15,15 +26,17 @@ import ScanOrder from './pages/deliver/ScanOrder';
 import Calendar from './pages/deliver/Calendar';
 
 // 臨時頁面組件
+// line登入 頁面組件
+// const Register = () => <div>註冊頁面</div>;
+// const Login = () => <div>登入頁面</div>;
+
 // 顧客(customer) 頁面組件
-const Register = () => <div>註冊頁面</div>;
-const Login = () => <div>登入頁面</div>;
-const MyOrder = () => <div>我的訂單</div>;
-const Subscribe = () => <div>開始訂閱</div>;
-const CheckoutPlan = () => <div>結帳計劃頁面</div>;
-const CheckoutUserData = () => <div>使用者數據頁面</div>;
-const CheckoutPayment = () => <div>支付頁面</div>;
-const CheckoutSuccess = () => <div>支付成功頁面</div>;
+// const MyOrder = () => <div>我的訂單</div>;
+// const Subscribe = () => <div>開始訂閱</div>;
+// const CheckoutPlan = () => <div>結帳計劃頁面</div>;
+// const CheckoutUserData = () => <div>使用者數據頁面</div>;
+// const CheckoutPayment = () => <div>支付頁面</div>;
+// const CheckoutSuccess = () => <div>支付成功頁面</div>;
 const Account = () => <div>帳戶頁面</div>;
 const ContactUs = () => <div>聯絡我們</div>;
 const PageNotFound = () => <div>404 - 頁面未找到</div>;
@@ -35,27 +48,18 @@ const PageNotFound = () => <div>404 - 頁面未找到</div>;
 const ReportBackend = () => <div>回報後台</div>;
 
 function App() {
-  // 用戶角色類型
-  type UserRole = 'customer' | 'deliver';
-
-  // 假設這是從認證系統獲取的用戶角色
-  // const userRole: UserRole = 'customer';
-  const userRole: UserRole = 'deliver';
-
-  // 導航路徑選擇函數
-  const getRedirectPath = (role: UserRole): string => {
-    return role === 'customer' ? '/customer' : '/deliver';
-  };
-
   return (
     <>
       <GlobalStyles />
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
+          {/* 根路徑重定向到 auth 登入頁面 */}
+          <Route path="/" element={<Navigate to="/auth" replace />} />
+
           {/* 登入/註冊 */}
           <Route path="/auth">
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
+            <Route index element={<Navigate to="/auth/line-login" replace />} />
+            <Route path="line-login" element={<LineLogin />} />
           </Route>
 
           {/* 顧客路由 */}
@@ -67,17 +71,62 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<MyOrder />} />
-            <Route path="subscribe" element={<Subscribe />} />
-            <Route path="checkout">
-              <Route path="plan" element={<CheckoutPlan />} />
-              <Route path="user-data" element={<CheckoutUserData />} />
-              <Route path="payment" element={<CheckoutPayment />} />
-              <Route path="success" element={<CheckoutSuccess />} />
-            </Route>
+            {/* 首頁 */}
+            <Route
+              index
+              element={<Navigate to="/customer/my-order" replace />}
+            />
+            <Route path="my-order" element={<MyOrder />} />
+            <Route path="Plan" element={<Plan />} />
             <Route path="account" element={<Account />} />
             <Route path="contact-us" element={<ContactUs />} />
           </Route>
+
+          {/* 查看訂單詳情 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/order-detail/:orderId"
+            element={
+              <ProtectedRoute role="customer">
+                <OrderDetail />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 訂閱方案詳情 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/subscribe"
+            element={
+              <ProtectedRoute role="customer">
+                <Subscribe />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 訂閱資料填寫 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/SubscribeData"
+            element={
+              <ProtectedRoute role="customer">
+                <SubscribeData />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 訂閱結帳 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/SubscribeCheckout"
+            element={
+              <ProtectedRoute role="customer">
+                <SubscribeCheckout />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/SubscribeSuccess"
+            element={<SubscribeSuccess />}
+          />
 
           {/* DOG路由 */}
           <Route
@@ -114,14 +163,10 @@ function App() {
             }
           />
 
-          {/* 重新導向和404路由 */}
-          <Route
-            path="/"
-            element={<Navigate to={getRedirectPath(userRole)} replace />}
-          />
+          {/* 404路由 */}
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }

@@ -10,15 +10,13 @@ const AppLayoutStyled = styled.section`
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
-
-  @media (min-width: calc(var(--min-width-mobile) + 1px)) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-  }
 `;
 
 const Main = styled.main`
-  background-color: var(--color-gray-100);
+  background-color: var(--color-gray-200);
+  padding: 0.5rem var(--spacing-14);
+  height: 100%;
+  overflow: hidden;
 `;
 
 function CustomerLayout() {

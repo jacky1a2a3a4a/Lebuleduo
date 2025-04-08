@@ -25,3 +25,10 @@ dist-ssr
 
 # Vite cache
 .vite
+
+# Environment variables
+.env
+.env.production
+
+
+.vercel

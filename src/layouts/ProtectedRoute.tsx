@@ -8,23 +8,37 @@ interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({ children, role }: ProtectedRouteProps) {
-  // 這裡之後可以添加認證和授權邏輯
-  // 暫時返回子元素，不做任何保護
-  return children;
+  // 檢查用戶是否已登入（檢查 token 是否存在）
+  const token = sessionStorage.getItem('token');
+  // 檢查用戶角色是否與路由要求的角色匹配
+  const userRole = sessionStorage.getItem('userRole');
 
-  // 完整邏輯大概會像這樣：
-  // const isAuthenticated = true; // 之後改為實際檢查
-  // const userRole = 'customer'; // 之後改為從認證系統獲取
+  console.log('ProtectedRoute - 檢查用戶權限', {
+    token: !!token,
+    userRole,
+    requiredRole: role,
+  });
 
-  // if (!isAuthenticated) {
-  //   return <Navigate to="/auth/login" replace />;
-  // }
+  // 用戶未登入，跳轉到登入頁面
+  if (!token) {
+    console.log('用戶未登入，重定向到登入頁面');
+    return <Navigate to="/auth/line-login" replace />;
+  }
 
-  // if (role && role !== userRole) {
-  //   return <Navigate to="/" replace />;
-  // }
+  // 用戶角色與路由要求的角色不匹配，跳轉到對應頁面
+  if (role === 'customer' && userRole !== 'customer') {
+    console.log('用戶角色不是客戶，重定向到汪汪員頁面');
+    return <Navigate to="/deliver" replace />;
+  } else if (role === 'deliver' && userRole !== 'deliver') {
+    console.log('用戶角色不是汪汪員，重定向到客戶頁面');
+    return <Navigate to="/customer/my-order" replace />;
+  }
 
-  // return children;
+  // 一切正常，渲染子組件
+  console.log('用戶權限驗證通過，顯示受保護內容');
+  // 清除重定向標記
+  sessionStorage.removeItem('is_redirecting');
+  return <>{children}</>;
 }
 
 export default ProtectedRoute;

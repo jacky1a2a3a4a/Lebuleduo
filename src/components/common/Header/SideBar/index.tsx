@@ -6,10 +6,10 @@ type SideBarProps = {
 };
 
 // 側邊欄容器主體
-const SidebarContainer = styled.div<SideBarProps>`
+const SidebarContainer = styled.div<{ $isOpen: boolean }>`
   background-color: var(--color-gray-100);
-  box-shadow: ${({ isOpen }) =>
-    isOpen ? '2px 0 5px rgba(0, 0, 0, 0.1)' : 'none'};
+  box-shadow: ${({ $isOpen }) =>
+    $isOpen ? '2px 0 5px rgba(0, 0, 0, 0.1)' : 'none'};
 
   position: fixed;
   z-index: 9;
@@ -19,13 +19,13 @@ const SidebarContainer = styled.div<SideBarProps>`
   width: 300px;
   padding: 6rem 2rem 2rem;
 
-  transform: ${({ isOpen }) =>
-    isOpen ? 'translateX(0)' : 'translateX(-100%)'};
+  transform: ${({ $isOpen }) =>
+    $isOpen ? 'translateX(0)' : 'translateX(-100%)'};
   transition: transform 0.3s ease-in-out;
 `;
 
 // 灰色遮色片
-const SidebarOverlay = styled.div<SideBarProps>`
+const SidebarOverlay = styled.div<{ $isOpen: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
 
   position: fixed;
@@ -35,8 +35,8 @@ const SidebarOverlay = styled.div<SideBarProps>`
   height: 100%;
   z-index: 8;
 
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  visibility: ${({ $isOpen }) => ($isOpen ? 'visible' : 'hidden')};
   transition:
     opacity 0.3s ease-in-out,
     visibility 0.3s ease-in-out;
@@ -74,8 +74,8 @@ function CustomerSideBar({ isOpen, setIsOpen }) {
 
   return (
     <>
-      <SidebarOverlay isOpen={isOpen} onClick={() => setIsOpen(false)} />
-      <SidebarContainer isOpen={isOpen}>
+      <SidebarOverlay $isOpen={isOpen} onClick={() => setIsOpen(false)} />
+      <SidebarContainer $isOpen={isOpen}>
         <NavMenu>
           <MenuItem>首頁</MenuItem>
           <MenuItem>服務</MenuItem>

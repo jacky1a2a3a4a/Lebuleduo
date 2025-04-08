@@ -17,7 +17,8 @@ type TaskCardsContainerProps = {
   topPosition: number;
 };
 
-// 樣式組件
+
+// 最外層容器
 export const TaskSectionStyled = styled.section`
   position: relative;
   width: 100%;
@@ -33,6 +34,7 @@ export const TaskSectionStyled = styled.section`
   }
 `;
 
+// 外送員卡片 最外層容器
 export const DeliverContainer = styled.div`
   background-color: var(--color-gray-100);
   border-radius: var(--border-radius-lg);
@@ -174,7 +176,7 @@ export const TaskCategoryWrapper = styled.div<CategoryPositionProps>`
   max-width: calc(var(--min-width-mobile) - 2rem);
   transition: top 0.3s ease;
 
-  &::after {
+  /* &::after {
     content: '';
     position: absolute;
     top: 0;
@@ -184,13 +186,15 @@ export const TaskCategoryWrapper = styled.div<CategoryPositionProps>`
     height: 100%;
     background: linear-gradient(to right, transparent, var(--color-gray-100));
     pointer-events: none;
-  }
+  } */
 `;
 
+// 分類標籤 最外層容器
 export const TaskCategoryContainer = styled.div`
   position: relative;
   width: 100%;
   padding: 0.75rem 0;
+  margin: 0 auto;
   display: flex;
   gap: 0.75rem;
 
