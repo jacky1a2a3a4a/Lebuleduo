@@ -47,6 +47,30 @@ const GlobalStyles = createGlobalStyle`
 
   --backdrop-color: rgba(255, 255, 255, 0.1);
 
+  /* 垃不垃多配色 */
+  --color-background-Primary: #FFFFFF;
+  --color-background-Secondary: #F8FAFF;
+
+  --color-text-Primary: #1F2A52;
+  --color-text-Secondary: #323232;
+  --color-text-Tertiary: #757575;
+  --color-text-disabled: #BDBDBD;
+
+  --color-Primary: #445DB3;
+  --color-Secondary: #A2AED9;
+  --color-Tertiary: #F7DD97;
+
+  --color-neutral-600: #757575;
+  --color-neutral-500: #9E9E9E;
+  --color-neutral-400: #BDBDBD;
+  --color-neutral-300: #E0E0E0;
+  --color-neutral-200: #EEEEEE;
+
+  --color-error: #E53F34;
+
+
+   
+
   /* For dark mode */
   --image-grayscale: 0;
   --image-opacity: 100%;
