@@ -50,7 +50,7 @@ function OrderDetails() {
 
   // 使用 useJsApiLoader 來處理 Google Maps API 載入
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyABHP7-CH4b-cyZaARmoUI9OwOGi3e6Whg',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
     libraries: libraries as any,
   });
 
@@ -96,7 +96,7 @@ function OrderDetails() {
             });
             setMapLoaded(true);
             resolve(true);
-            console.log(results,status);
+            console.log(results, status);
           } else {
             console.error('地理編碼失敗:', status);
             setMapLoaded(true); // 即使失敗也標記為已載入，使用默認位置
