@@ -262,7 +262,9 @@ function OrderInProcess() {
         </DetailRow>
 
         <MapContainer>
-          <LoadScript googleMapsApiKey="AIzaSyABHP7-CH4b-cyZaARmoUI9OwOGi3e6Whg">
+          <LoadScript
+            googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}
+          >
             <GoogleMap
               mapContainerStyle={{ width: '100%', height: '100%' }}
               center={location}
