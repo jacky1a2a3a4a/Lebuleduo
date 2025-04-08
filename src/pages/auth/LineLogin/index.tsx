@@ -2,6 +2,7 @@
 import styled from 'styled-components';
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LineLogin = () => {
   const [selectedRole, setSelectedRole] = useState<
@@ -9,6 +10,7 @@ const LineLogin = () => {
   >(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  const navigate = useNavigate();
 
   const handleRoleSelect = (role: 'customer' | 'deliver') => {
     if (selectedRole === role) return;
@@ -48,8 +50,8 @@ const LineLogin = () => {
       sessionStorage.setItem('userRole', role);
       sessionStorage.setItem('profileData', JSON.stringify(mockProfileData));
 
-      // 跳轉到對應頁面
-      window.location.href = role === 'customer' ? '/customer' : '/deliver';
+      // 使用 React Router 導航而非直接修改 window.location
+      navigate(role === 'customer' ? '/customer' : '/deliver');
     };
 
     // 顯示確認對話框
