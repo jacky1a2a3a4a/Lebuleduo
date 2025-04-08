@@ -15,4 +15,19 @@ export default defineConfig({
     port: 5173,
     host: true,
   },
+  base: '/',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    emptyOutDir: true,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['styled-components', 'react-icons'],
+        },
+      },
+    },
+  },
 });
