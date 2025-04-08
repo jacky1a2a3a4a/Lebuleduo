@@ -52,6 +52,10 @@ function OrderDetails() {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
     libraries: libraries as any,
+    id: 'google-map-script',
+    version: 'weekly',
+    language: 'zh-TW',
+    region: 'TW',
   });
 
   // 定義地圖中心位置和載入狀態
@@ -243,28 +247,24 @@ function OrderDetails() {
         </DetailRow>
 
         <MapContainer>
-          {/* 顯示地圖載入錯誤 */}
           {loadError && (
-            <ErrorMessage>地圖載入失敗，請重新整理頁面。</ErrorMessage>
+            <ErrorMessage>地圖載入失敗: {loadError.message}</ErrorMessage>
           )}
-
-          {/* 顯示地圖載入中 */}
-          {!isLoaded && !loadError && (
-            <ErrorMessage>正在載入地圖...</ErrorMessage>
-          )}
-
-          {/* 顯示已載入的地圖 */}
-          {isLoaded && !loadError && (
+          {!isLoaded ? (
+            <div>正在載入地圖...</div>
+          ) : (
             <GoogleMap
-              mapContainerStyle={{ width: '100%', height: '100%' }}
-              center={mapCenter}
-              zoom={16}
-              options={{
-                disableDefaultUI: false,
-                zoomControl: true,
+              mapContainerStyle={{
+                width: '100%',
+                height: '200px',
+                borderRadius: 'var(--border-radius-md)',
               }}
+              center={mapCenter || { lat: 25.033, lng: 121.5654 }} // 默認台北市中心
+              zoom={15}
+              onLoad={() => console.log('地圖已成功載入')}
+              onError={(error) => console.error('地圖載入錯誤:', error)}
             >
-              <Marker position={mapCenter} />
+              {mapCenter && <Marker position={mapCenter} />}
             </GoogleMap>
           )}
         </MapContainer>
