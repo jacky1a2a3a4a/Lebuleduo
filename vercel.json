@@ -1,0 +1,8 @@
+{
+  "routes": [
+    { "src": "/customer.*", "dest": "/index.html" },
+    { "src": "/deliver.*", "dest": "/index.html" },
+    { "src": "/auth.*", "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
