@@ -14,11 +14,9 @@
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "src": "/favicon.ico", "dest": "/favicon.ico" },
     { "src": "/Lebuleduo.svg", "dest": "/Lebuleduo.svg" },
-    { "src": "/customer.*", "dest": "/index.html" },
-    { "src": "/deliver.*", "dest": "/index.html" },
-    { "src": "/auth.*", "dest": "/index.html" },
+    { "src": "/customer(.*)", "dest": "/index.html" },
+    { "src": "/deliver(.*)", "dest": "/index.html" },
+    { "src": "/auth(.*)", "dest": "/index.html" },
     { "src": "/(.*)", "dest": "/index.html" }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  ]
 }
