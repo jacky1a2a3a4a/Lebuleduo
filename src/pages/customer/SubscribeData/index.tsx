@@ -1,38 +1,144 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AddressAutocomplete from './AddressAutocomplete'; // 引入地址自動完成組件
+import { IoAdd, IoClose } from 'react-icons/io5'; // 導入圖標
 
 // 為styled-components定義類型
 interface StyledProps {
   $active?: boolean; // 定義元件是否處於活動狀態
   $light?: boolean; // 定義元件是否使用淺色樣式
   $open?: boolean; // 定義元件（如下拉選單）是否展開
+  $error?: boolean; // 定義元件是否處於錯誤狀態
+}
+
+// 圖片類型
+interface FixedPointImage {
+  id: string;
+  url: string;
+  file: File;
 }
 
 //組件本體
 const SubscribeData = () => {
+  // 參考元素用於滾動
+  const nameRef = useRef<HTMLDivElement>(null);
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const addressRef = useRef<HTMLDivElement>(null);
+  const notesRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  // 啟用路由方法
   const location = useLocation();
   const navigate = useNavigate();
 
   // 從上一頁獲取方案數據
-  const { planId, planName, frequency, days, startDate, totalPrice } =
-    location.state || {};
+  const {
+    planId,
+    planName,
+    liter,
+    price,
+    planKg,
+    planPeople,
+    planDescription,
+    frequency,
+    days,
+    startDate,
+    totalPrice,
+  } = location.state || {};
 
   //// 狀態管理
-  const [isLoading, setIsLoading] = useState(false); // 載入狀態
+  // 載入狀態，暫未使用但可能在未來用於API整合
+  const [isLoading] = useState(false);
 
+  ////收運資料
   const [name, setName] = useState(''); // 聯絡人姓名
+  const [nameError, setNameError] = useState<string | null>(null); // 姓名錯誤提示
   const [phone, setPhone] = useState(''); // 聯絡電話
+  const [phoneError, setPhoneError] = useState<string | null>(null); // 電話格式錯誤提示
   const [address, setAddress] = useState(''); // 收運地址
-  const [mapLocation, setMapLocation] = useState<{
+  const [addressError, setAddressError] = useState<string | null>(null); // 地址錯誤提示
+  const [notes, setNotes] = useState(''); // 附加備註
+  const [notesError, setNotesError] = useState<string | null>(null); // 備註錯誤提示
+
+  //// 處理Google Map位置資料
+  const [, setMapLocation] = useState<{
     lat: number;
     lng: number;
   } | null>(null); // google map位置
-  const [notes, setNotes] = useState(''); // 附加備註
 
-  const [deliveryMethod, setDeliveryMethod] = useState('delivery'); // 收據方式
+  // 處理地址選擇
+  const handleLocationSelect = (location: { lat: number; lng: number }) => {
+    setMapLocation(location);
+    validateAddress(address); // 當地址有變更時驗證
+  };
 
+  ////收運方式 + 照片上傳
+  const [deliveryMethod, setDeliveryMethod] = useState('fixedpoint'); // 如果選擇放置固定點收運方式 則會顯示照片上傳區域
+  // 陣列儲存已上傳照片
+  const [fixedPointImages, setFixedPointImages] = useState<FixedPointImage[]>(
+    [],
+  );
+
+  // 處理照片上傳
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+
+      // 驗證文件類型
+      if (!file.type.startsWith('image/')) {
+        setPhotoError('*請上傳圖片格式的檔案');
+        return;
+      }
+
+      // 驗證文件大小 (限制為5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setPhotoError('*圖片大小不得超過5MB');
+        return;
+      }
+
+      // 檢查是否已經上傳了兩張照片
+      if (fixedPointImages.length >= 2) {
+        setPhotoError('*最多只能上傳兩張照片');
+        return;
+      }
+
+      // 創建臨時URL以預覽圖片
+      const imageUrl = URL.createObjectURL(file);
+      const imageId = Date.now().toString();
+
+      // 添加到圖片列表
+      setFixedPointImages([
+        ...fixedPointImages,
+        {
+          id: imageId,
+          url: imageUrl,
+          file,
+        },
+      ]);
+
+      // 清除錯誤訊息
+      setPhotoError(null);
+
+      // 清除文件選擇器的值，以便可以再次選擇相同的文件
+      e.target.value = '';
+    }
+  };
+
+  // 開啟文件選擇器
+  const openFileSelector = () => {
+    fileInputRef.current?.click();
+  };
+
+  // 處理照片刪除
+  const handleDeletePhoto = (id: string) => {
+    const newImages = fixedPointImages.filter((image) => image.id !== id);
+    setFixedPointImages(newImages);
+  };
+
+  // 照片錯誤提示
+  const [photoError, setPhotoError] = useState<string | null>(null);
+
+  ////資料驗證
   // 檢查 API 金鑰是否設置
   useEffect(() => {
     if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
@@ -40,23 +146,117 @@ const SubscribeData = () => {
     }
   }, []);
 
-  // 載入中
-  if (isLoading) {
-    return <LoadingMessage>載入中...</LoadingMessage>;
-  }
+  // 姓名驗證函數
+  const validateName = (name: string): boolean => {
+    if (!name.trim()) {
+      setNameError('*請輸入聯絡人姓名');
+      return false;
+    }
+    setNameError(null);
+    return true;
+  };
 
-  // 處理地址選擇
-  const handleLocationSelect = (location: { lat: number; lng: number }) => {
-    setMapLocation(location);
+  // 電話格式驗證函數
+  const validatePhone = (phoneNumber: string): boolean => {
+    // 台灣手機號碼格式 (09開頭的10位數字)
+    const mobilePattern = /^09\d{8}$/;
+    // 台灣市話格式 (區號+號碼，例如 02-12345678 或 02-1234-5678)
+    const telPattern = /^0\d{1,2}[-\s]?\d{6,8}$/;
+
+    if (!phoneNumber.trim()) {
+      setPhoneError('*請輸入聯絡電話');
+      return false;
+    } else if (
+      mobilePattern.test(phoneNumber) ||
+      telPattern.test(phoneNumber)
+    ) {
+      setPhoneError(null);
+      return true;
+    } else {
+      setPhoneError('*請輸入有效的台灣手機或市話號碼');
+      return false;
+    }
+  };
+
+  // 地址驗證函數
+  const validateAddress = (address: string): boolean => {
+    if (!address.trim()) {
+      setAddressError('*請輸入收運地址');
+      return false;
+    }
+    setAddressError(null);
+    return true;
+  };
+
+  // 備註驗證函數
+  const validateNotes = (notes: string): boolean => {
+    if (!notes.trim()) {
+      setNotesError('*請填寫地點備註');
+      return false;
+    }
+    setNotesError(null);
+    return true;
+  };
+
+  // 檢查所有欄位是否填寫完整，才能進行下一步
+  const isFormValid = () => {
+    return (
+      !!name.trim() &&
+      !!address.trim() &&
+      !!phone.trim() &&
+      !!notes.trim() &&
+      phoneError === null &&
+      // 如果選擇了固定點收運，則需要有兩張照片
+      (deliveryMethod !== 'fixedpoint' || fixedPointImages.length === 2)
+    );
   };
 
   // 處理下一步按鈕
   //將狀態傳遞到結帳頁面
   const handleNext = () => {
-    navigate('/customer/checkout', {
+    // 驗證所有欄位
+    const isNameValid = validateName(name);
+    const isPhoneValid = validatePhone(phone);
+    const isAddressValid = validateAddress(address);
+    const isNotesValid = validateNotes(notes);
+
+    // 如果某欄位無效，滾動到該欄位
+    if (!isNameValid) {
+      nameRef.current?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    if (!isPhoneValid) {
+      phoneRef.current?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    if (!isAddressValid) {
+      addressRef.current?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    if (!isNotesValid) {
+      // 備註區域滾動
+      notesRef.current?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+
+    // 如果選擇了固定點收運方式，檢查是否上傳了兩張照片
+    if (deliveryMethod === 'fixedpoint') {
+      if (fixedPointImages.length < 2) {
+        setPhotoError('*請上傳兩張固定點照片');
+        return;
+      }
+    }
+
+    // 將選擇的數據傳遞到下一個頁面
+    navigate('/customer/SubscribeCheckout', {
       state: {
         planId,
         planName,
+        liter,
+        price,
+        planKg,
+        planPeople,
+        planDescription,
         frequency,
         days,
         startDate,
@@ -66,9 +266,18 @@ const SubscribeData = () => {
         address,
         notes,
         deliveryMethod,
+        fixedPointImages: fixedPointImages.map((img) => ({
+          id: img.id,
+          url: img.url,
+        })),
       },
     });
   };
+
+  // 載入中
+  if (isLoading) {
+    return <LoadingMessage>載入中...</LoadingMessage>;
+  }
 
   return (
     <PageWrapper>
@@ -90,7 +299,7 @@ const SubscribeData = () => {
           </StepItem>
 
           <StepConnector>
-            <StepLine />
+            <StepLine $active={isFormValid()} />
           </StepConnector>
 
           <StepItem>
@@ -108,64 +317,121 @@ const SubscribeData = () => {
           <SectionSubtitle>請填寫基本收運資料</SectionSubtitle>
         </SectionTitle>
         <FormSection>
-          <FormGroup>
+          <FormGroup ref={nameRef}>
             <InputLabel>聯絡人姓名</InputLabel>
             <StyledInput
               type="text"
               placeholder="請輸入您的真實姓名"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              onBlur={() => validateName(name)}
+              $error={nameError !== null}
             />
+            {nameError && <ErrorMessage>{nameError}</ErrorMessage>}
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup ref={phoneRef}>
             <InputLabel>聯絡電話</InputLabel>
             <StyledInput
               type="tel"
               placeholder="請輸入手機或市話號碼"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              onBlur={() => validatePhone(phone)}
+              $error={phoneError !== null}
             />
+            {phoneError && <ErrorMessage>{phoneError}</ErrorMessage>}
           </FormGroup>
 
-          <FormGroup>
+          <FormGroup ref={addressRef}>
             <InputLabel>收運地址</InputLabel>
             {/* 使用自動完成地址組件 */}
             <AddressAutocomplete
               value={address}
-              onChange={setAddress}
+              onChange={(value) => {
+                setAddress(value);
+                if (value.trim()) validateAddress(value);
+              }}
               onLocationSelect={handleLocationSelect}
+              error={addressError !== null}
             />
-          </FormGroup>
-
-          <FormGroup>
-            <InputLabel>附加備註</InputLabel>
-            <StyledTextarea
-              placeholder="如有特殊收運需求，請在此備註"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
+            {addressError && <ErrorMessage>{addressError}</ErrorMessage>}
           </FormGroup>
         </FormSection>
 
-        {/* 收據方式 */}
+        {/* 收運方式 */}
         <SectionTitle>
-          <SectionMainTitle>收據方式</SectionMainTitle>
-          <SectionSubtitle>請選擇收據開立方式</SectionSubtitle>
+          <SectionMainTitle>收運方式</SectionMainTitle>
+          <SectionSubtitle>請選擇收運方式</SectionSubtitle>
         </SectionTitle>
         <FormSection>
           <DeliveryOptions>
             <DeliveryOption
-              $active={deliveryMethod === 'delivery'}
-              onClick={() => setDeliveryMethod('delivery')}
+              $active={deliveryMethod === 'fixedpoint'}
+              onClick={() => setDeliveryMethod('fixedpoint')}
             >
-              <RadioButton $active={deliveryMethod === 'delivery'} />
-              <DeliveryOptionText>
-                <DeliveryOptionTitle>專員親送</DeliveryOptionTitle>
-                <DeliveryOptionDescription>
-                  請向上門收運的專員索取收據，可當場確認無誤。
-                </DeliveryOptionDescription>
-              </DeliveryOptionText>
+              <RadioButton $active={deliveryMethod === 'fixedpoint'} />
+              <DeliveryOptionContent>
+                <DeliveryOptionText>
+                  <DeliveryOptionTitle>放置固定點</DeliveryOptionTitle>
+                  <DeliveryOptionDescription>
+                    請用戶上傳垃圾放置固定點的照片。
+                    建議放置易辨識位置，例如：門口、鞋櫃、花盆旁等，未來專員會依據照片位置進行收運。
+                  </DeliveryOptionDescription>
+                </DeliveryOptionText>
+
+                {/* 固定點照片上傳區域 */}
+                {deliveryMethod === 'fixedpoint' && (
+                  <DeliveryOptionImageContainer>
+                    <DeliveryOptionImages>
+                      {fixedPointImages.map((image) => (
+                        <DeliveryOptionImage key={image.id}>
+                          <DeliveryOptionImagePhoto
+                            style={{ backgroundImage: `url(${image.url})` }}
+                          />
+                          <DeleteImageButton
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeletePhoto(image.id);
+                            }}
+                          >
+                            <IoClose />
+                          </DeleteImageButton>
+                        </DeliveryOptionImage>
+                      ))}
+
+                      {/* 隱藏的文件輸入 */}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        onChange={handlePhotoUpload}
+                      />
+
+                      {/* 添加照片按鈕 - 只在照片少於2張時顯示 */}
+                      {fixedPointImages.length < 2 && (
+                        <DeliveryOptionImageUpload
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openFileSelector();
+                          }}
+                        >
+                          <IoAdd size={24} />
+                        </DeliveryOptionImageUpload>
+                      )}
+                    </DeliveryOptionImages>
+
+                    {/* 照片錯誤提示 */}
+                    {photoError && <ErrorMessage>{photoError}</ErrorMessage>}
+
+                    {/* 照片上傳說明 - 更新為必須上傳兩張 */}
+                    <PhotoInstructions>
+                      *請務必上傳兩張固定點照片，每張不超過5MB
+                    </PhotoInstructions>
+                  </DeliveryOptionImageContainer>
+                )}
+              </DeliveryOptionContent>
             </DeliveryOption>
 
             <DeliveryOption
@@ -174,12 +440,24 @@ const SubscribeData = () => {
             >
               <RadioButton $active={deliveryMethod === 'ereceipt'} />
               <DeliveryOptionText>
-                <DeliveryOptionTitle>電子收據</DeliveryOptionTitle>
+                <DeliveryOptionTitle>面交收運</DeliveryOptionTitle>
                 <DeliveryOptionDescription>
-                  將以您留下的聯絡資訊，寄送電子收據供您存檔，無紙化環保。
+                  用戶選擇面交請於備注欄位填寫面交詳細位置，此服務需在預約時段內於指定地點與代收員見面，需配合本公司安排服務時間。
                 </DeliveryOptionDescription>
               </DeliveryOptionText>
             </DeliveryOption>
+
+            <FormGroup ref={notesRef}>
+              <InputLabel>地點備註</InputLabel>
+              <StyledTextarea
+                placeholder="請備註放置固定點或面交收運的詳細位置"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                onBlur={() => validateNotes(notes)}
+                $error={notesError !== null}
+              />
+              {notesError && <ErrorMessage>{notesError}</ErrorMessage>}
+            </FormGroup>
           </DeliveryOptions>
         </FormSection>
 
@@ -188,7 +466,12 @@ const SubscribeData = () => {
           <TotalPriceText>總金額</TotalPriceText>
           <TotalPriceTCount>NT${totalPrice || 580}</TotalPriceTCount>
         </TotalPrice>
-        <NextButton onClick={handleNext}>下一步</NextButton>
+        <NextButton
+          onClick={handleNext}
+          $active={isFormValid()} //根據表單有效性設置樣式
+        >
+          下一步
+        </NextButton>
       </ScrollableContent>
     </PageWrapper>
   );
@@ -307,6 +590,13 @@ const ScrollableContent = styled.div`
   }
 `;
 
+// 錯誤訊息
+const ErrorMessage = styled.div`
+  color: var(--color-red-500);
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-sm);
+`;
+
 // 區段標題 模板
 const SectionTitle = styled.h2`
   margin-bottom: var(--spacing-sm);
@@ -353,15 +643,17 @@ const FormGroup = styled.div`
 const InputLabel = styled.label`
   display: block;
   font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
   color: var(--color-gray-600);
 `;
 
 // 樣式化輸入框
-const StyledInput = styled.input`
+const StyledInput = styled.input<StyledProps>`
   width: 100%;
   padding: var(--spacing-md);
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid
+    ${(props) =>
+      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-round);
   font-size: var(--font-size-md);
 
@@ -372,16 +664,20 @@ const StyledInput = styled.input`
 
   // 注目框
   &:focus {
-    outline: 1px solid var(--color-gray-400);
+    outline: 1px solid
+      ${(props) =>
+        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
     outline-offset: 0px;
   }
 `;
 
 // 樣式化文本區域
-const StyledTextarea = styled.textarea`
+const StyledTextarea = styled.textarea<StyledProps>`
   width: 100%;
   padding: var(--spacing-md);
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid
+    ${(props) =>
+      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-md);
   min-height: 100px;
@@ -391,13 +687,21 @@ const StyledTextarea = styled.textarea`
     color: var(--color-gray-400);
     font-size: var(--font-size-sm);
   }
+
+  // 注目框
+  &:focus {
+    outline: 1px solid
+      ${(props) =>
+        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
+    outline-offset: 0px;
+  }
 `;
 
-// 收貨方式選項容器
+//// 收貨方式 最外層大容器
 const DeliveryOptions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md);
 `;
 
 // 收貨方式選項
@@ -414,24 +718,6 @@ const DeliveryOption = styled.div<StyledProps>`
   &:hover {
     border-color: var(--color-gray-400);
   }
-`;
-
-// 收貨方式文本容器
-const DeliveryOptionText = styled.div`
-  margin-left: var(--spacing-md);
-`;
-
-// 收貨方式標題
-const DeliveryOptionTitle = styled.div`
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-xs);
-`;
-
-// 收貨方式描述
-const DeliveryOptionDescription = styled.div`
-  font-size: var(--font-size-xs);
-  color: var(--color-gray-500);
-  line-height: 1.4;
 `;
 
 // 單選按鈕
@@ -457,6 +743,111 @@ const RadioButton = styled.div<StyledProps>`
   }
 `;
 
+// 選項內容容器 文字+照片
+const DeliveryOptionContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  margin-left: var(--spacing-md);
+`;
+
+// 收貨方式文本容器
+const DeliveryOptionText = styled.div`
+  margin-bottom: var(--spacing-sm);
+`;
+
+// 收貨方式標題
+const DeliveryOptionTitle = styled.div`
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-xs);
+`;
+
+// 收貨方式描述
+const DeliveryOptionDescription = styled.div`
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+  line-height: 1.4;
+`;
+
+// 收貨方式圖片容器
+const DeliveryOptionImageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+// 收貨方式圖片區
+const DeliveryOptionImages = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+`;
+
+// 照片項目容器 - 修改高度從100px到125px以實現4:5比例
+const DeliveryOptionImage = styled.div`
+  position: relative;
+  width: 100px;
+  height: 125px;
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+`;
+
+// 照片顯示 - 確保圖片完整顯示
+const DeliveryOptionImagePhoto = styled.div`
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+`;
+
+// 刪除照片按鈕
+const DeleteImageButton = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+`;
+
+// 上傳照片按鈕 - 同樣修改為4:5比例
+const DeliveryOptionImageUpload = styled.div`
+  width: 100px;
+  height: 125px;
+  background-color: var(--color-gray-200);
+  border: 2px dashed var(--color-gray-400);
+  border-radius: var(--border-radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-gray-500);
+
+  &:hover {
+    background-color: var(--color-gray-300);
+  }
+`;
+
+// 照片上傳說明
+const PhotoInstructions = styled.p`
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-400);
+  margin-top: var(--spacing-sm);
+`;
+
 // 總計價格
 const TotalPrice = styled.div`
   font-weight: var(--font-weight-bold);
@@ -478,20 +869,28 @@ const TotalPriceTCount = styled.div`
 `;
 
 // 下一步按鈕
-const NextButton = styled.button`
-  width: 100%;
-  padding: var(--spacing-md);
-  background-color: var(--color-gray-500);
+const NextButton = styled.button<StyledProps>`
+  background-color: ${(props) =>
+    props.$active ? 'var(--color-gray-600)' : 'var(--color-gray-300)'};
   color: var(--color-gray-0);
   border: none;
   border-radius: var(--border-radius-round);
+
+  width: 100%;
+  padding: var(--spacing-md);
   font-size: var(--font-size-md);
   margin-top: var(--spacing-md);
-  cursor: pointer;
   transition: background-color 0.2s;
+  cursor: ${(props) => (props.$active ? 'pointer' : 'not-allowed')};
 
   &:hover {
-    background-color: var(--color-gray-600);
+    background-color: ${(props) =>
+      props.$active ? 'var(--color-gray-700)' : 'var(--color-gray-400)'};
+  }
+
+  &:disabled {
+    background-color: var(--color-gray-300);
+    cursor: not-allowed;
   }
 `;
 

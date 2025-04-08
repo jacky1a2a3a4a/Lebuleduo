@@ -53,7 +53,15 @@ const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
 const Subscribe = () => {
   const navigate = useNavigate(); // 獲取導航功能
   const location = useLocation(); // 獲取當前位置對象
-  const { planId } = location.state || {}; // 只取出需要使用的planId
+  const {
+    planId,
+    planName,
+    liter,
+    price,
+    planKg,
+    planPeople,
+    planDescription,
+  } = location.state || {}; // 獲取從Plan頁面傳遞的所有參數
 
   //// 狀態管理
   const [isLoading, setIsLoading] = useState(true); // 是否正在加載
@@ -103,50 +111,44 @@ const Subscribe = () => {
       try {
         setIsLoading(true);
 
-        // 模擬從API獲取所有方案
-        const mockPlans: Plan[] = [
-          {
-            PlanID: 3,
-            PlanName: '小汪方案',
-            Liter: 25,
-            kg: 5,
-            Price: 299,
-            PlanPeople: '1-2人用',
-          },
-          {
-            PlanID: 4,
-            PlanName: '中汪方案',
-            Liter: 50,
-            kg: 10,
-            Price: 599,
-            PlanPeople: '3-5人用',
-          },
-          {
-            PlanID: 5,
-            PlanName: '巨汪方案',
-            Liter: 75,
-            kg: 15,
-            Price: 899,
-            PlanPeople: '5人以上',
-          },
-        ];
+        // 使用API取得所有方案
+        const response = await fetch('/api/GET/user/plans');
+        const data = await response.json();
 
-        // 設置所有可用方案列表
-        setAvailablePlans(mockPlans);
-
-        // 如果從Plan頁面傳入了planId，則選中該方案
-        // 否則默認選中第一個方案
-        let selectedPlan;
-        if (planId) {
-          selectedPlan =
-            mockPlans.find((p) => p.PlanID === Number(planId)) || mockPlans[0];
-        } else {
-          selectedPlan = mockPlans[0];
+        // 處理API數據
+        let apiPlans: Plan[] = [];
+        if (data && data.Plans && Array.isArray(data.Plans)) {
+          // 將API返回的數據映射成Plan類型
+          apiPlans = data.Plans.map((p) => ({
+            PlanID: p.PlanID,
+            PlanName: p.PlanName,
+            Liter: p.Liter,
+            kg: p.PlanKG, // 注意這裡的字段名不同
+            Price: p.Price,
+            PlanPeople: p.PlanPeople,
+            PlanDescription: p.PlanDescription,
+          }));
         }
 
-        // 設置當前選中的方案
-        setPlan(selectedPlan);
-        updateTotalPrice(selectedPlan.Price, selectedFrequency);
+        // 設置所有可用方案列表
+        setAvailablePlans(apiPlans);
+
+        // 如果從Plan頁面傳入了方案信息，則創建一個方案對象
+        if (planId) {
+          const selectedPlan: Plan = {
+            PlanID: planId,
+            PlanName: planName,
+            Liter: liter,
+            kg: planKg,
+            Price: price,
+            PlanPeople: planPeople,
+            PlanDescription: planDescription,
+          };
+          setPlan(selectedPlan);
+        } else if (apiPlans.length > 0) {
+          // 否則默認選中第一個方案
+          setPlan(apiPlans[0]);
+        }
 
         // 設置今天日期為默認開始日期
         const today = new Date();
@@ -160,7 +162,14 @@ const Subscribe = () => {
     };
 
     fetchPlans();
-  }, [planId, selectedFrequency]);
+  }, [planId, planName, liter, price, planKg, planPeople, planDescription]);
+
+  // 處理價格計算的另一個useEffect
+  useEffect(() => {
+    if (plan) {
+      updateTotalPrice(plan.Price, selectedFrequency);
+    }
+  }, [plan, selectedFrequency]);
 
   // 載入中
   if (isLoading) {
@@ -170,7 +179,6 @@ const Subscribe = () => {
   // 處理方案切換
   const handlePlanChange = (selectedPlan: Plan) => {
     setPlan(selectedPlan);
-    updateTotalPrice(selectedPlan.Price, selectedFrequency);
     setDropdownOpen(false);
   };
 
@@ -182,10 +190,6 @@ const Subscribe = () => {
   // 處理週期選擇
   const handleFrequencyChange = (frequency: string) => {
     setSelectedFrequency(frequency);
-    // 更新總價
-    if (plan) {
-      updateTotalPrice(plan.Price, frequency);
-    }
   };
 
   // 處理收集日選擇
@@ -223,6 +227,12 @@ const Subscribe = () => {
     navigate('/customer/SubscribeData', {
       state: {
         planId: plan?.PlanID,
+        planName: plan?.PlanName,
+        liter: plan?.Liter,
+        planKg: plan?.kg,
+        price: plan?.Price,
+        planPeople: plan?.PlanPeople,
+        planDescription: plan?.PlanDescription,
         frequency: selectedFrequency,
         days: selectedDays,
         startDate,
@@ -265,7 +275,7 @@ const Subscribe = () => {
       <ScrollableContent>
         {/* 已選方案 */}
         <SectionTitle>
-          <SectionMainTitle>已選方案</SectionMainTitle> 
+          <SectionMainTitle>已選方案</SectionMainTitle>
           <SectionSubtitle>請選擇您要訂閱的方案</SectionSubtitle>
         </SectionTitle>
 
@@ -304,7 +314,7 @@ const Subscribe = () => {
 
         {/* 取貨頻率 */}
         <SectionTitle>
-          預定期程
+          <SectionMainTitle>預定期程</SectionMainTitle>
           <SectionSubtitle>週期越長越優惠</SectionSubtitle>
         </SectionTitle>
 
@@ -347,7 +357,7 @@ const Subscribe = () => {
 
         {/* 定期收集日 */}
         <SectionTitle id="weekdays-section">
-          每周收運日
+          <SectionMainTitle>每周收運日</SectionMainTitle>
           <SectionSubtitle>請點選每週固定收運時間</SectionSubtitle>
         </SectionTitle>
 
@@ -367,7 +377,7 @@ const Subscribe = () => {
 
         {/* 開始日期 */}
         <SectionTitle>
-          開始日期
+          <SectionMainTitle>開始日期</SectionMainTitle>
           <SectionSubtitle>請選擇開始收運的日期</SectionSubtitle>
         </SectionTitle>
 

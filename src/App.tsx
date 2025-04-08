@@ -15,6 +15,8 @@ import OrderDetail from './pages/customer/OrderDetail';
 import Plan from './pages/customer/Plan';
 import Subscribe from './pages/customer/Subscribe';
 import SubscribeData from './pages/customer/SubscribeData';
+import SubscribeCheckout from './pages/customer/SubscribeCheckout';
+import SubscribeSuccess from './pages/customer/SubscribeSuccess';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -31,10 +33,10 @@ import Calendar from './pages/deliver/Calendar';
 // 顧客(customer) 頁面組件
 // const MyOrder = () => <div>我的訂單</div>;
 // const Subscribe = () => <div>開始訂閱</div>;
-const CheckoutPlan = () => <div>結帳計劃頁面</div>;
-const CheckoutUserData = () => <div>使用者數據頁面</div>;
-const CheckoutPayment = () => <div>支付頁面</div>;
-const CheckoutSuccess = () => <div>支付成功頁面</div>;
+// const CheckoutPlan = () => <div>結帳計劃頁面</div>;
+// const CheckoutUserData = () => <div>使用者數據頁面</div>;
+// const CheckoutPayment = () => <div>支付頁面</div>;
+// const CheckoutSuccess = () => <div>支付成功頁面</div>;
 const Account = () => <div>帳戶頁面</div>;
 const ContactUs = () => <div>聯絡我們</div>;
 const PageNotFound = () => <div>404 - 頁面未找到</div>;
@@ -76,18 +78,6 @@ function App() {
             />
             <Route path="my-order" element={<MyOrder />} />
             <Route path="Plan" element={<Plan />} />
-            <Route path="checkout">
-              <Route
-                index
-                element={
-                  <Navigate to="/customer/Checkout/Checkout-plan" replace />
-                }
-              />
-              <Route path="Checkout-plan" element={<CheckoutPlan />} />
-              <Route path="user-data" element={<CheckoutUserData />} />
-              <Route path="payment" element={<CheckoutPayment />} />
-              <Route path="success" element={<CheckoutSuccess />} />
-            </Route>
             <Route path="account" element={<Account />} />
             <Route path="contact-us" element={<ContactUs />} />
           </Route>
@@ -120,6 +110,22 @@ function App() {
                 <SubscribeData />
               </ProtectedRoute>
             }
+          />
+
+          {/* 訂閱結帳 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/SubscribeCheckout"
+            element={
+              <ProtectedRoute role="customer">
+                <SubscribeCheckout />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
+          <Route
+            path="/customer/SubscribeSuccess"
+            element={<SubscribeSuccess />}
           />
 
           {/* DOG路由 */}

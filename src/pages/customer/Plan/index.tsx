@@ -44,7 +44,7 @@ const Plan = () => {
   // 處理點擊"立即預定"按鈕的函數
   //儲存planId到state，方便訂閱畫面使用，能夠顯示同樣的方案
   const handleSubscribe = (plan) => {
-    const { PlanID, PlanName, Liter, Price, PlanKG, PlanPeople } = plan;
+    const { PlanID, PlanName, Liter, Price, PlanKG, PlanDescription, PlanPeople } = plan;
     navigate('/customer/subscribe', {
       state: {
         planId: PlanID,
@@ -52,6 +52,7 @@ const Plan = () => {
         liter: Liter,
         price: Price,
         planKg: PlanKG,
+        planDescription: PlanDescription,
         planPeople: PlanPeople,
       },
     });

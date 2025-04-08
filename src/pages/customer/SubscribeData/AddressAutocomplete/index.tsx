@@ -2,13 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { IoLocationSharp } from 'react-icons/io5';
 import { IoIosArrowDown } from 'react-icons/io';
-import { useLoadScript, GoogleMap, Marker } from '@react-google-maps/api';
-
-// 需要加載的Google Maps庫
-const libraries = ['places'];
-
-// Google Maps API金鑰
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+import {
+  useLoadScript,
+  GoogleMap,
+  Marker,
+  Libraries,
+} from '@react-google-maps/api';
 
 // 為styled-components定義類型
 interface StyledProps {
@@ -21,7 +20,8 @@ interface StyledProps {
 interface AddressAutocompleteProps {
   value: string;
   onChange: (value: string) => void;
-  onLocationSelect: (location: { lat: number; lng: number }) => void;
+  onLocationSelect?: (location: { lat: number; lng: number }) => void;
+  error?: boolean;
 }
 
 // 地址建議介面
@@ -30,41 +30,68 @@ interface AddressSuggestion {
   placeId: string;
 }
 
+// 引用.env檔案，載入Google Maps API金鑰(安全性考量)
+const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+// 需要加載的Google Maps函式庫
+// 使用places函式庫，提供地址自動完成功能
+const libraries: Libraries = ['places'];
+
+// 組件本體
 const AddressAutocomplete = ({
   value,
   onChange,
   onLocationSelect,
+  error,
 }: AddressAutocompleteProps) => {
-  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+  // 載入狀態
   const [isLoading, setIsLoading] = useState(false);
+  // 下拉選單開啟狀態
+  const [isOpen, setIsOpen] = useState(false);
+  // 地址建議
+  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+
+  // 輸入框DOM參考
   const inputRef = useRef<HTMLInputElement>(null);
+  // 下拉選單DOM參考
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  ////創建容器(使用google maps提供的型別定義)
+  // 地址自動完成服務
   const autocompleteServiceRef =
     useRef<google.maps.places.AutocompleteService | null>(null);
+  // 地理編碼器
+  const geocoderRef = useRef<google.maps.Geocoder | null>(null);
+  // 地點服務
   const placesServiceRef = useRef<google.maps.places.PlacesService | null>(
     null,
   );
-  const geocoderRef = useRef<google.maps.Geocoder | null>(null);
+
+  // 地圖位置
   const [mapLocation, setMapLocation] = useState<google.maps.LatLngLiteral>({
     lat: 22.6397,
     lng: 120.3022,
   });
 
-  // 加載Google Maps API
+  // useLoadScript hook加載Google Maps API
+  // 解構libraries提供的isLoaded,loadError參數
+  // isLoaded true/false 是否成功載入
+  // loadError undefined/null 載入錯誤
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    libraries: libraries as string[],
+    libraries: libraries,
   });
 
   // 初始化Google Maps服務
   useEffect(() => {
     if (isLoaded && !loadError) {
+      //創建服務並存進容器
       autocompleteServiceRef.current =
         new google.maps.places.AutocompleteService();
       geocoderRef.current = new google.maps.Geocoder();
 
       // 創建一個隱藏的div來初始化PlacesService (需要DOM元素)
+      // Google Maps API 的設計要求
       const placesDiv = document.createElement('div');
       placesDiv.style.display = 'none';
       document.body.appendChild(placesDiv);
@@ -72,6 +99,7 @@ const AddressAutocomplete = ({
         placesDiv,
       );
 
+      // 卸載時移除隱藏的div
       return () => {
         document.body.removeChild(placesDiv);
       };
@@ -180,7 +208,8 @@ const AddressAutocomplete = ({
   };
 
   // 加載中或出錯時顯示
-  if (!isLoaded) return <StatusMessageItem>載入Google Maps中...</StatusMessageItem>;
+  if (!isLoaded)
+    return <StatusMessageItem>載入Google Maps中...</StatusMessageItem>;
   if (loadError) return <StatusMessageItem>無法載入地圖服務</StatusMessageItem>;
 
   const mapContainerStyle = {
@@ -200,6 +229,7 @@ const AddressAutocomplete = ({
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => value.trim().length > 0 && setIsOpen(true)}
           ref={inputRef}
+          $error={error}
         />
         <InputIcon
           $open={isOpen}
@@ -262,7 +292,6 @@ const Container = styled.div`
   width: 100%;
 `;
 
-
 // 狀態訊息
 const StatusMessageItem = styled.div`
   padding: var(--spacing-sm) var(--spacing-md);
@@ -281,11 +310,13 @@ const InputGroup = styled.div`
 `;
 
 // 帶有圖標的輸入框
-const StyledInputWithIcon = styled.input`
+const StyledInputWithIcon = styled.input<{ $error?: boolean }>`
   width: 100%;
   padding: var(--spacing-md);
   padding-right: 40px; /* 為圖標預留空間 */
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid
+    ${(props) =>
+      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-round);
   font-size: var(--font-size-md);
 
@@ -295,7 +326,9 @@ const StyledInputWithIcon = styled.input`
   }
 
   &:focus {
-    outline: 1px solid var(--color-gray-400);
+    outline: 1px solid
+      ${(props) =>
+        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
     outline-offset: 0px;
   }
 `;
@@ -370,34 +403,33 @@ const MapContainer = styled.div`
   overflow: hidden;
 `;
 
-const MapOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: var(--border-radius-xl);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+// const MapOverlay = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   background-color: rgba(0, 0, 0, 0.5);
+//   border-radius: var(--border-radius-xl);
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
 
-const EditButton = styled.button`
-  background-color: white;
-  border: none;
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-sm) var(--spacing-md);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  color: var(--color-gray-600);
+// const EditButton = styled.button`
+//   background-color: white;
+//   border: none;
+//   border-radius: var(--border-radius-round);
+//   padding: var(--spacing-sm) var(--spacing-md);
+//   cursor: pointer;
+//   display: flex;
+//   align-items: center;
+//   gap: var(--spacing-sm);
+//   color: var(--color-gray-600);
 
-  &:hover {
-    background-color: var(--color-gray-100);
-  }
-`;
-
+//   &:hover {
+//     background-color: var(--color-gray-100);
+//   }
+// `;
 
 export default AddressAutocomplete;
