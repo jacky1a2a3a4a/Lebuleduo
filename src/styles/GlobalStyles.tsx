@@ -49,7 +49,7 @@ const GlobalStyles = createGlobalStyle`
 
   /* 垃不垃多配色 */
   --color-white: #FFFFFF;
-  
+
   --color-background-Primary: #FFFFFF;
   --color-background-Secondary: #F8FAFF;
 
@@ -61,9 +61,9 @@ const GlobalStyles = createGlobalStyle`
   --color-secondary-hover: #8090B2;
   --color-tertiary-hover: #E6C26D;
 
-  --color-text-Primary: #1F2A52;
-  --color-text-Secondary: #323232;
-  --color-text-Tertiary: #757575;
+  --color-text-primary: #1F2A52;
+  --color-text-secondary: #323232;
+  --color-text-tertiary: #757575;
   --color-text-disabled: #BDBDBD; 
 
   --color-neutral-600: #757575;
@@ -108,6 +108,7 @@ const GlobalStyles = createGlobalStyle`
   --spacing-12: 0.75rem;  /* 12px */
   --spacing-14: 0.875rem; /* 14px */
   --spacing-md: 1rem;     /* 16px */
+  --spacing-20: 1.25rem;  /* 20px */
   --spacing-lg: 1.5rem;   /* 24px */
   --spacing-xl: 2rem;     /* 32px */
   --spacing-2xl: 3rem;    /* 48px */

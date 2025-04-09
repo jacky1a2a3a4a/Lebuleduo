@@ -17,7 +17,6 @@ type TaskCardsContainerProps = {
   topPosition: number;
 };
 
-
 // 最外層容器
 export const TaskSectionStyled = styled.section`
   position: relative;
@@ -36,58 +35,59 @@ export const TaskSectionStyled = styled.section`
 
 // 外送員卡片 最外層容器
 export const DeliverContainer = styled.div`
-  background-color: var(--color-gray-100);
-  border-radius: var(--border-radius-lg);
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-xl);
 
   position: fixed;
   z-index: 20;
   width: 100%;
   max-width: calc(var(--min-width-mobile) - 2rem);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+
+  padding: var(--spacing-20) var(--spacing-md);
 `;
 
+// 外送員卡片 問候語容器
 export const DeliverGreeting = styled.div`
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
+// 外送員卡片 問候語
 export const TaskGreetingItem = styled.div`
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-xl);
   font-weight: 600;
 `;
 
+// 外送員卡片 外送員編號
 export const TaskId = styled.div`
-  color: var(--color-gray-600);
+  color: var(--color-text-Tertiary);
   font-size: var(--font-size-sm);
 `;
 
-export const IconWrapper = styled.div`
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.5rem;
+// 外送員卡片 本日收運進度
+export const ProgressTitle = styled.div`
+  color: var(--color-text-secondary);
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-export const DeliverDate = styled.div`
   width: 100%;
-  margin-bottom: var(--spacing-sm);
-
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-weight: 500;
+  margin-bottom: var(--spacing-xs);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 `;
 
+//外送員卡片 進度 最外層容器
 export const DeliverProgress = styled.div`
   width: 100%;
 
@@ -95,28 +95,55 @@ export const DeliverProgress = styled.div`
   flex-direction: column;
 `;
 
+// 外送員卡片 進度 標題容器
 export const DeliverProgressHeader = styled.div`
   width: 100%;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  margin-bottom: var(--spacing-sm);
 `;
 
-export const ProgressTitle = styled.div`
+// 外送員卡片 日期容器
+export const IconWrapper = styled.div`
+  color: var(--color-text-Primary);
+
+  width: 24px;
+  height: 24px;
+  margin-right: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: var(--font-size-xl);
+`;
+
+// 外送員卡片 日期容器
+export const DeliverDate = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-weight: 600;
+
+  width: 100%;
+
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 `;
 
+// 外送員卡片 進度 狀態大容器
 export const ProgressStatus = styled.div`
   display: flex;
   gap: 1rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-normal);
 `;
 
-export const StatusItem = styled.div`
+// 外送員卡片 進度 狀態個別容器
+export const StatusItem = styled.div<{ isEmpty?: boolean }>`
+  color: ${(props) =>
+    props.isEmpty ? 'var(--color-text-disabled)' : 'var(--color-text-primary)'};
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -126,14 +153,15 @@ export const Label = styled.span`
   margin-right: 4px;
 `;
 
+// 外送員卡片 進度條容器
 export const DeliverProgressBarContainer = styled.div`
   background-color: var(--color-gray-200);
+  border-radius: var(--border-radius-round);
 
   width: 100%;
-  height: 8px;
+  height: 24px;
   margin: 0.5rem 0;
 
-  border-radius: 4px;
   overflow: hidden;
 `;
 

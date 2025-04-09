@@ -1,4 +1,4 @@
-// CustomerFooter 顧客頁面底部導航
+//CustomerFooter 顧客頁面底部導航
 import {
   HiInboxStack,
   HiShoppingCart,
@@ -6,7 +6,7 @@ import {
   HiMiniChatBubbleOvalLeftEllipsis,
 } from 'react-icons/hi2';
 
-import CommonFooter, { FooterNavItem } from '../../../common/Footer';
+import Footer, { FooterNavItem } from '../../../common/Footer';
 
 // 顧客導航項目
 const customerFooterNavItems: FooterNavItem[] = [
@@ -32,12 +32,8 @@ const customerFooterNavItems: FooterNavItem[] = [
   },
 ];
 
-/**
- * 顧客專用頁尾
- * 包含顧客相關導航
- */
 function CustomerFooter() {
-  return <CommonFooter navItems={customerFooterNavItems} />;
+  return <Footer navItems={customerFooterNavItems} />;
 }
 
 export default CustomerFooter;

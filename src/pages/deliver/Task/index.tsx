@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { HiTruck, HiCalendar } from 'react-icons/hi2';
+import { HiCalendar } from 'react-icons/hi2';
 
 import {
   TaskSectionStyled,
@@ -90,7 +90,54 @@ function Task() {
     if (savedTasks) {
       return JSON.parse(savedTasks);
     }
-    return [];
+    // 測試用的假資料
+    return [
+      {
+        id: '1',
+        status: 'waiting',
+        time: '09:00',
+        address: '台北市信義區信義路五段7號',
+        notes: '請注意收件人不在家時，可放置管理室',
+        customerName: '王小明',
+        phone: '0912-345-678',
+      },
+      {
+        id: '2',
+        status: 'ongoing',
+        time: '10:30',
+        address: '台北市大安區忠孝東路四段77號',
+        notes: '需要冷藏配送',
+        customerName: '李小華',
+        phone: '0923-456-789',
+      },
+      {
+        id: '3',
+        status: 'completed',
+        time: '11:45',
+        address: '台北市中山區南京東路三段219號',
+        notes: '請按門鈴後等待',
+        customerName: '張大偉',
+        phone: '0934-567-890',
+      },
+      {
+        id: '4',
+        status: 'waiting',
+        time: '13:15',
+        address: '台北市松山區八德路四段123號',
+        notes: '大樓有電梯，請直接上樓',
+        customerName: '陳小美',
+        phone: '0945-678-901',
+      },
+      {
+        id: '5',
+        status: 'waiting',
+        time: '14:30',
+        address: '台北市內湖區瑞光路321號',
+        notes: '公司收件，請送至櫃台',
+        customerName: '林小強',
+        phone: '0956-789-012',
+      },
+    ];
   });
 
   // 從 localStorage 讀取保存的分類，如果沒有則默認為 'all'
@@ -119,7 +166,6 @@ function Task() {
 
       //佈署時需要使用 vercel.json 定義路徑
       const response = await fetch('/api/GET/user/orders', {
-
         method: 'GET',
         signal: controller.signal, //參數連接到AbortController，允許超時中止
       });
@@ -311,37 +357,35 @@ function Task() {
         </div>
       )}
 
+      {/* 外送員卡片 */}
       <DeliverContainer ref={deliverContainerRef}>
         <DeliverGreeting>
           <TaskGreetingItem>早安，汪汪員</TaskGreetingItem>
           <TaskId>ID-158673</TaskId>
         </DeliverGreeting>
 
-        <DeliverDate>
-          <IconWrapper>
-            <HiCalendar />
-          </IconWrapper>
-          <div>{currentDate}</div>
-        </DeliverDate>
+        <ProgressTitle>
+          <div>本日收運進度</div>
+        </ProgressTitle>
 
         <DeliverProgress>
           <DeliverProgressHeader>
-            <ProgressTitle>
+            <DeliverDate>
               <IconWrapper>
-                <HiTruck />
+                <HiCalendar />
               </IconWrapper>
-              <div>今日收運進度</div>
-            </ProgressTitle>
+              <div>{currentDate}</div>
+            </DeliverDate>
 
             <ProgressStatus>
-              <StatusItem>
+              <StatusItem isEmpty={completedTasks.length === 0}>
                 <Label>已完成:</Label>
                 <span>
                   {completedTasks.length}/{tasks.length}
                 </span>
               </StatusItem>
 
-              <StatusItem>
+              <StatusItem isEmpty={true}>
                 <Label>異常:</Label>
                 <span>0</span>
               </StatusItem>

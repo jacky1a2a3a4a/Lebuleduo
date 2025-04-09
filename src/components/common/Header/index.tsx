@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import BurgerButton from './BuggerButton';
+import ActionButton from './ActionButton';
 
 /**
  * 通用頁首屬性接口
@@ -80,4 +81,5 @@ function CommonHeader({ title, titlePath = '/', actionButton }: HeaderProps) {
   );
 }
 
+export { ActionButton };
 export default CommonHeader;
