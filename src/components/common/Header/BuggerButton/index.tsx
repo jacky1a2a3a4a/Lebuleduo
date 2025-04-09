@@ -19,7 +19,7 @@ const Button = styled.button<{ $isOpen: boolean }>`
 
   div {
     background: ${({ $isOpen }) =>
-      $isOpen ? 'var(--color-text-Primary)' : 'var(--color-white)'};
+      $isOpen ? 'var(--color-text-primary)' : 'var(--color-white)'};
     width: 1.5rem;
     height: 0.25rem;
     border-radius: 10px;

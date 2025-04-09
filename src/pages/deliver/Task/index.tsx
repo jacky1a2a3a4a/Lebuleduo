@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
 import { HiCalendar } from 'react-icons/hi2';
-
 import {
   TaskSectionStyled,
   DeliverContainer,
