@@ -13,10 +13,11 @@ export default defineConfig({
       },
     },
     port: 5173,
-    host: true,
+    host: '0.0.0.0', // 明確指定
+    cors: true, // 添加 CORS 支援
   },
 
-  base: './',
+  base: '/', // 使用絕對路徑
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
