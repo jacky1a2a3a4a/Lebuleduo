@@ -2,30 +2,38 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { IconType } from 'react-icons';
 
-// ts type定義屬性類型
-// 需要導出是因為它定義了外部組件（如 CustomerFooter）需要提供的數據結構
+/**
+ * 底部導航項目接口
+ */
 export type FooterNavItem = {
+  /** 導航圖標 */
   icon: IconType;
+  /** 導航文字標籤 */
   label: string;
+  /** 導航目標路徑 */
   path: string;
 };
 
-// 通用組件內部使用，接收上方定義的導航項目
-type FooterProps = {
+/**
+ * 通用頁尾屬性接口
+ */
+interface FooterProps {
+  /** 導航項目陣列 */
   navItems: FooterNavItem[];
-};
+}
 
 const minWidthMobilePlus = 403;
 
+// 頁尾外層容器
 const FooterWrapper = styled.div`
+  background-color: var(--color-white);
   width: 100%;
-  background-color: var(--color-gray-200);
   z-index: 999;
 `;
 
-// footer容器
+// 頁尾容器
 const FooterContainer = styled.footer`
-  background-color: var(--color-gray-200);
+  background-color: var(--color-white);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   height: 64px;
@@ -42,7 +50,7 @@ const ListItem = styled.li`
   justify-content: center;
 `;
 
-// footer導航連結
+// 頁尾導航連結
 const FooterNavLink = styled(NavLink)`
   color: var(--color-gray-400);
 
@@ -61,11 +69,11 @@ const FooterNavLink = styled(NavLink)`
   }
 
   &.active {
-    color: var(--color-gray-800);
+    color: var(--color-primary);
   }
 `;
 
-//icon 容器
+// 圖標容器
 const IconContainer = styled.div`
   width: 1.5rem;
   height: 1.5rem;
@@ -78,7 +86,17 @@ const IconContainer = styled.div`
   }
 `;
 
-function Footer({ navItems }: FooterProps) {
+// 圖標文字
+const IconText = styled.span`
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+`;
+
+/**
+ * 通用頁尾組件
+ * 顯示底部導航列表
+ */
+function CommonFooter({ navItems }: FooterProps) {
   return (
     <FooterWrapper>
       <FooterContainer>
@@ -86,7 +104,7 @@ function Footer({ navItems }: FooterProps) {
           <ListItem key={index}>
             <FooterNavLink to={item.path} end={item.path === '/deliver'}>
               <IconContainer>{<item.icon />}</IconContainer>
-              <span>{item.label}</span>
+              <IconText>{item.label}</IconText>
             </FooterNavLink>
           </ListItem>
         ))}
@@ -95,4 +113,4 @@ function Footer({ navItems }: FooterProps) {
   );
 }
 
-export default Footer;
+export default CommonFooter;

@@ -48,17 +48,23 @@ const GlobalStyles = createGlobalStyle`
   --backdrop-color: rgba(255, 255, 255, 0.1);
 
   /* 垃不垃多配色 */
+  --color-white: #FFFFFF;
+  
   --color-background-Primary: #FFFFFF;
   --color-background-Secondary: #F8FAFF;
+
+  --color-primary: #445DB3;
+  --color-secondary: #A2AED9;
+  --color-tertiary: #F7DD97;
+
+  --color-primary-hover: #334D99;
+  --color-secondary-hover: #8090B2;
+  --color-tertiary-hover: #E6C26D;
 
   --color-text-Primary: #1F2A52;
   --color-text-Secondary: #323232;
   --color-text-Tertiary: #757575;
-  --color-text-disabled: #BDBDBD;
-
-  --color-Primary: #445DB3;
-  --color-Secondary: #A2AED9;
-  --color-Tertiary: #F7DD97;
+  --color-text-disabled: #BDBDBD; 
 
   --color-neutral-600: #757575;
   --color-neutral-500: #9E9E9E;
@@ -67,9 +73,6 @@ const GlobalStyles = createGlobalStyle`
   --color-neutral-200: #EEEEEE;
 
   --color-error: #E53F34;
-
-
-   
 
   /* For dark mode */
   --image-grayscale: 0;
@@ -147,7 +150,7 @@ body {
 
 /* 全局 */
 html,body {
-  font-family: "Poppins", "Noto Sans",'Noto Sans TC', sans-serif;
+  font-family: 'Noto Sans TC',"Poppins", "Noto Sans", sans-serif;
   color: var(--color-gray-700);
 
   transition: color 0.3s, background-color 0.3s;

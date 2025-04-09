@@ -1,15 +1,16 @@
-//CustomerLayout 顧客頁面佈局
+// CustomerLayout 顧客頁面佈局
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Header from '../components/customer/layout/Header/index';
-import Footer from '../components/customer/layout/Footer/index';
+import CustomerHeader from '../components/customer/layout/Header';
+import CustomerFooter from '../components/customer/layout/Footer';
 
 const AppLayoutStyled = styled.section`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
+  overflow-x: hidden;
 `;
 
 const Main = styled.main`
@@ -19,14 +20,18 @@ const Main = styled.main`
   overflow: hidden;
 `;
 
+/**
+ * 顧客頁面佈局
+ * 包含頁首、主內容區域和頁尾
+ */
 function CustomerLayout() {
   return (
     <AppLayoutStyled>
-      <Header />
+      <CustomerHeader />
       <Main>
         <Outlet />
       </Main>
-      <Footer />
+      <CustomerFooter />
     </AppLayoutStyled>
   );
 }

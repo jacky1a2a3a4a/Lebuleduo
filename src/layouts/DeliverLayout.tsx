@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Header from '../components/deliver/layout/Header/index';
-import Footer from '../components/deliver/layout/Footer/index';
+import DeliverHeader from '../components/deliver/Header';
+import DeliverFooter from '../components/deliver/Footer';
 
 const AppLayoutStyled = styled.section`
   display: grid;
@@ -20,14 +20,18 @@ const Main = styled.main`
   overflow: hidden;
 `;
 
+/**
+ * 外送員頁面佈局
+ * 包含頁首、主內容區域和頁尾
+ */
 function DeliverLayout() {
   return (
     <AppLayoutStyled>
-      <Header />
+      <DeliverHeader />
       <Main>
         <Outlet />
       </Main>
-      <Footer />
+      <DeliverFooter />
     </AppLayoutStyled>
   );
 }

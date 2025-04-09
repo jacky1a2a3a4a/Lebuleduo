@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import { useEffect } from 'react';
 
-type SideBarProps = {
+// 定義 props 類型
+interface SideBarProps {
   isOpen: boolean;
-};
+  setIsOpen: (isOpen: boolean) => void;
+}
 
 // 側邊欄容器主體
 const SidebarContainer = styled.div<{ $isOpen: boolean }>`
@@ -51,6 +53,7 @@ const MenuItem = styled.div`
   border-bottom: 1px solid var(--color-gray-200);
   font-size: 1.2rem;
   cursor: pointer;
+  color: var(--color-text-Primary);
 
   &:hover {
     color: var(--color-brand-600);
@@ -58,7 +61,7 @@ const MenuItem = styled.div`
 `;
 
 //從Header傳入isOpen和setIsOpen
-function CustomerSideBar({ isOpen, setIsOpen }) {
+function CustomerSideBar({ isOpen, setIsOpen }: SideBarProps) {
   // 當側邊欄打開時，禁止body滾動
   useEffect(() => {
     if (isOpen) {

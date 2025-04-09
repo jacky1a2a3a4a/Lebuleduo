@@ -18,9 +18,10 @@ const Button = styled.button<{ $isOpen: boolean }>`
   }
 
   div {
+    background: ${({ $isOpen }) =>
+      $isOpen ? 'var(--color-text-Primary)' : 'var(--color-white)'};
     width: 1.5rem;
     height: 0.25rem;
-    background: var(--color-gray-700);
     border-radius: 10px;
     transition: all 0.3s linear;
     position: relative;
@@ -37,10 +38,6 @@ const Button = styled.button<{ $isOpen: boolean }>`
     &:nth-child(3) {
       transform: ${({ $isOpen }) => ($isOpen ? 'rotate(-45deg)' : 'rotate(0)')};
     }
-  }
-
-  &:hover div {
-    background: var(--color-gray-500);
   }
 `;
 
