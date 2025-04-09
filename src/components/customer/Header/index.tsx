@@ -14,7 +14,7 @@ const SubscribeButton = styled(ActionButton)`
   align-items: center;
   justify-content: center;
   gap: var(--spacing-2);
-  
+
   width: 100%;
   padding: var(--spacing-sm);
 
