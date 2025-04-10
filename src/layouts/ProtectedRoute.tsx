@@ -23,7 +23,7 @@ const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
         .catch((err) => {
           console.error('獲取用戶資料失敗:', err);
           // 如果獲取失敗，清除登入狀態，強制用戶重新登入
-          authService.logout();
+          // authService.logout();
         });
     }
   }, [isAuthenticated]);
@@ -41,7 +41,7 @@ const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
       return <Navigate to="/deliver" replace />;
     } else {
       // 角色未知，登出並重定向至登入頁面
-      authService.logout();
+      // authService.logout();
       return <Navigate to="/auth/line-login" replace />;
     }
   }

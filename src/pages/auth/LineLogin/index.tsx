@@ -1,6 +1,7 @@
 // 登入頁面 切版
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getLineConfig, saveLineState } from '../../../configs/lineConfig';
 import {
   LoginSectionStyled,
@@ -17,14 +18,39 @@ import {
   LineButton,
   IconStyled,
   BackButton,
+  LineButtonTest,
 } from './styles';
+
+// 添加 mockAuthService 的引入
+import mockAuthService from '../../../services/mockAuthService';
 
 const LineLogin = () => {
   const [selectedRole, setSelectedRole] = useState<
     'customer' | 'deliver' | null
-  >(null); // 選擇身分  
+  >(null); // 選擇身分
   const [isAnimating, setIsAnimating] = useState(false); // 進入動畫
   const [isExiting, setIsExiting] = useState(false); // 退出動畫
+
+  const navigate = useNavigate();
+
+  // 添加臨時直接登入的處理函數
+  const handleMockLogin = async () => {
+    if (!selectedRole) return;
+
+    try {
+      const { userData } = await mockAuthService.login(selectedRole);
+      console.log('模擬登入成功', userData);
+
+      // 根據角色導航到對應頁面
+      if (selectedRole === 'customer') {
+        navigate('/customer');
+      } else if (selectedRole === 'deliver') {
+        navigate('/deliver');
+      }
+    } catch (error) {
+      console.error('模擬登入失敗:', error);
+    }
+  };
 
   // 選擇身分
   const handleRoleSelect = (role: 'customer' | 'deliver') => {
@@ -142,6 +168,17 @@ const LineLogin = () => {
             </BackButton>
           </ButtonGroup>
         </SelectedRoleContainer>
+      )}
+
+      {selectedRole && (
+        <ButtonGroup>
+          {/* 添加臨時登入按鈕 */}
+          <LineButtonTest
+            onClick={handleMockLogin}
+          >
+            臨時直接登入
+          </LineButtonTest>
+        </ButtonGroup>
       )}
     </LoginSectionStyled>
   );

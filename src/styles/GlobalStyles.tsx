@@ -72,7 +72,8 @@ const GlobalStyles = createGlobalStyle`
   --color-neutral-300: #E0E0E0;
   --color-neutral-200: #EEEEEE;
 
-  --color-error: #E53F34;
+  --color-error: #FFE5CE;
+  --color-error-hover: #D99292;
 
   /* For dark mode */
   --image-grayscale: 0;
@@ -120,7 +121,7 @@ const GlobalStyles = createGlobalStyle`
   --border-radius-sm: 5px;
   --border-radius-md: 7px;
   --border-radius-lg: 9px;
-  --border-radius-xl: 11px;
+  --border-radius-xl: 12px;
   --border-radius-round: 9999px;  
 
   /* RWD */

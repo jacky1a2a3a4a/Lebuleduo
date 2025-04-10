@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { HiCalendar } from 'react-icons/hi2';
+import { HiCalendarDays } from 'react-icons/hi2';
 import {
   TaskSectionStyled,
   DeliverContainer,
@@ -347,6 +347,23 @@ function Task() {
     day: '2-digit',
   });
 
+  // 根據時間返回問候語
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+    const currentMinute = new Date().getMinutes();
+    const currentTime = currentHour * 100 + currentMinute;
+
+    if (currentTime >= 900 && currentTime < 1200) {
+      return '早安，汪汪員';
+    } else if (currentTime >= 1200 && currentTime < 1400) {
+      return '吃午餐了嗎，汪汪員';
+    } else if (currentTime >= 1400 && currentTime < 1800) {
+      return '奮鬥吧，汪汪員';
+    } else {
+      return '燃燒吧，汪汪員';
+    }
+  };
+
   return (
     <TaskSectionStyled>
       {isLoading && <div>載入中...</div>}
@@ -359,9 +376,25 @@ function Task() {
       {/* 外送員卡片 */}
       <DeliverContainer ref={deliverContainerRef}>
         <DeliverGreeting>
-          <TaskGreetingItem>早安，汪汪員</TaskGreetingItem>
+          <TaskGreetingItem>{getGreeting()}</TaskGreetingItem>
           <TaskId>ID-158673</TaskId>
         </DeliverGreeting>
+
+        {ongoingTask && (
+          <OngoingTaskContainer>
+            <OngoingTaskTitle>進行中的任務</OngoingTaskTitle>
+            <TaskCard
+              taskId={ongoingTask.id}
+              status={ongoingTask.status}
+              time={ongoingTask.time}
+              address={ongoingTask.address}
+              notes={ongoingTask.notes}
+              customerName={ongoingTask.customerName}
+              phone={ongoingTask.phone}
+              onStatusChange={handleTaskStatusChange}
+            />
+          </OngoingTaskContainer>
+        )}
 
         <ProgressTitle>
           <div>本日收運進度</div>
@@ -371,7 +404,7 @@ function Task() {
           <DeliverProgressHeader>
             <DeliverDate>
               <IconWrapper>
-                <HiCalendar />
+                <HiCalendarDays />
               </IconWrapper>
               <div>{currentDate}</div>
             </DeliverDate>
@@ -396,22 +429,6 @@ function Task() {
               progress={(completedTasks.length / tasks.length) * 100 || 0}
             />
           </DeliverProgressBarContainer>
-
-          {ongoingTask && (
-            <OngoingTaskContainer>
-              <OngoingTaskTitle>進行中任務</OngoingTaskTitle>
-              <TaskCard
-                taskId={ongoingTask.id}
-                status={ongoingTask.status}
-                time={ongoingTask.time}
-                address={ongoingTask.address}
-                notes={ongoingTask.notes}
-                customerName={ongoingTask.customerName}
-                phone={ongoingTask.phone}
-                onStatusChange={handleTaskStatusChange}
-              />
-            </OngoingTaskContainer>
-          )}
         </DeliverProgress>
       </DeliverContainer>
 
@@ -419,17 +436,10 @@ function Task() {
       <TaskCategoryWrapper topPosition={topPosition}>
         <TaskCategoryContainer>
           <CategoryTab
-            isActive={activeCategory === 'all'}
-            onClick={() => handleCategoryChange('all')}
-          >
-            全部({tasks.length})
-          </CategoryTab>
-
-          <CategoryTab
             isActive={activeCategory === 'waiting'}
             onClick={() => handleCategoryChange('waiting')}
           >
-            未完成({waitingTasks.length})
+            待前往({waitingTasks.length})
           </CategoryTab>
 
           <CategoryTab
@@ -448,6 +458,7 @@ function Task() {
         </TaskCategoryContainer>
       </TaskCategoryWrapper>
 
+      {/* 任務卡片列表 */}
       <TaskCardsContainer topPosition={topPosition}>
         {getFilteredTasks().map((task) => (
           <TaskCard
@@ -466,8 +477,6 @@ function Task() {
           />
         ))}
       </TaskCardsContainer>
-
-      {/* <BottomFadeEffect /> */}
     </TaskSectionStyled>
   );
 }

@@ -194,3 +194,9 @@ export const LineLoginButton = styled.button<{
     animation: fadeOut 0.2s ease-in-out;
   `}
 `;
+
+export const LineButtonTest = styled.button`
+  margin-top: 10px;
+  padding: 12px 24px;
+  background-color: #666;
+`;

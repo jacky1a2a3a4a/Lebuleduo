@@ -6,9 +6,8 @@ export const TaskCardWrapper = styled.div<{
   status: TaskStatus;
   disabled?: boolean;
 }>`
-  opacity: ${({ status, disabled }) =>
-    status === 'waiting' && disabled ? 0.6 : 1};
-
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
   position: relative;
 
   width: 100%;
@@ -18,28 +17,31 @@ export const TaskCardWrapper = styled.div<{
 
 // 任務卡片主體
 export const TaskCardItem = styled.div<{ status: TaskStatus }>`
-  background-color: ${(props) =>
-    props.status === 'completed'
-      ? 'var(--color-gray-100)'
-      : 'var(--color-gray-0)'};
+  background: ${(props) =>
+    props.status === 'ongoing'
+      ? 'linear-gradient(to bottom, var(--color-white) 0%, #E8ECF7 100%)'
+      : props.status === 'completed'
+        ? 'var(--color-gray-100)'
+        : 'var(--color-gray-0)'};
+  box-shadow: var(--card-shadow);
+  border-radius: var(--border-radius-lg);
 
   width: 100%;
   padding: 1rem;
 
   display: flex;
   flex-direction: column;
-  border: 1.5px solid
+  border: 1px solid
     ${(props) => {
       switch (props.status) {
         case 'ongoing':
-          return 'var(--color-gray-700)';
+          return 'var(--color-primary)';
         case 'completed':
           return 'var(--color-gray-400)';
         default:
           return 'var(--color-gray-300)';
       }
     }};
-  border-radius: var(--border-radius-lg);
 `;
 
 // 任務卡片內容區
@@ -58,7 +60,7 @@ export const TaskImg = styled.div`
   background-color: var(--color-gray-200);
 
   width: 100%;
-  aspect-ratio: 1/1;
+  aspect-ratio: 3/4;
 
   border-radius: var(--border-radius-lg);
 `;
@@ -76,14 +78,16 @@ export const TaskDetailContainer = styled.div`
 export const TaskCardHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 0.25rem;
 
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-xs);
 `;
 
 // 任務標題
 export const TaskTitle = styled.div`
-  font-size: 1.25rem;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xl);
   font-weight: 600;
 `;
 
@@ -92,42 +96,49 @@ export const TaskTag = styled.div<{ status: TaskStatus }>`
   background-color: ${({ status }) => {
     switch (status) {
       case 'ongoing':
-        return 'var(--color-gray-700)';
+        return 'var(--color-primary)';
       case 'completed':
-        return 'var(--color-gray-400)';
+        return 'var(--color-secondary)';
       default:
-        return 'var(--color-gray-200)';
+        return 'var(--color-tertiary)';
     }
   }};
   color: ${({ status }) =>
     status === 'ongoing' ? 'var(--color-gray-0)' : 'var(--color-gray-600)'};
+  border-radius: var(--border-radius-round);
 
-  padding: 0.25rem 1rem;
+  padding: 0.25rem 0.5rem;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: var(--border-radius-round);
+
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
 `;
 
 // 任務地址+姓名容器
 export const TaskUserContent = styled.div`
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-xs);
 `;
 
 export const MainContent = styled.div`
+  color: var(--color-text-primary);
   font-size: var(--font-size-sm);
+  text-decoration: underline;
 `;
 
 export const SubContent = styled.div`
-  color: var(--color-gray-400);
-
+  color: var(--color-text-tertiary);
   font-size: var(--font-size-xs);
 `;
 
+export const TertiaryContent = styled.div`
+  color: var(--color-text-disabled);
+  font-size: var(--font-size-xs);
+`;
 
 // 任務卡片按鈕容器
 export const TaskCardButtons = styled.div`
@@ -142,44 +153,61 @@ export const TaskCardButton = styled.button<{
   disabled?: boolean;
 }>`
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-
-  padding: 0.75rem 1rem;
-
+  padding: var(--spacing-sm) var(--spacing-md);
   border: none;
   border-radius: var(--border-radius-round);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
-  &:first-child {
-    background-color: var(--color-gray-200);
-    color: var(--color-gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  &:first-child {
+    background-color: var(--color-gray-0);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
     flex: 1;
 
     &:hover {
       background-color: ${({ disabled }) =>
-        !disabled && 'var(--color-gray-300)'};
+        !disabled && 'var(--color-gray-100)'};
     }
   }
 
   &:last-child {
     background-color: ${({ styledType }) =>
-      styledType === 'primary'
-        ? 'var(--color-gray-700)'
-        : 'var(--color-gray-200)'};
+      styledType === 'secondary'
+        ? 'var(--color-error)'
+        : 'var(--color-primary)'};
     color: ${({ styledType }) =>
-      styledType === 'primary'
-        ? 'var(--color-gray-0)'
-        : 'var(--color-gray-600)'};
+      styledType === 'secondary'
+        ? 'var(--color-text-tertiary)'
+        : 'var(--color-gray-0)'};
+    flex: 1.5;
+    border: ${({ styledType }) =>
+      styledType === 'secondary'
+        ? '1px solid var(--color-error-hover)'
+        : 'none'};
 
-    flex: 2;
+    svg {
+      color: ${({ styledType }) =>
+        styledType === 'secondary' ? 'var(--color-error-hover)' : 'inherit'};
+    }
 
     &:hover {
       background-color: ${({ disabled, styledType }) =>
         !disabled &&
-        (styledType === 'primary'
-          ? 'var(--color-gray-800)'
-          : 'var(--color-gray-300)')};
+        (styledType === 'secondary'
+          ? 'var(--color-error-hover)'
+          : 'var(--color-primary-hover)')};
     }
   }
 `;

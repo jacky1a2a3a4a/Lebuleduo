@@ -14,8 +14,8 @@ const AppLayoutStyled = styled.section`
 `;
 
 const Main = styled.main`
-  background-color: var(--color-primary);
-  padding: 0.5rem var(--spacing-14);
+  /* background-color: var(--color-gray-500); */
+  /* padding: 0.5rem var(--spacing-14); */
   height: 100%;
   overflow: hidden;
 `;

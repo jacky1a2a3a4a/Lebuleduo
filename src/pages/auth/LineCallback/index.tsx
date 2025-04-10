@@ -106,9 +106,9 @@ const LineCallback = () => {
         }
 
         // 3 秒後返回登入頁面，使用 navigate
-        setTimeout(() => {
-          navigate('/auth/line-login', { replace: true });
-        }, 3000);
+        // setTimeout(() => {
+        //   // navigate('/auth/line-login', { replace: true });
+        // }, 3000);
       } finally {
         setLoading(false);
       }

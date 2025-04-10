@@ -64,6 +64,8 @@ const AppContent = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
+    console.log('code', code);
+    console.log('state', state);
 
     if (code && state) {
       // 將參數存儲到 localStorage
@@ -71,9 +73,10 @@ const AppContent = () => {
       localStorage.setItem('line_auth_state', state);
 
       // 重定向到回調處理路由，使用 navigate
-      navigate('/auth/line-callback', { replace: true });
+      // navigate('/auth/line-callback', { replace: true });
+      navigate('/auth/line-login', { replace: true });
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <Routes>

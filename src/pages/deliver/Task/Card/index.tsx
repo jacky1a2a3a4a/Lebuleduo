@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { HiDocumentText, HiMiniTruck, HiXCircle } from 'react-icons/hi2';
 import {
   TaskCardWrapper,
   TaskCardItem,
@@ -11,6 +12,7 @@ import {
   TaskUserContent,
   MainContent,
   SubContent,
+  TertiaryContent,
   TaskCardButtons,
   TaskCardButton,
 } from './styled';
@@ -103,7 +105,7 @@ function TaskCard({
       case 'completed':
         return '已完成';
       default:
-        return '等待前往';
+        return '待前往';
     }
   };
 
@@ -132,22 +134,22 @@ function TaskCard({
             <TaskUserContent>
               <MainContent>{address}</MainContent>
               <SubContent>固定放置點: {notes}</SubContent>
-            </TaskUserContent>
-
-            <TaskUserContent>
-              <MainContent>{customerName}</MainContent>
-              <SubContent>訂單編號: {taskId}</SubContent>
+              <TertiaryContent>訂單編號: {taskId}</TertiaryContent>
             </TaskUserContent>
           </TaskDetailContainer>
         </TaskCardContent>
 
         <TaskCardButtons>
-          <TaskCardButton onClick={handleOrderDetail}>訂單詳情</TaskCardButton>
+          <TaskCardButton onClick={handleOrderDetail} disabled={disabled}>
+            <HiDocumentText />
+            訂單詳情
+          </TaskCardButton>
           <TaskCardButton
             styledType={status === 'ongoing' ? 'secondary' : 'primary'}
             onClick={handleStatusChange}
             disabled={disabled || status === 'completed'}
           >
+            {status === 'ongoing' ? <HiXCircle /> : <HiMiniTruck />}
             {getActionButtonText()}
           </TaskCardButton>
         </TaskCardButtons>
