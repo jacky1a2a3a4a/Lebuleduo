@@ -53,7 +53,7 @@ const LineLogin = () => {
   // LINE 登入 URL 設定
   const LINE_LOGIN_URL = 'https://access.line.me/oauth2/v2.1/authorize';
   const CLIENT_ID = '2007121127';
-  const REDIRECT_URI = 'http://4.240.61.223/auth/line-login';
+  const REDIRECT_URI = 'http://4.240.61.223/auth/line-callback';
 
   // 處理 LINE 登入回調
   useEffect(() => {
