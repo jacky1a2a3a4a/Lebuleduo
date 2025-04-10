@@ -49,14 +49,18 @@ function TaskCard({
   time,
   address,
   notes,
-  customerName,
   onStatusChange,
   disabled = false,
-  weight,
-  photos,
 }: TaskCardProps) {
   // 路由 跳轉
   const navigate = useNavigate();
+
+  // 格式化時間顯示
+  const formatTime = (timeStr: string) => {
+    const [hours] = timeStr.split(':');
+    const hour = parseInt(hours, 10);
+    return `${timeStr} ${hour < 12 ? 'AM' : 'PM'}`;
+  };
 
   // 訂單詳情 路由
   const handleOrderDetail = () => {
@@ -128,7 +132,7 @@ function TaskCard({
           <TaskImg />
           <TaskDetailContainer>
             <TaskCardHeader>
-              <TaskTitle>{time}</TaskTitle>
+              <TaskTitle>{formatTime(time)}</TaskTitle>
               <TaskTag status={status}>{getStatusText()}</TaskTag>
             </TaskCardHeader>
             <TaskUserContent>

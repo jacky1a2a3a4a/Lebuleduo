@@ -1,5 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { HiDocumentText, HiMiniUser, HiMapPin, HiPhone } from 'react-icons/hi2';
+import {
+  HiDocumentText,
+  HiMiniUser,
+  HiMapPin,
+  HiPhone,
+  HiChevronLeft,
+} from 'react-icons/hi2';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { useEffect, useState, useCallback } from 'react';
 import { TaskStatus } from '../Card';
@@ -8,6 +14,7 @@ import {
   HeaderContainer,
   PageTitle,
   PageSubtitle,
+  IconStyled,
   DetailCard,
   DetailRow,
   DetailTime,
@@ -167,8 +174,13 @@ function OrderDetails() {
   return (
     <FullHeightContainer>
       <HeaderContainer>
-        <PageTitle>訂單詳情</PageTitle>
-        <PageSubtitle>請務必核對用戶資料及訂單內容</PageSubtitle>
+        <PageTitle onClick={handleBack}>
+          <IconStyled>
+            <HiChevronLeft />
+          </IconStyled>
+          訂單詳情
+        </PageTitle>
+        <PageSubtitle>定單編號: {task.id}</PageSubtitle>
       </HeaderContainer>
 
       <DetailCard>
@@ -309,7 +321,6 @@ function OrderDetails() {
       </DetailCard>
 
       <DetailButtons>
-        <Button onClick={handleBack}>返回任務</Button>
         <Button
           onClick={handleStatusChange}
           disabled={task.status === 'completed'}
