@@ -16,6 +16,7 @@ import DeliverLayout from './layouts/DeliverLayout';
 //line登入 頁面組件
 import LineLogin from './pages/auth/LineLogin/index';
 import LineCallback from './pages/auth/LineCallback/index';
+
 // 顧客(customer) 頁面組件
 import MyOrder from './pages/customer/MyOrder';
 import OrderDetail from './pages/customer/OrderDetail';
@@ -32,7 +33,7 @@ import OrderInProcess from './pages/deliver/Task/OrderInProcess';
 import ScanOrder from './pages/deliver/ScanOrder';
 import Calendar from './pages/deliver/Calendar';
 
-// 臨時頁面組件
+//// 臨時頁面組件
 // line登入 頁面組件
 // const Register = () => <div>註冊頁面</div>;
 // const Login = () => <div>登入頁面</div>;
@@ -54,7 +55,7 @@ const PageNotFound = () => <div>404 - 頁面未找到</div>;
 // const Settlement = () => <div>行事曆</div>;
 const ReportBackend = () => <div>回報後台</div>;
 
-// 創建一個新的組件來處理重定向邏輯
+// 當獲取官方提供的參數後，重定向到我們指定的line callback頁面
 const AppContent = () => {
   const navigate = useNavigate();
 
