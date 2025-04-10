@@ -1,6 +1,6 @@
 // src/pages/auth/LineCallback/index.tsx
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { validateLineState, getLoginRole } from '../../../configs/lineConfig';
 import axios from 'axios';
 import {
@@ -27,7 +27,6 @@ const LineCallback = () => {
     localStorage: {},
   });
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -116,7 +115,7 @@ const LineCallback = () => {
     };
 
     handleCallback();
-  }, [location, navigate]);
+  }, []);
 
   return (
     <CallbackContainer>
