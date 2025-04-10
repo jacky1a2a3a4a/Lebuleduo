@@ -22,9 +22,9 @@ import {
 const LineLogin = () => {
   const [selectedRole, setSelectedRole] = useState<
     'customer' | 'deliver' | null
-  >(null);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
+  >(null); // 選擇身分  
+  const [isAnimating, setIsAnimating] = useState(false); // 進入動畫
+  const [isExiting, setIsExiting] = useState(false); // 退出動畫
 
   // 選擇身分
   const handleRoleSelect = (role: 'customer' | 'deliver') => {
@@ -89,7 +89,7 @@ const LineLogin = () => {
     <LoginSectionStyled>
       <Logo src={'/Lebuledou.png'} />
       <WelcomeText>
-        <TextMain>Lebuledou</TextMain>
+        <TextMain>Lebu-ledou</TextMain>
         <TextSub>垃不垃多</TextSub>
         <TextContent>歡迎使用最省事的垃圾代收服務</TextContent>
       </WelcomeText>

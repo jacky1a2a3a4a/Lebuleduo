@@ -1,8 +1,8 @@
 // src/pages/auth/LineCallback/index.tsx
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { validateLineState, getLoginRole } from '../../../configs/lineConfig';
+import axios from 'axios';
 import {
   CallbackContainer,
   LoadingSpinner,
@@ -87,7 +87,7 @@ const LineCallback = () => {
 
           // 根據角色導向不同頁面，使用 navigate
           if (userRole === 'customer') {
-            navigate('/customer/my-order', { replace: true });
+            navigate('/customer', { replace: true });
           } else {
             navigate('/deliver', { replace: true });
           }
@@ -106,10 +106,10 @@ const LineCallback = () => {
           setError('登入過程中發生錯誤');
         }
 
-        // 5 秒後返回登入頁面，使用 navigate
+        // 3 秒後返回登入頁面，使用 navigate
         setTimeout(() => {
           navigate('/auth/line-login', { replace: true });
-        }, 5000);
+        }, 3000);
       } finally {
         setLoading(false);
       }
@@ -131,7 +131,7 @@ const LineCallback = () => {
         <>
           <Message>登入失敗</Message>
           <ErrorMessage>{error}</ErrorMessage>
-          <p>5 秒後自動返回登入頁面...</p>
+          <p>3 秒後自動返回登入頁面...</p>
         </>
       )}
 

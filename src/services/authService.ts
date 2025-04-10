@@ -1,4 +1,6 @@
 // src/services/authService.ts
+//專注於用戶認證和資料管理
+
 import axios from 'axios';
 
 // API 基礎路徑
@@ -17,7 +19,7 @@ export interface UserData {
 // 身分類型
 export type UserRole = 'customer' | 'deliver';
 
-// 驗證服務
+// 驗證服務大組件
 const authService = {
   // LINE 登入回調
   lineCallback: async (code: string, role: UserRole) => {
@@ -55,15 +57,15 @@ const authService = {
     }
   },
 
-  // 登出功能
-  logout: () => {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_role');
-    localStorage.removeItem('user_data');
+  // 登出功能(目前沒有)
+  // logout: () => {
+  //   localStorage.removeItem('auth_token');
+  //   localStorage.removeItem('user_role');
+  //   localStorage.removeItem('user_data');
 
-    // 返回登入頁面
-    window.location.href = '/#/auth/line-login';
-  },
+  //   // 返回登入頁面
+  //   window.location.href = '/#/auth/line-login';
+  // },
 
   // 檢查用戶是否已登入
   isAuthenticated: (): boolean => {
@@ -83,8 +85,8 @@ const authService = {
     if (userData) {
       try {
         return JSON.parse(userData);
-      } catch (e) {
-        console.error('解析用戶資料失敗');
+      } catch (error) {
+        console.error('解析用戶資料失敗:', error);
         return null;
       }
     }

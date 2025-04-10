@@ -1,4 +1,7 @@
 // src/configs/lineConfig.ts
+//專注於 LINE 登入的配置和安全性
+
+// LINE 登入配置
 interface LineConfig {
   CLIENT_ID: string;
   REDIRECT_URI: string;

@@ -27,21 +27,21 @@ export const WelcomeText = styled.h1`
 
 // 登入頁面 歡迎文字 主要文字
 export const TextMain = styled.span`
-  color: var(--color-gray-700);
+  color: var(--color-primary);
   font-size: var(--font-size-2xl);
   font-weight: bold;
 `;
 
 // 登入頁面 歡迎文字 副文字
 export const TextSub = styled.span`
-  color: var(--color-gray-700);
+  color: var(--color-tertiary);
   font-size: var(--font-size-xl);
   margin-bottom: var(--spacing-14);
 `;
 
 // 登入頁面 歡迎文字 內容文字
 export const TextContent = styled.span`
-  color: var(--color-gray-400);
+  color: var(--color-text-tertiary);
   font-size: 1rem;
 `;
 
