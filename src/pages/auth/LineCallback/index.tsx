@@ -1,5 +1,5 @@
 // src/pages/auth/LineCallback/index.tsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { validateLineState, getLoginRole } from '../../../configs/lineConfig';
 import axios from 'axios';
@@ -13,8 +13,8 @@ import {
 } from './styles';
 
 const LineCallback = () => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true); // 頁面載入狀態
+  const [error, setError] = useState<string | null>(null); // 儲存錯誤訊息
   const [debugInfo, setDebugInfo] = useState<{
     code: string | null;
     state: string | null;
@@ -25,12 +25,19 @@ const LineCallback = () => {
     state: null,
     role: null,
     localStorage: {},
-  });
+  }); // 儲存除錯資訊
   const navigate = useNavigate();
+  const hasProcessed = useRef(false);
 
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        // 如果已經處理過，直接返回
+        if (hasProcessed.current) {
+          console.log('已經處理過授權碼，跳過重複處理');
+          return;
+        }
+
         console.log('=== LINE 登入回調處理開始 ===');
         console.log('當前完整 URL:', window.location.href);
 
@@ -38,6 +45,9 @@ const LineCallback = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const state = urlParams.get('state');
+
+        console.log('code', code);
+        console.log('state', state);
 
         // 更新除錯資訊
         setDebugInfo({
@@ -50,10 +60,12 @@ const LineCallback = () => {
           },
         });
 
+        // 驗證授權碼(code)
         if (!code) {
           throw new Error('無法獲取授權碼');
         }
 
+        // 驗證 state 參數
         if (!state || !validateLineState(state)) {
           throw new Error('無效的 state 參數，可能存在安全風險');
         }
@@ -65,36 +77,79 @@ const LineCallback = () => {
           throw new Error('無法確定用戶角色');
         }
 
+        // 打印要發送的 code 值
+        console.log('要發送的 code 值:', code);
+
         try {
           // 將 code 發送給後端以換取 token
-          const response = await axios.post('/api/auth/line/callback', {
+          console.log('發送請求的參數:', {
             code,
             role: userRole,
           });
 
-          // 處理後端回傳的資料
-          const { accessToken, user } = response.data;
+          const response = await axios.post(
+            '/api/auth/line/callback',
+            {
+              code,
+              role: userRole,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              validateStatus: function (status) {
+                return status >= 200 && status < 500; // 接受 400 狀態碼
+              },
+            },
+          );
 
-          // 將 token 儲存到 localStorage
-          localStorage.setItem('auth_token', accessToken);
-          localStorage.setItem('user_role', userRole);
-          localStorage.setItem('user_data', JSON.stringify(user));
+          console.log('後端回傳的資料:', response.data);
+
+          if (response.status === 400) {
+            console.error('後端返回 400 錯誤:', response.data);
+            throw new Error(
+              `後端處理失敗: ${response.data.message || '未知錯誤'}`,
+            );
+          }
+
+          // 處理後端回傳的資料
+          const { token, profileData, roleName } = response.data;
+
+          // 將 token 和用戶資料儲存到 localStorage
+          localStorage.setItem('auth_token', token);
+          localStorage.setItem('user_role', roleName);
+          localStorage.setItem(
+            'user_data',
+            JSON.stringify({
+              displayName: profileData.displayName,
+              userId: profileData.userId,
+              pictureUrl: profileData.pictureUrl,
+            }),
+          );
 
           // 清除登入相關的 state 資訊
           localStorage.removeItem('line_login_state');
           localStorage.removeItem('line_login_role');
 
-          // 根據角色導向不同頁面，使用 navigate
-          if (userRole === 'customer') {
+          // 標記為已處理，避免重複請求token，第二次會失敗
+          hasProcessed.current = true;
+
+          // 根據接收回來的角色導向不同頁面，使用 navigate
+          if (roleName === 'customer') {
             navigate('/customer', { replace: true });
           } else {
             navigate('/deliver', { replace: true });
           }
         } catch (apiError: unknown) {
-          console.error('後端 API 錯誤:', apiError);
           if (axios.isAxiosError(apiError)) {
+            console.error('後端 API 錯誤詳細資訊:', {
+              status: apiError.response?.status,
+              data: apiError.response?.data,
+              headers: apiError.response?.headers,
+            });
             throw new Error(`後端處理失敗: ${apiError.message}`);
           }
+          console.error('未知錯誤:', apiError);
           throw new Error('後端處理失敗');
         }
       } catch (err: unknown) {
@@ -115,7 +170,7 @@ const LineCallback = () => {
     };
 
     handleCallback();
-  }, []);
+  }, []); //沒有依賴，只會執行一次
 
   return (
     <CallbackContainer>

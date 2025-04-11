@@ -12,9 +12,7 @@ interface LineConfig {
 // 顧客配置
 const CUSTOMER_CONFIG: LineConfig = {
   CLIENT_ID: import.meta.env.VITE_LINE_CHANNEL_ID || '2007121127',
-  REDIRECT_URI: import.meta.env.DEV
-    ? 'http://localhost:5173/auth/line-callback'
-    : 'http://4.240.61.223/auth/line-callback',
+  REDIRECT_URI: 'http://localhost:5173/auth/line/callback',
   STATE: 'customer_state_' + Math.random().toString(36).substring(2, 15),
   SCOPE: 'profile openid email',
 };
@@ -22,9 +20,7 @@ const CUSTOMER_CONFIG: LineConfig = {
 // 汪汪員配置
 const DELIVER_CONFIG: LineConfig = {
   CLIENT_ID: import.meta.env.VITE_LINE_CHANNEL_ID || '2007121127',
-  REDIRECT_URI: import.meta.env.DEV
-    ? 'http://localhost:5173/auth/line-callback'
-    : 'http://4.240.61.223/auth/line-callback',
+  REDIRECT_URI: 'http://localhost:5173/auth/line/callback',
   STATE: 'deliver_state_' + Math.random().toString(36).substring(2, 15),
   SCOPE: 'profile openid email',
 };

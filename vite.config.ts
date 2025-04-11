@@ -9,15 +9,27 @@ export default defineConfig({
         target: 'http://4.240.61.223',
         changeOrigin: true,
         secure: false,
+        // 確保這裡的 rewrite 設定正確
         rewrite: (path) => path.replace(/^\/api/, ''),
+        configure: (proxy) => {
+          proxy.on('error', (err) => {
+            console.log('代理錯誤', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req) => {
+            console.log('發送請求到目標伺服器:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req) => {
+            console.log('從目標伺服器接收回應:', proxyRes.statusCode, req.url);
+          });
+        },
       },
     },
     port: 5173,
-    host: '0.0.0.0', // 明確指定
-    cors: true, // 添加 CORS 支援
+    host: '0.0.0.0',
+    cors: true,
   },
 
-  base: '/', // 使用絕對路徑
+  base: '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

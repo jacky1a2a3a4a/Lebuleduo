@@ -21,7 +21,7 @@ import {
   LineButtonTest,
 } from './styles';
 
-// 添加 mockAuthService 的引入
+// 模擬登入認證
 import mockAuthService from '../../../services/mockAuthService';
 
 const LineLogin = () => {
@@ -33,7 +33,7 @@ const LineLogin = () => {
 
   const navigate = useNavigate();
 
-  // 添加臨時直接登入的處理函數
+  // 模擬登入
   const handleMockLogin = async () => {
     if (!selectedRole) return;
 

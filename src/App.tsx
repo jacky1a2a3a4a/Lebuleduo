@@ -68,13 +68,8 @@ const AppContent = () => {
     console.log('state', state);
 
     if (code && state) {
-      // 將參數存儲到 localStorage
-      localStorage.setItem('line_auth_code', code);
-      localStorage.setItem('line_auth_state', state);
-
-      // 重定向到回調處理路由，使用 navigate
-      // navigate('/auth/line-callback', { replace: true });
-      navigate('/auth/line-login', { replace: true });
+      // 直接重定向到回調處理路由
+      navigate('/auth/line/callback', { replace: true });
     }
   }, []);
 
@@ -87,7 +82,7 @@ const AppContent = () => {
       <Route path="/auth">
         <Route index element={<Navigate to="/auth/line-login" replace />} />
         <Route path="line-login" element={<LineLogin />} />
-        <Route path="line-callback" element={<LineCallback />} />
+        <Route path="line/callback" element={<LineCallback />} />
       </Route>
 
       {/* 顧客路由 */}
