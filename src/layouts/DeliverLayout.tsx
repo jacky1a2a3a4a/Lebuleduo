@@ -20,10 +20,7 @@ const Main = styled.main`
   overflow: hidden;
 `;
 
-/**
- * 外送員頁面佈局
- * 包含頁首、主內容區域和頁尾
- */
+
 function DeliverLayout() {
   return (
     <AppLayoutStyled>

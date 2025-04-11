@@ -37,6 +37,7 @@ const LineCallback = () => {
           console.log('已經處理過授權碼，跳過重複處理');
           return;
         }
+        hasProcessed.current = true;
 
         console.log('=== LINE 登入回調處理開始 ===');
         console.log('當前完整 URL:', window.location.href);
@@ -134,12 +135,21 @@ const LineCallback = () => {
           // 標記為已處理，避免重複請求token，第二次會失敗
           hasProcessed.current = true;
 
-          // 根據接收回來的角色導向不同頁面，使用 navigate
-          if (roleName === 'customer') {
-            navigate('/customer', { replace: true });
-          } else {
-            navigate('/deliver', { replace: true });
-          }
+          // 顯示成功訊息
+          setLoading(false);
+          setError(null);
+
+          // 清除 URL 參數
+          window.history.replaceState({}, '', '/');
+
+          // 3 秒後根據角色導向不同頁面
+          setTimeout(() => {
+            if (roleName === 'customer') {
+              navigate('/customer', { replace: true });
+            } else {
+              navigate('/deliver', { replace: true });
+            }
+          }, 3000);
         } catch (apiError: unknown) {
           if (axios.isAxiosError(apiError)) {
             console.error('後端 API 錯誤詳細資訊:', {
@@ -160,10 +170,10 @@ const LineCallback = () => {
           setError('登入過程中發生錯誤');
         }
 
-        // 3 秒後返回登入頁面，使用 navigate
-        // setTimeout(() => {
-        //   // navigate('/auth/line-login', { replace: true });
-        // }, 3000);
+        // 3 秒後返回登入頁面
+        setTimeout(() => {
+          navigate('/auth/line-login', { replace: true });
+        }, 3000);
       } finally {
         setLoading(false);
       }
@@ -186,6 +196,13 @@ const LineCallback = () => {
           <Message>登入失敗</Message>
           <ErrorMessage>{error}</ErrorMessage>
           <p>3 秒後自動返回登入頁面...</p>
+        </>
+      )}
+
+      {!loading && !error && (
+        <>
+          <Message>登入成功！</Message>
+          <Message>正在為您導向頁面...</Message>
         </>
       )}
 
