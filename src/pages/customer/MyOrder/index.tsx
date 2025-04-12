@@ -4,8 +4,8 @@ import { HiTruck, HiExclamationCircle } from 'react-icons/hi2';
 import {
   OrderStep,
   TabType,
-  ApiOrder,
-  ApiResponse,
+  ApiTodayOrder,
+  ApiCurrentOrder,
   ApiCompletedOrder,
 } from './types';
 import {
@@ -48,33 +48,44 @@ import {
 // 組件本體
 function MyOrder() {
   const navigate = useNavigate();
+  const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
+  const userName = userData.displayName || '尊貴的會員';
+  const userId = localStorage.getItem('UsersID'); // 從localStorage獲取用戶ID
 
-  //// 收運進度條
-  // 假設當前訂單狀態是「待收運」(可以從API或狀態管理中獲取)
-  const currentStep = 1; // 0:待收運, 1:前往中, 2:已完成
-  const progress = (currentStep / 2) * 100; // 計算進度百分比，由於有3個步驟(0-2)，所以除以2
+  // 使用者今日數據狀態
+  const [todayData, setTodayData] = useState<ApiTodayOrder | null>(null);
+  const todayDataStatus = todayData?.status || '未完成'; // 如果沒有數據，默認為'未完成'
 
+  // 根據狀態設定 currentStep
+  let currentStep = 0;
+  if (todayDataStatus === '未完成') {
+    currentStep = 0;
+  } else if (todayDataStatus === '前往中') {
+    currentStep = 1;
+  } else if (todayDataStatus === '已完成') {
+    currentStep = 2;
+  }
+
+  //// 收運進度條 步驟
+  // 計算進度百分比，由於有3個步驟(0-2)，所以除以2
+  const progress = (currentStep / 2) * 100;
+
+  // 收運進度條
   const orderSteps: OrderStep[] = [
-    { label: '待收運', position: 0 },
+    { label: '未完成', position: 0 },
     { label: '前往中', position: 50 },
     { label: '已完成', position: 100 },
   ];
 
-  ////模擬資料
-  // 圖片URL，實際開發時可從API獲取
-  // const productImageUrl1 = '../../public/user_trash_photo_test.jpg';
-  // const productImageUrl2 = '../../public/user_trash_photo_test.jpg';
-
-  // 標籤狀態管理
-  const [activeTab, setActiveTab] = useState<TabType>('current');
-
   // 訂單數據狀態
-  const [currentOrders, setCurrentOrders] = useState<ApiOrder[]>([]);
+  const [currentOrders, setCurrentOrders] = useState<ApiCurrentOrder[]>([]);
   const [completedOrders, setCompletedOrders] = useState<ApiCompletedOrder[]>(
     [],
   );
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const [activeTab, setActiveTab] = useState<TabType>('current'); // 標籤狀態管理
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 載入狀態
+  const [error, setError] = useState<string | null>(null); // 錯誤訊息
 
   // 處理標籤切換，確保只在標籤不同時進行切換
   const handleTabClick = (tab: TabType) => {
@@ -95,41 +106,57 @@ function MyOrder() {
         setIsLoading(true);
 
         // API使用代理路徑
-        // 路徑設定 > vite.config.ts
-        const currentOrdersAPI_Path = '/api/GET/user/dashboard/New/1';
-        const completedOrdersAPI_Path = '/api/GET/user/dashboard/End/1';
+        const userTodayAPI_Path = `/api/GET/user/dashboard/today/${userId}`;
+        const currentOrdersAPI_Path = `/api/GET/user/orders/${userId}`;
+        const completedOrdersAPI_Path = `/api/GET/user/orders/completed/${userId}`;
 
-        // 同時調用兩個API獲取數據
-        const [currentResponse, completedResponse] = await Promise.all([
-          fetch(currentOrdersAPI_Path),
-          fetch(completedOrdersAPI_Path),
-        ]);
+        // 分別調用API獲取數據
+        // 使用者今日數據
+        const userTodayResponse = await fetch(userTodayAPI_Path);
 
-        // 檢查當前方案API響應
+        if (!userTodayResponse.ok) {
+          throw new Error(`使用者今日API請求失敗：${userTodayResponse.status}`);
+        }
+        const TodayData = (await userTodayResponse.json()) as {
+          statusCode: number;
+          status: boolean;
+          message: string;
+          result: ApiTodayOrder;
+        };
+        console.log('使用者今日數據:', TodayData);
+        setTodayData(TodayData.result);
+
+        // 當前訂單數據
+        const currentResponse = await fetch(currentOrdersAPI_Path);
         if (!currentResponse.ok) {
           throw new Error(`當前訂單API請求失敗：${currentResponse.status}`);
         }
+        const currentData = (await currentResponse.json()) as {
+          statusCode: number;
+          status: boolean;
+          message: string;
+          result: ApiCurrentOrder[];
+        };
+        console.log('當前訂單數據:', currentData);
 
-        // 檢查已完成方案API響應
+        if (currentData.status && currentData.result.length > 0) {
+          setCurrentOrders(currentData.result);
+        }
+
+        // 結束訂單數據
+        const completedResponse = await fetch(completedOrdersAPI_Path);
         if (!completedResponse.ok) {
           throw new Error(`已完成訂單API請求失敗：${completedResponse.status}`);
         }
-
-        // 解析API響應
-        const currentData = (await currentResponse.json()) as ApiResponse;
-        const completedData = (await completedResponse.json()) as ApiResponse;
-
-        console.log('當前訂單API回應:', currentData);
-        console.log('已完成訂單API回應:', completedData);
-
-        // 更新當前方案狀態
-        if (currentData.status && currentData.result.length > 0) {
-          setCurrentOrders(currentData.result as ApiOrder[]);
-        }
-
-        // 更新已完成方案狀態
+        const completedData = (await completedResponse.json()) as {
+          statusCode: number;
+          status: boolean;
+          message: string;
+          result: ApiCompletedOrder[];
+        };
+        console.log('已完成訂單數據:', completedData);
         if (completedData.status && completedData.result.length > 0) {
-          setCompletedOrders(completedData.result as ApiCompletedOrder[]);
+          setCompletedOrders(completedData.result);
         }
 
         // 如果兩種訂單都沒有數據
@@ -154,7 +181,7 @@ function MyOrder() {
     <MyOrderSectionStyled>
       <UserCardSection>
         <UserCard>
-          <UserGreeting>您好，尊貴的會員</UserGreeting>
+          <UserGreeting>您好，{userName}</UserGreeting>
 
           <UserCardItem>
             <UserCardTitle>
@@ -172,7 +199,7 @@ function MyOrder() {
               <UserTextItem>訂單狀態</UserTextItem>
             </UserCardTitle>
             <UserCardContent>
-              <OrderStatus>前往中</OrderStatus>
+              <OrderStatus>{todayData?.status || '錯誤'}</OrderStatus>
             </UserCardContent>
           </UserCardItem>
         </UserCard>
@@ -217,7 +244,9 @@ function MyOrder() {
         </BackgroundContainer>
       </ProgressBarSection>
 
+      {/* 訂單列表 */}
       <OrderContainer>
+        {/* 訂單列表標籤 */}
         <TabContainer>
           <TabItem
             $isActive={activeTab === 'current'}
@@ -233,6 +262,7 @@ function MyOrder() {
           </TabItem>
         </TabContainer>
 
+        {/* 訂單列表 */}
         <OrderListSection>
           {isLoading ? (
             <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -256,14 +286,14 @@ function MyOrder() {
                     // 使用解構賦值提取需要的屬性
                     const {
                       OrdersID,
-                      Photos,
                       PlanName,
-                      Liter,
                       PlanKG,
-                      NextServiceDate,
+                      Liter,
+                      OrderImageUrl,
                       RemainingCount,
                       StartDate,
                       EndDate,
+                      NextServiceDate,
                     } = currentOrder;
 
                     return (
@@ -273,8 +303,11 @@ function MyOrder() {
                       >
                         <OrderCardLayout>
                           <OrderPhotoContainer>
-                            {Photos && Photos.length > 0 ? (
-                              <OrderPhotoImage src={Photos[0]} alt="訂單商品" />
+                            {OrderImageUrl && OrderImageUrl.length > 0 ? (
+                              <OrderPhotoImage
+                                src={OrderImageUrl[0]}
+                                alt="訂單商品"
+                              />
                             ) : (
                               <OrderPhoto>
                                 <HiExclamationCircle />
@@ -335,10 +368,11 @@ function MyOrder() {
                   // 使用解構賦值提取需要的屬性
                   const {
                     OrdersID,
-                    Photos,
+
                     PlanName,
                     Liter,
                     PlanKG,
+                    OrderImageUrl,
                     StartDate,
                     EndDate,
                   } = completedOrder;
@@ -361,8 +395,11 @@ function MyOrder() {
                     >
                       <OrderCardLayout>
                         <OrderPhotoContainer>
-                          {Photos && Photos.length > 0 ? (
-                            <OrderPhotoImage src={Photos[0]} alt="訂單商品" />
+                          {OrderImageUrl && OrderImageUrl.length > 0 ? (
+                            <OrderPhotoImage
+                              src={OrderImageUrl[0]}
+                              alt="訂單商品"
+                            />
                           ) : (
                             <OrderPhoto>
                               <HiExclamationCircle />

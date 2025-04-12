@@ -248,7 +248,7 @@ const SubscribeData = () => {
     }
 
     // 將選擇的數據傳遞到下一個頁面
-    navigate('/customer/SubscribeCheckout', {
+    navigate('/customer/Subscribe-checkout', {
       state: {
         planId,
         planName,
@@ -598,7 +598,7 @@ const ErrorMessage = styled.div`
 `;
 
 // 區段標題 模板
-const SectionTitle = styled.h2`
+const SectionTitle = styled.div`
   margin-bottom: var(--spacing-sm);
 
   display: flex;

@@ -114,11 +114,12 @@ const LineCallback = () => {
           }
 
           // 處理後端回傳的資料
-          const { token, profileData, roleName } = response.data;
+          const { token, profileData, roleName, UsersID } = response.data;
 
           // 將 token 和用戶資料儲存到 localStorage
           localStorage.setItem('auth_token', token);
           localStorage.setItem('user_role', roleName);
+          localStorage.setItem('UsersID', UsersID); //後端設計的使用者ID
           localStorage.setItem(
             'user_data',
             JSON.stringify({
