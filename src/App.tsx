@@ -124,7 +124,7 @@ const AppContent = () => {
 
       {/* 訂閱資料填寫 - 獨立路由，不使用 CustomerLayout */}
       <Route
-        path="/customer/subscribe-form"
+        path="/customer/subscribe-data"
         element={
           <ProtectedRoute role="customer">
             <SubscribeData />
@@ -134,7 +134,7 @@ const AppContent = () => {
 
       {/* 訂閱結帳 - 獨立路由，不使用 CustomerLayout */}
       <Route
-        path="/customer/SubscribeCheckout"
+        path="/customer/Subscribe-checkout"
         element={
           <ProtectedRoute role="customer">
             <SubscribeCheckout />

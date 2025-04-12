@@ -66,7 +66,7 @@ export const DeliverGreeting = styled.div`
 // 外送員卡片 問候語
 export const TaskGreetingItem = styled.div`
   font-size: var(--font-size-xl);
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
 `;
 
 // 外送員卡片 外送員編號

@@ -69,7 +69,7 @@ type TaskItem = {
 };
 
 // 分類型別定義
-type CategoryType = 'all' | 'waiting' | 'completed' | 'error';
+type CategoryType = 'waiting' | 'completed' | 'error';
 
 // 容器高度偏移量
 const TOP_OFFSET = 96; // 6rem
@@ -139,10 +139,10 @@ function Task() {
     ];
   });
 
-  // 從 localStorage 讀取保存的分類，如果沒有則默認為 'all'
+  // 從 localStorage 讀取保存的分類，如果沒有則默認為 'waiting'
   const [activeCategory, setActiveCategory] = useState<CategoryType>(() => {
     const savedCategory = localStorage.getItem('activeCategory');
-    return (savedCategory as CategoryType) || 'all';
+    return (savedCategory as CategoryType) || 'waiting';
   });
 
   // 當分類改變時，保存到 localStorage
