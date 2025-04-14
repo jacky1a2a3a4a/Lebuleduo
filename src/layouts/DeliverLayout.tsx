@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Header from '../components/deliver/layout/Header/index';
-import Footer from '../components/deliver/layout/Footer/index';
+import DeliverHeader from '../components/deliver/Header';
+import DeliverFooter from '../components/deliver/Footer';
 
 const AppLayoutStyled = styled.section`
   display: grid;
@@ -14,20 +14,21 @@ const AppLayoutStyled = styled.section`
 `;
 
 const Main = styled.main`
-  background-color: var(--color-gray-100);
-  padding: 0.5rem var(--spacing-14);
+  /* background-color: var(--color-gray-500); */
+  /* padding: 0.5rem var(--spacing-14); */
   height: 100%;
   overflow: hidden;
 `;
 
+
 function DeliverLayout() {
   return (
     <AppLayoutStyled>
-      <Header />
+      <DeliverHeader />
       <Main>
         <Outlet />
       </Main>
-      <Footer />
+      <DeliverFooter />
     </AppLayoutStyled>
   );
 }

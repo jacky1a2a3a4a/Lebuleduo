@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { HiDocumentText, HiMiniTruck, HiXCircle } from 'react-icons/hi2';
 import {
   TaskCardWrapper,
   TaskCardItem,
@@ -11,6 +12,7 @@ import {
   TaskUserContent,
   MainContent,
   SubContent,
+  TertiaryContent,
   TaskCardButtons,
   TaskCardButton,
 } from './styled';
@@ -47,14 +49,18 @@ function TaskCard({
   time,
   address,
   notes,
-  customerName,
   onStatusChange,
   disabled = false,
-  weight,
-  photos,
 }: TaskCardProps) {
   // 路由 跳轉
   const navigate = useNavigate();
+
+  // 格式化時間顯示
+  const formatTime = (timeStr: string) => {
+    const [hours] = timeStr.split(':');
+    const hour = parseInt(hours, 10);
+    return `${timeStr} ${hour < 12 ? 'AM' : 'PM'}`;
+  };
 
   // 訂單詳情 路由
   const handleOrderDetail = () => {
@@ -103,7 +109,7 @@ function TaskCard({
       case 'completed':
         return '已完成';
       default:
-        return '等待前往';
+        return '待前往';
     }
   };
 
@@ -126,28 +132,28 @@ function TaskCard({
           <TaskImg />
           <TaskDetailContainer>
             <TaskCardHeader>
-              <TaskTitle>{time}</TaskTitle>
+              <TaskTitle>{formatTime(time)}</TaskTitle>
               <TaskTag status={status}>{getStatusText()}</TaskTag>
             </TaskCardHeader>
             <TaskUserContent>
               <MainContent>{address}</MainContent>
               <SubContent>固定放置點: {notes}</SubContent>
-            </TaskUserContent>
-
-            <TaskUserContent>
-              <MainContent>{customerName}</MainContent>
-              <SubContent>訂單編號: {taskId}</SubContent>
+              <TertiaryContent>訂單編號: {taskId}</TertiaryContent>
             </TaskUserContent>
           </TaskDetailContainer>
         </TaskCardContent>
 
         <TaskCardButtons>
-          <TaskCardButton onClick={handleOrderDetail}>訂單詳情</TaskCardButton>
+          <TaskCardButton onClick={handleOrderDetail} disabled={disabled}>
+            <HiDocumentText />
+            訂單詳情
+          </TaskCardButton>
           <TaskCardButton
             styledType={status === 'ongoing' ? 'secondary' : 'primary'}
             onClick={handleStatusChange}
             disabled={disabled || status === 'completed'}
           >
+            {status === 'ongoing' ? <HiXCircle /> : <HiMiniTruck />}
             {getActionButtonText()}
           </TaskCardButton>
         </TaskCardButtons>

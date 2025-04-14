@@ -1,4 +1,4 @@
-# Logs
+# Logs 日誌文件
 logs
 *.log
 npm-debug.log*
@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# 建置和依賴目錄
 node_modules
 dist
 dist-ssr
@@ -23,12 +24,13 @@ dist-ssr
 *.sln
 *.sw?
 
-# Vite cache
+# Vite cache 快取文件
 .vite
 
-# Environment variables
+# Environment variables 環境變量
 .env
 .env.production
 
-
+# Vercel 部署文件
 .vercel
+

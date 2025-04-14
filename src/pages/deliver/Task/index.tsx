@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { HiTruck, HiCalendar } from 'react-icons/hi2';
-
+import { HiCalendarDays } from 'react-icons/hi2';
 import {
   TaskSectionStyled,
   DeliverContainer,
@@ -70,7 +69,7 @@ type TaskItem = {
 };
 
 // 分類型別定義
-type CategoryType = 'all' | 'waiting' | 'completed' | 'error';
+type CategoryType = 'waiting' | 'completed' | 'error';
 
 // 容器高度偏移量
 const TOP_OFFSET = 96; // 6rem
@@ -90,13 +89,60 @@ function Task() {
     if (savedTasks) {
       return JSON.parse(savedTasks);
     }
-    return [];
+    // 測試用的假資料
+    return [
+      {
+        id: '1',
+        status: 'waiting',
+        time: '09:00',
+        address: '台北市信義區信義路五段7號',
+        notes: '請注意收件人不在家時，可放置管理室',
+        customerName: '王小明',
+        phone: '0912-345-678',
+      },
+      {
+        id: '2',
+        status: 'ongoing',
+        time: '10:30',
+        address: '台北市大安區忠孝東路四段77號',
+        notes: '需要冷藏配送',
+        customerName: '李小華',
+        phone: '0923-456-789',
+      },
+      {
+        id: '3',
+        status: 'completed',
+        time: '11:45',
+        address: '台北市中山區南京東路三段219號',
+        notes: '請按門鈴後等待',
+        customerName: '張大偉',
+        phone: '0934-567-890',
+      },
+      {
+        id: '4',
+        status: 'waiting',
+        time: '13:15',
+        address: '台北市松山區八德路四段123號',
+        notes: '大樓有電梯，請直接上樓',
+        customerName: '陳小美',
+        phone: '0945-678-901',
+      },
+      {
+        id: '5',
+        status: 'waiting',
+        time: '14:30',
+        address: '台北市內湖區瑞光路321號',
+        notes: '公司收件，請送至櫃台',
+        customerName: '林小強',
+        phone: '0956-789-012',
+      },
+    ];
   });
 
-  // 從 localStorage 讀取保存的分類，如果沒有則默認為 'all'
+  // 從 localStorage 讀取保存的分類，如果沒有則默認為 'waiting'
   const [activeCategory, setActiveCategory] = useState<CategoryType>(() => {
     const savedCategory = localStorage.getItem('activeCategory');
-    return (savedCategory as CategoryType) || 'all';
+    return (savedCategory as CategoryType) || 'waiting';
   });
 
   // 當分類改變時，保存到 localStorage
@@ -119,7 +165,6 @@ function Task() {
 
       //佈署時需要使用 vercel.json 定義路徑
       const response = await fetch('/api/GET/user/orders', {
-
         method: 'GET',
         signal: controller.signal, //參數連接到AbortController，允許超時中止
       });
@@ -302,6 +347,23 @@ function Task() {
     day: '2-digit',
   });
 
+  // 根據時間返回問候語
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+    const currentMinute = new Date().getMinutes();
+    const currentTime = currentHour * 100 + currentMinute;
+
+    if (currentTime >= 900 && currentTime < 1200) {
+      return '早安，汪汪員';
+    } else if (currentTime >= 1200 && currentTime < 1400) {
+      return '吃午餐了嗎，汪汪員';
+    } else if (currentTime >= 1400 && currentTime < 1800) {
+      return '奮鬥吧，汪汪員';
+    } else {
+      return '燃燒吧，汪汪員';
+    }
+  };
+
   return (
     <TaskSectionStyled>
       {isLoading && <div>載入中...</div>}
@@ -311,37 +373,51 @@ function Task() {
         </div>
       )}
 
+      {/* 外送員卡片 */}
       <DeliverContainer ref={deliverContainerRef}>
         <DeliverGreeting>
-          <TaskGreetingItem>早安，汪汪員</TaskGreetingItem>
+          <TaskGreetingItem>{getGreeting()}</TaskGreetingItem>
           <TaskId>ID-158673</TaskId>
         </DeliverGreeting>
 
-        <DeliverDate>
-          <IconWrapper>
-            <HiCalendar />
-          </IconWrapper>
-          <div>{currentDate}</div>
-        </DeliverDate>
+        {ongoingTask && (
+          <OngoingTaskContainer>
+            <OngoingTaskTitle>進行中的任務</OngoingTaskTitle>
+            <TaskCard
+              taskId={ongoingTask.id}
+              status={ongoingTask.status}
+              time={ongoingTask.time}
+              address={ongoingTask.address}
+              notes={ongoingTask.notes}
+              customerName={ongoingTask.customerName}
+              phone={ongoingTask.phone}
+              onStatusChange={handleTaskStatusChange}
+            />
+          </OngoingTaskContainer>
+        )}
+
+        <ProgressTitle>
+          <div>本日收運進度</div>
+        </ProgressTitle>
 
         <DeliverProgress>
           <DeliverProgressHeader>
-            <ProgressTitle>
+            <DeliverDate>
               <IconWrapper>
-                <HiTruck />
+                <HiCalendarDays />
               </IconWrapper>
-              <div>今日收運進度</div>
-            </ProgressTitle>
+              <div>{currentDate}</div>
+            </DeliverDate>
 
             <ProgressStatus>
-              <StatusItem>
+              <StatusItem isEmpty={completedTasks.length === 0}>
                 <Label>已完成:</Label>
                 <span>
                   {completedTasks.length}/{tasks.length}
                 </span>
               </StatusItem>
 
-              <StatusItem>
+              <StatusItem isEmpty={true}>
                 <Label>異常:</Label>
                 <span>0</span>
               </StatusItem>
@@ -353,22 +429,6 @@ function Task() {
               progress={(completedTasks.length / tasks.length) * 100 || 0}
             />
           </DeliverProgressBarContainer>
-
-          {ongoingTask && (
-            <OngoingTaskContainer>
-              <OngoingTaskTitle>進行中任務</OngoingTaskTitle>
-              <TaskCard
-                taskId={ongoingTask.id}
-                status={ongoingTask.status}
-                time={ongoingTask.time}
-                address={ongoingTask.address}
-                notes={ongoingTask.notes}
-                customerName={ongoingTask.customerName}
-                phone={ongoingTask.phone}
-                onStatusChange={handleTaskStatusChange}
-              />
-            </OngoingTaskContainer>
-          )}
         </DeliverProgress>
       </DeliverContainer>
 
@@ -376,17 +436,10 @@ function Task() {
       <TaskCategoryWrapper topPosition={topPosition}>
         <TaskCategoryContainer>
           <CategoryTab
-            isActive={activeCategory === 'all'}
-            onClick={() => handleCategoryChange('all')}
-          >
-            全部({tasks.length})
-          </CategoryTab>
-
-          <CategoryTab
             isActive={activeCategory === 'waiting'}
             onClick={() => handleCategoryChange('waiting')}
           >
-            未完成({waitingTasks.length})
+            待前往({waitingTasks.length})
           </CategoryTab>
 
           <CategoryTab
@@ -405,6 +458,7 @@ function Task() {
         </TaskCategoryContainer>
       </TaskCategoryWrapper>
 
+      {/* 任務卡片列表 */}
       <TaskCardsContainer topPosition={topPosition}>
         {getFilteredTasks().map((task) => (
           <TaskCard
@@ -423,8 +477,6 @@ function Task() {
           />
         ))}
       </TaskCardsContainer>
-
-      {/* <BottomFadeEffect /> */}
     </TaskSectionStyled>
   );
 }

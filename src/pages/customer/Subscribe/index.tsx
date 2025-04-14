@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { Plan } from './types';
@@ -81,30 +81,6 @@ const Subscribe = () => {
   const [discount, setDiscount] = useState(0); // 折扣金額
   const [totalPrice, setTotalPrice] = useState(0); // 折扣後總價格
 
-  // 總價格計算函式
-  const updateTotalPrice = (price: number, frequency: string) => {
-    const freq = parseInt(frequency);
-    const rawPrice = price * freq;
-    let discountRate = 1; //折扣率(無)
-    let discountAmount = 0; //折扣價差(無)
-
-    // 套用折扣：3個月95折，5個月9折
-    if (freq === 3) {
-      discountRate = 0.9;
-    } else if (freq === 6) {
-      discountRate = 0.85;
-    }
-
-    // 計算折扣後價格
-    const discountedPrice = Math.round(rawPrice * discountRate);
-    // 計算折扣價差
-    discountAmount = rawPrice - discountedPrice;
-
-    setOriginalPrice(rawPrice);
-    setTotalPrice(discountedPrice);
-    setDiscount(discountAmount);
-  };
-
   // 獲取所有可用方案
   useEffect(() => {
     const fetchPlans = async () => {
@@ -164,12 +140,40 @@ const Subscribe = () => {
     fetchPlans();
   }, [planId, planName, liter, price, planKg, planPeople, planDescription]);
 
-  // 處理價格計算的另一個useEffect
+  // 總價格計算函式 只重新計算有改變的參數
+  const updateTotalPrice = useCallback(
+    (price: number, frequency: string) => {
+      const freq = parseInt(frequency);
+      const daysPerWeek = selectedDays.length;
+      const rawPrice = price * freq * daysPerWeek;
+      let discountRate = 1; //折扣率(無)
+      let discountAmount = 0; //折扣價差(無)
+
+      // 套用折扣：3個月95折，5個月9折
+      if (freq === 3) {
+        discountRate = 0.9;
+      } else if (freq === 6) {
+        discountRate = 0.85;
+      }
+
+      // 計算折扣後價格
+      const discountedPrice = Math.round(rawPrice * discountRate);
+      // 計算折扣價差
+      discountAmount = rawPrice - discountedPrice;
+
+      setOriginalPrice(rawPrice);
+      setTotalPrice(discountedPrice);
+      setDiscount(discountAmount);
+    },
+    [selectedDays],
+  );
+
+  // 處理價格計算 只要方案、收日頻率、收運日改變，就重新計算總價格
   useEffect(() => {
     if (plan) {
       updateTotalPrice(plan.Price, selectedFrequency);
     }
-  }, [plan, selectedFrequency]);
+  }, [plan, selectedFrequency, updateTotalPrice]);
 
   // 載入中
   if (isLoading) {
@@ -224,7 +228,7 @@ const Subscribe = () => {
     }
 
     // 將選擇的數據傳遞到下一個頁面
-    navigate('/customer/SubscribeData', {
+    navigate('/customer/subscribe-data', {
       state: {
         planId: plan?.PlanID,
         planName: plan?.PlanName,

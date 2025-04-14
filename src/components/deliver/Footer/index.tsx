@@ -5,10 +5,10 @@ import {
   HiUserGroup,
 } from 'react-icons/hi2';
 
-import Footer, { FooterNavItem } from '../../../common/Footer';
+import CommonFooter, { FooterNavItem } from '../../common/Footer';
 
-// 任務相關導航項目
-const taskNavItems: FooterNavItem[] = [
+// 外送員導航項目配置
+const deliverNavItems: FooterNavItem[] = [
   {
     icon: HiDocumentText,
     label: '今日任務',
@@ -31,8 +31,12 @@ const taskNavItems: FooterNavItem[] = [
   },
 ];
 
-function TaskFooter() {
-  return <Footer navItems={taskNavItems} />;
+/**
+ * 外送員專用頁尾
+ * 包含任務相關導航
+ */
+function DeliverFooter() {
+  return <CommonFooter navItems={deliverNavItems} />;
 }
 
-export default TaskFooter;
+export default DeliverFooter;

@@ -14,17 +14,35 @@ export const FullHeightContainer = styled.div`
 // 頁面標題容器
 export const HeaderContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   max-width: calc(var(--min-width-mobile) - 2rem);
-  margin-top: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
+
+  margin: var(--spacing-sm) 0 var(--spacing-md) 0;
 `;
 
 export const PageTitle = styled.div`
-  font-size: var(--font-size-sm);
-  font-weight: 700;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-sm);
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+export const IconStyled = styled.div`
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const PageSubtitle = styled.div`

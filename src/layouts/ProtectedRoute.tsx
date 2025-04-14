@@ -1,44 +1,53 @@
-// 測試
+// src/layouts/ProtectedRoute.tsx
+import { ReactNode, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { ReactNode } from 'react';
+import authService, { UserRole } from '../services/authService';
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  role: 'customer' | 'deliver';
+  role: UserRole;
 }
 
-function ProtectedRoute({ children, role }: ProtectedRouteProps) {
-  // 檢查用戶是否已登入（檢查 token 是否存在）
-  const token = sessionStorage.getItem('token');
-  // 檢查用戶角色是否與路由要求的角色匹配
-  const userRole = sessionStorage.getItem('userRole');
+const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
+  const isAuthenticated = authService.isAuthenticated();
+  const userRole = authService.getUserRole();
 
-  console.log('ProtectedRoute - 檢查用戶權限', {
-    token: !!token,
-    userRole,
-    requiredRole: role,
-  });
+  useEffect(() => {
+    // 如果使用者已登入但localStorage中沒有用戶資料，則嘗試獲取
+    if (isAuthenticated && !authService.getCachedUserData()) {
+      authService
+        .getUserInfo()
+        .then((userData) => {
+          localStorage.setItem('user_data', JSON.stringify(userData));
+        })
+        .catch((err) => {
+          console.error('獲取用戶資料失敗:', err);
+          // 如果獲取失敗，清除登入狀態，強制用戶重新登入
+          // authService.logout();
+        });
+    }
+  }, [isAuthenticated]);
 
-  // 用戶未登入，跳轉到登入頁面
-  if (!token) {
-    console.log('用戶未登入，重定向到登入頁面');
+  // 如果未登入，重定向到登入頁面
+  if (!isAuthenticated) {
     return <Navigate to="/auth/line-login" replace />;
   }
 
-  // 用戶角色與路由要求的角色不匹配，跳轉到對應頁面
-  if (role === 'customer' && userRole !== 'customer') {
-    console.log('用戶角色不是客戶，重定向到汪汪員頁面');
-    return <Navigate to="/deliver" replace />;
-  } else if (role === 'deliver' && userRole !== 'deliver') {
-    console.log('用戶角色不是汪汪員，重定向到客戶頁面');
-    return <Navigate to="/customer/my-order" replace />;
+  // 如果角色不符，重定向到對應角色的首頁
+  if (userRole !== role) {
+    if (userRole === 'customer') {
+      return <Navigate to="/customer/my-order" replace />;
+    } else if (userRole === 'deliver') {
+      return <Navigate to="/deliver" replace />;
+    } else {
+      // 角色未知，登出並重定向至登入頁面
+      // authService.logout();
+      return <Navigate to="/auth/line-login" replace />;
+    }
   }
 
-  // 一切正常，渲染子組件
-  console.log('用戶權限驗證通過，顯示受保護內容');
-  // 清除重定向標記
-  sessionStorage.removeItem('is_redirecting');
+  // 如果已登入且角色符合，渲染子元件
   return <>{children}</>;
-}
+};
 
 export default ProtectedRoute;

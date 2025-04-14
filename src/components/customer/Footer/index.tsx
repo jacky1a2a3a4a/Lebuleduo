@@ -6,7 +6,7 @@ import {
   HiMiniChatBubbleOvalLeftEllipsis,
 } from 'react-icons/hi2';
 
-import Footer, { FooterNavItem } from '../../../common/Footer';
+import Footer, { FooterNavItem } from '../../common/Footer';
 
 // 顧客導航項目
 const customerFooterNavItems: FooterNavItem[] = [

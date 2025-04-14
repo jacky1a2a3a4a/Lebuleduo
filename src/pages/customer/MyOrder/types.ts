@@ -28,18 +28,31 @@ export interface Order {
   imageUrl?: string;
 }
 
+// API 返回的今日訂單類型
+//帶修改 目前有問題
+export interface ApiTodayOrder {
+  usersID: number;
+  number: string;
+  name: string;
+  date: string;
+  status: '未完成' | '前往中' | '已完成' | '異常回報' | '已取消';
+}
+
 // API 返回的當前訂單類型
-export interface ApiOrder {
+export interface ApiCurrentOrder {
   OrdersID: number;
   OrderNumber: string;
   PlanName: string;
   PlanKG: number;
   Liter: number;
+  OrderImageUrl: string[];
   StartDate: string;
   EndDate: string;
-  Photos: string[];
-  NextServiceDate: string;
+  WeekDay: string;
+  Address: string;
+  TotalCount: number;
   RemainingCount: number;
+  NextServiceDate: string;
 }
 
 // API 返回的已完成訂單類型
@@ -49,17 +62,10 @@ export interface ApiCompletedOrder {
   PlanName: string;
   PlanKG: number;
   Liter: number;
+  OrderImageUrl: string[];
   StartDate: string;
   EndDate: string;
-  Photos: string[];
+  WeekDay: string;
+  Address: string;
+  TotalCount: number;
 }
-
-// API 回應類型
-export interface ApiResponse {
-  statusCode: number;
-  status: boolean;
-  message: string;
-  result: ApiOrder[] | ApiCompletedOrder[];
-}
-
-
