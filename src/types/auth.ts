@@ -1,8 +1,18 @@
+export type UserRole = 'customer' | 'deliver' | 'admin';
+
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  avatar?: string;
+}
+
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'customer' | 'driver' | 'admin';
+  role: UserRole;
 }
 
 export interface AuthState {
@@ -20,5 +30,5 @@ export interface LoginCredentials {
 
 export interface RegisterCredentials extends LoginCredentials {
   name: string;
-  role: 'customer' | 'driver';
+  role: UserRole;
 }
