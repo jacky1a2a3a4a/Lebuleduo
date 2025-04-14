@@ -3,7 +3,6 @@ import { StyledProps } from './types';
 
 //最外層容器
 export const MyOrderSectionStyled = styled.section`
-  background-color: var(--color-gray-200);
   width: 100%;
   height: 100%;
 
@@ -35,10 +34,10 @@ export const UserCard = styled.div`
 
 // 使用者卡片 問候語
 export const UserGreeting = styled.h1`
-  color: var(--color-gray-600);
-  font-size: var(--font-size-xl);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
 `;
 
 // 使用者卡片 項目

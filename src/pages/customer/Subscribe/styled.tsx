@@ -115,7 +115,7 @@ export const ScrollableContent = styled.div`
 `;
 
 // 區段標題 模板
-export const SectionTitle = styled.h2`
+export const SectionTitle = styled.div`
   margin-bottom: var(--spacing-sm);
 
   display: flex;
