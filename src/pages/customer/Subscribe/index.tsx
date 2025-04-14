@@ -2,16 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { Plan } from './types';
+import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
 import {
   LoadingMessage,
   PageWrapper,
-  FixedStepsContainer,
-  StepWrapper,
-  StepItem,
-  StepNumber,
-  StepText,
-  StepConnector,
-  StepLine,
   ScrollableContent,
   SectionTitle,
   SectionMainTitle,
@@ -24,6 +18,8 @@ import {
   PlanDropdown,
   PlanOption,
   PlanOptionTitle,
+  PlanOptionMainTitle,
+  PlanOptionSubtitle,
   FrequencyOptions,
   FrequencyOption,
   RadioButton,
@@ -36,6 +32,7 @@ import {
   ErrorMessage,
   DatePickerContainer,
   DateInput,
+  BottomInfoContainer,
   TotalPrice,
   TotalPriceText,
   TotalPriceContainer,
@@ -43,8 +40,8 @@ import {
   TotalPriceTCount,
   OriginalPriceText,
   DiscountText,
-  NextButton,
 } from './styled';
+import SubscribeNextButton from '../../../components/customer/SubscribeNextButton';
 
 // 週期天數選項
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
@@ -245,37 +242,16 @@ const Subscribe = () => {
     });
   };
 
+  const steps = [
+    { number: 1, text: '選擇方案' },
+    { number: 2, text: '填選收運資料' },
+    { number: 3, text: '結帳' },
+  ];
+
   return (
     <PageWrapper>
-      {/* 固定在頂部的進度指示器 */}
-      <FixedStepsContainer>
-        <StepWrapper>
-          <StepItem>
-            <StepNumber $active={true}>1</StepNumber>
-            <StepText $active={true}>選擇方案</StepText>
-          </StepItem>
-
-          <StepConnector>
-            <StepLine $active={hasSelectedDays} />
-          </StepConnector>
-
-          <StepItem>
-            <StepNumber>2</StepNumber>
-            <StepText>填選收運資料</StepText>
-          </StepItem>
-
-          <StepConnector>
-            <StepLine />
-          </StepConnector>
-
-          <StepItem>
-            <StepNumber>3</StepNumber>
-            <StepText>結帳</StepText>
-          </StepItem>
-        </StepWrapper>
-      </FixedStepsContainer>
-
-      {/* 可滾動的內容區域 */}
+      <SubscribeProgressSteps currentStep={1} steps={steps} />
+      
       <ScrollableContent>
         {/* 已選方案 */}
         <SectionTitle>
@@ -303,12 +279,12 @@ const Subscribe = () => {
                   onClick={() => handlePlanChange(availablePlan)}
                 >
                   <PlanOptionTitle>
-                    <div>
+                    <PlanOptionMainTitle>
                       {availablePlan.PlanName} ({availablePlan.PlanPeople})
-                    </div>
-                    <div>
+                    </PlanOptionMainTitle>
+                    <PlanOptionSubtitle>
                       {availablePlan.Liter}L / {availablePlan.kg}kg
-                    </div>
+                    </PlanOptionSubtitle>
                   </PlanOptionTitle>
                 </PlanOption>
               ))}
@@ -392,8 +368,10 @@ const Subscribe = () => {
             onChange={(e) => setStartDate(e.target.value)}
           />
         </DatePickerContainer>
+      </ScrollableContent>
 
-        {/* 總計金額與下一步 */}
+      {/* 總計金額與下一步 */}
+      <BottomInfoContainer>
         <TotalPrice>
           <TotalPriceText>總金額</TotalPriceText>
           <TotalPriceContainer>
@@ -407,10 +385,10 @@ const Subscribe = () => {
           </TotalPriceContainer>
         </TotalPrice>
 
-        <NextButton onClick={handleNext} $active={hasSelectedDays}>
+        <SubscribeNextButton onClick={handleNext} $active={hasSelectedDays}>
           下一步
-        </NextButton>
-      </ScrollableContent>
+        </SubscribeNextButton>
+      </BottomInfoContainer>
     </PageWrapper>
   );
 };
