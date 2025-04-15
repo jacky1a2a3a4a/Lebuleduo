@@ -29,12 +29,9 @@ import {
   DeleteImageButton,
   DeliveryOptionImageUpload,
   PhotoInstructions,
-  TotalPrice,
-  TotalPriceText,
-  TotalPriceTCount,
-  NextButton,
   LoadingMessage,
 } from './styled';
+import SubscribeBottom from '../../../components/customer/SubscribeBottom';
 
 // 圖片類型
 interface FixedPointImage {
@@ -81,10 +78,6 @@ const SubscribeData = () => {
   const [addressError, setAddressError] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
   const [notesError, setNotesError] = useState<string | null>(null);
-  const [mapLocation, setMapLocation] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
   const [deliveryMethod, setDeliveryMethod] = useState('fixedpoint');
   const [fixedPointImages, setFixedPointImages] = useState<FixedPointImage[]>(
     [],
@@ -92,8 +85,7 @@ const SubscribeData = () => {
   const [photoError, setPhotoError] = useState<string | null>(null);
 
   // 處理地址選擇
-  const handleLocationSelect = (location: { lat: number; lng: number }) => {
-    setMapLocation(location);
+  const handleLocationSelect = () => {
     validateAddress(address);
   };
 
@@ -421,15 +413,13 @@ const SubscribeData = () => {
             </FormGroup>
           </DeliveryOptions>
         </FormSection>
-
-        <TotalPrice>
-          <TotalPriceText>總金額</TotalPriceText>
-          <TotalPriceTCount>NT${totalPrice || 580}</TotalPriceTCount>
-        </TotalPrice>
-        <NextButton onClick={handleNext} $active={isFormValid()}>
-          下一步
-        </NextButton>
       </ScrollableContent>
+
+      <SubscribeBottom
+        totalPrice={totalPrice}
+        isActive={isFormValid()}
+        onNext={handleNext}
+      />
     </PageWrapper>
   );
 };

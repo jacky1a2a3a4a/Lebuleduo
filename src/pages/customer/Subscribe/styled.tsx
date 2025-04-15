@@ -262,7 +262,7 @@ export const FrequencyOption = styled.div<StyledProps>`
   background-color: var(--color-gray-0);
   border: 1px solid
     ${(props) =>
-      props.$active ? 'var(--color-secondary)' : 'var(--color-secondary)'};
+      props.$active ? 'var(--color-primary)' : 'var(--color-secondary)'};
   border-radius: var(--border-radius-xl);
 
   display: flex;

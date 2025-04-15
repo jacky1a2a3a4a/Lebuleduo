@@ -32,16 +32,8 @@ import {
   ErrorMessage,
   DatePickerContainer,
   DateInput,
-  BottomInfoContainer,
-  TotalPrice,
-  TotalPriceText,
-  TotalPriceContainer,
-  PriceDetails,
-  TotalPriceTCount,
-  OriginalPriceText,
-  DiscountText,
 } from './styled';
-import SubscribeNextButton from '../../../components/customer/SubscribeNextButton';
+import SubscribeBottom from '../../../components/customer/SubscribeBottom';
 
 // 週期天數選項
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
@@ -251,7 +243,7 @@ const Subscribe = () => {
   return (
     <PageWrapper>
       <SubscribeProgressSteps currentStep={1} steps={steps} />
-      
+
       <ScrollableContent>
         {/* 已選方案 */}
         <SectionTitle>
@@ -370,25 +362,13 @@ const Subscribe = () => {
         </DatePickerContainer>
       </ScrollableContent>
 
-      {/* 總計金額與下一步 */}
-      <BottomInfoContainer>
-        <TotalPrice>
-          <TotalPriceText>總金額</TotalPriceText>
-          <TotalPriceContainer>
-            <TotalPriceTCount>NT${totalPrice}</TotalPriceTCount>
-            {discount > 0 && (
-              <PriceDetails>
-                <OriginalPriceText>NT${originalPrice}</OriginalPriceText>
-                <DiscountText>節省 NT${discount}</DiscountText>
-              </PriceDetails>
-            )}
-          </TotalPriceContainer>
-        </TotalPrice>
-
-        <SubscribeNextButton onClick={handleNext} $active={hasSelectedDays}>
-          下一步
-        </SubscribeNextButton>
-      </BottomInfoContainer>
+      <SubscribeBottom
+        totalPrice={totalPrice}
+        originalPrice={originalPrice}
+        discount={discount}
+        isActive={hasSelectedDays}
+        onNext={handleNext}
+      />
     </PageWrapper>
   );
 };

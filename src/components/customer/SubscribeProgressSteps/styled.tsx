@@ -23,6 +23,11 @@ export const StepWrapper = styled.div`
   margin: 0 auto;
 `;
 
+// 步驟項目容器
+export const StepItemContainer = styled.div`
+  display: flex;
+`;
+
 // 步驟連接器
 export const StepConnector = styled.div`
   flex: 1;

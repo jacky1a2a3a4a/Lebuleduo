@@ -1,6 +1,7 @@
 import {
   FixedStepsContainer,
   StepWrapper,
+  StepItemContainer,
   StepItem,
   StepNumber,
   StepText,
@@ -16,29 +17,24 @@ interface ProgressStepsProps {
   }[];
 }
 
-const ProgressSteps = ({
-  currentStep,
-  steps,
-}: ProgressStepsProps) => {
+const ProgressSteps = ({ currentStep, steps }: ProgressStepsProps) => {
   return (
     <FixedStepsContainer>
       <StepWrapper>
         {steps.map((step, index) => (
-          <>
-            <StepItem key={`step-${step.number}`}>
+          <StepItemContainer key={index}>
+            <StepItem>
               <StepNumber $active={index < currentStep}>
                 {step.number}
               </StepNumber>
               <StepText $active={index < currentStep}>{step.text}</StepText>
             </StepItem>
             {index < steps.length - 1 && (
-              <StepConnector key={`connector-${step.number}`}>
-                <StepLine
-                  $active={index < currentStep - 1}
-                />
+              <StepConnector>
+                <StepLine $active={index < currentStep - 1} />
               </StepConnector>
             )}
-          </>
+          </StepItemContainer>
         ))}
       </StepWrapper>
     </FixedStepsContainer>
