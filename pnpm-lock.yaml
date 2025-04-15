@@ -14,9 +14,6 @@ importers:
       axios:
         specifier: ^1.8.4
         version: 1.8.4
-      axois:
-        specifier: 0.0.1-security
-        version: 0.0.1-security
       flatpickr:
         specifier: ^4.6.13
         version: 4.6.13
@@ -655,9 +652,6 @@ packages:
 
   axios@1.8.4:
     resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
-
-  axois@0.0.1-security:
-    resolution: {integrity: sha512-8Nui4fwwyxHfjAfpDlg3Jt66EJA4i1D1eJch3D+wM/Oe+qhpyp7yfiszko/O5/adYu20wc37RG9/Eg8QIJHcvA==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -1940,8 +1934,6 @@ snapshots:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
-
-  axois@0.0.1-security: {}
 
   balanced-match@1.0.2: {}
 

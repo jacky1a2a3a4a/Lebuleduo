@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
 import SubscribeBottom from '../../../components/customer/SubscribeBottom';
 import {
@@ -54,6 +55,7 @@ interface SubscriptionData {
   fixedPointImages?: Array<{
     id: string;
     url: string;
+    file?: File; // 添加檔案屬性
   }>;
 }
 
@@ -63,12 +65,32 @@ const steps = [
   { number: 3, text: '結帳' },
 ];
 
+// 將星期幾轉換為中文
+const convertDaysToChinese = (days: string) => {
+  const dayMap: { [key: string]: string } = {
+    '1': '一',
+    '2': '二',
+    '3': '三',
+    '4': '四',
+    '5': '五',
+    '6': '六',
+    '7': '日',
+  };
+
+  return days
+    .split(',')
+    .map((day) => dayMap[day.trim()])
+    .join('，');
+};
+
 const SubscribeCheckout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('creditCard');
   const [subscriptionData, setSubscriptionData] =
     useState<SubscriptionData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     console.log(
@@ -86,9 +108,89 @@ const SubscribeCheckout = () => {
     setPaymentMethod(method);
   };
 
-  const handleCheckout = () => {
-    // TODO: 實現結帳邏輯
-    navigate('/customer/subscribe-success', { state: { subscriptionData } });
+  const handleCheckout = async () => {
+    if (!subscriptionData) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const userId = localStorage.getItem('UsersID');
+      if (!userId) {
+        setError('請先登入');
+        setIsLoading(false);
+        return;
+      }
+
+      // 建立 FormData 物件
+      const formData = new FormData();
+      formData.append('UsersID', userId);
+      formData.append('PlanID', subscriptionData.planId.toString());
+      formData.append('DiscountID', subscriptionData.frequency.toString());
+      formData.append('OrderName', subscriptionData.name);
+      formData.append('OrderPhone', subscriptionData.phone);
+      formData.append('Addresses', subscriptionData.address);
+      formData.append('Notes', subscriptionData.notes || '');
+      formData.append('WeekDay', subscriptionData.days);
+      formData.append('StartDate', subscriptionData.startDate);
+      formData.append('TotalAmount', subscriptionData.totalPrice.toString());
+
+      // 處理圖片檔案上傳
+      if (
+        subscriptionData.deliveryMethod === 'fixedpoint' &&
+        subscriptionData.fixedPointImages &&
+        subscriptionData.fixedPointImages.length > 0
+      ) {
+        // 如果有檔案屬性，直接使用檔案
+        for (let i = 0; i < subscriptionData.fixedPointImages.length; i++) {
+          const image = subscriptionData.fixedPointImages[i];
+          if (image.file) {
+            formData.append(`OrderImage`, image.file, `image_${i}.jpg`);
+          } else {
+            // 如果沒有檔案但有 URL，嘗試從 URL 獲取檔案
+            try {
+              // 處理 data URL
+              if (image.url.startsWith('data:')) {
+                const response = await fetch(image.url);
+                const blob = await response.blob();
+                formData.append(`OrderImage`, blob, `image_${i}.jpg`);
+              } else {
+                // 處理 blob URL
+                const response = await fetch(image.url);
+                const blob = await response.blob();
+                formData.append(`OrderImage`, blob, `image_${i}.jpg`);
+              }
+            } catch (error) {
+              console.error('無法從 URL 獲取圖片:', error);
+              setError('圖片處理失敗，請重新上傳');
+              setIsLoading(false);
+              return;
+            }
+          }
+        }
+      }
+
+      // 發送請求到後端 API
+      const response = await axios.post('/api/POST/user/orders', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.data) {
+        navigate('/customer/subscribe-success', {
+          state: {
+            subscriptionData,
+            orderId: response.data.orderId,
+          },
+        });
+      }
+    } catch (err) {
+      console.error('訂單提交失敗:', err);
+      setError('訂單提交失敗，請稍後再試');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!subscriptionData) {
@@ -118,7 +220,9 @@ const SubscribeCheckout = () => {
             <SubscriptionInfoItem>
               ．預定期程：{subscriptionData.frequency}個月
             </SubscriptionInfoItem>
-            <SubscriptionInfoItem>．每周收運日:{}</SubscriptionInfoItem>
+            <SubscriptionInfoItem>
+              ．每周收運日: {convertDaysToChinese(subscriptionData.days)}
+            </SubscriptionInfoItem>
           </SubscriptionInfo>
 
           <Divider />
@@ -143,7 +247,7 @@ const SubscribeCheckout = () => {
               <DateText>
                 {new Date(
                   new Date(subscriptionData.startDate).getTime() +
-                    subscriptionData.frequency * 7 * 24 * 60 * 60 * 1000,
+                    subscriptionData.frequency * 30 * 24 * 60 * 60 * 1000,
                 )
                   .toLocaleDateString('zh-TW', {
                     year: 'numeric',
@@ -160,23 +264,23 @@ const SubscribeCheckout = () => {
 
           <DeliverTitle>收運資訊</DeliverTitle>
           <SubscriptionInfo>
-            <div>姓名：{subscriptionData.name}</div>
-            <div>聯絡電話：{subscriptionData.phone}</div>
-            <div>收運地址：{subscriptionData.address}</div>
+            <div>．姓名：{subscriptionData.name}</div>
+            <div>．聯絡電話：{subscriptionData.phone}</div>
+            <div>．收運地址：{subscriptionData.address}</div>
             <div>
-              收運方式：
+              ．收運方式：
               {subscriptionData.deliveryMethod === 'fixedpoint'
                 ? '放置固定點'
                 : '面交收運'}
             </div>
             {subscriptionData.notes && (
-              <div>備註：{subscriptionData.notes}</div>
+              <div>．備註：{subscriptionData.notes}</div>
             )}
 
             {subscriptionData.deliveryMethod === 'fixedpoint' &&
               subscriptionData.fixedPointImages && (
                 <FixedPointImagesContainer>
-                  <FixedPointImagesTitle>固定點照片：</FixedPointImagesTitle>
+                  <FixedPointImagesTitle>．固定點照片：</FixedPointImagesTitle>
                   <FixedPointImagesGrid>
                     {subscriptionData.fixedPointImages.map((image) => (
                       <FixedPointImage
@@ -225,10 +329,16 @@ const SubscribeCheckout = () => {
 
       <SubscribeBottom
         totalPrice={subscriptionData.totalPrice}
-        isActive={true}
+        isActive={!isLoading}
         onNext={handleCheckout}
         isLastStep={true}
+        isLoading={isLoading}
       />
+      {error && (
+        <div style={{ color: 'red', textAlign: 'center', marginTop: '10px' }}>
+          {error}
+        </div>
+      )}
     </PageWrapper>
   );
 };

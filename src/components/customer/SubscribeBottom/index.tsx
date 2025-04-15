@@ -19,6 +19,7 @@ interface SubscribeBottomProps {
   onNext: () => void;
   children?: React.ReactNode;
   isLastStep?: boolean;
+  isLoading?: boolean;
 }
 
 const SubscribeBottom = ({
@@ -29,6 +30,7 @@ const SubscribeBottom = ({
   onNext,
   children,
   isLastStep = false,
+  isLoading = false,
 }: SubscribeBottomProps) => {
   const hasDiscount = Boolean(
     discount &&
@@ -57,8 +59,12 @@ const SubscribeBottom = ({
           </TotalPriceContainer>
         </TotalPrice>
 
-        <SubscribeNextButton onClick={onNext} $active={isActive}>
-          {isLastStep ? '結帳' : '下一步'}
+        <SubscribeNextButton
+          onClick={onNext}
+          $active={isActive && !isLoading}
+          disabled={isLoading}
+        >
+          {isLoading ? '處理中...' : isLastStep ? '結帳' : '下一步'}
         </SubscribeNextButton>
       </BottomInfoContainer>
     </>

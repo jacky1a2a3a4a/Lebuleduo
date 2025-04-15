@@ -281,6 +281,7 @@ const SubscribeData = () => {
       fixedPointImages: fixedPointImages.map((img) => ({
         id: img.id,
         url: img.url,
+        file: img.file, // 保留檔案物件，以便在結帳頁面使用
       })),
     };
 

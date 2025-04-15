@@ -217,7 +217,6 @@ export const TotalAmount = styled.div`
 `;
 
 export const FixedPointImagesContainer = styled.div`
-  margin-top: var(--spacing-md);
 `;
 
 export const FixedPointImagesTitle = styled.div`
@@ -228,6 +227,8 @@ export const FixedPointImagesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
+
+  padding: var(--spacing-sm);
 `;
 
 export const FixedPointImage = styled.img`
