@@ -18,6 +18,7 @@ interface SubscribeBottomProps {
   isActive: boolean;
   onNext: () => void;
   children?: React.ReactNode;
+  isLastStep?: boolean;
 }
 
 const SubscribeBottom = ({
@@ -27,6 +28,7 @@ const SubscribeBottom = ({
   isActive,
   onNext,
   children,
+  isLastStep = false,
 }: SubscribeBottomProps) => {
   const hasDiscount = Boolean(
     discount &&
@@ -56,7 +58,7 @@ const SubscribeBottom = ({
         </TotalPrice>
 
         <SubscribeNextButton onClick={onNext} $active={isActive}>
-          下一步
+          {isLastStep ? '結帳' : '下一步'}
         </SubscribeNextButton>
       </BottomInfoContainer>
     </>

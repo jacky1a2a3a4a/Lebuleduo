@@ -68,6 +68,35 @@ const SubscribeData = () => {
     totalPrice,
   } = location.state || {};
 
+  // 添加日誌檢查上一頁接收到的數據
+  useEffect(() => {
+    console.log('SubscribeData - 接收到的數據:', {
+      planId,
+      planName,
+      liter,
+      price,
+      planKg,
+      planPeople,
+      planDescription,
+      frequency,
+      days,
+      startDate,
+      totalPrice,
+    });
+  }, [
+    planId,
+    planName,
+    liter,
+    price,
+    planKg,
+    planPeople,
+    planDescription,
+    frequency,
+    days,
+    startDate,
+    totalPrice,
+  ]);
+
   // 狀態管理
   const [isLoading] = useState(false);
   const [name, setName] = useState('');
@@ -232,29 +261,31 @@ const SubscribeData = () => {
       return;
     }
 
-    navigate('/customer/Subscribe-checkout', {
-      state: {
-        planId,
-        planName,
-        liter,
-        price,
-        planKg,
-        planPeople,
-        planDescription,
-        frequency,
-        days,
-        startDate,
-        totalPrice,
-        name,
-        phone,
-        address,
-        notes,
-        deliveryMethod,
-        fixedPointImages: fixedPointImages.map((img) => ({
-          id: img.id,
-          url: img.url,
-        })),
-      },
+    const subscriptionData = {
+      planId,
+      planName,
+      liter,
+      price,
+      planKg,
+      planPeople,
+      planDescription,
+      frequency,
+      days,
+      startDate,
+      totalPrice,
+      name,
+      phone,
+      address,
+      notes,
+      deliveryMethod,
+      fixedPointImages: fixedPointImages.map((img) => ({
+        id: img.id,
+        url: img.url,
+      })),
+    };
+
+    navigate('/customer/subscribe-checkout', {
+      state: { subscriptionData },
     });
   };
 

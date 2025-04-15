@@ -15,7 +15,7 @@ export default defineConfig({
           proxy.on('error', (err) => {
             console.log('代理錯誤', err);
           });
-          proxy.on('proxyReq', (_, req) => {
+          proxy.on('proxyReq', (proxyReq, req) => {
             console.log('發送請求到目標伺服器:', req.method, req.url);
           });
           proxy.on('proxyRes', (proxyRes, req) => {

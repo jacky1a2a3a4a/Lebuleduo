@@ -134,7 +134,7 @@ const AppContent = () => {
 
       {/* 訂閱結帳 - 獨立路由，不使用 CustomerLayout */}
       <Route
-        path="/customer/Subscribe-checkout"
+        path="/customer/subscribe-checkout"
         element={
           <ProtectedRoute role="customer">
             <SubscribeCheckout />
@@ -143,7 +143,7 @@ const AppContent = () => {
       />
 
       {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
-      <Route path="/customer/SubscribeSuccess" element={<SubscribeSuccess />} />
+      <Route path="/customer/subscribe-success" element={<SubscribeSuccess />} />
 
       {/* DOG路由 */}
       <Route
