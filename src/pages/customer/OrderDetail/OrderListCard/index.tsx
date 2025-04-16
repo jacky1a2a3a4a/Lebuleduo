@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HiPencil, HiCalendar, HiQueueList } from 'react-icons/hi2';
+import { MdEditNote, MdArticle, MdCalendarToday } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import {
   OrderListCardContainer,
@@ -12,19 +12,20 @@ import {
   StatusText,
   ActionButton,
   IconStyled,
+  IconStyledLarge,
   ErrorText,
 } from './styled';
 import ModifyDateModal from './ModifyDateModal'; // 修改日期模態框
 
 // 任務卡片 props 類型
 //這些props是從父元件傳遞過來的
-type OrderListCardProps = {
+interface OrderListCardProps {
   date: string;
   time: string;
   status: string;
   isActive: boolean;
   orderId: string;
-};
+}
 
 function OrderListCard({
   date,
@@ -35,6 +36,18 @@ function OrderListCard({
 }: OrderListCardProps) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false); // 控制修改日期模態框的開啟狀態
+
+  // 轉換狀態顯示文字
+  const getDisplayStatus = (status: string) => {
+    switch (status) {
+      case '異常':
+        return '有異常';
+      case '已完成':
+        return '已結束';
+      default:
+        return status;
+    }
+  };
 
   // 檢查是否可以修改（必須在兩天前）
   const canModify = () => {
@@ -86,12 +99,15 @@ function OrderListCard({
 
   return (
     <>
-      <OrderListCardContainer $isActive={isActive}>
+      <OrderListCardContainer
+        $isActive={isActive}
+        $isAbnormal={status === '異常'}
+      >
         <CardItems>
           <CardItem>
-            <IconStyled>
-              <HiCalendar />
-            </IconStyled>
+            <IconStyledLarge>
+              <MdCalendarToday />
+            </IconStyledLarge>
             <Date>
               <DateDisplay>{date}</DateDisplay>
               <TimeRange>{time}</TimeRange>
@@ -100,15 +116,18 @@ function OrderListCard({
 
           <CardItem>
             <OrderStatus>
-              <StatusText $isActive={isActive}>{status}</StatusText>
+              <StatusText $isActive={isActive} $isAbnormal={status === '異常'}>
+                {getDisplayStatus(status)}
+              </StatusText>
             </OrderStatus>
             <ActionButton
               onClick={handleButtonClick}
               $isActive={isActive}
+              $isAbnormal={status === '異常'}
               disabled={isActive && !canModify()}
             >
               <IconStyled>
-                {isActive ? <HiPencil /> : <HiQueueList />}
+                {isActive ? <MdEditNote /> : <MdArticle />}
               </IconStyled>
               {isActive ? '修改預約' : '查看紀錄'}
             </ActionButton>

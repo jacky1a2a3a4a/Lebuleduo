@@ -1,13 +1,25 @@
 import styled from 'styled-components';
 
 // OrderListCard 相關樣式
-export const OrderListCardContainer = styled.div<{ $isActive: boolean }>`
-  background-color: ${({ $isActive }) =>
-    $isActive ? 'var(--color-white)' : 'var(--color-neutral-200)'};
-  border: ${({ $isActive }) =>
-    $isActive ? '1px solid var(--color-secondary)' : 'none'};
+export const OrderListCardContainer = styled.div<{
+  $isActive: boolean;
+  $isAbnormal?: boolean;
+}>`
+  background-color: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal
+      ? 'var(--color-error)'
+      : $isActive
+        ? 'var(--color-white)'
+        : 'var(--color-neutral-200)'};
+  border: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal
+      ? '1px solid var(--color-error-hover)'
+      : $isActive
+        ? '1px solid var(--color-secondary)'
+        : 'none'};
   border-radius: var(--border-radius-lg);
-  box-shadow: ${({ $isActive }) => ($isActive ? 'var(--card-shadow)' : 'none')};
+  box-shadow: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal || $isActive ? 'var(--card-shadow)' : 'none'};
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-sm);
 `;
@@ -48,29 +60,55 @@ export const OrderStatus = styled.div`
   margin-right: var(--spacing-sm);
 `;
 
-export const StatusText = styled.div<{ $isActive: boolean }>`
-  color: ${({ $isActive }) =>
-    $isActive ? 'var(--color-primary)' : 'var(--color-neutral-500)'};
-  border: ${({ $isActive }) =>
-    $isActive
-      ? '1px solid var(--color-primary)'
-      : '1px solid var(--color-neutral-500)'};
+export const StatusText = styled.div<{
+  $isActive: boolean;
+  $isAbnormal?: boolean;
+}>`
+  color: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal
+      ? 'var(--color-error-hover)'
+      : $isActive
+        ? 'var(--color-primary)'
+        : 'var(--color-neutral-500)'};
+  border: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal
+      ? '1px solid var(--color-error-hover)'
+      : $isActive
+        ? '1px solid var(--color-primary)'
+        : '1px solid var(--color-neutral-500)'};
   border-radius: var(--border-radius-round);
 
   padding: var(--spacing-xs) var(--spacing-sm);
 
   font-size: var(--font-size-sm);
-  font-weight: ${({ $isActive }) =>
-    $isActive ? 'var(--font-weight-medium)' : 'var(--font-weight-normal)'};
+  font-weight: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal || $isActive
+      ? 'var(--font-weight-medium)'
+      : 'var(--font-weight-normal)'};
 `;
 
-export const ActionButton = styled.button<{ $isActive: boolean }>`
-  background-color: ${({ $isActive }) =>
-    $isActive ? 'var(--color-primary)' : 'var(--color-white)'};
-  color: ${({ $isActive }) =>
-    $isActive ? 'var(--color-white)' : 'var(--color-primary)'};
-  border: ${({ $isActive }) =>
-    $isActive ? 'none' : '1px solid var(--color-primary)'};
+export const ActionButton = styled.button<{
+  $isActive: boolean;
+  $isAbnormal?: boolean;
+}>`
+  background-color: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal
+      ? 'var(--color-error-hover)'
+      : $isActive
+        ? 'var(--color-primary)'
+        : 'var(--color-white)'};
+  color: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal
+      ? 'var(--color-white)'
+      : $isActive
+        ? 'var(--color-white)'
+        : 'var(--color-primary)'};
+  border: ${({ $isActive, $isAbnormal }) =>
+    $isAbnormal
+      ? 'none'
+      : $isActive
+        ? 'none'
+        : '1px solid var(--color-primary)'};
   border-radius: var(--border-radius-round);
   display: flex;
   align-items: center;
@@ -81,8 +119,8 @@ export const ActionButton = styled.button<{ $isActive: boolean }>`
   white-space: nowrap;
 
   &:hover {
-    background-color: ${({ $isActive }) =>
-      $isActive ? 'var(--color-gray-100)' : 'var(--color-gray-300)'};
+    background-color: ${({ $isAbnormal }) =>
+      $isAbnormal ? 'var(--color-error)' : 'var(--color-gray-300)'};
     color: var(--color-gray-800);
   }
 
@@ -102,8 +140,20 @@ export const IconStyled = styled.div`
   margin-right: var(--spacing-xs);
 
   svg {
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
+  }
+`;
+
+export const IconStyledLarge = styled.div`
+  display: flex;
+  align-items: center;
+  color: inherit;
+  margin-right: var(--spacing-xs);
+
+  svg { 
+    width: 20px;
+    height: 20px;
   }
 `;
 

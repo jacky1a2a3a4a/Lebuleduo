@@ -82,6 +82,7 @@ export const ContentArea = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 `;
 
 // 訂單卡片
@@ -200,21 +201,26 @@ export const OrderListSection = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  position: relative;
+  overflow: hidden;
 `;
 
 // === 收運列表 標籤容器 ===
 export const TabContainer = styled.div`
   display: flex;
   gap: var(--spacing-sm);
-
   padding: var(--spacing-sm) 0 var(--spacing-xs);
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--color-background-secondary);
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 `;
 
 // 收運列表 標籤
@@ -236,21 +242,41 @@ export const Tab = styled.button<{ $active: boolean }>`
   white-space: nowrap;
 
   cursor: pointer;
-  transition: all 0.3s ease;
-  transform: scale(1);
-
-  &:active {
-    transform: scale(0.98);
-  }
+  transition: all 0.2s ease;
 
   display: flex;
   align-items: center;
   gap: 8px;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
 `;
 
-// 收運列表 標籤內容
+// === 收運列表 任務內容大容器 ===
 export const TabContent = styled.div`
   background-color: transparent;
+  overflow-y: auto;
+  flex: 1;
+  height: 100%;
+  padding-bottom: var(--spacing-md);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+// 收運任務列表
+export const OrderList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+  width: 100%;
+  padding: 0 var(--spacing-xs);
 `;
 
 // 收運列表標題區塊
@@ -274,11 +300,4 @@ export const OrderListCal = styled.div`
   color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-`;
-
-// 收運列表
-export const OrderList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-12);
 `;
