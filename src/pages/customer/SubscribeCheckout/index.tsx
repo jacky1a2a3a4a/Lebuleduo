@@ -86,7 +86,7 @@ const convertDaysToChinese = (days: string) => {
 const SubscribeCheckout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [paymentMethod, setPaymentMethod] = useState('creditCard');
+  const [paymentMethod, setPaymentMethod] = useState('linePay');
   const [subscriptionData, setSubscriptionData] =
     useState<SubscriptionData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -313,6 +313,7 @@ const SubscribeCheckout = () => {
                 </PaymentSubtext>
               </PaymentTextContainer>
             </PaymentMethodItem>
+
             <PaymentMethodItem
               selected={paymentMethod === 'creditCard'}
               onClick={() => handlePaymentMethodChange('creditCard')}

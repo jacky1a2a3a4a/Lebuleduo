@@ -36,7 +36,13 @@ import {
   OrderListTitle,
   OrderListCal,
   OrderList,
+  TabContainer,
+  Tab,
+  TabContent,
 } from './styled';
+
+// 虛擬機URL
+const BASE_URL = 'http://lebuleduo.rocket-coding.com';
 
 function OrderDetail() {
   const navigate = useNavigate();
@@ -44,7 +50,9 @@ function OrderDetail() {
   const [orderData, setOrderData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('全部');
 
+  // 馬上載入訂單數據
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
@@ -88,23 +96,139 @@ function OrderDetail() {
     navigate(-1);
   };
 
+  // 載入中
   if (isLoading) {
     return <LoadingMessage>載入中...</LoadingMessage>;
   }
 
+  // 錯誤
   if (error) {
     return <ErrorMessage>錯誤: {error}</ErrorMessage>;
   }
 
+  // 沒有找到訂單數據
   if (!orderData) {
     return <EmptyMessage>沒有找到訂單數據</EmptyMessage>;
   }
 
-  // 分離已完成和未完成的訂單
+  // 分離不同狀態的訂單
+  const abnormalOrders =
+    orderData.OrderDetails?.filter((order) => order.Status === '異常') || [];
+  const scheduledOrders =
+    orderData.OrderDetails?.filter((order) =>
+      ['已排定', '前往中', '已抵達'].includes(order.Status),
+    ) || [];
+  const unscheduledOrders =
+    orderData.OrderDetails?.filter((order) => order.Status === '未排定') || [];
   const completedOrders =
     orderData.OrderDetails?.filter((order) => order.Status === '已完成') || [];
-  const upcomingOrders =
-    orderData.OrderDetails?.filter((order) => order.Status === '未完成') || [];
+
+  // 計算全部任務數量
+  const totalOrders = orderData.OrderDetails?.length || 0;
+
+  // 渲染訂單列表
+  const renderOrderList = (orders) => (
+    <OrderList>
+      {orders.map((order) => (
+        <OrderListCard
+          key={order.OrderDetailID}
+          date={order.ServiceDate}
+          time={order.DriverTime || '未排定'}
+          status={order.Status}
+          isActive={order.Status !== '已完成'}
+          orderId={order.OrderDetailID}
+        />
+      ))}
+    </OrderList>
+  );
+
+  // 依照標籤，渲染對應任務區塊
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case '全部':
+        return (
+          <>
+            {abnormalOrders.length > 0 && (
+              <>
+                <OrderListHeader>
+                  <OrderListTitle>異常任務</OrderListTitle>
+                </OrderListHeader>
+                {renderOrderList(abnormalOrders)}
+              </>
+            )}
+            {scheduledOrders.length > 0 && (
+              <>
+                <OrderListHeader>
+                  <OrderListTitle>已排定任務</OrderListTitle>
+                </OrderListHeader>
+                {renderOrderList(scheduledOrders)}
+              </>
+            )}
+            {unscheduledOrders.length > 0 && (
+              <>
+                <OrderListHeader>
+                  <OrderListTitle>未排定任務</OrderListTitle>
+                  <OrderListCal>
+                    剩餘次數: {unscheduledOrders.length}/{totalOrders}
+                  </OrderListCal>
+                </OrderListHeader>
+
+                {renderOrderList(unscheduledOrders)}
+              </>
+            )}
+            {completedOrders.length > 0 && (
+              <>
+                <OrderListHeader>
+                  <OrderListTitle>已結束任務</OrderListTitle>
+                </OrderListHeader>
+                {renderOrderList(completedOrders)}
+              </>
+            )}
+          </>
+        );
+      case '已排定':
+        return (
+          <>
+            <OrderListHeader>
+              <OrderListTitle>已排定任務</OrderListTitle>
+            </OrderListHeader>
+            {renderOrderList(scheduledOrders)}
+          </>
+        );
+      case '未排定':
+        return (
+          <>
+            <OrderListHeader>
+              <OrderListTitle>未排定任務</OrderListTitle>
+              <OrderListCal>
+                剩餘次數: {unscheduledOrders.length}/{totalOrders}
+              </OrderListCal>
+            </OrderListHeader>
+            {renderOrderList(unscheduledOrders)}
+          </>
+        );
+      case '已結束':
+        return (
+          <>
+            <OrderListHeader>
+              <OrderListTitle>已結束任務</OrderListTitle>
+            </OrderListHeader>
+            {renderOrderList(completedOrders)}
+          </>
+        );
+      case '異常':
+        return (
+          <>
+            <OrderListHeader>
+              <OrderListTitle>異常任務</OrderListTitle>
+            </OrderListHeader>
+            {renderOrderList(abnormalOrders)}
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <OrderDetailContainer>
@@ -136,12 +260,14 @@ function OrderDetail() {
 
           <OrderPhotoArea>
             <PhotoContainer>
-              {[0, 1].map((index) => {
-                const imageUrl = orderData.OrderImageUrl?.[index];
+              {orderData.Photos?.map((photo, index) => {
                 return (
                   <SinglePhotoContainer key={index}>
-                    {imageUrl ? (
-                      <Photo src={imageUrl} alt={`垃圾照片 ${index + 1}`} />
+                    {photo ? (
+                      <Photo
+                        src={`${BASE_URL}${photo}`}
+                        alt={`收運定點照片 ${index + 1}`}
+                      />
                     ) : (
                       <NoPhotoPlaceholder>
                         <HiExclamationCircle size={24} />
@@ -175,45 +301,42 @@ function OrderDetail() {
 
         {/* 收運任務 */}
         <OrderListSection>
-          {/* 已排定收運 */}
-          <OrderListHeader>
-            <OrderListTitle>已排定任務</OrderListTitle>
-            <OrderListCal>
-              剩餘次數: {upcomingOrders.length}/
-              {upcomingOrders.length + completedOrders.length}
-            </OrderListCal>
-          </OrderListHeader>
-
-          <OrderList>
-            {upcomingOrders.map((order) => (
-              <OrderListCard
-                key={order.OrderDetailID}
-                date={order.ServiceDate}
-                time={order.DriverTime || '未排定'}
-                status={order.Status}
-                isActive={true}
-                orderId={order.OrderDetailID}
-              />
-            ))}
-          </OrderList>
-
-          {/* 已完成收運 */}
-          <OrderListHeader>
-            <OrderListTitle>已結束任務</OrderListTitle>
-          </OrderListHeader>
-
-          <OrderList>
-            {completedOrders.map((order) => (
-              <OrderListCard
-                key={order.OrderDetailID}
-                date={order.ServiceDate}
-                time={order.DriverTime || '未排定'}
-                status={order.Status}
-                isActive={false}
-                orderId={order.OrderDetailID}
-              />
-            ))}
-          </OrderList>
+          {/* 收運任務 標籤 */}
+          <TabContainer>
+            <Tab
+              $active={activeTab === '全部'}
+              onClick={() => setActiveTab('全部')}
+            >
+              全部 ({totalOrders})
+            </Tab>
+            <Tab
+              $active={activeTab === '已排定'}
+              onClick={() => setActiveTab('已排定')}
+            >
+              已排定 ({scheduledOrders.length})
+            </Tab>
+            <Tab
+              $active={activeTab === '未排定'}
+              onClick={() => setActiveTab('未排定')}
+            >
+              未排定 ({unscheduledOrders.length})
+            </Tab>
+            <Tab
+              $active={activeTab === '已結束'}
+              onClick={() => setActiveTab('已結束')}
+            >
+              已結束 ({completedOrders.length})
+            </Tab>
+            <Tab
+              $active={activeTab === '異常'}
+              onClick={() => setActiveTab('異常')}
+            >
+              異常 ({abnormalOrders.length})
+            </Tab>
+          </TabContainer>
+          
+          {/* 任務內容 */}
+          <TabContent>{renderTabContent()}</TabContent>
         </OrderListSection>
       </ContentArea>
     </OrderDetailContainer>

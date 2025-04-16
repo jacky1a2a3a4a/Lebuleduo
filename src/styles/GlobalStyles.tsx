@@ -53,6 +53,8 @@ const GlobalStyles = createGlobalStyle`
   --color-background-primary: #FFFFFF;
   --color-background-secondary: #F8FAFF;
 
+  --color-background-secondary-hover: #F0F4FF;
+
   --color-primary: #445DB3;
   --color-secondary: #A2AED9;
   --color-tertiary: #F7DD97;
@@ -127,8 +129,8 @@ const GlobalStyles = createGlobalStyle`
   --border-radius-round: 9999px;  
 
   /* RWD */
-  --min-width-mobile: 402px;  /* iphone 16 pro */
-  --min-width-mobile-plus: 403px;
+  --mobile-min-width: 402px;  /* iphone 16 pro */
+  --mobile-min-width-plus: 403px;
 }
 
 html {

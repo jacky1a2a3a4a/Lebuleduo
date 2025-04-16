@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://4.240.61.223',
+        target: 'http://lebuleduo.rocket-coding.com',
         changeOrigin: true,
         secure: false,
         // 確保這裡的 rewrite 設定正確
