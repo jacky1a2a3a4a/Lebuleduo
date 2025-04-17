@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { HiExclamationCircle, HiPencil, HiMiniQrCode } from 'react-icons/hi2';
-import { IoAdd, IoClose } from 'react-icons/io5';
+import { useParams, useNavigate } from 'react-router-dom';
+import { IoMdAdd, IoMdClose } from 'react-icons/io';
+import { IoIosArrowDown } from 'react-icons/io';
 import {
   ErrorMessage,
   OrderEditContainer,
@@ -9,13 +9,6 @@ import {
   OrderCard,
   CardHeader,
   OrderTitle,
-  CardHeaderEditButtons,
-  EditButton,
-  OrderPhotoArea,
-  PhotoContainer,
-  SinglePhotoContainer,
-  Photo,
-  NoPhotoPlaceholder,
   DetailList,
   DetailItem,
   DetailLabel,
@@ -27,13 +20,7 @@ import {
   InputLabel,
   StyledInput,
   StyledTextarea,
-  DeliveryOptions,
-  DeliveryOption,
-  RadioButton,
-  DeliveryOptionContent,
-  DeliveryOptionText,
-  DeliveryOptionTitle,
-  DeliveryOptionDescription,
+  DeliverySelect,
   DeliveryOptionImageContainer,
   DeliveryOptionImages,
   DeliveryOptionImage,
@@ -41,6 +28,9 @@ import {
   DeleteImageButton,
   DeliveryOptionImageUpload,
   PhotoInstructions,
+  SelectGroup,
+  SelectIcon,
+  SuccessMessage,
 } from './styled';
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 import AddressAutocomplete from '../SubscribeData/AddressAutocomplete';
@@ -74,10 +64,14 @@ interface OrderData {
 }
 
 function OrderDetail() {
-  const navigate = useNavigate();
   const { orderId } = useParams<{ orderId: string }>();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [deletedOriginalImages, setDeletedOriginalImages] = useState<string[]>(
+    [],
+  );
+  const navigate = useNavigate();
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // 參考元素用於滾動
   const nameRef = useRef<HTMLDivElement>(null);
@@ -92,9 +86,11 @@ function OrderDetail() {
       try {
         const response = await fetch(`api/GET/user/RevisedMemInfo/${orderId}`);
         const data = await response.json();
+        console.log(data);
 
         if (data.status) {
           setOrderData(data.result[0]);
+          console.log(data.result[0]);
         } else {
           console.error('Failed to fetch order data:', data.message);
         }
@@ -194,6 +190,20 @@ function OrderDetail() {
     setFixedPointImages(newImages);
   };
 
+  // 處理刪除原始照片
+  const handleDeleteOriginalPhoto = (photoUrl: string) => {
+    setDeletedOriginalImages([...deletedOriginalImages, photoUrl]);
+    // 更新 orderData 中的 OrderImageUrl
+    if (orderData) {
+      setOrderData({
+        ...orderData,
+        OrderImageUrl: orderData.OrderImageUrl.filter(
+          (url) => url !== photoUrl,
+        ),
+      });
+    }
+  };
+
   // 驗證函數
   const validateName = (name: string): boolean => {
     if (!name.trim()) {
@@ -243,18 +253,22 @@ function OrderDetail() {
 
   // 檢查表單是否有效
   const isFormValid = () => {
+    const remainingOriginalImages = orderData?.OrderImageUrl || [];
+    const totalImages =
+      remainingOriginalImages.length + fixedPointImages.length;
+
     return (
       !!name.trim() &&
       !!address.trim() &&
       !!phone.trim() &&
       !!notes.trim() &&
       phoneError === null &&
-      (deliveryMethod !== 'fixedpoint' || fixedPointImages.length === 2)
+      (deliveryMethod !== 'fixedpoint' || totalImages >= 2)
     );
   };
 
   // 處理儲存按鈕
-  const handleSave = () => {
+  const handleSave = async () => {
     const isNameValid = validateName(name);
     const isPhoneValid = validatePhone(phone);
     const isAddressValid = validateAddress(address);
@@ -277,20 +291,68 @@ function OrderDetail() {
       return;
     }
 
-    if (deliveryMethod === 'fixedpoint' && fixedPointImages.length < 2) {
-      setPhotoError('*請上傳兩張固定點照片');
-      return;
+    if (deliveryMethod === 'fixedpoint') {
+      const remainingOriginalImages = orderData?.OrderImageUrl || [];
+      const totalImages =
+        remainingOriginalImages.length + fixedPointImages.length;
+
+      if (totalImages < 2) {
+        setPhotoError('*請確保有兩張固定點照片');
+        return;
+      }
     }
 
-    // TODO: 處理儲存邏輯
-    console.log('儲存修改的資料:', {
-      name,
-      phone,
-      address,
-      notes,
-      deliveryMethod,
-      fixedPointImages,
-    });
+    try {
+      // 準備表單資料
+      const formData = new FormData();
+      formData.append('OrdersID', orderId || '');
+      formData.append('OrderName', name);
+      formData.append('OrderPhone', phone);
+      formData.append('Addresses', address);
+      formData.append('Notes', notes);
+
+      // 處理圖片上傳
+      if (deliveryMethod === 'fixedpoint') {
+        // 保留未被刪除的原有圖片
+        const remainingOriginalImages =
+          orderData?.OrderImageUrl?.filter(
+            (photo) => !deletedOriginalImages.includes(photo),
+          ) || [];
+
+        // 將未被刪除的原有圖片加入 formData
+        remainingOriginalImages.forEach((photoUrl) => {
+          // 將原有圖片的 URL 加入 formData
+          formData.append('OrderImageUrl', photoUrl);
+        });
+
+        // 加入新上傳的圖片
+        fixedPointImages.forEach((image) => {
+          formData.append('OrderImageUrl', image.file);
+        });
+      }
+
+      // 發送 PUT 請求
+      const response = await fetch(`api/Put/user/RevisedMemInfo/${orderId}`, {
+        method: 'PUT',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.status) {
+        setShowSuccessMessage(true);
+        // 滾動到頂部
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // 3秒後跳轉回前一頁
+        setTimeout(() => {
+          navigate(-1);
+        }, 3000);
+      } else {
+        console.error('修改失敗：', data.message);
+      }
+    } catch (error) {
+      console.error('Error saving order:', error);
+    }
   };
 
   return (
@@ -302,50 +364,17 @@ function OrderDetail() {
       />
 
       <ContentArea>
+        {showSuccessMessage && (
+          <SuccessMessage>修改成功！將在3秒後返回上一頁...</SuccessMessage>
+        )}
+
         {/* 方案卡片 */}
         <OrderCard>
           <CardHeader>
             <OrderTitle>
               {orderData.PlanName} {orderData.Liter}L/{orderData.PlanKG}kg
             </OrderTitle>
-            <CardHeaderEditButtons>
-              <EditButton>
-                <HiMiniQrCode />
-              </EditButton>
-              <EditButton
-                onClick={() =>
-                  navigate(`/customer/order/${orderId}/edit`, {
-                    state: {
-                      orderData,
-                    },
-                  })
-                }
-              >
-                <HiPencil />
-              </EditButton>
-            </CardHeaderEditButtons>
           </CardHeader>
-
-          <OrderPhotoArea>
-            <PhotoContainer>
-              {orderData.OrderImageUrl?.map((photo, index) => {
-                return (
-                  <SinglePhotoContainer key={index}>
-                    {photo ? (
-                      <Photo
-                        src={`${BASE_URL}${photo}`}
-                        alt={`收運定點照片 ${index + 1}`}
-                      />
-                    ) : (
-                      <NoPhotoPlaceholder>
-                        <HiExclamationCircle size={24} />
-                      </NoPhotoPlaceholder>
-                    )}
-                  </SinglePhotoContainer>
-                );
-              })}
-            </PhotoContainer>
-          </OrderPhotoArea>
 
           <DetailList>
             <DetailItem>
@@ -413,85 +442,95 @@ function OrderDetail() {
             </FormSection>
 
             <FormSection>
-              <DeliveryOptions>
-                <DeliveryOption
-                  $active={deliveryMethod === 'fixedpoint'}
-                  onClick={() => setDeliveryMethod('fixedpoint')}
-                >
-                  <RadioButton $active={deliveryMethod === 'fixedpoint'} />
-                  <DeliveryOptionContent>
-                    <DeliveryOptionText>
-                      <DeliveryOptionTitle>放置固定點</DeliveryOptionTitle>
-                      <DeliveryOptionDescription>
-                        請用戶上傳垃圾放置固定點的照片。
-                        建議放置易辨識位置，例如：門口、鞋櫃、花盆旁等，未來專員會依據照片位置進行收運。
-                      </DeliveryOptionDescription>
-                    </DeliveryOptionText>
+              <FormGroup>
+                <InputLabel>收運方式</InputLabel>
+                <SelectGroup>
+                  <DeliverySelect
+                    value={deliveryMethod}
+                    onChange={(e) =>
+                      setDeliveryMethod(
+                        e.target.value as 'fixedpoint' | 'ereceipt',
+                      )
+                    }
+                  >
+                    <option value="fixedpoint">放置固定點</option>
+                    <option value="ereceipt">面交收運</option>
+                  </DeliverySelect>
+                  <SelectIcon>
+                    <IoIosArrowDown />
+                  </SelectIcon>
+                </SelectGroup>
+              </FormGroup>
 
-                    {deliveryMethod === 'fixedpoint' && (
-                      <DeliveryOptionImageContainer>
-                        <DeliveryOptionImages>
-                          {fixedPointImages.map((image) => (
-                            <DeliveryOptionImage key={image.id}>
-                              <DeliveryOptionImagePhoto
-                                style={{ backgroundImage: `url(${image.url})` }}
-                              />
-                              <DeleteImageButton
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeletePhoto(image.id);
-                                }}
-                              >
-                                <IoClose />
-                              </DeleteImageButton>
-                            </DeliveryOptionImage>
-                          ))}
-
-                          <input
-                            type="file"
-                            accept="image/*"
-                            ref={fileInputRef}
-                            style={{ display: 'none' }}
-                            onChange={handlePhotoUpload}
+              {deliveryMethod === 'fixedpoint' && (
+                <FormGroup>
+                  <InputLabel>固定點照片</InputLabel>
+                  <DeliveryOptionImageContainer>
+                    <DeliveryOptionImages>
+                      {orderData?.OrderImageUrl?.map((photo, index) => (
+                        <DeliveryOptionImage key={index}>
+                          <DeliveryOptionImagePhoto
+                            style={{
+                              backgroundImage: `url(${BASE_URL}${photo})`,
+                            }}
                           />
+                          <DeleteImageButton
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteOriginalPhoto(photo);
+                            }}
+                          >
+                            <IoMdClose />
+                          </DeleteImageButton>
+                        </DeliveryOptionImage>
+                      ))}
 
-                          {fixedPointImages.length < 2 && (
-                            <DeliveryOptionImageUpload
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                openFileSelector();
-                              }}
-                            >
-                              <IoAdd size={24} />
-                            </DeliveryOptionImageUpload>
-                          )}
-                        </DeliveryOptionImages>
+                      {fixedPointImages.map((image) => (
+                        <DeliveryOptionImage key={image.id}>
+                          <DeliveryOptionImagePhoto
+                            style={{ backgroundImage: `url(${image.url})` }}
+                          />
+                          <DeleteImageButton
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeletePhoto(image.id);
+                            }}
+                          >
+                            <IoMdClose />
+                          </DeleteImageButton>
+                        </DeliveryOptionImage>
+                      ))}
 
-                        {photoError && (
-                          <ErrorMessage>{photoError}</ErrorMessage>
-                        )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        onChange={handlePhotoUpload}
+                      />
 
-                        <PhotoInstructions>
-                          *請務必上傳兩張固定點照片，每張不超過5MB
-                        </PhotoInstructions>
-                      </DeliveryOptionImageContainer>
-                    )}
-                  </DeliveryOptionContent>
-                </DeliveryOption>
+                      {(orderData?.OrderImageUrl?.length || 0) +
+                        fixedPointImages.length <
+                        2 && (
+                        <DeliveryOptionImageUpload
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openFileSelector();
+                          }}
+                        >
+                          <IoMdAdd size={24} />
+                        </DeliveryOptionImageUpload>
+                      )}
+                    </DeliveryOptionImages>
 
-                <DeliveryOption
-                  $active={deliveryMethod === 'ereceipt'}
-                  onClick={() => setDeliveryMethod('ereceipt')}
-                >
-                  <RadioButton $active={deliveryMethod === 'ereceipt'} />
-                  <DeliveryOptionContent>
-                    <DeliveryOptionTitle>面交收運</DeliveryOptionTitle>
-                    <DeliveryOptionDescription>
-                      用戶選擇面交請於備注欄位填寫面交詳細位置，此服務需在預約時段內於指定地點與代收員見面，需配合本公司安排服務時間。
-                    </DeliveryOptionDescription>
-                  </DeliveryOptionContent>
-                </DeliveryOption>
-              </DeliveryOptions>
+                    {photoError && <ErrorMessage>{photoError}</ErrorMessage>}
+
+                    <PhotoInstructions>
+                      *請務必上傳兩張固定點照片，每張不超過5MB
+                    </PhotoInstructions>
+                  </DeliveryOptionImageContainer>
+                </FormGroup>
+              )}
 
               <FormGroup ref={notesRef}>
                 <InputLabel>地點備註</InputLabel>

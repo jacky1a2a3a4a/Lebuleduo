@@ -10,7 +10,7 @@ export const LoadingMessage = styled.div`
 
 // 錯誤訊息
 export const ErrorMessage = styled.div`
-  color: var(--color-red-500);
+  color: var(--color-error);
   font-size: var(--font-size-sm);
   margin-top: var(--spacing-xs);
 `;
@@ -21,6 +21,18 @@ export const EmptyMessage = styled.div`
   padding: var(--spacing-xl);
   font-size: var(--font-size-md);
   color: var(--color-gray-500);
+`;
+
+// 成功訊息
+export const SuccessMessage = styled.div`
+  background-color: var(--color-success-light);
+  color: var(--color-success);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
 `;
 
 // === 頁面 最外層大容器 ===
@@ -201,11 +213,7 @@ export const OrderListSection = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    display: none; // Chrome, Safari, Opera
-  }
+  overflow: hidden;
 `;
 
 // 收運列表 白色容器
@@ -214,6 +222,12 @@ export const OrderListContainer = styled.div`
   border: 1px solid var(--color-neutral-400);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-md) var(--spacing-sm);
+  overflow-y: auto;
+  height: 100%;
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari, Opera
+  }
 `;
 
 // 收運任務列表
@@ -267,26 +281,58 @@ export const InputLabel = styled.label`
   font-weight: var(--font-weight-medium);
 `;
 
-// 輸入框
-export const StyledInput = styled.input<{ $error?: boolean }>`
+// 輸入框群組
+export const SelectGroup = styled.div`
+  position: relative;
   width: 100%;
-  padding: var(--spacing-sm) var(--spacing-12);
+  display: flex;
+  align-items: center;
+`;
+
+// 下拉式選單容器
+export const DeliverySelect = styled.select<{ $error?: boolean }>`
+  width: 100%;
+  padding: var(--spacing-md);
+  padding-right: 40px; /* 為圖標預留空間 */
   border: 1px solid
     ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-neutral-400)'};
+      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-round);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  cursor: pointer;
   transition: all 0.3s;
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(68, 93, 179, 0.2);
-  }
+  appearance: none; /* 移除原生下拉箭頭 */
 
   &::placeholder {
-    color: var(--color-neutral-500);
+    color: var(--color-gray-400);
+    font-size: var(--font-size-sm);
   }
+
+  &:focus {
+    outline: 1px solid
+      ${(props) =>
+        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
+    outline-offset: 0px;
+  }
+
+  option {
+    padding: var(--spacing-sm);
+  }
+`;
+
+// 下拉選單圖標
+export const SelectIcon = styled.div`
+  color: var(--color-gray-500);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
 `;
 
 // 文字區域
@@ -311,112 +357,6 @@ export const StyledTextarea = styled.textarea<{ $error?: boolean }>`
   &::placeholder {
     color: var(--color-neutral-500);
   }
-`;
-
-// 收運選項容器
-export const DeliveryOptions = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-`;
-
-// 收運選項
-export const DeliveryOption = styled.div<{ $active?: boolean }>`
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-12);
-  padding: var(--spacing-md);
-  border: 1px solid
-    ${(props) =>
-      props.$active ? 'var(--color-primary)' : 'var(--color-neutral-400)'};
-  border-radius: var(--border-radius-lg);
-  cursor: pointer;
-  transition: all 0.3s;
-
-  &:hover {
-    border-color: var(--color-primary);
-  }
-`;
-
-// 單選按鈕
-export const RadioButton = styled.div<{ $active?: boolean }>`
-  width: 20px;
-  height: 20px;
-  border: 2px solid
-    ${(props) =>
-      props.$active ? 'var(--color-primary)' : 'var(--color-neutral-400)'};
-  border-radius: var(--border-radius-round);
-  position: relative;
-  flex-shrink: 0;
-  margin-top: 2px;
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    background-color: ${(props) =>
-      props.$active ? 'var(--color-primary)' : 'transparent'};
-    border-radius: var(--border-radius-round);
-  }
-`;
-
-// 收運選項內容
-export const DeliveryOptionContent = styled.div`
-  flex: 1;
-`;
-
-// 收運選項文字
-export const DeliveryOptionText = styled.div`
-  margin-bottom: var(--spacing-md);
-`;
-
-// 收運選項標題
-export const DeliveryOptionTitle = styled.h3`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  margin: 0 0 var(--spacing-sm) 0;
-  color: var(--color-text-primary);
-`;
-
-// 收運選項描述
-export const DeliveryOptionDescription = styled.p`
-  font-size: var(--font-size-sm);
-  color: var(--color-text-tertiary);
-  margin: 0;
-  line-height: 1.5;
-`;
-
-// 收運選項圖片容器
-export const DeliveryOptionImageContainer = styled.div`
-  margin-top: var(--spacing-md);
-`;
-
-// 收運選項圖片列表
-export const DeliveryOptionImages = styled.div`
-  display: flex;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
-`;
-
-// 收運選項圖片
-export const DeliveryOptionImage = styled.div`
-  position: relative;
-  width: 100px;
-  height: 100px;
-  border-radius: var(--border-radius-sm);
-  overflow: hidden;
-`;
-
-// 收運選項圖片照片
-export const DeliveryOptionImagePhoto = styled.div`
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
 `;
 
 // 刪除圖片按鈕
@@ -464,4 +404,62 @@ export const PhotoInstructions = styled.p`
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
   margin: 0;
+`;
+
+// 收運選項圖片容器
+export const DeliveryOptionImageContainer = styled.div`
+  margin-top: var(--spacing-md);
+`;
+
+// 收運選項圖片列表
+export const DeliveryOptionImages = styled.div`
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+`;
+
+// 收運選項圖片
+export const DeliveryOptionImage = styled.div`
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+`;
+
+// 收運選項圖片照片
+export const DeliveryOptionImagePhoto = styled.div`
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+`;
+
+// 輸入框
+export const StyledInput = styled.input<{ $error?: boolean }>`
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid
+    ${(props) =>
+      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  background-color: var(--color-white);
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${(props) =>
+      props.$error ? 'var(--color-red-500)' : 'var(--color-primary)'};
+  }
+
+  &::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  &:disabled {
+    background-color: var(--color-gray-100);
+    cursor: not-allowed;
+  }
 `;
