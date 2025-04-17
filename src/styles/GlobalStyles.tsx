@@ -75,8 +75,8 @@ const GlobalStyles = createGlobalStyle`
   --color-neutral-300: #E0E0E0;
   --color-neutral-200: #EEEEEE;
 
-  --color-error: #FFE5CE;
-  --color-error-hover: #D99292;
+  --color-error: #D99292;
+  --color-background-error: #FFF4EB;
 
   /* For dark mode */
   --image-grayscale: 0;

@@ -1,34 +1,25 @@
 import styled from 'styled-components';
 
-export const ModalOverlay = styled.div`
+export const ModalOverlay = styled.div<{ $isClosing?: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: flex-end;
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
 `;
 
-export const ModalContainer = styled.div`
-  background-color: var(--color-gray-0);
+export const ModalContainer = styled.div<{ $isClosing?: boolean }>`
+  background-color: var(--color-white);
   width: 100%;
   max-height: 90vh;
   border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-  padding: var(--spacing-lg);
-  animation: slideUp 0.3s ease;
+  padding: var(--spacing-md);
+  animation: ${({ $isClosing }) => ($isClosing ? 'slideDown' : 'slideUp')} 0.3s
+    ease;
+  box-shadow: var(--card-shadow);
 
   @keyframes slideUp {
     from {
@@ -38,10 +29,19 @@ export const ModalContainer = styled.div`
       transform: translateY(0);
     }
   }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
 `;
 
 export const ModalHeader = styled.div`
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 `;
 
 export const ModalTitle = styled.h2`
@@ -54,14 +54,14 @@ export const ModalTitle = styled.h2`
 export const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
 `;
 
 export const DateInfo = styled.div`
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--spacing-sm) var(--spacing-md);
-  background-color: var(--color-gray-50);
+  background-color: var(--color-neutral-200);
   padding: var(--spacing-md);
   border-radius: var(--border-radius-md);
 `;
@@ -82,7 +82,7 @@ export const NoticeText = styled.div`
   font-size: var(--font-size-sm);
   line-height: 1.5;
   padding: var(--spacing-md);
-  background-color: var(--color-gray-50);
+  background-color: var(--color-neutral-200);
   border-radius: var(--border-radius-md);
 `;
 
@@ -106,24 +106,24 @@ export const Button = styled.button`
 `;
 
 export const CancelButton = styled(Button)`
-  background-color: var(--color-gray-200);
+  background-color: var(--color-neutral-200);
   color: var(--color-gray-700);
 
   &:hover {
-    background-color: var(--color-gray-300);
+    background-color: var(--color-neutral-300);
   }
 `;
 
 export const ConfirmButton = styled(Button)`
-  background-color: var(--color-primary-600);
-  color: var(--color-gray-0);
+  background-color: var(--color-secondary);
+  color: var(--color-white);
 
   &:hover {
-    background-color: var(--color-primary-700);
+    background-color: var(--color-secondary-hover);
   }
 
   &:disabled {
-    background-color: var(--color-gray-300);
+    background-color: var(--color-neutral-300);
     color: var(--color-gray-500);
     cursor: not-allowed;
   }

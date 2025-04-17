@@ -1,27 +1,48 @@
 import styled from 'styled-components';
 
-// OrderListCard 相關樣式
+type StatusType = 'normal' | 'active' | 'ongoing' | 'arrived' | 'abnormal' | 'finished';
+
+// === 卡片容器 ===
 export const OrderListCardContainer = styled.div<{
-  $isActive: boolean;
-  $isAbnormal?: boolean;
+  $status: StatusType;
 }>`
-  background-color: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal
-      ? 'var(--color-error)'
-      : $isActive
-        ? 'var(--color-white)'
-        : 'var(--color-neutral-200)'};
-  border: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal
-      ? '1px solid var(--color-error-hover)'
-      : $isActive
-        ? '1px solid var(--color-secondary)'
-        : 'none'};
+  background-color: ${({ $status }) => {
+    switch ($status) {
+      case 'abnormal':
+        return 'var(--color-background-error)';
+      case 'active':
+      case 'ongoing':
+      case 'arrived':
+        return 'var(--color-white)';
+      case 'finished':
+        return 'var(--color-neutral-200)';
+      default:
+        return 'var(--color-white)';
+    }
+  }};
+  border: ${({ $status }) => {
+    switch ($status) {
+      case 'abnormal':
+        return '1px solid var(--color-error)';
+      case 'active':
+      case 'ongoing':
+      case 'arrived':
+        return '1px solid var(--color-primary)';
+      case 'normal':
+        return '1px solid var(--color-secondary)';
+      default:
+        return 'none';
+    }
+  }};
   border-radius: var(--border-radius-lg);
-  box-shadow: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal || $isActive ? 'var(--card-shadow)' : 'none'};
+  box-shadow: ${({ $status }) =>
+    $status === 'abnormal' || $status === 'active' || $status === 'ongoing' || $status === 'arrived' || $status === 'normal'
+      ? 'var(--card-shadow)'
+      : 'none'};
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-sm);
+  pointer-events: ${({ $status }) =>
+    $status === 'finished' ? 'none' : 'auto'};
 `;
 
 export const CardItems = styled.div`
@@ -60,73 +81,116 @@ export const OrderStatus = styled.div`
   margin-right: var(--spacing-sm);
 `;
 
+// 訂單狀態文字
 export const StatusText = styled.div<{
-  $isActive: boolean;
-  $isAbnormal?: boolean;
+  $status: StatusType;
 }>`
-  color: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal
-      ? 'var(--color-error-hover)'
-      : $isActive
-        ? 'var(--color-primary)'
-        : 'var(--color-neutral-500)'};
-  border: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal
-      ? '1px solid var(--color-error-hover)'
-      : $isActive
-        ? '1px solid var(--color-primary)'
-        : '1px solid var(--color-neutral-500)'};
+  background-color: ${({ $status }) => {
+    switch ($status) {
+      case 'abnormal':
+        return 'var(--color-error)';
+      case 'active':
+        return 'var(--color-tertiary)';
+      case 'ongoing':
+        return '#1976D2';
+      case 'arrived':
+        return '#9DDACE';
+      case 'finished':
+        return 'var(--color-neutral-200)';
+      case 'normal':
+        return 'var(--color-white)';
+    }
+  }};
+  color: ${({ $status }) => {
+    switch ($status) {
+      case 'abnormal':
+        return 'var(--color-white)';
+      case 'active':
+        return 'var(--color-text-primary)';
+      case 'ongoing':
+        return 'var(--color-white)';
+      case 'arrived':
+        return 'var(--color-text-primary)';
+      case 'finished':
+        return 'var(--color-neutral-500)';
+      case 'normal':
+        return 'var(--color-secondary)';
+    }
+  }};
+  border: ${({ $status }) => {
+    switch ($status) {
+      case 'abnormal':
+        return '1px solid none';
+      case 'finished':
+        return '1px solid var(--color-neutral-500)';
+      case 'normal':
+        return '1px solid var(--color-secondary)';
+      default:
+        return 'none';
+    }
+  }};
   border-radius: var(--border-radius-round);
-
   padding: var(--spacing-xs) var(--spacing-sm);
-
   font-size: var(--font-size-sm);
-  font-weight: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal || $isActive
-      ? 'var(--font-weight-medium)'
-      : 'var(--font-weight-normal)'};
+  font-weight: var(--font-weight-normal);
 `;
 
+// === 修改預約,查看紀錄,查看狀態按鈕 ===
 export const ActionButton = styled.button<{
-  $isActive: boolean;
-  $isAbnormal?: boolean;
+  $status: StatusType;
 }>`
-  background-color: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal
-      ? 'var(--color-error-hover)'
-      : $isActive
-        ? 'var(--color-primary)'
-        : 'var(--color-white)'};
-  color: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal
-      ? 'var(--color-white)'
-      : $isActive
-        ? 'var(--color-white)'
-        : 'var(--color-primary)'};
-  border: ${({ $isActive, $isAbnormal }) =>
-    $isAbnormal
-      ? 'none'
-      : $isActive
-        ? 'none'
-        : '1px solid var(--color-primary)'};
+  background-color: ${({ $status }) => {
+    switch ($status) {
+      case 'finished':
+        return 'var(--color-white)';
+      case 'abnormal':
+        return 'var(--color-white)';
+      case 'active':
+      case 'ongoing':
+      case 'arrived':
+        return 'var(--color-white)';
+      case 'normal':
+        return 'var(--color-primary)';
+    }
+  }};
+  color: ${({ $status }) => {
+    switch ($status) {
+      case 'finished':
+        return 'var(--color-neutral-600)';
+      case 'abnormal':
+        return 'var(--color-error)';
+      case 'active':
+      case 'ongoing':
+      case 'arrived':
+        return 'var(--color-primary)';
+      case 'normal':
+        return 'var(--color-white)';
+    }
+  }};
+  border: ${({ $status }) => {
+    switch ($status) {
+      case 'finished':
+        return '1px solid var(--color-neutral-600)';
+      case 'abnormal':
+        return '1px solid var(--color-error)';
+      case 'active':
+      case 'ongoing':
+      case 'arrived':
+        return '1px solid var(--color-primary)';
+      case 'normal':
+        return 'none';
+    }
+  }};
   border-radius: var(--border-radius-round);
   display: flex;
   align-items: center;
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-sm);
-  cursor: pointer;
+  cursor: ${({ $status }) =>
+    $status === 'finished' ? 'not-allowed' : 'pointer'};
   transition: all 0.2s ease;
   white-space: nowrap;
-
-  &:hover {
-    background-color: ${({ $isAbnormal }) =>
-      $isAbnormal ? 'var(--color-error)' : 'var(--color-gray-300)'};
-    color: var(--color-gray-800);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
+  opacity: ${({ $status }) => ($status === 'finished' ? 0.7 : 1)};
 
   svg {
     font-size: var(--font-size-md);
@@ -151,15 +215,15 @@ export const IconStyledLarge = styled.div`
   color: inherit;
   margin-right: var(--spacing-xs);
 
-  svg { 
+  svg {
     width: 20px;
     height: 20px;
   }
 `;
 
 export const ErrorText = styled.div`
-  color: var(--color-error-600);
-  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
   margin-top: var(--spacing-sm);
   padding: 0 var(--spacing-md);
 `;

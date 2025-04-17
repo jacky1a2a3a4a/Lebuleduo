@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import {
@@ -29,6 +29,22 @@ function ModifyDateModal({
   onConfirm,
   originalDate,
 }: ModifyDateModalProps) {
+  const [isClosing, setIsClosing] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+      setIsClosing(false);
+    } else if (isVisible) {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+      }, 300); // 動畫持續時間
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, isVisible]);
+
   // 初始化選擇日期為今天
   const today = new globalThis.Date();
   today.setHours(0, 0, 0, 0);
@@ -62,11 +78,11 @@ function ModifyDateModal({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isVisible) return null;
 
   return (
-    <ModalOverlay>
-      <ModalContainer>
+    <ModalOverlay $isClosing={isClosing}>
+      <ModalContainer $isClosing={isClosing}>
         <ModalHeader>
           <ModalTitle>修改預約日期</ModalTitle>
         </ModalHeader>

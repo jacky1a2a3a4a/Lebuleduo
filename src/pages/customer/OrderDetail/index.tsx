@@ -122,8 +122,7 @@ function OrderDetail() {
           date={order.ServiceDate}
           time={order.DriverTime || '未排定'}
           status={order.Status}
-          isActive={order.Status !== '已完成'}
-          orderId={order.OrderDetailID}
+          orderDetailId={order.OrderDetailID}
         />
       ))}
     </OrderList>

@@ -15,27 +15,47 @@ import {
   IconStyledLarge,
   ErrorText,
 } from './styled';
-import ModifyDateModal from './ModifyDateModal'; // 修改日期模態框
+import ModifyDateModal from './ModifyDateModal'; // 修改日期行事曆
+
+// 訂單卡片狀態類型
+type OrderStatusType =
+  | 'normal' // 未排定
+  | 'active' // 已排定
+  | 'ongoing' // 前往中
+  | 'arrived' // 已抵達
+  | 'abnormal' // 異常
+  | 'finished'; // 已結束
 
 // 任務卡片 props 類型
 //這些props是從父元件傳遞過來的
 interface OrderListCardProps {
   date: string;
   time: string;
-  status: string;
-  isActive: boolean;
-  orderId: string;
+  status: string; // 任務狀態
+  orderDetailId: string; // 任務ID
+  isAbnormal?: boolean;
 }
 
+// ===組件本體===
 function OrderListCard({
   date,
   time,
   status,
-  isActive,
-  orderId,
+  orderDetailId,
 }: OrderListCardProps) {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false); // 控制修改日期模態框的開啟狀態
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 獲取當前狀態
+  const getCurrentStatus = (): OrderStatusType => {
+    if (status === '異常') return 'abnormal';
+    if (status === '已排定')
+      return 'active';
+    if (status === '前往中') return 'ongoing';
+    if (status === '已抵達') return 'arrived';
+    if (status === '未排定') return 'normal';
+    if (status === '已完成') return 'finished';
+  };
 
   // 轉換狀態顯示文字
   const getDisplayStatus = (status: string) => {
@@ -75,14 +95,26 @@ function OrderListCard({
     }
   };
 
-  // 點擊按鈕 isActive? 修改預約 : 查看紀錄
+  // 處理按鈕點擊
   const handleButtonClick = () => {
-    if (isActive) {
-      if (canModify()) {
-        setIsModalOpen(true);
-      }
-    } else {
-      navigate(`/customer/order-record/${orderId}`);
+    const currentStatus = getCurrentStatus();
+
+    if (
+      currentStatus === 'active' ||
+      currentStatus === 'abnormal' ||
+      currentStatus === 'finished'
+    ) {
+      navigate(`/customer/order-status/${orderDetailId}`);
+      return;
+    }
+
+    if (currentStatus === 'normal') {
+      setIsModalOpen(true);
+      return;
+    }
+
+    if (canModify()) {
+      setIsModalOpen(true);
     }
   };
 
@@ -97,12 +129,11 @@ function OrderListCard({
     }
   };
 
+  const currentStatus = getCurrentStatus();
+
   return (
     <>
-      <OrderListCardContainer
-        $isActive={isActive}
-        $isAbnormal={status === '異常'}
-      >
+      <OrderListCardContainer $status={currentStatus}>
         <CardItems>
           <CardItem>
             <IconStyledLarge>
@@ -116,24 +147,33 @@ function OrderListCard({
 
           <CardItem>
             <OrderStatus>
-              <StatusText $isActive={isActive} $isAbnormal={status === '異常'}>
+              <StatusText $status={currentStatus}>
                 {getDisplayStatus(status)}
               </StatusText>
             </OrderStatus>
-            <ActionButton
-              onClick={handleButtonClick}
-              $isActive={isActive}
-              $isAbnormal={status === '異常'}
-              disabled={isActive && !canModify()}
-            >
+
+            <ActionButton onClick={handleButtonClick} $status={currentStatus}>
               <IconStyled>
-                {isActive ? <MdEditNote /> : <MdArticle />}
+                {currentStatus === 'active' ||
+                currentStatus === 'ongoing' ||
+                currentStatus === 'arrived' ||
+                currentStatus === 'abnormal' ||
+                currentStatus === 'finished' ? (
+                  <MdArticle />
+                ) : (
+                  <MdEditNote />
+                )}
               </IconStyled>
-              {isActive ? '修改預約' : '查看紀錄'}
+              {currentStatus === 'finished'
+                ? '查看紀錄'
+                : currentStatus === 'abnormal' || currentStatus === 'active'
+                  ? '查看狀態'
+                  : '修改預約'}
             </ActionButton>
           </CardItem>
         </CardItems>
-        {isActive && !canModify() && (
+
+        {!canModify() && (
           <ErrorText>※ 已超過可修改時間（需在兩天前修改）</ErrorText>
         )}
       </OrderListCardContainer>
