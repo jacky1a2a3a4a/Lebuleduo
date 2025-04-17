@@ -1,5 +1,6 @@
 // 登入頁面 切版
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
+import Loginlogo from '../../../assets/Lebuledou_sit.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLineConfig, saveLineState } from '../../../configs/lineConfig';
@@ -113,7 +114,7 @@ const LineLogin = () => {
 
   return (
     <LoginSectionStyled>
-      <Logo src={'/Lebuledou.png'} />
+      <Logo src={Loginlogo} />
       <WelcomeText>
         <TextMain>Lebu-ledou</TextMain>
         <TextSub>垃不垃多</TextSub>
@@ -171,14 +172,12 @@ const LineLogin = () => {
       )}
 
       {selectedRole && (
-        <ButtonGroup>
+        <>
           {/* 添加臨時登入按鈕 */}
-          <LineButtonTest
-            onClick={handleMockLogin}
-          >
+          <LineButtonTest onClick={handleMockLogin}>
             臨時直接登入
           </LineButtonTest>
-        </ButtonGroup>
+        </>
       )}
     </LoginSectionStyled>
   );

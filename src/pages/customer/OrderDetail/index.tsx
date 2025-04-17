@@ -1,21 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import {
-  HiChevronLeft,
-  HiExclamationCircle,
-  HiPencil,
-  HiMiniQrCode,
-} from 'react-icons/hi2';
+import { HiExclamationCircle, HiPencil, HiMiniQrCode } from 'react-icons/hi2';
 import OrderListCard from './OrderListCard';
 import {
   LoadingMessage,
   ErrorMessage,
   EmptyMessage,
   OrderDetailContainer,
-  NavHeader,
-  BackButton,
-  PageTitle,
-  OrderID,
   ContentArea,
   OrderCard,
   CardHeader,
@@ -40,6 +31,7 @@ import {
   Tab,
   TabContent,
 } from './styled';
+import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 
 // 虛擬機URL
 const BASE_URL = 'http://lebuleduo.rocket-coding.com';
@@ -90,11 +82,6 @@ function OrderDetail() {
       fetchOrderData();
     }
   }, [orderId]);
-
-  // 返回上一頁
-  const handleBack = () => {
-    navigate(-1);
-  };
 
   // 載入中
   if (isLoading) {
@@ -233,13 +220,7 @@ function OrderDetail() {
   return (
     <OrderDetailContainer>
       {/* navbar */}
-      <NavHeader>
-        <BackButton onClick={handleBack}>
-          <HiChevronLeft />
-          <PageTitle>訂單詳情</PageTitle>
-        </BackButton>
-        <OrderID>訂單編號: {orderData.OrderNumber}</OrderID>
-      </NavHeader>
+      <OrderNavHeader title="訂單詳情" orderNumber={orderData.OrderNumber} />
 
       <ContentArea>
         {/* 方案卡片 */}
@@ -252,7 +233,15 @@ function OrderDetail() {
               <EditButton>
                 <HiMiniQrCode />
               </EditButton>
-              <EditButton>
+              <EditButton
+                onClick={() =>
+                  navigate(`/customer/order/${orderId}/edit`, {
+                    state: {
+                      orderData,
+                    },
+                  })
+                }
+              >
                 <HiPencil />
               </EditButton>
             </CardHeaderEditButtons>

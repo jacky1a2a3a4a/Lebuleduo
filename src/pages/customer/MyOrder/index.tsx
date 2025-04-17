@@ -367,7 +367,7 @@ function MyOrder() {
                     無當前訂單
                   </div>
                 )
-              ) : // 顯示已完成訂單
+              ) : // 顯示已結束方案
               completedOrders.length > 0 ? (
                 completedOrders.map((completedOrder) => {
                   // 使用解構賦值提取需要的屬性
@@ -396,6 +396,7 @@ function MyOrder() {
                     <OrderCard
                       key={OrdersID}
                       onClick={() => handleOrderDetailClick(OrdersID)}
+                      $isCompleted={true}
                     >
                       <OrderCardLayout>
                         <OrderPhotoContainer>
@@ -421,11 +422,6 @@ function MyOrder() {
                               <OrderCardDetail>
                                 {lastPickupDate}
                               </OrderCardDetail>
-                            </OrderCardItem>
-
-                            <OrderCardItem>
-                              <OrderCardSubtitle>訂單狀態</OrderCardSubtitle>
-                              <OrderCardDetail>已完成</OrderCardDetail>
                             </OrderCardItem>
 
                             <OrderCardItem>

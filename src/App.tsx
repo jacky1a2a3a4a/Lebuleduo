@@ -25,6 +25,7 @@ import Subscribe from './pages/customer/Subscribe';
 import SubscribeData from './pages/customer/SubscribeData';
 import SubscribeCheckout from './pages/customer/SubscribeCheckout';
 import SubscribeSuccess from './pages/customer/SubscribeSuccess';
+import OrderEdit from './pages/customer/OrderEdit';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -112,6 +113,16 @@ const AppContent = () => {
         }
       />
 
+      {/* 編輯訂單資料 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order/:orderId/edit"
+        element={
+          <ProtectedRoute role="customer">
+            <OrderEdit />
+          </ProtectedRoute>
+        }
+      />
+
       {/* 訂閱方案詳情 - 獨立路由，不使用 CustomerLayout */}
       <Route
         path="/customer/subscribe"
@@ -143,7 +154,10 @@ const AppContent = () => {
       />
 
       {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
-      <Route path="/customer/subscribe-success" element={<SubscribeSuccess />} />
+      <Route
+        path="/customer/subscribe-success"
+        element={<SubscribeSuccess />}
+      />
 
       {/* DOG路由 */}
       <Route

@@ -281,9 +281,10 @@ export const OrderList = styled.div`
 `;
 
 // 訂單卡片 容器
-export const OrderCard = styled.div`
-  background-color: var(--color-gray-0);
-  border: 1px solid var(--color-neutral-300);
+export const OrderCard = styled.div<{ $isCompleted?: boolean }>`
+  background-color: ${({ $isCompleted }) =>
+    $isCompleted ? 'var(--color-neutral-200)' : 'var(--color-white)'};
+  border: 1px solid var(--color-neutral-400);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   position: relative;
   z-index: 1;
