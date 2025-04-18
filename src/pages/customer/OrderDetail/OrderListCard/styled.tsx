@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 
-type StatusType = 'normal' | 'active' | 'ongoing' | 'arrived' | 'abnormal' | 'finished';
+type StatusType =
+  | 'normal'
+  | 'active'
+  | 'ongoing'
+  | 'arrived'
+  | 'abnormal'
+  | 'finished';
 
 // === 卡片容器 ===
 export const OrderListCardContainer = styled.div<{
@@ -36,7 +42,11 @@ export const OrderListCardContainer = styled.div<{
   }};
   border-radius: var(--border-radius-lg);
   box-shadow: ${({ $status }) =>
-    $status === 'abnormal' || $status === 'active' || $status === 'ongoing' || $status === 'arrived' || $status === 'normal'
+    $status === 'abnormal' ||
+    $status === 'active' ||
+    $status === 'ongoing' ||
+    $status === 'arrived' ||
+    $status === 'normal'
       ? 'var(--card-shadow)'
       : 'none'};
   padding: var(--spacing-md);
@@ -138,8 +148,10 @@ export const StatusText = styled.div<{
 // === 修改預約,查看紀錄,查看狀態按鈕 ===
 export const ActionButton = styled.button<{
   $status: StatusType;
+  $disabled: boolean;
 }>`
-  background-color: ${({ $status }) => {
+  background-color: ${({ $status, $disabled }) => {
+    if ($disabled) return 'var(--color-neutral-200)';
     switch ($status) {
       case 'finished':
         return 'var(--color-white)';
@@ -153,7 +165,8 @@ export const ActionButton = styled.button<{
         return 'var(--color-primary)';
     }
   }};
-  color: ${({ $status }) => {
+  color: ${({ $status, $disabled }) => {
+    if ($disabled) return 'var(--color-neutral-500)';
     switch ($status) {
       case 'finished':
         return 'var(--color-neutral-600)';
@@ -167,7 +180,8 @@ export const ActionButton = styled.button<{
         return 'var(--color-white)';
     }
   }};
-  border: ${({ $status }) => {
+  border: ${({ $status, $disabled }) => {
+    if ($disabled) return '1px solid var(--color-neutral-300)';
     switch ($status) {
       case 'finished':
         return '1px solid var(--color-neutral-600)';
@@ -186,11 +200,13 @@ export const ActionButton = styled.button<{
   align-items: center;
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-sm);
-  cursor: ${({ $status }) =>
-    $status === 'finished' ? 'not-allowed' : 'pointer'};
+  cursor: ${({ $status, $disabled }) =>
+    $status === 'finished' || $disabled ? 'not-allowed' : 'pointer'};
   transition: all 0.2s ease;
   white-space: nowrap;
-  opacity: ${({ $status }) => ($status === 'finished' ? 0.7 : 1)};
+  opacity: ${({ $status, $disabled }) =>
+    $status === 'finished' || $disabled ? 0.7 : 1};
+  pointer-events: ${({ $disabled }) => ($disabled ? 'none' : 'auto')};
 
   svg {
     font-size: var(--font-size-md);
@@ -222,7 +238,7 @@ export const IconStyledLarge = styled.div`
 `;
 
 export const ErrorText = styled.div`
-  color: var(--color-error);
+  color: var(--color-neutral-500);
   font-size: var(--font-size-xs);
   margin-top: var(--spacing-sm);
   padding: 0 var(--spacing-md);

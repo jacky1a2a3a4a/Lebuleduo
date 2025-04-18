@@ -34,17 +34,21 @@ import {
 } from './styled';
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 import AddressAutocomplete from '../SubscribeData/AddressAutocomplete';
+import LoadingMessage from '../../../components/common/LoadingMessage';
 
 // 虛擬機URL
 const BASE_URL = 'http://lebuleduo.rocket-coding.com';
 
 // 圖片類型
-interface FixedPointImage {
+interface Image {
   id: string;
   url: string;
-  file: File;
+  file: File | null;
+  isOriginal: boolean;
+  originalPath?: string;
 }
 
+// 訂單資料類型
 interface OrderData {
   OrdersID: number;
   OrderNumber: string;
@@ -63,15 +67,16 @@ interface OrderData {
   Notes: string;
 }
 
-function OrderDetail() {
+// ===組件本體===
+function OrderEdit() {
   const { orderId } = useParams<{ orderId: string }>();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [deletedOriginalImages, setDeletedOriginalImages] = useState<string[]>(
     [],
   );
-  const navigate = useNavigate();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const navigate = useNavigate();
 
   // 參考元素用於滾動
   const nameRef = useRef<HTMLDivElement>(null);
@@ -114,25 +119,39 @@ function OrderDetail() {
   const [notes, setNotes] = useState('');
   const [notesError, setNotesError] = useState<string | null>(null);
   const [deliveryMethod, setDeliveryMethod] = useState('fixedpoint');
-  const [fixedPointImages, setFixedPointImages] = useState<FixedPointImage[]>(
-    [],
-  );
+  const [images, setImages] = useState<Image[]>([]);
   const [photoError, setPhotoError] = useState<string | null>(null);
 
-  // 當 orderData 更新時，更新表單狀態
+  // 當 orderData 更新時，更新表單狀態(用戶原來的資料)
   useEffect(() => {
     if (orderData) {
       setName(orderData.OrderName);
       setPhone(orderData.OrderPhone);
       setAddress(orderData.Addresses);
       setNotes(orderData.Notes);
+
+      // 初始化圖片列表
+      if (orderData.OrderImageUrl && orderData.OrderImageUrl.length > 0) {
+        const initialImages = orderData.OrderImageUrl.map(
+          (photoUrl, index) => ({
+            id: `original-${index}`,
+            url: `${BASE_URL}${photoUrl}`,
+            file: null,
+            isOriginal: true,
+            originalPath: photoUrl,
+          }),
+        );
+        setImages(initialImages);
+      }
     }
   }, [orderData]);
 
+  // 載入中
   if (isLoading) {
-    return <ErrorMessage>載入中...</ErrorMessage>;
+    return <LoadingMessage />;
   }
 
+  // 無法載入訂單資料
   if (!orderData) {
     return <ErrorMessage>無法載入訂單資料</ErrorMessage>;
   }
@@ -144,39 +163,57 @@ function OrderDetail() {
 
   // 處理照片上傳
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
+    if (!e.target.files?.length) return;
 
-      if (!file.type.startsWith('image/')) {
-        setPhotoError('*請上傳圖片格式的檔案');
-        return;
-      }
+    const file = e.target.files[0];
+    setPhotoError(null);
 
-      if (file.size > 5 * 1024 * 1024) {
-        setPhotoError('*圖片大小不得超過5MB');
-        return;
-      }
-
-      if (fixedPointImages.length >= 2) {
-        setPhotoError('*最多只能上傳兩張照片');
-        return;
-      }
-
-      const imageUrl = URL.createObjectURL(file);
-      const imageId = Date.now().toString();
-
-      setFixedPointImages([
-        ...fixedPointImages,
-        {
-          id: imageId,
-          url: imageUrl,
-          file,
-        },
-      ]);
-
-      setPhotoError(null);
-      e.target.value = '';
+    // 驗證檔案
+    if (!file.type.startsWith('image/')) {
+      setPhotoError('*請上傳圖片格式的檔案');
+      return;
     }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setPhotoError('*圖片大小不得超過5MB');
+      return;
+    }
+
+    // 計算當前照片總數
+    const currentImageCount = images.length;
+    if (currentImageCount >= 2) {
+      setPhotoError('*最多只能上傳兩張照片');
+      return;
+    }
+
+    // 創建新的圖片物件
+    const newImage: Image = {
+      id: `new-${Date.now()}`,
+      url: URL.createObjectURL(file),
+      file,
+      isOriginal: false,
+    };
+
+    setImages((prev) => [...prev, newImage]);
+    e.target.value = '';
+  };
+
+  // 處理照片刪除
+  const handleDeletePhoto = (id: string) => {
+    setImages((prev) => {
+      const imageToDelete = prev.find((img) => img.id === id);
+      if (!imageToDelete) return prev;
+
+      // 如果是原始照片，添加到已刪除列表
+      if (imageToDelete.isOriginal && imageToDelete.originalPath) {
+        setDeletedOriginalImages((prev) => [
+          ...prev,
+          imageToDelete.originalPath!,
+        ]);
+      }
+
+      return prev.filter((img) => img.id !== id);
+    });
   };
 
   // 開啟文件選擇器
@@ -184,27 +221,20 @@ function OrderDetail() {
     fileInputRef.current?.click();
   };
 
-  // 處理照片刪除
-  const handleDeletePhoto = (id: string) => {
-    const newImages = fixedPointImages.filter((image) => image.id !== id);
-    setFixedPointImages(newImages);
-  };
+  // 檢查照片是否有效
+  const validatePhotos = (): boolean => {
+    if (deliveryMethod !== 'fixedpoint') return true;
 
-  // 處理刪除原始照片
-  const handleDeleteOriginalPhoto = (photoUrl: string) => {
-    setDeletedOriginalImages([...deletedOriginalImages, photoUrl]);
-    // 更新 orderData 中的 OrderImageUrl
-    if (orderData) {
-      setOrderData({
-        ...orderData,
-        OrderImageUrl: orderData.OrderImageUrl.filter(
-          (url) => url !== photoUrl,
-        ),
-      });
+    if (images.length < 2) {
+      setPhotoError('*請確保有兩張固定點照片');
+      return false;
     }
+
+    setPhotoError(null);
+    return true;
   };
 
-  // 驗證函數
+  // ===驗證填寫資料函數===
   const validateName = (name: string): boolean => {
     if (!name.trim()) {
       setNameError('*請輸入聯絡人姓名');
@@ -253,9 +283,8 @@ function OrderDetail() {
 
   // 檢查表單是否有效
   const isFormValid = () => {
-    const remainingOriginalImages = orderData?.OrderImageUrl || [];
-    const totalImages =
-      remainingOriginalImages.length + fixedPointImages.length;
+    // 計算總照片數量（原始照片 + 新上傳的照片）
+    const totalImages = images.length;
 
     return (
       !!name.trim() &&
@@ -291,16 +320,7 @@ function OrderDetail() {
       return;
     }
 
-    if (deliveryMethod === 'fixedpoint') {
-      const remainingOriginalImages = orderData?.OrderImageUrl || [];
-      const totalImages =
-        remainingOriginalImages.length + fixedPointImages.length;
-
-      if (totalImages < 2) {
-        setPhotoError('*請確保有兩張固定點照片');
-        return;
-      }
-    }
+    if (!validatePhotos()) return;
 
     try {
       // 準備表單資料
@@ -313,22 +333,35 @@ function OrderDetail() {
 
       // 處理圖片上傳
       if (deliveryMethod === 'fixedpoint') {
-        // 保留未被刪除的原有圖片
-        const remainingOriginalImages =
-          orderData?.OrderImageUrl?.filter(
-            (photo) => !deletedOriginalImages.includes(photo),
-          ) || [];
+        // 將所有圖片都當作新圖片上傳
+        const allImages = images.filter((img) => img.file);
+        console.log(
+          '所有要上傳的照片:',
+          allImages.map((img) => ({
+            id: img.id,
+            fileName: img.file?.name,
+            size: img.file?.size,
+            isOriginal: img.isOriginal,
+          })),
+        );
 
-        // 將未被刪除的原有圖片加入 formData
-        remainingOriginalImages.forEach((photoUrl) => {
-          // 將原有圖片的 URL 加入 formData
-          formData.append('OrderImageUrl', photoUrl);
+        allImages.forEach((image) => {
+          if (image.file) {
+            formData.append('OrderImageUrl', image.file);
+          }
         });
 
-        // 加入新上傳的圖片
-        fixedPointImages.forEach((image) => {
-          formData.append('OrderImageUrl', image.file);
+        // 添加已刪除的圖片路徑
+        console.log('已刪除的照片路徑:', deletedOriginalImages);
+        deletedOriginalImages.forEach((path) => {
+          formData.append('DeletedImageUrls', path);
         });
+
+        // 顯示最終的 FormData 內容
+        console.log('FormData 內容:');
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}:`, value);
+        }
       }
 
       // 發送 PUT 請求
@@ -449,12 +482,12 @@ function OrderDetail() {
                     value={deliveryMethod}
                     onChange={(e) =>
                       setDeliveryMethod(
-                        e.target.value as 'fixedpoint' | 'ereceipt',
+                        e.target.value as 'fixedpoint' | 'receipt',
                       )
                     }
                   >
                     <option value="fixedpoint">放置固定點</option>
-                    <option value="ereceipt">面交收運</option>
+                    <option value="receipt">面交收運</option>
                   </DeliverySelect>
                   <SelectIcon>
                     <IoIosArrowDown />
@@ -467,25 +500,7 @@ function OrderDetail() {
                   <InputLabel>固定點照片</InputLabel>
                   <DeliveryOptionImageContainer>
                     <DeliveryOptionImages>
-                      {orderData?.OrderImageUrl?.map((photo, index) => (
-                        <DeliveryOptionImage key={index}>
-                          <DeliveryOptionImagePhoto
-                            style={{
-                              backgroundImage: `url(${BASE_URL}${photo})`,
-                            }}
-                          />
-                          <DeleteImageButton
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteOriginalPhoto(photo);
-                            }}
-                          >
-                            <IoMdClose />
-                          </DeleteImageButton>
-                        </DeliveryOptionImage>
-                      ))}
-
-                      {fixedPointImages.map((image) => (
+                      {images.map((image) => (
                         <DeliveryOptionImage key={image.id}>
                           <DeliveryOptionImagePhoto
                             style={{ backgroundImage: `url(${image.url})` }}
@@ -509,9 +524,7 @@ function OrderDetail() {
                         onChange={handlePhotoUpload}
                       />
 
-                      {(orderData?.OrderImageUrl?.length || 0) +
-                        fixedPointImages.length <
-                        2 && (
+                      {images.length < 2 && (
                         <DeliveryOptionImageUpload
                           onClick={(e) => {
                             e.stopPropagation();
@@ -567,4 +580,4 @@ function OrderDetail() {
   );
 }
 
-export default OrderDetail;
+export default OrderEdit;

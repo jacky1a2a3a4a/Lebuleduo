@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { HiExclamationCircle, HiPencil, HiMiniQrCode } from 'react-icons/hi2';
 import OrderListCard from './OrderListCard';
 import {
-  LoadingMessage,
   ErrorMessage,
   EmptyMessage,
   OrderDetailContainer,
@@ -32,7 +31,7 @@ import {
   TabContent,
 } from './styled';
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
-
+import LoadingMessage from '../../../components/common/LoadingMessage';
 // 虛擬機URL
 const BASE_URL = 'http://lebuleduo.rocket-coding.com';
 
@@ -85,7 +84,7 @@ function OrderDetail() {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage>載入中...</LoadingMessage>;
+    return <LoadingMessage />;
   }
 
   // 錯誤
@@ -114,19 +113,23 @@ function OrderDetail() {
   const totalOrders = orderData.OrderDetails?.length || 0;
 
   // 渲染訂單列表
-  const renderOrderList = (orders) => (
-    <OrderList>
-      {orders.map((order) => (
-        <OrderListCard
-          key={order.OrderDetailID}
-          date={order.ServiceDate}
-          time={order.DriverTime || '未排定'}
-          status={order.Status}
-          orderDetailId={order.OrderDetailID}
-        />
-      ))}
-    </OrderList>
-  );
+  const renderOrderList = (orders) => {
+    return (
+      <OrderList>
+        {orders.map((order) => (
+          <OrderListCard
+            key={order.OrderDetailID}
+            date={order.ServiceDate}
+            time={order.ServiceTime}
+            status={order.Status}
+            orderDetailId={order.OrderDetailID}
+            ordersId={orderData.OrdersID}
+            usersId={parseInt(localStorage.getItem('UsersID') || '0')}
+          />
+        ))}
+      </OrderList>
+    );
+  };
 
   // 依照標籤，渲染對應任務區塊
   const renderTabContent = () => {

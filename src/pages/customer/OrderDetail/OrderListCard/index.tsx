@@ -28,13 +28,14 @@ type OrderStatusType =
 
 // 任務卡片 props 類型
 //這些props是從父元件傳遞過來的
-interface OrderListCardProps {
+type OrderListCardProps = {
   date: string;
   time: string;
-  status: string; // 任務狀態
-  orderDetailId: string; // 任務ID
-  isAbnormal?: boolean;
-}
+  status: string;
+  orderDetailId: number;
+  ordersId: number;
+  usersId: number;
+};
 
 // ===組件本體===
 function OrderListCard({
@@ -42,6 +43,8 @@ function OrderListCard({
   time,
   status,
   orderDetailId,
+  ordersId,
+  usersId,
 }: OrderListCardProps) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,8 +52,7 @@ function OrderListCard({
   // 獲取當前狀態
   const getCurrentStatus = (): OrderStatusType => {
     if (status === '異常') return 'abnormal';
-    if (status === '已排定')
-      return 'active';
+    if (status === '已排定') return 'active';
     if (status === '前往中') return 'ongoing';
     if (status === '已抵達') return 'arrived';
     if (status === '未排定') return 'normal';
@@ -101,6 +103,8 @@ function OrderListCard({
 
     if (
       currentStatus === 'active' ||
+      currentStatus === 'ongoing' ||
+      currentStatus === 'arrived' ||
       currentStatus === 'abnormal' ||
       currentStatus === 'finished'
     ) {
@@ -152,7 +156,11 @@ function OrderListCard({
               </StatusText>
             </OrderStatus>
 
-            <ActionButton onClick={handleButtonClick} $status={currentStatus}>
+            <ActionButton
+              onClick={handleButtonClick}
+              $status={currentStatus}
+              $disabled={!canModify()}
+            >
               <IconStyled>
                 {currentStatus === 'active' ||
                 currentStatus === 'ongoing' ||
@@ -166,7 +174,10 @@ function OrderListCard({
               </IconStyled>
               {currentStatus === 'finished'
                 ? '查看紀錄'
-                : currentStatus === 'abnormal' || currentStatus === 'active'
+                : currentStatus === 'abnormal' ||
+                    currentStatus === 'active' ||
+                    currentStatus === 'ongoing' ||
+                    currentStatus === 'arrived'
                   ? '查看狀態'
                   : '修改預約'}
             </ActionButton>
@@ -178,11 +189,14 @@ function OrderListCard({
         )}
       </OrderListCardContainer>
 
+      {/* 修改日期modal，同時傳遞props */}
       <ModifyDateModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirmModify}
-        originalDate={date}
+        usersId={usersId}
+        ordersId={ordersId}
+        orderDetailId={orderDetailId}
       />
     </>
   );

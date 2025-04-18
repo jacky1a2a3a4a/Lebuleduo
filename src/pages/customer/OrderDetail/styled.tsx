@@ -1,12 +1,5 @@
 import styled from 'styled-components';
 
-// 載入中訊息
-export const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: var(--font-size-md);
-  color: var(--color-gray-500);
-`;
 
 // 錯誤訊息
 export const ErrorMessage = styled.div`
