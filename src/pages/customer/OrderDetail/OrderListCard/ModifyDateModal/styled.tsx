@@ -72,35 +72,56 @@ export const ModalContent = styled.div`
   gap: var(--spacing-md);
 `;
 
+// ===修改日期modal 變更內容容器===
 export const DateInfo = styled.div`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--spacing-sm) var(--spacing-md);
-  background-color: var(--color-neutral-200);
+  background-color: var(--color-tertiary);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
   padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
 `;
 
-export const DateLabel = styled.span`
+export const DateInfoTitle = styled.h3`
+  color: var(--color-text-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+`;
+
+export const DateInfoContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+`;
+
+export const DateInfoItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const DateLabel = styled.span<{ $bold?: boolean }>`
   color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
+  font-weight: ${({ $bold }) =>
+    $bold ? 'var(--font-weight-bold)' : 'var(--font-weight-normal)'};
 `;
 
-export const DateValue = styled.span`
-  color: var(--color-tertiary-hover);
+export const DateValue = styled.span<{ $bold?: boolean }> `
+  color: var(--color-text-primary);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: ${({ $bold }) =>
+    $bold ? 'var(--font-weight-bold)' : 'var(--font-weight-normal)'};
 `;
 
 // ===日曆===
 export const CalendarContainer = styled.div`
-  background-color: var(--color-neutral-200);
+  background-color: var(--color-background-secondary);
   padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-lg);
 
   // 日曆整體圓角
   .react-calendar {
-    border: 1px solid var(--color-neutral-300);
+    border: 2px solid var(--color-neutral-300);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
   }
@@ -109,7 +130,7 @@ export const CalendarContainer = styled.div`
   .react-calendar__tile--active {
     background-color: var(--color-tertiary);
     color: var(--color-white);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--border-radius-round);
   }
 
   .react-calendar__tile--active:enabled:focus {
@@ -128,7 +149,7 @@ export const CalendarContainer = styled.div`
   .react-calendar__tile.original-date {
     background-color: var(--color-neutral-100);
     border: 3px solid var(--color-tertiary);
-    border-radius: var(--border-radius-lg);
+    border-radius: var(--border-radius-round);
     color: var(--color-text-primary);
   }
 
@@ -145,12 +166,10 @@ export const CalendarContainer = styled.div`
 export const NoticeText = styled.div`
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
-  padding: var(--spacing-md);
-  background-color: var(--color-neutral-200);
-  border-radius: var(--border-radius-md);
+  padding: 0 var(--spacing-md);
 `;
 
-// 按鈕容器
+// ===按鈕容器===
 export const ButtonGroup = styled.div`
   display: flex;
   gap: var(--spacing-md);
@@ -160,7 +179,7 @@ export const ButtonGroup = styled.div`
 export const Button = styled.button`
   flex: 1;
   padding: var(--spacing-md);
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-round);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
   transition: all 0.2s ease;
@@ -180,11 +199,11 @@ export const CancelButton = styled(Button)`
 `;
 
 export const ConfirmButton = styled(Button)`
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   color: var(--color-white);
 
   &:hover {
-    background-color: var(--color-secondary-hover);
+    background-color: var(--color-primary-hover);
   }
 
   &:disabled {

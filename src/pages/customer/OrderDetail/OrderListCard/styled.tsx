@@ -51,8 +51,6 @@ export const OrderListCardContainer = styled.div<{
       : 'none'};
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-sm);
-  pointer-events: ${({ $status }) =>
-    $status === 'finished' ? 'none' : 'auto'};
 `;
 
 export const CardItems = styled.div`
@@ -181,10 +179,10 @@ export const ActionButton = styled.button<{
     }
   }};
   border: ${({ $status, $disabled }) => {
-    if ($disabled) return '1px solid var(--color-neutral-300)';
+    if ($disabled) return '1px solid var(--color-neutral-400)';
     switch ($status) {
       case 'finished':
-        return '1px solid var(--color-neutral-600)';
+        return '1px solid var(--color-neutral-400)';
       case 'abnormal':
         return '1px solid var(--color-error)';
       case 'active':
@@ -200,14 +198,12 @@ export const ActionButton = styled.button<{
   align-items: center;
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-sm);
-  cursor: ${({ $status, $disabled }) =>
-    $status === 'finished' || $disabled ? 'not-allowed' : 'pointer'};
-  transition: all 0.2s ease;
   white-space: nowrap;
-  opacity: ${({ $status, $disabled }) =>
-    $status === 'finished' || $disabled ? 0.7 : 1};
-  pointer-events: ${({ $disabled }) => ($disabled ? 'none' : 'auto')};
 
+  pointer-events: ${({ $disabled }) => ($disabled ? 'auto' : 'none')};
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+
+  transition: all 0.2s ease;
   svg {
     font-size: var(--font-size-md);
   }

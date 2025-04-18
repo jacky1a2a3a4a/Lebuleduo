@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { HiExclamationCircle, HiPencil, HiMiniQrCode } from 'react-icons/hi2';
 import OrderListCard from './OrderListCard';
 import {
@@ -43,44 +43,45 @@ function OrderDetail() {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('全部');
 
+  // 獲取訂單數據的函數
+  const fetchOrderData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const usersId = localStorage.getItem('UsersID');
+      console.log('正在請求訂單數據，參數：', {
+        usersId,
+        orderId,
+      });
+
+      const response = await fetch(
+        `/api/GET/user/orders/${usersId}/${orderId}`,
+      );
+      const data = await response.json();
+
+      console.log('API 回傳數據：', data);
+
+      if (data.status) {
+        console.log('訂單詳情數據：', data.result[0]);
+        console.log('OrderDetail 數據：', data.result[0].OrderDetails);
+        setOrderData(data.result[0]);
+      } else {
+        console.error('API 回傳錯誤：', data.message);
+        setError(data.message);
+      }
+    } catch (error) {
+      console.error('獲取訂單數據時出錯：', error);
+      setError('獲取訂單數據時出錯');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [orderId]);
+
   // 馬上載入訂單數據
   useEffect(() => {
-    const fetchOrderData = async () => {
-      try {
-        setIsLoading(true);
-        const usersId = localStorage.getItem('UsersID');
-        console.log('正在請求訂單數據，參數：', {
-          usersId,
-          orderId,
-        });
-
-        const response = await fetch(
-          `/api/GET/user/orders/${usersId}/${orderId}`,
-        );
-        const data = await response.json();
-
-        console.log('API 回傳數據：', data);
-
-        if (data.status) {
-          console.log('訂單詳情數據：', data.result[0]);
-          console.log('OrderDetail 數據：', data.result[0].OrderDetails);
-          setOrderData(data.result[0]);
-        } else {
-          console.error('API 回傳錯誤：', data.message);
-          setError(data.message);
-        }
-      } catch (error) {
-        console.error('獲取訂單數據時出錯：', error);
-        setError('獲取訂單數據時出錯');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     if (orderId) {
       fetchOrderData();
     }
-  }, [orderId]);
+  }, [orderId, fetchOrderData]);
 
   // 載入中
   if (isLoading) {
@@ -114,9 +115,22 @@ function OrderDetail() {
 
   // 渲染訂單列表
   const renderOrderList = (orders) => {
+    // 如果是未排定任務或全部標籤下的未排定任務，則按照時間順序排序
+    const sortedOrders =
+      activeTab === '未排定' ||
+      (activeTab === '全部' &&
+        orders.some((order) => order.Status === '未排定'))
+        ? [...orders].sort((a, b) => {
+            // 將日期字串轉換為 Date 對象進行比較
+            const dateA = new Date(a.ServiceDate.replace(/\//g, '-'));
+            const dateB = new Date(b.ServiceDate.replace(/\//g, '-'));
+            return dateA.getTime() - dateB.getTime();
+          })
+        : orders;
+
     return (
       <OrderList>
-        {orders.map((order) => (
+        {sortedOrders.map((order) => (
           <OrderListCard
             key={order.OrderDetailID}
             date={order.ServiceDate}
@@ -125,6 +139,7 @@ function OrderDetail() {
             orderDetailId={order.OrderDetailID}
             ordersId={orderData.OrdersID}
             usersId={parseInt(localStorage.getItem('UsersID') || '0')}
+            onDateModified={fetchOrderData}
           />
         ))}
       </OrderList>

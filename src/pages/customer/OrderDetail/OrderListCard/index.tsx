@@ -35,6 +35,7 @@ type OrderListCardProps = {
   orderDetailId: number;
   ordersId: number;
   usersId: number;
+  onDateModified?: () => void; // 添加新的屬性
 };
 
 // ===組件本體===
@@ -45,6 +46,7 @@ function OrderListCard({
   orderDetailId,
   ordersId,
   usersId,
+  onDateModified,
 }: OrderListCardProps) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,27 +99,17 @@ function OrderListCard({
     }
   };
 
-  // 處理按鈕點擊
-  const handleButtonClick = () => {
+  // 處理卡片點擊（導向訂單狀態頁面）
+  const handleCardClick = () => {
+    navigate(`/customer/order-status/${orderDetailId}`);
+  };
+
+  // 處理按鈕點擊（修改預約）
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const currentStatus = getCurrentStatus();
 
-    if (
-      currentStatus === 'active' ||
-      currentStatus === 'ongoing' ||
-      currentStatus === 'arrived' ||
-      currentStatus === 'abnormal' ||
-      currentStatus === 'finished'
-    ) {
-      navigate(`/customer/order-status/${orderDetailId}`);
-      return;
-    }
-
-    if (currentStatus === 'normal') {
-      setIsModalOpen(true);
-      return;
-    }
-
-    if (canModify()) {
+    if (currentStatus === 'normal' && canModify()) {
       setIsModalOpen(true);
     }
   };
@@ -128,6 +120,7 @@ function OrderListCard({
       // TODO: 實現修改日期的 API 調用
       console.log('修改日期為：', newDate);
       setIsModalOpen(false);
+      onDateModified?.(); // 調用 onDateModified 函數
     } catch (error) {
       console.error('修改日期失敗：', error);
     }
@@ -137,7 +130,11 @@ function OrderListCard({
 
   return (
     <>
-      <OrderListCardContainer $status={currentStatus}>
+      <OrderListCardContainer
+        $status={currentStatus}
+        onClick={handleCardClick}
+        style={{ cursor: 'pointer' }}
+      >
         <CardItems>
           <CardItem>
             <IconStyledLarge>
@@ -159,37 +156,21 @@ function OrderListCard({
             <ActionButton
               onClick={handleButtonClick}
               $status={currentStatus}
-              $disabled={!canModify()}
+              $disabled={!canModify() && currentStatus === 'normal'}
             >
               <IconStyled>
-                {currentStatus === 'active' ||
-                currentStatus === 'ongoing' ||
-                currentStatus === 'arrived' ||
-                currentStatus === 'abnormal' ||
-                currentStatus === 'finished' ? (
-                  <MdArticle />
-                ) : (
-                  <MdEditNote />
-                )}
+                {currentStatus === 'normal' ? <MdEditNote /> : <MdArticle />}
               </IconStyled>
-              {currentStatus === 'finished'
-                ? '查看紀錄'
-                : currentStatus === 'abnormal' ||
-                    currentStatus === 'active' ||
-                    currentStatus === 'ongoing' ||
-                    currentStatus === 'arrived'
-                  ? '查看狀態'
-                  : '修改預約'}
+              {currentStatus === 'normal' ? '修改預約' : '查看狀態'}
             </ActionButton>
           </CardItem>
         </CardItems>
 
-        {!canModify() && (
+        {!canModify() && currentStatus === 'normal' && (
           <ErrorText>※ 已超過可修改時間（需在兩天前修改）</ErrorText>
         )}
       </OrderListCardContainer>
 
-      {/* 修改日期modal，同時傳遞props */}
       <ModifyDateModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

@@ -10,6 +10,7 @@ import {
   ModalTitle,
   ModalContent,
   DateInfo,
+  DateInfoTitle,
   DateLabel,
   DateValue,
   NoticeText,
@@ -17,6 +18,8 @@ import {
   CancelButton,
   ConfirmButton,
   CalendarContainer,
+  DateInfoContent,
+  DateInfoItem,
 } from './styled.tsx';
 
 //日曆組件props
@@ -57,6 +60,8 @@ function ModifyDateModal({
   ordersId,
   orderDetailId,
 }: ModifyDateModalProps) {
+  const [isLoading, setIsLoading] = useState(false); //載入狀態
+  const [error, setError] = useState<string | null>(null); //錯誤訊息
   const [isClosing, setIsClosing] = useState(false); //關閉狀態
   const [isVisible, setIsVisible] = useState(false); //顯示狀態
   const [orderDetail, setOrderDetail] = useState<
@@ -65,8 +70,6 @@ function ModifyDateModal({
   const [allOrderDates, setAllOrderDates] = useState<
     OrderDetailResponse['allOrderDates']
   >([]); //所有任務日期
-  const [isLoading, setIsLoading] = useState(false); //載入狀態
-  const [error, setError] = useState<string | null>(null); //錯誤訊息
   const [selectedDate, setSelectedDate] = useState<globalThis.Date | null>(
     null,
   ); //預設選擇日期為 任務原定日期
@@ -85,6 +88,14 @@ function ModifyDateModal({
         );
         setAllOrderDates(response.data.allOrderDates); // 設定所有任務日期
         setOrderDetail(response.data.result); // 設定任務時間資料
+
+        // 設置初始選定日期為原始日期
+        if (response.data.result.OriginalDate) {
+          const [year, month, day] =
+            response.data.result.OriginalDate.split('/').map(Number);
+          setSelectedDate(new globalThis.Date(year, month - 1, day));
+        }
+
         console.log('該筆方案所有任務日期:', response.data.allOrderDates);
         console.log('任務時間資料:', response.data.result);
       } catch (err) {
@@ -156,12 +167,35 @@ function ModifyDateModal({
   };
 
   // 確認修改日期
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (selectedDate) {
-      onConfirm(selectedDate);
+      try {
+        setIsLoading(true);
+        const formattedDate = formatDate(selectedDate);
+        const response = await axios.put(
+          `api/Put/users/${usersId}/orders/${ordersId}/orderDetails/${orderDetailId}`,
+          {
+            newServiceDate: formattedDate,
+          },
+        );
+        console.log('修改日期回應:', response.data);
+
+        if (response.data.status) {
+          onConfirm(selectedDate);
+          onClose();
+        } else {
+          setError('修改日期失敗，請稍後再試');
+        }
+      } catch (err) {
+        setError('修改日期失敗，請稍後再試');
+        console.error('Error updating service date:', err);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
+  // 如果modal不顯示，則不渲染
   if (!isVisible) return null;
 
   return (
@@ -173,20 +207,11 @@ function ModifyDateModal({
 
         <ModalContent>
           {isLoading ? (
-            <StatusMessage>載入中...</StatusMessage>
+            <StatusMessage></StatusMessage>
           ) : error ? (
             <StatusMessage>{error}</StatusMessage>
           ) : orderDetail ? (
             <>
-              <DateInfo>
-                <DateLabel>原訂日期：</DateLabel>
-                <DateValue>{orderDetail.OriginalDate}</DateValue>
-                <DateLabel>修改日期：</DateLabel>
-                <DateValue>
-                  {selectedDate ? formatDate(selectedDate) : '*請選擇新的日期*'}
-                </DateValue>
-              </DateInfo>
-
               <CalendarContainer>
                 <Calendar
                   onChange={(date) => setSelectedDate(date as globalThis.Date)}
@@ -202,8 +227,26 @@ function ModifyDateModal({
                 />
               </CalendarContainer>
 
+              <DateInfo>
+                <DateInfoTitle>變更內容</DateInfoTitle>
+                <DateInfoContent>
+                  <DateInfoItem>
+                    <DateLabel>原訂日期：</DateLabel>
+                    <DateValue>{orderDetail.OriginalDate}</DateValue>
+                  </DateInfoItem>
+                  <DateInfoItem>
+                    <DateLabel $bold>修改日期：</DateLabel>
+                    <DateValue $bold>
+                      {selectedDate
+                        ? formatDate(selectedDate)
+                        : '*請選擇新的日期*'}
+                    </DateValue>
+                  </DateInfoItem>
+                </DateInfoContent>
+              </DateInfo>
+
               <NoticeText>
-                ※ 請注意：
+                ※ 溫興提醒：
                 <br />• 可選擇的日期範圍為 今天 到 方案結束日
                 <br />• 訂單修改的最終決定權為垃不垃多公司所有
               </NoticeText>
