@@ -1,12 +1,5 @@
 import styled from 'styled-components';
 
-// 載入中訊息
-export const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: var(--font-size-md);
-  color: var(--color-gray-500);
-`;
 
 // 錯誤訊息
 export const ErrorMessage = styled.div`
@@ -27,19 +20,13 @@ export const EmptyMessage = styled.div`
 // 頁面容器
 export const OrderDetailContainer = styled.div`
   background-color: var(--color-primary);
-  width: 100%;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
-
-  @media (min-width: 768px) {
-    max-width: 480px;
-    margin: 0 auto;
-    border-left: 1px solid var(--color-gray-300);
-    border-right: 1px solid var(--color-gray-300);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  }
+  margin: 0 auto;
+  width: var(--mobile-min-width);
+  height: 100vh;
+  overflow: hidden;
 `;
 
 // 導航欄
@@ -82,12 +69,13 @@ export const OrderID = styled.h2`
   font-weight: var(--font-weight-normal);
 `;
 
-// 內容區域 最外層容器
+// ===內容區域 最外層容器
 export const ContentArea = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 `;
 
 // 訂單卡片
@@ -97,7 +85,7 @@ export const OrderCard = styled.div`
   border-radius: var(--border-radius-lg);
   box-shadow: var(--card-shadow);
   padding: var(--spacing-md);
-  margin: var(--spacing-md);
+  margin: 0 var(--spacing-md) var(--spacing-md);
 `;
 
 // 訂單卡片頭部
@@ -140,14 +128,14 @@ export const PhotoContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: var(--spacing-sm);
-  width: 50%;
+  width: 100%;
 `;
 
 // 單張照片容器
 export const SinglePhotoContainer = styled.div`
   background-color: var(--color-gray-200);
   border-radius: var(--border-radius-lg);
-  width: 100%;
+  width: 25%;
   overflow: hidden;
   aspect-ratio: 3/4;
 `;
@@ -198,15 +186,90 @@ export const DetailValue = styled.div`
   font-weight: var(--font-weight-medium);
 `;
 
-// 收運列表區塊
+// === 收運列表區塊 最外層大容器 ===
 export const OrderListSection = styled.div`
-  background-color: var(--color-gray-0);
+  background-color: var(--color-background-secondary);
   border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
   padding: var(--spacing-12);
   flex: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
   overflow: hidden;
+`;
+
+// === 收運列表 標籤容器 ===
+export const TabContainer = styled.div`
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0 var(--spacing-xs);
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--color-background-secondary);
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+`;
+
+// 收運列表 標籤
+export const Tab = styled.button<{ $active: boolean }>`
+  background-color: ${({ $active }) =>
+    $active ? 'var(--color-tertiary)' : 'var(--color-neutral-200)'};
+  color: ${({ $active }) =>
+    $active ? 'var(--color-text-primary)' : 'var(--color-text-tertiary)'};
+  border: ${({ $active }) =>
+    $active ? 'none' : '1px solid var(--color-neutral-300)'};
+  border-radius: var(--border-radius-round);
+
+  padding: 8px 16px;
+
+  font-size: var(--font-size-sm);
+  font-weight: ${({ $active }) =>
+    $active ? 'var(--font-weight-bold)' : 'var(--font-weight-normal)'};
+  text-align: center;
+  white-space: nowrap;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+`;
+
+// === 收運列表 任務內容大容器 ===
+export const TabContent = styled.div`
+  background-color: transparent;
+  overflow-y: auto;
+  flex: 1;
+  height: 100%;
+  padding-bottom: var(--spacing-md);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+// 收運任務列表
+export const OrderList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+  width: 100%;
+  padding: 0 var(--spacing-xs);
 `;
 
 // 收運列表標題區塊
@@ -230,18 +293,4 @@ export const OrderListCal = styled.div`
   color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-`;
-
-// 收運列表
-export const OrderList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-12);
-  overflow-y: auto;
-  flex: 1;
-
-  //有滾動軸但不顯示
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;

@@ -1,39 +1,36 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import { IconType } from 'react-icons';
+import { useLocation } from 'react-router-dom';
 
-/**
- * 底部導航項目接口
- */
 export type FooterNavItem = {
-  /** 導航圖標 */
   icon: IconType;
-  /** 導航文字標籤 */
   label: string;
-  /** 導航目標路徑 */
   path: string;
 };
 
-/**
- * 通用頁尾屬性接口
- */
 interface FooterProps {
-  /** 導航項目陣列 */
   navItems: FooterNavItem[];
 }
 
 const minWidthMobilePlus = 403;
 
 // 頁尾外層容器
-const FooterWrapper = styled.div`
-  background-color: var(--color-white);
+const FooterWrapper = styled.div<{ $primary?: boolean; $secondary?: boolean }>`
+  background-color: ${({ $primary, $secondary }) => {
+    if ($primary) return 'var(--color-primary)';
+    if ($secondary) return 'var(--color-background-secondary)';
+    return 'transparent';
+  }};
   width: 100%;
-  z-index: 999;
+  z-index: 99;
 `;
 
 // 頁尾容器
 const FooterContainer = styled.footer`
   background-color: var(--color-white);
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   height: 64px;
@@ -97,8 +94,14 @@ const IconText = styled.span`
  * 顯示底部導航列表
  */
 function CommonFooter({ navItems }: FooterProps) {
+  const location = useLocation();
+
+  const isPrimary = location.pathname === '/customer/my-order';
+  const isSecondary = location.pathname === '/customer/Plan';
+  console.log(location);
+
   return (
-    <FooterWrapper>
+    <FooterWrapper $primary={isPrimary} $secondary={isSecondary}>
       <FooterContainer>
         {navItems.map((item, index) => (
           <ListItem key={index}>

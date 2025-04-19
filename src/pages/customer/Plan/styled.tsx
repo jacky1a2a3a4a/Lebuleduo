@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+////載入中訊息
 //訂閱方案 載入中訊息
 export const LoadingMessage = styled.div`
   text-align: center;
@@ -24,7 +25,7 @@ export const EmptyMessage = styled.div`
   color: var(--color-gray-500);
 `;
 
-//訂閱方案 最大外容器
+////訂閱方案 最大外容器
 export const PlanSectionStyled = styled.section`
   background-color: var(--color-gray-200);
   width: 100%;
@@ -38,20 +39,20 @@ export const PlanSectionStyled = styled.section`
 
 //訂閱方案 容器
 export const PlanContainer = styled.div`
-  background-color: var(--color-gray-200);
+  background-color: var(--color-primary);
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
 `;
 
 //方案介紹 最外層容器
 export const PlanDescription = styled.div`
-  background-color: var(--color-gray-200);
+  margin: 0 var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
 `;
 
 //訂閱方案 方案介紹標題
-export const PlanDescriptionTitle = styled.h2`
+export const PlanDescriptionTitle = styled.div`
+  color: var(--color-white);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--spacing-md);
@@ -71,11 +72,15 @@ export const ContentItem = styled.div`
 
 //訂閱方案 打勾icon
 export const IconCheckedStyled = styled.div`
-  color: var(--color-primary);
+  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--spacing-sm);
+  margin-right: var(--spacing-12);
+
+  width: 20px;
+  height: 20px;
+
   font-size: var(--font-size-2xl);
 `;
 
@@ -88,15 +93,29 @@ export const ContentText = styled.div`
 
 //訂閱方案 方案介紹內容項目主文字
 export const ContentMainText = styled.p`
+  color: var(--color-tertiary);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
 `;
 
 //訂閱方案 方案介紹內容項目副文字
 export const ContentSubText = styled.p`
-  color: var(--color-gray-500);
-  font-size: var(--font-size-xs);
+  color: var(--color-white);
+  font-size: var(--font-size-xxs);
   font-weight: var(--font-weight-normal);
+`;
+
+////卡片列表
+// 訂閱方案 卡片列表容器
+export const PlanCardListContainer = styled.div`
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+
+  padding: var(--spacing-lg) var(--spacing-md);
 `;
 
 //訂閱方案 卡片
@@ -118,6 +137,7 @@ export const PlanCardHeader = styled.div`
 
 //訂閱方案 卡片標題
 export const PlanCardTitle = styled.h2`
+  color: var(--color-primary);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
   margin: var(--spacing-xs) 0;
@@ -125,6 +145,7 @@ export const PlanCardTitle = styled.h2`
 
 //訂閱方案 卡片價格
 export const PlanCardPrice = styled.p`
+  color: var(--color-text-primary);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
 `;
@@ -133,12 +154,12 @@ export const PlanCardPrice = styled.p`
 export const Divider = styled.div`
   border-bottom: 1px solid var(--color-gray-200);
   width: 100%;
-  margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+  margin:var(--spacing-12) 0 var(--spacing-sm) 0;
 `;
 
 //訂閱方案 卡片描述
 export const PlanCardDescription = styled.div`
-  color: var(--color-gray-500);
+  color: var(--color-text-tertiary);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   display: flex;
@@ -148,10 +169,10 @@ export const PlanCardDescription = styled.div`
 
 //訂閱方案 卡片描述 項目
 export const PlanCardDescriptionItem = styled.p`
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
 `;
 
-//訂閱方案 卡片按鈕容器
+////訂閱方案 卡片按鈕容器
 export const PlanButtons = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -160,15 +181,17 @@ export const PlanButtons = styled.div`
 
 //訂閱方案 卡片按鈕
 export const PlanButton = styled.button`
-  background-color: var(--color-gray-300);
+  background-color: var(--color-primary);
   color: var(--color-gray-0);
   border-radius: var(--border-radius-round);
   font-size: var(--font-size-sm);
+
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-sm);
-  width: 50%;
+  width: 35%;
+
   padding: var(--spacing-12) 0;
 
   &:hover {

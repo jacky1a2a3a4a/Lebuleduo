@@ -34,7 +34,7 @@ const HeaderWrapper = styled.div`
 // Header 容器
 const HeaderContainer = styled.header`
   background-color: var(--color-primary);
-  padding: 1.2rem 1.5rem;
+  padding: var(--spacing-12) var(--spacing-md);
   display: grid;
   grid-template-columns: auto 1.75fr 1fr;
   align-items: center;

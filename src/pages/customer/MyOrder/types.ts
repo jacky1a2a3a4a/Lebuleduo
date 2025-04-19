@@ -6,6 +6,7 @@ export interface StyledProps {
   $step?: number; // 步驟數字
   $progress?: number; // 進度百分比
   $position?: number; // 位置數值
+  $primary?: boolean; // 是否為主色調
 }
 
 // 收運步驟類型
@@ -35,7 +36,7 @@ export interface ApiTodayOrder {
   number: string;
   name: string;
   date: string;
-  status: '未完成' | '前往中' | '已完成' | '異常回報' | '已取消';
+  status: '未排定' | '已排定' | '前往中' | '已抵達' | '已完成' | '異常' ;
 }
 
 // API 返回的當前訂單類型
@@ -45,7 +46,7 @@ export interface ApiCurrentOrder {
   PlanName: string;
   PlanKG: number;
   Liter: number;
-  OrderImageUrl: string[];
+  Photos: string[];
   StartDate: string;
   EndDate: string;
   WeekDay: string;
@@ -62,7 +63,7 @@ export interface ApiCompletedOrder {
   PlanName: string;
   PlanKG: number;
   Liter: number;
-  OrderImageUrl: string[];
+  Photos: string[];
   StartDate: string;
   EndDate: string;
   WeekDay: string;

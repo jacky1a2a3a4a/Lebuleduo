@@ -1,4 +1,4 @@
-import { IoMdCart, IoMdCheckmarkCircleOutline } from 'react-icons/io';
+import { MdAddShoppingCart, MdOutlineTaskAlt } from 'react-icons/md';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -15,6 +15,7 @@ import {
   ContentText,
   ContentMainText,
   ContentSubText,
+  PlanCardListContainer,
   PlanCard,
   PlanCardHeader,
   PlanCardTitle,
@@ -107,7 +108,7 @@ const Plan = () => {
           <PlanDescriptionContent>
             <ContentItem>
               <IconCheckedStyled>
-                <IoMdCheckmarkCircleOutline />
+                <MdOutlineTaskAlt />
               </IconCheckedStyled>
               <ContentText>
                 <ContentMainText>大包小包一次搞定</ContentMainText>
@@ -119,7 +120,7 @@ const Plan = () => {
 
             <ContentItem>
               <IconCheckedStyled>
-                <IoMdCheckmarkCircleOutline />
+                <MdOutlineTaskAlt />
               </IconCheckedStyled>
               <ContentText>
                 <ContentMainText>每週收運自由選</ContentMainText>
@@ -131,7 +132,7 @@ const Plan = () => {
 
             <ContentItem>
               <IconCheckedStyled>
-                <IoMdCheckmarkCircleOutline />
+                <MdOutlineTaskAlt />
               </IconCheckedStyled>
               <ContentText>
                 <ContentMainText>line即時提醒</ContentMainText>
@@ -144,48 +145,50 @@ const Plan = () => {
         </PlanDescription>
 
         {/* 方案卡片列表 */}
-        {plans.map((plan, index) => {
-          // 使用解構賦值簡化plan對象的處理
-          const {
-            PlanID,
-            PlanName,
-            Liter,
-            Price,
-            PlanKG,
-            PlanDescription,
-            PlanPeople,
-          } = plan;
+        <PlanCardListContainer>
+          {plans.map((plan, index) => {
+            // 使用解構賦值簡化plan對象的處理
+            const {
+              PlanID,
+              PlanName,
+              Liter,
+              Price,
+              PlanKG,
+              PlanDescription,
+              PlanPeople,
+            } = plan;
 
-          return (
-            <PlanCard key={PlanID || index}>
-              <PlanCardHeader>
-                <PlanCardTitle>
-                  {PlanName || '錯誤'} ({PlanPeople || '錯誤'})
-                </PlanCardTitle>
-                <PlanCardPrice>NT$ {Price || '錯誤'}起/月</PlanCardPrice>
-              </PlanCardHeader>
-              <Divider />
-              <PlanCardDescription>
-                <PlanCardDescriptionItem>
-                  ．每次收運: 一般垃圾 + 回收 + 廚餘 = {Liter || '錯誤'}公升 /{' '}
-                  {PlanKG || '錯誤'}公斤
-                </PlanCardDescriptionItem>
-                <PlanCardDescriptionItem>
-                  ．{PlanDescription || '錯誤'}
-                </PlanCardDescriptionItem>
-              </PlanCardDescription>
+            return (
+              <PlanCard key={PlanID || index}>
+                <PlanCardHeader>
+                  <PlanCardTitle>
+                    {PlanName || '錯誤'} ({PlanPeople || '錯誤'})
+                  </PlanCardTitle>
+                  <PlanCardPrice>NT$ {Price || '錯誤'}起/月</PlanCardPrice>
+                </PlanCardHeader>
+                <Divider />
+                <PlanCardDescription>
+                  <PlanCardDescriptionItem>
+                    ．每次收運: 一般垃圾 + 回收 + 廚餘 = {Liter || '錯誤'}公升 /{' '}
+                    {PlanKG || '錯誤'}公斤
+                  </PlanCardDescriptionItem>
+                  <PlanCardDescriptionItem>
+                    ．{PlanDescription || '錯誤'}
+                  </PlanCardDescriptionItem>
+                </PlanCardDescription>
 
-              <PlanButtons>
-                <PlanButton onClick={() => handleSubscribe(plan)}>
-                  <IconStyled>
-                    <IoMdCart />
-                  </IconStyled>
-                  立即預訂
-                </PlanButton>
-              </PlanButtons>
-            </PlanCard>
-          );
-        })}
+                <PlanButtons>
+                  <PlanButton onClick={() => handleSubscribe(plan)}>
+                    <IconStyled>
+                      <MdAddShoppingCart />
+                    </IconStyled>
+                    立即預訂
+                  </PlanButton>
+                </PlanButtons>
+              </PlanCard>
+            );
+          })}
+        </PlanCardListContainer>
       </PlanContainer>
     </PlanSectionStyled>
   );

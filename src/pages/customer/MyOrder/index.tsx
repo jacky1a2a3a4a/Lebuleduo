@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HiTruck, HiExclamationCircle } from 'react-icons/hi2';
+import { MdError } from 'react-icons/md';
+import dogImage from '../../../assets/Lebuledou_lying.png';
+import dogTruckImage from '../../../assets/Lebuledou_truck.png';
 import {
   OrderStep,
   TabType,
@@ -15,15 +17,15 @@ import {
   UserGreeting,
   UserCardItem,
   UserCardTitle,
-  UserTextItem,
-  UserCardContent,
-  OrderStatus,
-  Blank,
+  UserCardButton,
+  ImageContainer,
+  DogImage,
   ProgressBarSection,
   BackgroundContainer,
   ProgressBarContainer,
   ProgressBarFill,
-  TruckIcon,
+  ProgressDotContainer,
+  DogTruckImage,
   ProgressDot,
   ProgressStatus,
   ProgressItem,
@@ -45,6 +47,9 @@ import {
   OrderCardDetail,
 } from './styled';
 
+// 虛擬機URL
+const BASE_URL = 'http://lebuleduo.rocket-coding.com';
+
 // 組件本體
 function MyOrder() {
   const navigate = useNavigate();
@@ -52,28 +57,40 @@ function MyOrder() {
   const userName = userData.displayName || '尊貴的會員';
   const userId = localStorage.getItem('UsersID'); // 從localStorage獲取用戶ID
 
+  // 根據時間返回問候語
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) {
+      return '早安';
+    } else if (hour >= 12 && hour < 18) {
+      return '午安';
+    } else {
+      return '晚安';
+    }
+  };
+
   // 使用者今日數據狀態
   const [todayData, setTodayData] = useState<ApiTodayOrder | null>(null);
-  const todayDataStatus = todayData?.status || '未完成'; // 如果沒有數據，默認為'未完成'
+  const todayDataStatus = todayData?.status || '已抵達'; // 如果沒有數據，默認為'前往中'
 
   // 根據狀態設定 currentStep
   let currentStep = 0;
-  if (todayDataStatus === '未完成') {
+  if (todayDataStatus === '前往中') {
     currentStep = 0;
-  } else if (todayDataStatus === '前往中') {
+  } else if (todayDataStatus === '已抵達') {
     currentStep = 1;
   } else if (todayDataStatus === '已完成') {
     currentStep = 2;
   }
 
-  //// 收運進度條 步驟
-  // 計算進度百分比，由於有3個步驟(0-2)，所以除以2
-  const progress = (currentStep / 2) * 100;
+  // 收運進度條 步驟
+  // 計算進度百分比，根據 currentStep 的值 (0, 1, 2) 轉換為 (0%, 50%, 100%)
+  const progress = currentStep * 50;
 
   // 收運進度條
   const orderSteps: OrderStep[] = [
-    { label: '未完成', position: 0 },
-    { label: '前往中', position: 50 },
+    { label: '前往中', position: 0 },
+    { label: '已抵達', position: 50 },
     { label: '已完成', position: 100 },
   ];
 
@@ -104,6 +121,7 @@ function MyOrder() {
     const fetchOrders = async () => {
       try {
         setIsLoading(true);
+        setError(null);
 
         // API使用代理路徑
         const userTodayAPI_Path = `/api/GET/user/dashboard/today/${userId}`;
@@ -113,97 +131,86 @@ function MyOrder() {
         // 分別調用API獲取數據
         // 使用者今日數據
         const userTodayResponse = await fetch(userTodayAPI_Path);
-
         if (!userTodayResponse.ok) {
           throw new Error(`使用者今日API請求失敗：${userTodayResponse.status}`);
         }
-        const TodayData = (await userTodayResponse.json()) as {
-          statusCode: number;
-          status: boolean;
-          message: string;
-          result: ApiTodayOrder;
-        };
-        console.log('使用者今日數據:', TodayData);
+        const TodayData = await userTodayResponse.json();
+        if (!TodayData || !TodayData.result) {
+          throw new Error('使用者今日數據格式錯誤');
+        }
         setTodayData(TodayData.result);
+        console.log('使用者今日數據:', TodayData.result);
 
-        // 當前訂單數據
+        // 當前方案數據
         const currentResponse = await fetch(currentOrdersAPI_Path);
         if (!currentResponse.ok) {
           throw new Error(`當前訂單API請求失敗：${currentResponse.status}`);
         }
-        const currentData = (await currentResponse.json()) as {
-          statusCode: number;
-          status: boolean;
-          message: string;
-          result: ApiCurrentOrder[];
-        };
-        console.log('當前訂單數據:', currentData);
-
-        if (currentData.status && currentData.result.length > 0) {
+        const currentData = await currentResponse.json();
+        if (!currentData || !currentData.result) {
+          setCurrentOrders([]);
+        } else if (Array.isArray(currentData.result)) {
           setCurrentOrders(currentData.result);
         }
+        console.log('當前方案數據:', currentData.result);
 
-        // 結束訂單數據
+        // 已結束方案數據
         const completedResponse = await fetch(completedOrdersAPI_Path);
         if (!completedResponse.ok) {
           throw new Error(`已完成訂單API請求失敗：${completedResponse.status}`);
         }
-        const completedData = (await completedResponse.json()) as {
-          statusCode: number;
-          status: boolean;
-          message: string;
-          result: ApiCompletedOrder[];
-        };
-        console.log('已完成訂單數據:', completedData);
-        if (completedData.status && completedData.result.length > 0) {
+        const completedData = await completedResponse.json();
+        if (!completedData || !completedData.result) {
+          setCompletedOrders([]);
+        } else if (Array.isArray(completedData.result)) {
           setCompletedOrders(completedData.result);
         }
+        console.log('已完成方案數據:', completedData.result);
 
-        // 如果兩種訂單都沒有數據
-        if (
-          (!currentData.status || currentData.result.length === 0) &&
-          (!completedData.status || completedData.result.length === 0)
-        ) {
-          setError('沒有獲取到訂單數據');
+        // 檢查是否有任何訂單數據
+        const hasCurrentOrders =
+          Array.isArray(currentData?.result) && currentData.result.length > 0;
+        const hasCompletedOrders =
+          Array.isArray(completedData?.result) &&
+          completedData.result.length > 0;
+
+        if (!hasCurrentOrders && !hasCompletedOrders) {
+          setError('目前沒有訂單數據');
         }
       } catch (err) {
         console.error('獲取訂單數據失敗:', err);
-        setError('獲取訂單數據失敗，請稍後再試');
+        setError(
+          err instanceof Error ? err.message : '獲取訂單數據失敗，請稍後再試',
+        );
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchOrders();
-  }, []);
+  }, [userId]);
 
   return (
     <MyOrderSectionStyled>
       <UserCardSection>
+        {/* 使用者資訊 */}
         <UserCard>
-          <UserGreeting>您好，{userName}</UserGreeting>
+          <UserGreeting>
+            {getGreeting()}，{userName}
+          </UserGreeting>
 
           <UserCardItem>
-            <UserCardTitle>
-              <UserTextItem>
-                {currentOrders.length > 0
-                  ? currentOrders[0].NextServiceDate
-                  : '無安排收運日期'}
-              </UserTextItem>
-            </UserCardTitle>
-            <UserCardContent>10:00 - 11:00</UserCardContent>
+            <UserCardTitle>今日任務</UserCardTitle>
+            <UserCardButton>查看詳情</UserCardButton>
           </UserCardItem>
 
-          <UserCardItem>
-            <UserCardTitle>
-              <UserTextItem>訂單狀態</UserTextItem>
-            </UserCardTitle>
-            <UserCardContent>
-              <OrderStatus>{todayData?.status || '錯誤'}</OrderStatus>
-            </UserCardContent>
-          </UserCardItem>
+          <UserCardItem></UserCardItem>
         </UserCard>
-        <Blank />
+
+        {/* 狗圖 */}
+        <ImageContainer>
+          <DogImage src={dogImage} alt="趴趴狗" />
+        </ImageContainer>
       </UserCardSection>
 
       <ProgressBarSection>
@@ -213,20 +220,22 @@ function MyOrder() {
             {/* 進度條填充 */}
             <ProgressBarFill $progress={progress} />
 
-            {/* 進度圖標 */}
-            <TruckIcon $step={currentStep}>
-              <HiTruck />
-            </TruckIcon>
-
             {/* 進度點 */}
-            {orderSteps.map((step, index) => (
-              <ProgressDot
-                key={index}
-                $position={step.position}
-                $isActive={index === currentStep}
-                $isPassed={index < currentStep}
+            <ProgressDotContainer>
+              <DogTruckImage
+                src={dogTruckImage}
+                alt="狗車"
+                $progress={progress}
               />
-            ))}
+              {orderSteps.map((step, index) => (
+                <ProgressDot
+                  key={index}
+                  $position={step.position}
+                  $isActive={index === currentStep}
+                  $isPassed={index < currentStep}
+                />
+              ))}
+            </ProgressDotContainer>
           </ProgressBarContainer>
 
           {/* 進度文字 */}
@@ -289,7 +298,7 @@ function MyOrder() {
                       PlanName,
                       PlanKG,
                       Liter,
-                      OrderImageUrl,
+                      Photos,
                       RemainingCount,
                       StartDate,
                       EndDate,
@@ -303,14 +312,14 @@ function MyOrder() {
                       >
                         <OrderCardLayout>
                           <OrderPhotoContainer>
-                            {OrderImageUrl && OrderImageUrl.length > 0 ? (
+                            {Photos && Photos.length > 0 ? (
                               <OrderPhotoImage
-                                src={OrderImageUrl[0]}
+                                src={`${BASE_URL}${Photos[0]}`}
                                 alt="訂單商品"
                               />
                             ) : (
                               <OrderPhoto>
-                                <HiExclamationCircle />
+                                <MdError />
                               </OrderPhoto>
                             )}
                           </OrderPhotoContainer>
@@ -321,35 +330,31 @@ function MyOrder() {
                             </OrderCardTitle>
                             <OrderCardItems>
                               <OrderCardItem>
-                                <OrderCardSubtitle>下次收運</OrderCardSubtitle>
-                                <OrderCardDetail>
+                                <OrderCardSubtitle $primary>
+                                  下次收運
+                                </OrderCardSubtitle>
+                                <OrderCardDetail $primary>
                                   {NextServiceDate}
                                 </OrderCardDetail>
                               </OrderCardItem>
 
                               <OrderCardItem>
-                                <OrderCardSubtitle>剩餘次數</OrderCardSubtitle>
-                                <OrderCardDetail>
+                                <OrderCardSubtitle $primary>
+                                  剩餘次數
+                                </OrderCardSubtitle>
+                                <OrderCardDetail $primary>
                                   {RemainingCount}
                                 </OrderCardDetail>
                               </OrderCardItem>
 
                               <OrderCardItem>
-                                <OrderCardSubtitle $light>
-                                  開始時間
-                                </OrderCardSubtitle>
-                                <OrderCardDetail $light>
-                                  {StartDate}
-                                </OrderCardDetail>
+                                <OrderCardSubtitle>開始時間</OrderCardSubtitle>
+                                <OrderCardDetail>{StartDate}</OrderCardDetail>
                               </OrderCardItem>
 
                               <OrderCardItem>
-                                <OrderCardSubtitle $light>
-                                  結束時間
-                                </OrderCardSubtitle>
-                                <OrderCardDetail $light>
-                                  {EndDate}
-                                </OrderCardDetail>
+                                <OrderCardSubtitle>結束時間</OrderCardSubtitle>
+                                <OrderCardDetail>{EndDate}</OrderCardDetail>
                               </OrderCardItem>
                             </OrderCardItems>
                           </OrderCardData>
@@ -362,17 +367,16 @@ function MyOrder() {
                     無當前訂單
                   </div>
                 )
-              ) : // 顯示已完成訂單
+              ) : // 顯示已結束方案
               completedOrders.length > 0 ? (
                 completedOrders.map((completedOrder) => {
                   // 使用解構賦值提取需要的屬性
                   const {
                     OrdersID,
-
                     PlanName,
                     Liter,
                     PlanKG,
-                    OrderImageUrl,
+                    Photos,
                     StartDate,
                     EndDate,
                   } = completedOrder;
@@ -392,17 +396,18 @@ function MyOrder() {
                     <OrderCard
                       key={OrdersID}
                       onClick={() => handleOrderDetailClick(OrdersID)}
+                      $isCompleted={true}
                     >
                       <OrderCardLayout>
                         <OrderPhotoContainer>
-                          {OrderImageUrl && OrderImageUrl.length > 0 ? (
+                          {Photos && Photos.length > 0 ? (
                             <OrderPhotoImage
-                              src={OrderImageUrl[0]}
+                              src={`${BASE_URL}${Photos[0]}`}
                               alt="訂單商品"
                             />
                           ) : (
                             <OrderPhoto>
-                              <HiExclamationCircle />
+                              <MdError />
                             </OrderPhoto>
                           )}
                         </OrderPhotoContainer>
@@ -417,11 +422,6 @@ function MyOrder() {
                               <OrderCardDetail>
                                 {lastPickupDate}
                               </OrderCardDetail>
-                            </OrderCardItem>
-
-                            <OrderCardItem>
-                              <OrderCardSubtitle>訂單狀態</OrderCardSubtitle>
-                              <OrderCardDetail>已完成</OrderCardDetail>
                             </OrderCardItem>
 
                             <OrderCardItem>

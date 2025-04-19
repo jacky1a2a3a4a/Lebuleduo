@@ -25,6 +25,10 @@ import Subscribe from './pages/customer/Subscribe';
 import SubscribeData from './pages/customer/SubscribeData';
 import SubscribeCheckout from './pages/customer/SubscribeCheckout';
 import SubscribeSuccess from './pages/customer/SubscribeSuccess';
+import OrderEdit from './pages/customer/OrderEdit';
+import FinishedTask from './pages/customer/OrderTaskStatus/FinishedTask';
+
+import LoadingMessage from './components/common/LoadingMessage';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -45,7 +49,7 @@ import Calendar from './pages/deliver/Calendar';
 // const CheckoutUserData = () => <div>使用者數據頁面</div>;
 // const CheckoutPayment = () => <div>支付頁面</div>;
 // const CheckoutSuccess = () => <div>支付成功頁面</div>;
-const Account = () => <div>帳戶頁面</div>;
+// const Account = () => <div>帳戶頁面</div>;
 const ContactUs = () => <div>聯絡我們</div>;
 const PageNotFound = () => <div>404 - 頁面未找到</div>;
 
@@ -98,7 +102,7 @@ const AppContent = () => {
         <Route index element={<Navigate to="/customer/my-order" replace />} />
         <Route path="my-order" element={<MyOrder />} />
         <Route path="Plan" element={<Plan />} />
-        <Route path="account" element={<Account />} />
+        <Route path="account" element={<LoadingMessage />} />
         <Route path="contact-us" element={<ContactUs />} />
       </Route>
 
@@ -108,6 +112,16 @@ const AppContent = () => {
         element={
           <ProtectedRoute role="customer">
             <OrderDetail />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 編輯訂單資料 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order/:orderId/edit"
+        element={
+          <ProtectedRoute role="customer">
+            <OrderEdit />
           </ProtectedRoute>
         }
       />
@@ -134,7 +148,7 @@ const AppContent = () => {
 
       {/* 訂閱結帳 - 獨立路由，不使用 CustomerLayout */}
       <Route
-        path="/customer/Subscribe-checkout"
+        path="/customer/subscribe-checkout"
         element={
           <ProtectedRoute role="customer">
             <SubscribeCheckout />
@@ -143,7 +157,24 @@ const AppContent = () => {
       />
 
       {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
-      <Route path="/customer/SubscribeSuccess" element={<SubscribeSuccess />} />
+      <Route
+        path="/customer/subscribe-success"
+        element={
+          <ProtectedRoute role="customer">
+            <SubscribeSuccess />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 已結束任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-task/finished-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <FinishedTask />
+          </ProtectedRoute>
+        }
+      />
 
       {/* DOG路由 */}
       <Route

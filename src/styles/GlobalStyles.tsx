@@ -50,8 +50,10 @@ const GlobalStyles = createGlobalStyle`
   /* 垃不垃多配色 */
   --color-white: #FFFFFF;
 
-  --color-background-Primary: #FFFFFF;
-  --color-background-Secondary: #F8FAFF;
+  --color-background-primary: #FFFFFF;
+  --color-background-secondary: #F8FAFF;
+
+  --color-background-secondary-hover: #F0F4FF;
 
   --color-primary: #445DB3;
   --color-secondary: #A2AED9;
@@ -60,10 +62,11 @@ const GlobalStyles = createGlobalStyle`
   --color-primary-hover: #334D99;
   --color-secondary-hover: #8090B2;
   --color-tertiary-hover: #E6C26D;
+  
 
   --color-text-primary: #1F2A52;
   --color-text-secondary: #323232;
-  --color-text-tertiary: #757575;
+  --color-text-tertiary: #7B7B7B;
   --color-text-disabled: #BDBDBD; 
 
   --color-neutral-600: #757575;
@@ -72,8 +75,8 @@ const GlobalStyles = createGlobalStyle`
   --color-neutral-300: #E0E0E0;
   --color-neutral-200: #EEEEEE;
 
-  --color-error: #FFE5CE;
-  --color-error-hover: #D99292;
+  --color-error: #D99292;
+  --color-background-error: #FFF4EB;
 
   /* For dark mode */
   --image-grayscale: 0;
@@ -89,6 +92,7 @@ const GlobalStyles = createGlobalStyle`
   --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
    /* 字體大小 */
+  --font-size-xxs: 0.625rem;   /* 10px */
   --font-size-xs: 0.75rem;   /* 12px */
   --font-size-sm: 0.875rem;  /* 14px */
   --font-size-md: 1rem;    /* 16px */
@@ -125,8 +129,8 @@ const GlobalStyles = createGlobalStyle`
   --border-radius-round: 9999px;  
 
   /* RWD */
-  --min-width-mobile: 402px;  /* iphone 16 pro */
-  --min-width-mobile-plus: 403px;
+  --mobile-min-width: 402px;  /* iphone 16 pro */
+  --mobile-min-width-plus: 403px;
 }
 
 html {
@@ -157,7 +161,7 @@ html,body {
 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
-  line-height: 1.2;
+  line-height: 1.5;
   font-size: 16px;
   font-weight: var(--font-weight-normal);
 }
