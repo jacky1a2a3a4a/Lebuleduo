@@ -200,16 +200,15 @@ export const OrderListSection = styled.div`
 
 // === 收運列表 標籤容器 ===
 export const TabContainer = styled.div`
+  background-color: var(--color-background-secondary);
   display: flex;
   gap: var(--spacing-sm);
-  padding: var(--spacing-sm) 0 var(--spacing-xs);
-  overflow-x: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  padding: var(--spacing-sm) 0 var(--spacing-md);
+
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: var(--color-background-secondary);
+  overflow-x: auto;
 
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
