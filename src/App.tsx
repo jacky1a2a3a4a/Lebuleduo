@@ -26,6 +26,7 @@ import SubscribeData from './pages/customer/SubscribeData';
 import SubscribeCheckout from './pages/customer/SubscribeCheckout';
 import SubscribeSuccess from './pages/customer/SubscribeSuccess';
 import OrderEdit from './pages/customer/OrderEdit';
+import FinishedTask from './pages/customer/OrderTaskStatus/FinishedTask';
 
 import LoadingMessage from './components/common/LoadingMessage';
 
@@ -158,7 +159,21 @@ const AppContent = () => {
       {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
       <Route
         path="/customer/subscribe-success"
-        element={<SubscribeSuccess />}
+        element={
+          <ProtectedRoute role="customer">
+            <SubscribeSuccess />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 已結束任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-task/finished-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <FinishedTask />
+          </ProtectedRoute>
+        }
       />
 
       {/* DOG路由 */}

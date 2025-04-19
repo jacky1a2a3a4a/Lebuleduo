@@ -17,7 +17,6 @@ export const BackButton = styled.button`
   cursor: pointer;
 `;
 
-
 export const PageTitle = styled.div`
   color: var(--color-white);
 

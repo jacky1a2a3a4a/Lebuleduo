@@ -17,9 +17,8 @@ const OrderNavHeader = ({ title, orderNumber }: OrderNavHeaderProps) => {
   return (
     <NavHeader>
       <BackButton onClick={handleBack}>
-  
-          <HiChevronLeft />
-      
+        <HiChevronLeft />
+
         <PageTitle>{title}</PageTitle>
       </BackButton>
       {orderNumber && <OrderID>訂單編號: {orderNumber}</OrderID>}

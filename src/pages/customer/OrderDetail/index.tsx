@@ -37,8 +37,12 @@ const BASE_URL = 'http://lebuleduo.rocket-coding.com';
 
 function OrderDetail() {
   const navigate = useNavigate();
-  const { orderId } = useParams<{ orderId: string }>();
+  const { orderId, orderDetailId } = useParams<{
+    orderId: string;
+    orderDetailId: string;
+  }>();
   const [orderData, setOrderData] = useState(null);
+  const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('全部');
@@ -64,6 +68,16 @@ function OrderDetail() {
         console.log('訂單詳情數據：', data.result[0]);
         console.log('OrderDetail 數據：', data.result[0].OrderDetails);
         setOrderData(data.result[0]);
+
+        // 如果有 orderDetailId，找到對應的訂單詳情
+        if (orderDetailId) {
+          const detail = data.result[0].OrderDetails.find(
+            (detail) => detail.OrderDetailID.toString() === orderDetailId,
+          );
+          if (detail) {
+            setSelectedOrderDetail(detail);
+          }
+        }
       } else {
         console.error('API 回傳錯誤：', data.message);
         setError(data.message);
@@ -74,7 +88,7 @@ function OrderDetail() {
     } finally {
       setIsLoading(false);
     }
-  }, [orderId]);
+  }, [orderId, orderDetailId]);
 
   // 馬上載入訂單數據
   useEffect(() => {
@@ -96,6 +110,44 @@ function OrderDetail() {
   // 沒有找到訂單數據
   if (!orderData) {
     return <EmptyMessage>沒有找到訂單數據</EmptyMessage>;
+  }
+
+  // 如果有選中的訂單詳情，顯示該詳情的資訊
+  if (selectedOrderDetail) {
+    return (
+      <OrderDetailContainer>
+        <OrderNavHeader title="訂單詳情" orderNumber={orderData.OrderNumber} />
+        <ContentArea>
+          <OrderCard>
+            <CardHeader>
+              <OrderTitle>
+                {orderData.PlanName} {orderData.Liter}L/{orderData.PlanKG}kg
+              </OrderTitle>
+            </CardHeader>
+            <DetailList>
+              <DetailItem>
+                <DetailLabel>服務日期</DetailLabel>
+                <DetailValue>{selectedOrderDetail.ServiceDate}</DetailValue>
+              </DetailItem>
+              <DetailItem>
+                <DetailLabel>狀態</DetailLabel>
+                <DetailValue>{selectedOrderDetail.Status}</DetailValue>
+              </DetailItem>
+              <DetailItem>
+                <DetailLabel>司機抵達時間</DetailLabel>
+                <DetailValue>
+                  {selectedOrderDetail.DriverTime || '未設定'}
+                </DetailValue>
+              </DetailItem>
+              <DetailItem>
+                <DetailLabel>重量</DetailLabel>
+                <DetailValue>{selectedOrderDetail.KG || '未記錄'}</DetailValue>
+              </DetailItem>
+            </DetailList>
+          </OrderCard>
+        </ContentArea>
+      </OrderDetailContainer>
+    );
   }
 
   // 分離不同狀態的訂單

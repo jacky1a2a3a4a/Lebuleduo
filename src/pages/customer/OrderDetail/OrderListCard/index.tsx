@@ -32,8 +32,8 @@ type OrderListCardProps = {
   date: string;
   time: string;
   status: string;
-  orderDetailId: number;
   ordersId: number;
+  orderDetailId: number;
   usersId: number;
   onDateModified?: () => void; // 添加新的屬性
 };
@@ -43,8 +43,8 @@ function OrderListCard({
   date,
   time,
   status,
-  orderDetailId,
   ordersId,
+  orderDetailId,
   usersId,
   onDateModified,
 }: OrderListCardProps) {
@@ -99,9 +99,34 @@ function OrderListCard({
     }
   };
 
-  // 處理卡片點擊（導向訂單狀態頁面）
+  // 處理卡片點擊（根據狀態導向不同頁面）
   const handleCardClick = () => {
-    navigate(`/customer/order-status/${orderDetailId}`);
+    const currentStatus = getCurrentStatus();
+
+    switch (currentStatus) {
+      case 'abnormal':
+        navigate(
+          `/customer/order-task/abnormal-task/${ordersId}/${orderDetailId}`,
+        );
+        break;
+      case 'active':
+      case 'ongoing':
+      case 'arrived':
+        navigate(
+          `/customer/order-task/scheduled-task/${ordersId}/${orderDetailId}`,
+        );
+        break;
+      case 'normal':
+        navigate(
+          `/customer/order-task/unscheduled-task/${ordersId}/${orderDetailId}`,
+        );
+        break;
+      case 'finished':
+        navigate(
+          `/customer/order-task/finished-task/${ordersId}/${orderDetailId}`,
+        );
+        break;
+    }
   };
 
   // 處理按鈕點擊（修改預約）
