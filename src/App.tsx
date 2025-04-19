@@ -26,6 +26,7 @@ import SubscribeData from './pages/customer/SubscribeData';
 import SubscribeCheckout from './pages/customer/SubscribeCheckout';
 import SubscribeSuccess from './pages/customer/SubscribeSuccess';
 import OrderEdit from './pages/customer/OrderEdit';
+import AbnormalTask from './pages/customer/OrderTaskStatus/AbnormalTask';
 import ScheduledTask from './pages/customer/OrderTaskStatus/ScheduledTask';
 import UnScheduledTask from './pages/customer/OrderTaskStatus/unScheduledTask';
 import FinishedTask from './pages/customer/OrderTaskStatus/FinishedTask';
@@ -163,6 +164,16 @@ const AppContent = () => {
         element={
           <ProtectedRoute role="customer">
             <SubscribeSuccess />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 異常任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-task/abnormal-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <AbnormalTask />
           </ProtectedRoute>
         }
       />
