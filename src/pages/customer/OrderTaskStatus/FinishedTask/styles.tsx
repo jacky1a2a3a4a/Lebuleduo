@@ -1,28 +1,6 @@
 import styled from 'styled-components';
 import { HiOutlineCheckCircle } from 'react-icons/hi2';
 
-// ===最外層 大容器===
-export const ContainerStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  margin: 0 auto;
-  width: var(--mobile-min-width);
-  height: 100vh;
-  overflow: hidden;
-`;
-
-// ===任務區塊===
-export const TaskContainer = styled.div`
-  background-color: var(--color-background-secondary);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-
-  padding: var(--spacing-md);
-`;
-
-
 export const StatusCard = styled.div`
   background-color: var(--color-white);
   border-radius: var(--border-radius-lg);
@@ -109,7 +87,6 @@ export const OrderListCardContainer = styled.div<{ $status: string }>`
   margin-bottom: var(--spacing-md);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
-
 
 export const CardItem = styled.div`
   display: flex;

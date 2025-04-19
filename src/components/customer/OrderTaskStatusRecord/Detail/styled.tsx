@@ -2,8 +2,6 @@ import styled from 'styled-components';
 
 // ===詳細列表===
 export const DetailList = styled.div`
-  border-bottom: 1px solid var(--color-neutral-300);
-
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
