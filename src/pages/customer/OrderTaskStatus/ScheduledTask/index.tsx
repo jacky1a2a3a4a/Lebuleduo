@@ -2,16 +2,15 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import { ContainerStyled } from '../../../../components/customer/OrderTaskStatusContainer/ContainerStyled'; //容器樣式
-import { TaskContainer } from '../../../../components/customer/OrderTaskStatusContainer/TaskContainer'; //任務區塊
-import OrderNavHeader from '../../../../components/customer/OrderNavHeader'; //導航標題
-import OrderTaskStatusCard from '../../../../components/customer/OrderTaskStatusCard'; //訂單任務詳情卡片
-import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTaskStatusRecord/Title'; //收運紀錄標題
-import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container'; //收運紀錄容器
-import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail'; //收運紀錄詳情
-import Loading from '../../../../components/common/LoadingMessage'; //加載中
-
-import { Notification, NotificationText } from './styles';
+import { ContainerStyled } from '../../../../components/customer/OrderTaskStatusContainer/ContainerStyled/index.tsx'; //容器樣式
+import { TaskContainer } from '../../../../components/customer/OrderTaskStatusContainer/TaskContainer/index.tsx'; //任務區塊
+import OrderNavHeader from '../../../../components/customer/OrderNavHeader/index.tsx'; //導航標題
+import OrderTaskStatusCard from '../../../../components/customer/OrderTaskStatusCard/index.tsx'; //訂單任務詳情卡片
+import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTaskStatusRecord/Title/index.tsx'; //收運紀錄標題
+import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container/index.tsx'; //收運紀錄容器
+import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail/index.tsx'; //收運紀錄詳情
+import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
+import Loading from '../../../../components/common/LoadingMessage/index.tsx'; //加載中
 
 // 訂單詳情
 interface OrderDetail {
@@ -45,7 +44,7 @@ interface OrderTaskDetail {
   CompletedAt: string | null;
 }
 
-function UnScheduledTask() {
+function FinishedTask() {
   const userId = localStorage.getItem('UsersID'); //獲取使用者ID
   const { orderId, orderDetailId } = useParams(); //從URL獲取訂單ID
 
@@ -83,14 +82,11 @@ function UnScheduledTask() {
         );
         setOrderTaskDetail(orderTaskDetailData);
         console.log('OrderTaskDetail 訂單任務詳情：', orderTaskDetailData);
-        console.log('Status:', orderTaskDetailData?.Status);
-        console.log('ServiceDate:', orderTaskDetailData?.ServiceDate);
-        console.log('DriverTime:', orderTaskDetailData?.DriverTime);
 
-        // ===設定任務狀態===
+        // 更新相關狀態
         setStatus(orderTaskDetailData?.Status || '錯誤');
         setDate(orderTaskDetailData?.ServiceDate || '錯誤');
-        setTime(orderTaskDetailData?.DriverTime || '-');
+        setTime(orderTaskDetailData?.DriverTime || '錯誤');
 
         setLoading(false);
       } catch (error) {
@@ -123,9 +119,6 @@ function UnScheduledTask() {
     return <div>找不到訂單詳情</div>;
   }
 
-  // 訂單號
-  const orderNumber = orderDetail?.OrderNumber;
-
   // 方案詳情紀錄
   const recordDetails = [
     {
@@ -139,31 +132,46 @@ function UnScheduledTask() {
     { label: '備註', value: orderDetail.Notes },
   ];
 
+  // 收運紀錄步驟
+  const steps = [
+    {
+      title: '前往中',
+      time: orderTaskDetail?.OngoingAt || '尚未前往',
+      isCompleted: !!orderTaskDetail?.OngoingAt,
+    },
+    {
+      title: '已抵達',
+      time: orderTaskDetail?.ArrivedAt || '尚未抵達',
+      isCompleted: !!orderTaskDetail?.ArrivedAt,
+    },
+    {
+      title: '已完成',
+      time: orderTaskDetail?.CompletedAt || '尚未完成',
+      isCompleted: !!orderTaskDetail?.CompletedAt,
+      isLast: true,
+    },
+  ];
+
   return (
     <ContainerStyled>
       {/* 導航標題 */}
-      <OrderNavHeader title="未排定任務" orderNumber={orderNumber} />
+      <OrderNavHeader
+        title="已結束任務"
+        orderNumber={orderDetail?.OrderNumber || '未知訂單號'}
+      />
 
       <TaskContainer>
         {/* 訂單任務詳情 */}
         <OrderTaskStatusCard status={status} date={date} time={time} />
+
         <OrderTaskStatusRecordTitle title="收運紀錄" />
         <OrderTaskStatusRecordContainer>
           <OrderTaskStatusRecordDetail details={recordDetails} />
+          <OrderTaskStatusRecordStatus steps={steps} />
         </OrderTaskStatusRecordContainer>
-
-        <Notification>
-          <NotificationText>
-            ※ 溫馨提醒：
-            <br />
-            ．如需修改預約，請於48小時前完成修改。
-            <br />
-            ．訂單僅能修改預約日期，收運時間將由本公司安排。
-          </NotificationText>
-        </Notification>
       </TaskContainer>
     </ContainerStyled>
   );
 }
 
-export default UnScheduledTask;
+export default FinishedTask;

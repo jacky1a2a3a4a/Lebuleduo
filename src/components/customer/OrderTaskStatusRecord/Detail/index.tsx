@@ -1,12 +1,12 @@
 import { DetailList, DetailItem, Label, Value } from './styled';
 
-interface DetailItem {
+interface DetailItemData {
   label: string;
   value: string;
 }
 
 interface OrderTaskStatusRecordDetailProps {
-  details: DetailItem[];
+  details: DetailItemData[];
 }
 
 const OrderTaskStatusRecordDetail = ({

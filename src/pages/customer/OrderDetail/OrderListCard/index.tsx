@@ -192,7 +192,7 @@ function OrderListCard({
         </CardItems>
 
         {!canModify() && currentStatus === 'normal' && (
-          <ErrorText>※ 已超過可修改時間（需在兩天前修改）</ErrorText>
+          <ErrorText>※ 已超過可修改時間（請於48小時前完成修改）</ErrorText>
         )}
       </OrderListCardContainer>
 

@@ -26,6 +26,7 @@ import SubscribeData from './pages/customer/SubscribeData';
 import SubscribeCheckout from './pages/customer/SubscribeCheckout';
 import SubscribeSuccess from './pages/customer/SubscribeSuccess';
 import OrderEdit from './pages/customer/OrderEdit';
+import ScheduledTask from './pages/customer/OrderTaskStatus/ScheduledTask';
 import UnScheduledTask from './pages/customer/OrderTaskStatus/unScheduledTask';
 import FinishedTask from './pages/customer/OrderTaskStatus/FinishedTask';
 import LoadingMessage from './components/common/LoadingMessage';
@@ -166,7 +167,17 @@ const AppContent = () => {
         }
       />
 
-      {/* 未排程任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      {/* 已排定任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-task/scheduled-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <ScheduledTask />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 未排定任務狀態 - 獨立路由，不使用 CustomerLayout */}
       <Route
         path="/customer/order-task/unscheduled-task/:orderId/:orderDetailId"
         element={
