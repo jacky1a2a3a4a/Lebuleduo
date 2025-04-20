@@ -11,7 +11,7 @@ import OrderTaskStatusRecordContainer from '../../../../components/customer/Orde
 import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail'; //收運紀錄詳情
 import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
 import OrderTaskStatusRecordPhotos from '../../../../components/customer/OrderTaskStatusRecord/Photos/index.tsx'; //收運紀錄照片
-import AdditionalFee from '../../../../components/customer/OrderTaskStatusRecord/AdditionalFee';//補繳金額
+import AdditionalFee from '../../../../components/customer/OrderTaskStatusRecord/AdditionalFee'; //補繳金額
 import Loading from '../../../../components/common/LoadingMessage'; //加載中
 
 // 訂單詳情
@@ -164,7 +164,7 @@ function FinishedTask() {
 
   // 計算是否超重(測試)
   const isOverweight = true;
-    // orderTaskDetail?.KG && orderTaskDetail.KG > orderDetail.PlanKG;
+  // orderTaskDetail?.KG && orderTaskDetail.KG > orderDetail.PlanKG;
   const overweightAmount = 2;
   // isOverweight
   //   ? orderTaskDetail.KG - orderDetail.PlanKG
@@ -180,17 +180,22 @@ function FinishedTask() {
 
       <TaskContainer>
         {/* 訂單任務詳情 */}
-        <OrderTaskStatusCard status={status} date={date} time={time} />
+        <OrderTaskStatusCard
+          status={status}
+          date={date}
+          time={time}
+          isOverweight={isOverweight}
+        />
 
         <OrderTaskStatusRecordTitle title="收運紀錄" />
         <OrderTaskStatusRecordContainer isOverweight={isOverweight}>
           <OrderTaskStatusRecordDetail
             details={recordDetails}
             isOverweight={isOverweight}
-            />
-            {isOverweight && (
-              <AdditionalFee overweightAmount={overweightAmount} />
-            )}
+          />
+          {isOverweight && (
+            <AdditionalFee overweightAmount={overweightAmount} />
+          )}
           <OrderTaskStatusRecordStatus steps={steps} />
           <OrderTaskStatusRecordPhotos
             photos={orderTaskDetail?.DriverPhoto || []}

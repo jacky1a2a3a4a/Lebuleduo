@@ -25,10 +25,11 @@ const GlobalStyles = createGlobalStyle`
   --color-gray-800: #1f2937;
   --color-gray-900: #111827;
 
+  --color-green-line-light: #3ED495;
   --color-green-line-0: #06c755;
    --color-green-line-100: #05b54c;
-
-  --color-blue-100: #e0f2fe;
+   
+   --color-blue-100: #e0f2fe;
   --color-blue-700: #0369a1;
   --color-green-100: #dcfce7;
   --color-green-700: #15803d;

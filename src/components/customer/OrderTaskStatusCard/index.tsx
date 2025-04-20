@@ -14,15 +14,17 @@ interface OrderTaskStatusCardProps {
   date: string;
   time: string;
   onViewStatus?: () => void;
+  isOverweight?: boolean;
 }
 
 const OrderTaskStatusCard = ({
   status,
   date,
   time,
+  isOverweight,
 }: OrderTaskStatusCardProps) => {
   return (
-    <OrderTaskStatusCardContainer $status={status}>
+    <OrderTaskStatusCardContainer $status={status} $isOverweight={isOverweight}>
       {/* 日期區塊 */}
       <CardItem>
         <IconStyledLarge>

@@ -20,6 +20,7 @@ import LineCallback from './pages/auth/LineCallback/index';
 // 顧客(customer) 頁面組件
 import MyOrder from './pages/customer/MyOrder';
 import OrderDetail from './pages/customer/OrderDetail';
+import OrderDetailCompleted from './pages/customer/OrderDetailCompleted';
 import Plan from './pages/customer/Plan';
 import Subscribe from './pages/customer/Subscribe';
 import SubscribeData from './pages/customer/SubscribeData';
@@ -108,9 +109,9 @@ const AppContent = () => {
         <Route path="contact-us" element={<ContactUs />} />
       </Route>
 
-      {/* 查看訂單詳情 - 獨立路由，不使用 CustomerLayout */}
+      {/* 查看當前方案詳情 - 獨立路由，不使用 CustomerLayout */}
       <Route
-        path="/customer/order-detail/:orderId"
+        path="/customer/order-detail/current/:orderId"
         element={
           <ProtectedRoute role="customer">
             <OrderDetail />
@@ -118,6 +119,15 @@ const AppContent = () => {
         }
       />
 
+      {/* 查看已結束方案詳情 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-detail/completed/:orderId"
+        element={ 
+          <ProtectedRoute role="customer">
+            <OrderDetailCompleted />
+          </ProtectedRoute>
+        }
+      />
       {/* 編輯訂單資料 - 獨立路由，不使用 CustomerLayout */}
       <Route
         path="/customer/order/:orderId/edit"
