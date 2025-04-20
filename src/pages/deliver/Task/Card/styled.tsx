@@ -1,13 +1,8 @@
 import styled from 'styled-components';
-import { TaskStatus } from './index';
+import { TaskStatus } from '../../../../types/deliver';
 
 // 任務卡片外層容器
-export const TaskCardWrapper = styled.div<{
-  status: TaskStatus;
-  disabled?: boolean;
-}>`
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
-  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+export const TaskCardWrapper = styled.div<{ $status: TaskStatus }>`
   position: relative;
 
   width: 100%;
@@ -16,11 +11,11 @@ export const TaskCardWrapper = styled.div<{
 `;
 
 // 任務卡片主體
-export const TaskCardItem = styled.div<{ status: TaskStatus }>`
+export const TaskCardItem = styled.div<{ $status: TaskStatus }>`
   background: ${(props) =>
-    props.status === 'ongoing'
+    props.$status === 'ongoing'
       ? 'linear-gradient(to bottom, var(--color-white) 0%, #E8ECF7 100%)'
-      : props.status === 'completed'
+      : props.$status === 'completed'
         ? 'var(--color-gray-100)'
         : 'var(--color-gray-0)'};
   box-shadow: var(--card-shadow);
@@ -33,7 +28,7 @@ export const TaskCardItem = styled.div<{ status: TaskStatus }>`
   flex-direction: column;
   border: 1px solid
     ${(props) => {
-      switch (props.status) {
+      switch (props.$status) {
         case 'ongoing':
           return 'var(--color-primary)';
         case 'completed':
@@ -56,8 +51,12 @@ export const TaskCardContent = styled.div`
 `;
 
 // 任務圖片
-export const TaskImg = styled.div`
+export const TaskImg = styled.div<{ $photoUrl?: string }>`
   background-color: var(--color-gray-200);
+  background-image: ${({ $photoUrl }) =>
+    $photoUrl ? `url(${$photoUrl})` : 'none'};
+  background-size: cover;
+  background-position: center;
 
   width: 100%;
   aspect-ratio: 3/4;
@@ -92,9 +91,9 @@ export const TaskTitle = styled.div`
 `;
 
 // 任務狀態標籤
-export const TaskTag = styled.div<{ status: TaskStatus }>`
-  background-color: ${({ status }) => {
-    switch (status) {
+export const TaskTag = styled.div<{ $status: TaskStatus }>`
+  background-color: ${({ $status }) => {
+    switch ($status) {
       case 'ongoing':
         return 'var(--color-primary)';
       case 'completed':
@@ -103,8 +102,8 @@ export const TaskTag = styled.div<{ status: TaskStatus }>`
         return 'var(--color-tertiary)';
     }
   }};
-  color: ${({ status }) =>
-    status === 'ongoing' ? 'var(--color-gray-0)' : 'var(--color-gray-600)'};
+  color: ${({ $status }) =>
+    $status === 'ongoing' ? 'var(--color-gray-0)' : 'var(--color-gray-600)'};
   border-radius: var(--border-radius-round);
 
   padding: 0.25rem 0.5rem;
@@ -126,7 +125,7 @@ export const TaskUserContent = styled.div`
 
 export const MainContent = styled.div`
   color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   text-decoration: underline;
 `;
 
@@ -149,16 +148,16 @@ export const TaskCardButtons = styled.div`
 
 // 任務卡片按鈕
 export const TaskCardButton = styled.button<{
-  styledType?: 'primary' | 'secondary';
-  disabled?: boolean;
+  $styledType?: 'primary' | 'secondary';
+  $disabled?: boolean;
 }>`
-  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  opacity: ${({ $disabled }) => ($disabled ? 0.5 : 1)};
   padding: var(--spacing-sm) var(--spacing-md);
   border: none;
   border-radius: var(--border-radius-round);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
 
   display: flex;
   align-items: center;
@@ -177,35 +176,35 @@ export const TaskCardButton = styled.button<{
     flex: 1;
 
     &:hover {
-      background-color: ${({ disabled }) =>
-        !disabled && 'var(--color-gray-100)'};
+      background-color: ${({ $disabled }) =>
+        !$disabled && 'var(--color-gray-100)'};
     }
   }
 
   &:last-child {
-    background-color: ${({ styledType }) =>
-      styledType === 'secondary'
+    background-color: ${({ $styledType }) =>
+      $styledType === 'secondary'
         ? 'var(--color-error)'
         : 'var(--color-primary)'};
-    color: ${({ styledType }) =>
-      styledType === 'secondary'
+    color: ${({ $styledType }) =>
+      $styledType === 'secondary'
         ? 'var(--color-text-tertiary)'
         : 'var(--color-gray-0)'};
     flex: 1.5;
-    border: ${({ styledType }) =>
-      styledType === 'secondary'
+    border: ${({ $styledType }) =>
+      $styledType === 'secondary'
         ? '1px solid var(--color-error-hover)'
         : 'none'};
 
     svg {
-      color: ${({ styledType }) =>
-        styledType === 'secondary' ? 'var(--color-error-hover)' : 'inherit'};
+      color: ${({ $styledType }) =>
+        $styledType === 'secondary' ? 'var(--color-error-hover)' : 'inherit'};
     }
 
     &:hover {
-      background-color: ${({ disabled, styledType }) =>
-        !disabled &&
-        (styledType === 'secondary'
+      background-color: ${({ $disabled, $styledType }) =>
+        !$disabled &&
+        ($styledType === 'secondary'
           ? 'var(--color-error-hover)'
           : 'var(--color-primary-hover)')};
     }
