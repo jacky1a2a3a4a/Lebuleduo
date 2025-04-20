@@ -1,10 +1,19 @@
 import styled from 'styled-components';
 
 // ===最外層容器===
-export const OrderTaskStatusCardContainer = styled.div<{ $status: string }>`
-  background-color: var(--color-white);
-  border: 1px solid var(--color-neutral-200);
-  border-radius: var(--border-radius-lg);
+export const OrderTaskStatusCardContainer = styled.div<{
+  $status: string;
+  $isOverweight?: boolean;
+}>`
+  background-color: ${(props) =>
+    props.$isOverweight
+      ? 'var(--color-background-error)'
+      : 'var(--color-white)'};
+  border: ${(props) =>
+    props.$isOverweight
+      ? '1px solid var(--color-error)'
+      : '1px solid var(--color-neutral-200)'};
+  border-radius: var(--border-radius-xl);
 
   display: flex;
   justify-content: space-between;
@@ -49,36 +58,4 @@ export const DateDisplay = styled.span`
 //時間範圍
 export const TimeRange = styled.span`
   font-size: var(--font-size-sm);
-`;
-
-// 狀態容器
-export const OrderStatus = styled.div`
-  background-color: var(--color-neutral-200);
-  border: 2px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-round);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: var(--spacing-xs) var(--spacing-sm);
-`;
-
-// 狀態文字
-export const OrderStatusText = styled.span<{ $status: string }>`
-  color: ${(props) => {
-    switch (props.$status) {
-      case 'normal':
-        return 'var(--color-primary)';
-      case '已完成':
-        return 'var(--color-neutral-400)';
-      case '已取消':
-        return 'var(--color-error)';
-      default:
-        return 'var(--color-text-primary)';
-    }
-  }};
-  
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
 `;

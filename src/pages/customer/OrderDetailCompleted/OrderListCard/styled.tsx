@@ -200,7 +200,7 @@ export const ActionButton = styled.button<{
   font-size: var(--font-size-sm);
   white-space: nowrap;
 
-  /* pointer-events: ${({ $disabled }) => ($disabled ? 'none' : 'auto')}; */
+  pointer-events: ${({ $disabled }) => ($disabled ? 'auto' : 'none')};
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
 
   transition: all 0.2s ease;

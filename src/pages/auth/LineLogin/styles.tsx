@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 // 登入頁面 最外層容器
 export const LoginSectionStyled = styled.div`
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  background: var(--color-primary);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,7 +35,7 @@ export const LoginSectionStyled = styled.div`
 
 // 登入頁面 圖片
 export const Logo = styled.img`
-  width: 140px;
+  width: 185px;
   height: 100%;
   margin-bottom: var(--spacing-12);
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
@@ -46,19 +46,19 @@ export const Logo = styled.img`
   }
 `;
 
-// 登入頁面 歡迎文字
+// 登入頁面 文字容器
 export const WelcomeText = styled.h1`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: var(--spacing-4xl);
-  text-align: center;
+  width: 200px;
+  margin-bottom: var(--spacing-2xl);
 `;
 
 // 登入頁面 歡迎文字 主要文字
 export const TextMain = styled.span`
-  color: var(--color-primary);
-  font-size: var(--font-size-4xl);
+  color: var(--color-white);
+  font-size: var(--font-size-3xl);
   font-weight: bold;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: var(--spacing-2);
@@ -66,24 +66,25 @@ export const TextMain = styled.span`
 
 // 登入頁面 歡迎文字 副文字
 export const TextSub = styled.span`
-  color: var(--color-tertiary);
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-14);
-  letter-spacing: 1px;
-`;
-
-// 登入頁面 歡迎文字 內容文字
-export const TextContent = styled.span`
-  color: var(--color-text-tertiary);
-  font-size: 1.1rem;
-  line-height: 1.6;
-  max-width: 400px;
+  color: var(--color-white);
+  width: 100%;
   text-align: center;
+  font-size: var(--font-size-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    display: block;
+    text-align: center;
+    flex: 1;
+  }
 `;
 
 // 登入頁面 身分選擇
 export const RoleSelection = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
   margin: var(--spacing-4) 0;
 `;
@@ -105,7 +106,7 @@ export const RoleButton = styled.button<{
       ? '0 4px 6px rgba(68, 93, 179, 0.2)'
       : '0 2px 4px rgba(0, 0, 0, 0.1)'};
   border-radius: var(--border-radius-round);
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: var(--spacing-12) var(--spacing-xl);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -137,11 +138,11 @@ export const SelectedRoleContainer = styled.div`
 
 // 登入頁面 選擇身分 文字
 export const SelectedRoleText = styled.div`
-  color: var(--color-gray-600);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-medium);
+  color: var(--color-secondary);
   margin-bottom: var(--spacing-md);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  font-size: var(--font-size-md);
+  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
 `;
 
 export const ButtonGroup = styled.div`
@@ -159,13 +160,13 @@ export const LineButton = styled.button<{
 }>`
   background: linear-gradient(
     135deg,
-    var(--color-green-line-0) 0%,
-    #05b54a 100%
+    var(--color-green-line-light) 0%,
+    var(--color-green-line-0) 100%
   );
   color: white;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  padding: 14px 28px;
+  padding: var(--spacing-12) var(--spacing-2xl);
   margin-bottom: var(--spacing-md);
   border-radius: var(--border-radius-round);
   cursor: pointer;
@@ -191,8 +192,7 @@ export const LineButton = styled.button<{
 
 export const IconStyled = styled.div`
   margin-right: var(--spacing-12);
-  font-size: var(--font-size-xl);
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+  font-size: var(--font-size-sm);
 `;
 
 export const BackButton = styled.button<{
@@ -201,9 +201,9 @@ export const BackButton = styled.button<{
 }>`
   background-color: var(--color-gray-50);
   color: var(--color-gray-600);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  padding: 14px 28px;
+  padding: var(--spacing-12) var(--spacing-2xl);
   cursor: pointer;
   display: flex;
   align-items: center;

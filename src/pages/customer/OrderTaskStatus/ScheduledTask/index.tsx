@@ -2,17 +2,15 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import { ContainerStyled } from '../../../../components/customer/OrderTaskStatusContainer/ContainerStyled'; //容器樣式
-import { TaskContainer } from '../../../../components/customer/OrderTaskStatusContainer/TaskContainer'; //任務區塊
-import OrderNavHeader from '../../../../components/customer/OrderNavHeader'; //導航標題
-import OrderTaskStatusCard from '../../../../components/customer/OrderTaskStatusCard'; //訂單任務詳情卡片
-import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTaskStatusRecord/Title'; //收運紀錄標題
-import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container'; //收運紀錄容器
-import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail'; //收運紀錄詳情
+import { ContainerStyled } from '../../../../components/customer/OrderTaskStatusContainer/ContainerStyled/index.tsx'; //容器樣式
+import { TaskContainer } from '../../../../components/customer/OrderTaskStatusContainer/TaskContainer/index.tsx'; //任務區塊
+import OrderNavHeader from '../../../../components/customer/OrderNavHeader/index.tsx'; //導航標題
+import OrderTaskStatusCard from '../../../../components/customer/OrderTaskStatusCard/index.tsx'; //訂單任務詳情卡片
+import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTaskStatusRecord/Title/index.tsx'; //收運紀錄標題
+import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container/index.tsx'; //收運紀錄容器
+import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail/index.tsx'; //收運紀錄詳情
 import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
-import OrderTaskStatusRecordPhotos from '../../../../components/customer/OrderTaskStatusRecord/Photos/index.tsx'; //收運紀錄照片
-import Loading from '../../../../components/common/LoadingMessage'; //加載中
-
+import Loading from '../../../../components/common/LoadingMessage/index.tsx'; //加載中
 
 // 訂單詳情
 interface OrderDetail {
@@ -170,9 +168,6 @@ function FinishedTask() {
         <OrderTaskStatusRecordContainer>
           <OrderTaskStatusRecordDetail details={recordDetails} />
           <OrderTaskStatusRecordStatus steps={steps} />
-          <OrderTaskStatusRecordPhotos
-            photos={orderTaskDetail?.DriverPhoto || []}
-          />
         </OrderTaskStatusRecordContainer>
       </TaskContainer>
     </ContainerStyled>

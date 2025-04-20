@@ -2,17 +2,16 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-import { ContainerStyled } from '../../../../components/customer/OrderTaskStatusContainer/ContainerStyled'; //容器樣式
-import { TaskContainer } from '../../../../components/customer/OrderTaskStatusContainer/TaskContainer'; //任務區塊
-import OrderNavHeader from '../../../../components/customer/OrderNavHeader'; //導航標題
-import OrderTaskStatusCard from '../../../../components/customer/OrderTaskStatusCard'; //訂單任務詳情卡片
-import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTaskStatusRecord/Title'; //收運紀錄標題
-import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container'; //收運紀錄容器
-import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail'; //收運紀錄詳情
+import { ContainerStyled } from '../../../../components/customer/OrderTaskStatusContainer/ContainerStyled/index.tsx'; //容器樣式
+import { TaskContainer } from '../../../../components/customer/OrderTaskStatusContainer/TaskContainer/index.tsx'; //任務區塊
+import OrderNavHeader from '../../../../components/customer/OrderNavHeader/index.tsx'; //導航標題
+import OrderTaskStatusCard from '../../../../components/customer/OrderTaskStatusCard/index.tsx'; //訂單任務詳情卡片
+import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTaskStatusRecord/Title/index.tsx'; //收運紀錄標題
+import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container/index.tsx'; //收運紀錄容器
+import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail/index.tsx'; //收運紀錄詳情
 import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
 import OrderTaskStatusRecordPhotos from '../../../../components/customer/OrderTaskStatusRecord/Photos/index.tsx'; //收運紀錄照片
-import Loading from '../../../../components/common/LoadingMessage'; //加載中
-
+import Loading from '../../../../components/common/LoadingMessage/index.tsx'; //加載中
 
 // 訂單詳情
 interface OrderDetail {
@@ -46,7 +45,7 @@ interface OrderTaskDetail {
   CompletedAt: string | null;
 }
 
-function FinishedTask() {
+function CompletedFinishedTask() {
   const userId = localStorage.getItem('UsersID'); //獲取使用者ID
   const { orderId, orderDetailId } = useParams(); //從URL獲取訂單ID
 
@@ -63,7 +62,7 @@ function FinishedTask() {
     const fetchOrderDetail = async () => {
       try {
         const response = await axios.get(
-          `api/GET/user/orders/${userId}/${orderId}`,
+          `api/GET/user/orders/completed/${userId}/${orderId}`,
         );
         const data = response.data;
         console.log('API Response:', data);
@@ -78,10 +77,32 @@ function FinishedTask() {
         console.log('OrderDetail 訂單詳情：', orderDetailData);
 
         // ===設定訂單任務詳情===
-        const orderTaskDetailData = data.result[0].OrderDetails.find(
-          (item: OrderTaskDetail) =>
-            item.OrderDetailID === parseInt(orderDetailId || '0'),
-        );
+        let orderTaskDetailData = null;
+
+        if (
+          orderDetailData.OrderDetails &&
+          Array.isArray(orderDetailData.OrderDetails)
+        ) {
+          orderTaskDetailData = orderDetailData.OrderDetails.find(
+            (item: OrderTaskDetail) =>
+              item.OrderDetailID === parseInt(orderDetailId || '0'),
+          );
+        } else {
+          console.warn('訂單任務詳情不存在或格式不正確');
+          // 如果沒有 OrderDetails，嘗試從 orderDetailData 中直接獲取所需資訊
+          orderTaskDetailData = {
+            OrderDetailID: parseInt(orderDetailId || '0'),
+            ServiceDate: orderDetailData.StartDate,
+            DriverTime: null,
+            Status: '已完成',
+            DriverPhoto: orderDetailData.Photos || [],
+            KG: null,
+            OngoingAt: null,
+            ArrivedAt: null,
+            CompletedAt: orderDetailData.EndDate,
+          };
+        }
+
         setOrderTaskDetail(orderTaskDetailData);
         console.log('OrderTaskDetail 訂單任務詳情：', orderTaskDetailData);
 
@@ -179,4 +200,4 @@ function FinishedTask() {
   );
 }
 
-export default FinishedTask;
+export default CompletedFinishedTask;

@@ -2,7 +2,9 @@ import styled from 'styled-components';
 
 // ===最外層大容器===
 export const StatusContainer = styled.div`
+  border-top: 1px solid var(--color-neutral-300);
   padding: var(--spacing-md) var(--spacing-md) 0;
+  margin-top: var(--spacing-md);
   width: 100%;
 `;
 

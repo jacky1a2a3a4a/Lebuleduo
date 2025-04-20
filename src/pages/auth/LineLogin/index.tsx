@@ -1,6 +1,6 @@
 // 登入頁面 切版
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
-import Loginlogo from '../../../assets/Lebuledou_sit.png';
+import Loginlogo from '../../../assets/Lebuledou_truck_login_border.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLineConfig, saveLineState } from '../../../configs/lineConfig';
@@ -10,7 +10,6 @@ import {
   WelcomeText,
   TextMain,
   TextSub,
-  TextContent,
   RoleSelection,
   RoleButton,
   SelectedRoleContainer,
@@ -22,8 +21,8 @@ import {
   LineButtonTest,
 } from './styles';
 
-// 模擬登入認證
-import mockAuthService from '../../../services/mockAuthService';
+import mockAuthService from '../../../services/mockAuthService'; // 模擬登入認證
+const mockLogin = false; //模擬登入狀態
 
 const LineLogin = () => {
   const [selectedRole, setSelectedRole] = useState<
@@ -33,25 +32,6 @@ const LineLogin = () => {
   const [isExiting, setIsExiting] = useState(false); // 退出動畫
 
   const navigate = useNavigate();
-
-  // 模擬登入
-  const handleMockLogin = async () => {
-    if (!selectedRole) return;
-
-    try {
-      const { userData } = await mockAuthService.login(selectedRole);
-      console.log('模擬登入成功', userData);
-
-      // 根據角色導航到對應頁面
-      if (selectedRole === 'customer') {
-        navigate('/customer');
-      } else if (selectedRole === 'deliver') {
-        navigate('/deliver');
-      }
-    } catch (error) {
-      console.error('模擬登入失敗:', error);
-    }
-  };
 
   // 選擇身分
   const handleRoleSelect = (role: 'customer' | 'deliver') => {
@@ -80,6 +60,25 @@ const LineLogin = () => {
         setIsAnimating(false);
       }, 200);
     }, 200);
+  };
+
+  // 模擬登入
+  const handleMockLogin = async () => {
+    if (!selectedRole) return;
+
+    try {
+      const { userData } = await mockAuthService.login(selectedRole);
+      console.log('模擬登入成功', userData);
+
+      // 根據角色導航到對應頁面
+      if (selectedRole === 'customer') {
+        navigate('/customer');
+      } else if (selectedRole === 'deliver') {
+        navigate('/deliver');
+      }
+    } catch (error) {
+      console.error('模擬登入失敗:', error);
+    }
   };
 
   // Line 登入處理
@@ -117,8 +116,12 @@ const LineLogin = () => {
       <Logo src={Loginlogo} />
       <WelcomeText>
         <TextMain>Lebu-ledou</TextMain>
-        <TextSub>垃不垃多</TextSub>
-        <TextContent>歡迎使用最省事的垃圾代收服務</TextContent>
+        <TextSub>
+          <span>垃</span>
+          <span>不</span>
+          <span>垃</span>
+          <span>多</span>
+        </TextSub>
       </WelcomeText>
 
       {/* 身分選擇 */}
@@ -144,7 +147,7 @@ const LineLogin = () => {
       ) : (
         <SelectedRoleContainer>
           <SelectedRoleText>
-            {selectedRole === 'customer' ? '客戶' : '代收員'}登入
+            {selectedRole === 'customer' ? '顧客' : '汪汪員'}登入
           </SelectedRoleText>
           <ButtonGroup>
             <LineButton
@@ -171,7 +174,7 @@ const LineLogin = () => {
         </SelectedRoleContainer>
       )}
 
-      {selectedRole && (
+      {selectedRole && mockLogin && (
         <>
           {/* 添加臨時登入按鈕 */}
           <LineButtonTest onClick={handleMockLogin}>

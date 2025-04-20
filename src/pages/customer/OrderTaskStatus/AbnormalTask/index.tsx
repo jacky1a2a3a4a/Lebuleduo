@@ -11,8 +11,8 @@ import OrderTaskStatusRecordContainer from '../../../../components/customer/Orde
 import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail'; //收運紀錄詳情
 import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
 import OrderTaskStatusRecordPhotos from '../../../../components/customer/OrderTaskStatusRecord/Photos/index.tsx'; //收運紀錄照片
+import AdditionalFee from '../../../../components/customer/OrderTaskStatusRecord/AdditionalFee'; //補繳金額
 import Loading from '../../../../components/common/LoadingMessage'; //加載中
-
 
 // 訂單詳情
 interface OrderDetail {
@@ -130,6 +130,9 @@ function FinishedTask() {
     {
       label: '實際重量',
       value: orderTaskDetail?.KG ? `${orderTaskDetail.KG} kg` : '-',
+      // 是否超重
+      isOverweight:
+        orderTaskDetail?.KG && orderTaskDetail.KG > orderDetail.PlanKG,
     },
     { label: '備註', value: orderDetail.Notes },
   ];
@@ -147,6 +150,11 @@ function FinishedTask() {
       isCompleted: !!orderTaskDetail?.ArrivedAt,
     },
     {
+      title: '異常回報',
+      time: orderTaskDetail?.CompletedAt || '尚未完成',
+      isCompleted: !!orderTaskDetail?.CompletedAt,
+    },
+    {
       title: '已完成',
       time: orderTaskDetail?.CompletedAt || '尚未完成',
       isCompleted: !!orderTaskDetail?.CompletedAt,
@@ -154,21 +162,40 @@ function FinishedTask() {
     },
   ];
 
+  // 計算是否超重(測試)
+  const isOverweight = true;
+  // orderTaskDetail?.KG && orderTaskDetail.KG > orderDetail.PlanKG;
+  const overweightAmount = 2;
+  // isOverweight
+  //   ? orderTaskDetail.KG - orderDetail.PlanKG
+  //   : 0;
+
   return (
     <ContainerStyled>
       {/* 導航標題 */}
       <OrderNavHeader
-        title="已結束任務"
+        title="異常任務"
         orderNumber={orderDetail?.OrderNumber || '未知訂單號'}
       />
 
       <TaskContainer>
         {/* 訂單任務詳情 */}
-        <OrderTaskStatusCard status={status} date={date} time={time} />
+        <OrderTaskStatusCard
+          status={status}
+          date={date}
+          time={time}
+          isOverweight={isOverweight}
+        />
 
         <OrderTaskStatusRecordTitle title="收運紀錄" />
-        <OrderTaskStatusRecordContainer>
-          <OrderTaskStatusRecordDetail details={recordDetails} />
+        <OrderTaskStatusRecordContainer isOverweight={isOverweight}>
+          <OrderTaskStatusRecordDetail
+            details={recordDetails}
+            isOverweight={isOverweight}
+          />
+          {isOverweight && (
+            <AdditionalFee overweightAmount={overweightAmount} />
+          )}
           <OrderTaskStatusRecordStatus steps={steps} />
           <OrderTaskStatusRecordPhotos
             photos={orderTaskDetail?.DriverPhoto || []}

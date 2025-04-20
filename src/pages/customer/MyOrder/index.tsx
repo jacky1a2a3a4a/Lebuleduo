@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { MdError } from 'react-icons/md';
 import dogImage from '../../../assets/Lebuledou_lying.png';
 import dogTruckImage from '../../../assets/Lebuledou_truck.png';
+import LoadingMessage from '../../../components/common/LoadingMessage';
+
 import {
   OrderStep,
   TabType,
@@ -47,7 +49,7 @@ import {
   OrderCardDetail,
 } from './styled';
 
-// 虛擬機URL
+// 虛擬機URL(照片會用到)
 const BASE_URL = 'http://lebuleduo.rocket-coding.com';
 
 // 組件本體
@@ -100,20 +102,34 @@ function MyOrder() {
     [],
   );
 
-  const [activeTab, setActiveTab] = useState<TabType>('current'); // 標籤狀態管理
+  // 標籤狀態管理
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    // 從 localStorage 讀取上次的標籤狀態
+    const savedTab = localStorage.getItem('activeCategory_customer');
+    return (savedTab as TabType) || 'current';
+  });
+
   const [isLoading, setIsLoading] = useState<boolean>(true); // 載入狀態
+  // const testLoading = true; //測試用狀態
   const [error, setError] = useState<string | null>(null); // 錯誤訊息
 
   // 處理標籤切換，確保只在標籤不同時進行切換
   const handleTabClick = (tab: TabType) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
+      // 將新的標籤狀態保存到 localStorage
+      localStorage.setItem('activeCategory_customer', tab);
     }
   };
 
-  // 處理訂單詳情按鈕點擊
-  const handleOrderDetailClick = (orderId: number) => {
-    navigate(`/customer/order-detail/${orderId}`);
+  // 處理當前方案詳情 按鈕點擊
+  const handleOrderDetailCurrentClick = (orderId: number) => {
+    navigate(`/customer/order-detail/current/${orderId}`);
+  };
+
+  // 處理已結束方案詳情 按鈕點擊
+  const handleOrderDetailCompletedClick = (orderId: number) => {
+    navigate(`/customer/order-detail/completed/${orderId}`);
   };
 
   // 從API獲取數據
@@ -274,9 +290,7 @@ function MyOrder() {
         {/* 訂單列表 */}
         <OrderListSection>
           {isLoading ? (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
-              載入中...
-            </div>
+            <LoadingMessage size="mini" />
           ) : error ? (
             <div
               style={{
@@ -308,7 +322,7 @@ function MyOrder() {
                     return (
                       <OrderCard
                         key={OrdersID}
-                        onClick={() => handleOrderDetailClick(OrdersID)}
+                        onClick={() => handleOrderDetailCurrentClick(OrdersID)}
                       >
                         <OrderCardLayout>
                           <OrderPhotoContainer>
@@ -395,7 +409,7 @@ function MyOrder() {
                   return (
                     <OrderCard
                       key={OrdersID}
-                      onClick={() => handleOrderDetailClick(OrdersID)}
+                      onClick={() => handleOrderDetailCompletedClick(OrdersID)}
                       $isCompleted={true}
                     >
                       <OrderCardLayout>

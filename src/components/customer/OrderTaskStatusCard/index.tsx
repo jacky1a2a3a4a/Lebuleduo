@@ -1,4 +1,5 @@
-import { MdCalendarToday} from 'react-icons/md';
+import { MdCalendarToday } from 'react-icons/md';
+import StatusTag from '../../common/StatusTag';
 import {
   OrderTaskStatusCardContainer,
   CardItem,
@@ -6,8 +7,6 @@ import {
   Date,
   DateDisplay,
   TimeRange,
-  OrderStatus,
-  OrderStatusText,
 } from './styled';
 
 interface OrderTaskStatusCardProps {
@@ -15,15 +14,18 @@ interface OrderTaskStatusCardProps {
   date: string;
   time: string;
   onViewStatus?: () => void;
+  isOverweight?: boolean;
 }
 
 const OrderTaskStatusCard = ({
   status,
   date,
   time,
+  isOverweight,
 }: OrderTaskStatusCardProps) => {
   return (
-    <OrderTaskStatusCardContainer $status={status}>
+    <OrderTaskStatusCardContainer $status={status} $isOverweight={isOverweight}>
+      {/* 日期區塊 */}
       <CardItem>
         <IconStyledLarge>
           <MdCalendarToday />
@@ -34,10 +36,9 @@ const OrderTaskStatusCard = ({
         </Date>
       </CardItem>
 
+      {/* 狀態標籤 */}
       <CardItem>
-        <OrderStatus>
-          <OrderStatusText $status={status}>{status}</OrderStatusText>
-        </OrderStatus>
+        <StatusTag status={status} />
       </CardItem>
     </OrderTaskStatusCardContainer>
   );

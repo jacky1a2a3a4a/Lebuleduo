@@ -9,10 +9,9 @@ import OrderTaskStatusCard from '../../../../components/customer/OrderTaskStatus
 import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTaskStatusRecord/Title'; //收運紀錄標題
 import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container'; //收運紀錄容器
 import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail'; //收運紀錄詳情
-import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
-import OrderTaskStatusRecordPhotos from '../../../../components/customer/OrderTaskStatusRecord/Photos/index.tsx'; //收運紀錄照片
 import Loading from '../../../../components/common/LoadingMessage'; //加載中
 
+import { Notification, NotificationText } from './styles';
 
 // 訂單詳情
 interface OrderDetail {
@@ -46,7 +45,7 @@ interface OrderTaskDetail {
   CompletedAt: string | null;
 }
 
-function FinishedTask() {
+function UnScheduledTask() {
   const userId = localStorage.getItem('UsersID'); //獲取使用者ID
   const { orderId, orderDetailId } = useParams(); //從URL獲取訂單ID
 
@@ -84,11 +83,14 @@ function FinishedTask() {
         );
         setOrderTaskDetail(orderTaskDetailData);
         console.log('OrderTaskDetail 訂單任務詳情：', orderTaskDetailData);
+        console.log('Status:', orderTaskDetailData?.Status);
+        console.log('ServiceDate:', orderTaskDetailData?.ServiceDate);
+        console.log('DriverTime:', orderTaskDetailData?.DriverTime);
 
-        // 更新相關狀態
+        // ===設定任務狀態===
         setStatus(orderTaskDetailData?.Status || '錯誤');
         setDate(orderTaskDetailData?.ServiceDate || '錯誤');
-        setTime(orderTaskDetailData?.DriverTime || '錯誤');
+        setTime(orderTaskDetailData?.DriverTime || '-');
 
         setLoading(false);
       } catch (error) {
@@ -121,6 +123,9 @@ function FinishedTask() {
     return <div>找不到訂單詳情</div>;
   }
 
+  // 訂單號
+  const orderNumber = orderDetail?.OrderNumber;
+
   // 方案詳情紀錄
   const recordDetails = [
     {
@@ -134,49 +139,31 @@ function FinishedTask() {
     { label: '備註', value: orderDetail.Notes },
   ];
 
-  // 收運紀錄步驟
-  const steps = [
-    {
-      title: '前往中',
-      time: orderTaskDetail?.OngoingAt || '尚未前往',
-      isCompleted: !!orderTaskDetail?.OngoingAt,
-    },
-    {
-      title: '已抵達',
-      time: orderTaskDetail?.ArrivedAt || '尚未抵達',
-      isCompleted: !!orderTaskDetail?.ArrivedAt,
-    },
-    {
-      title: '已完成',
-      time: orderTaskDetail?.CompletedAt || '尚未完成',
-      isCompleted: !!orderTaskDetail?.CompletedAt,
-      isLast: true,
-    },
-  ];
-
   return (
     <ContainerStyled>
       {/* 導航標題 */}
-      <OrderNavHeader
-        title="已結束任務"
-        orderNumber={orderDetail?.OrderNumber || '未知訂單號'}
-      />
+      <OrderNavHeader title="未排定任務" orderNumber={orderNumber} />
 
       <TaskContainer>
         {/* 訂單任務詳情 */}
         <OrderTaskStatusCard status={status} date={date} time={time} />
-
         <OrderTaskStatusRecordTitle title="收運紀錄" />
         <OrderTaskStatusRecordContainer>
           <OrderTaskStatusRecordDetail details={recordDetails} />
-          <OrderTaskStatusRecordStatus steps={steps} />
-          <OrderTaskStatusRecordPhotos
-            photos={orderTaskDetail?.DriverPhoto || []}
-          />
         </OrderTaskStatusRecordContainer>
+
+        <Notification>
+          <NotificationText>
+            ※ 溫馨提醒：
+            <br />
+            ．如需修改預約，請於48小時前完成修改。
+            <br />
+            ．訂單僅能修改預約日期，收運時間將由本公司安排。
+          </NotificationText>
+        </Notification>
       </TaskContainer>
     </ContainerStyled>
   );
 }
 
-export default FinishedTask;
+export default UnScheduledTask;
