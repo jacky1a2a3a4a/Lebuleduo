@@ -32,6 +32,8 @@ import ScheduledTask from './pages/customer/OrderTaskStatus/ScheduledTask';
 import UnScheduledTask from './pages/customer/OrderTaskStatus/unScheduledTask';
 import FinishedTask from './pages/customer/OrderTaskStatus/FinishedTask';
 import LoadingMessage from './components/common/LoadingMessage';
+import CompletedAbnormalTask from './pages/customer/OrderTaskStatus/CompletedAbnormalTask';
+import CompletedFinishedTask from './pages/customer/OrderTaskStatus/CompletedFinishedTask';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -122,7 +124,7 @@ const AppContent = () => {
       {/* 查看已結束方案詳情 - 獨立路由，不使用 CustomerLayout */}
       <Route
         path="/customer/order-detail/completed/:orderId"
-        element={ 
+        element={
           <ProtectedRoute role="customer">
             <OrderDetailCompleted />
           </ProtectedRoute>
@@ -188,6 +190,15 @@ const AppContent = () => {
         }
       />
 
+      {/* 異常任務狀態-已完成訂單 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/completed-order/order-task/abnormal-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <CompletedAbnormalTask />
+          </ProtectedRoute>
+        }
+      />
       {/* 已排定任務狀態 - 獨立路由，不使用 CustomerLayout */}
       <Route
         path="/customer/order-task/scheduled-task/:orderId/:orderDetailId"
@@ -214,6 +225,16 @@ const AppContent = () => {
         element={
           <ProtectedRoute role="customer">
             <FinishedTask />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 已結束任務狀態-已完成訂單 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/completed-order/order-task/finished-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <CompletedFinishedTask />
           </ProtectedRoute>
         }
       />

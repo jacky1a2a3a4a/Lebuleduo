@@ -190,8 +190,6 @@ function OrderDetail() {
             status={order.Status}
             orderDetailId={order.OrderDetailID}
             ordersId={orderData.OrdersID}
-            usersId={parseInt(localStorage.getItem('UsersID') || '0')}
-            onDateModified={fetchOrderData}
           />
         ))}
       </OrderList>

@@ -5,6 +5,7 @@ interface ContainerStyledProps {
 }
 
 const Container = styled.div`
+  background-color: var(--color-background-secondary);
   display: flex;
   flex-direction: column;
   position: relative;
