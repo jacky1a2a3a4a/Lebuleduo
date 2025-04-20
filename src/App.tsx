@@ -20,11 +20,20 @@ import LineCallback from './pages/auth/LineCallback/index';
 // 顧客(customer) 頁面組件
 import MyOrder from './pages/customer/MyOrder';
 import OrderDetail from './pages/customer/OrderDetail';
+import OrderDetailCompleted from './pages/customer/OrderDetailCompleted';
 import Plan from './pages/customer/Plan';
 import Subscribe from './pages/customer/Subscribe';
 import SubscribeData from './pages/customer/SubscribeData';
 import SubscribeCheckout from './pages/customer/SubscribeCheckout';
 import SubscribeSuccess from './pages/customer/SubscribeSuccess';
+import OrderEdit from './pages/customer/OrderEdit';
+import AbnormalTask from './pages/customer/OrderTaskStatus/AbnormalTask';
+import ScheduledTask from './pages/customer/OrderTaskStatus/ScheduledTask';
+import UnScheduledTask from './pages/customer/OrderTaskStatus/unScheduledTask';
+import FinishedTask from './pages/customer/OrderTaskStatus/FinishedTask';
+import LoadingMessage from './components/common/LoadingMessage';
+import CompletedAbnormalTask from './pages/customer/OrderTaskStatus/CompletedAbnormalTask';
+import CompletedFinishedTask from './pages/customer/OrderTaskStatus/CompletedFinishedTask';
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
@@ -45,7 +54,7 @@ import Calendar from './pages/deliver/Calendar';
 // const CheckoutUserData = () => <div>使用者數據頁面</div>;
 // const CheckoutPayment = () => <div>支付頁面</div>;
 // const CheckoutSuccess = () => <div>支付成功頁面</div>;
-const Account = () => <div>帳戶頁面</div>;
+// const Account = () => <div>帳戶頁面</div>;
 const ContactUs = () => <div>聯絡我們</div>;
 const PageNotFound = () => <div>404 - 頁面未找到</div>;
 
@@ -98,16 +107,35 @@ const AppContent = () => {
         <Route index element={<Navigate to="/customer/my-order" replace />} />
         <Route path="my-order" element={<MyOrder />} />
         <Route path="Plan" element={<Plan />} />
-        <Route path="account" element={<Account />} />
+        <Route path="account" element={<LoadingMessage />} />
         <Route path="contact-us" element={<ContactUs />} />
       </Route>
 
-      {/* 查看訂單詳情 - 獨立路由，不使用 CustomerLayout */}
+      {/* 查看當前方案詳情 - 獨立路由，不使用 CustomerLayout */}
       <Route
-        path="/customer/order-detail/:orderId"
+        path="/customer/order-detail/current/:orderId"
         element={
           <ProtectedRoute role="customer">
             <OrderDetail />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 查看已結束方案詳情 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-detail/completed/:orderId"
+        element={
+          <ProtectedRoute role="customer">
+            <OrderDetailCompleted />
+          </ProtectedRoute>
+        }
+      />
+      {/* 編輯訂單資料 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order/:orderId/edit"
+        element={
+          <ProtectedRoute role="customer">
+            <OrderEdit />
           </ProtectedRoute>
         }
       />
@@ -134,7 +162,7 @@ const AppContent = () => {
 
       {/* 訂閱結帳 - 獨立路由，不使用 CustomerLayout */}
       <Route
-        path="/customer/Subscribe-checkout"
+        path="/customer/subscribe-checkout"
         element={
           <ProtectedRoute role="customer">
             <SubscribeCheckout />
@@ -143,7 +171,73 @@ const AppContent = () => {
       />
 
       {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
-      <Route path="/customer/SubscribeSuccess" element={<SubscribeSuccess />} />
+      <Route
+        path="/customer/subscribe-success"
+        element={
+          <ProtectedRoute role="customer">
+            <SubscribeSuccess />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 異常任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-task/abnormal-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <AbnormalTask />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 異常任務狀態-已完成訂單 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/completed-order/order-task/abnormal-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <CompletedAbnormalTask />
+          </ProtectedRoute>
+        }
+      />
+      {/* 已排定任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-task/scheduled-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <ScheduledTask />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 未排定任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-task/unscheduled-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <UnScheduledTask />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 已結束任務狀態 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/order-task/finished-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <FinishedTask />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 已結束任務狀態-已完成訂單 - 獨立路由，不使用 CustomerLayout */}
+      <Route
+        path="/customer/completed-order/order-task/finished-task/:orderId/:orderDetailId"
+        element={
+          <ProtectedRoute role="customer">
+            <CompletedFinishedTask />
+          </ProtectedRoute>
+        }
+      />
 
       {/* DOG路由 */}
       <Route

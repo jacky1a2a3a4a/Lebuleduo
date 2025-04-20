@@ -11,7 +11,7 @@ const Button = styled.button<{ $isOpen: boolean }>`
   height: 1.5rem;
   margin-right: var(--spacing-md);
   cursor: pointer;
-  z-index: 10;
+  z-index: 100;
 
   &:focus {
     outline: none;
@@ -19,7 +19,7 @@ const Button = styled.button<{ $isOpen: boolean }>`
 
   div {
     background: ${({ $isOpen }) =>
-      $isOpen ? 'var(--color-text-primary)' : 'var(--color-white)'};
+      $isOpen ? 'var(--color-primary)' : 'var(--color-white)'};
     width: 1.5rem;
     height: 0.25rem;
     border-radius: 10px;

@@ -2,16 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 import { Plan } from './types';
+import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
 import {
   LoadingMessage,
   PageWrapper,
-  FixedStepsContainer,
-  StepWrapper,
-  StepItem,
-  StepNumber,
-  StepText,
-  StepConnector,
-  StepLine,
   ScrollableContent,
   SectionTitle,
   SectionMainTitle,
@@ -24,6 +18,8 @@ import {
   PlanDropdown,
   PlanOption,
   PlanOptionTitle,
+  PlanOptionMainTitle,
+  PlanOptionSubtitle,
   FrequencyOptions,
   FrequencyOption,
   RadioButton,
@@ -36,15 +32,8 @@ import {
   ErrorMessage,
   DatePickerContainer,
   DateInput,
-  TotalPrice,
-  TotalPriceText,
-  TotalPriceContainer,
-  PriceDetails,
-  TotalPriceTCount,
-  OriginalPriceText,
-  DiscountText,
-  NextButton,
 } from './styled';
+import SubscribeBottom from '../../../components/customer/SubscribeBottom';
 
 // 週期天數選項
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
@@ -70,7 +59,7 @@ const Subscribe = () => {
   const [plan, setPlan] = useState<Plan | null>(null); // 選擇的方案
   const [availablePlans, setAvailablePlans] = useState<Plan[]>([]); // 所有可用方案
 
-  const [selectedFrequency, setSelectedFrequency] = useState('1'); // 預定預定期程:選擇的頻率
+  const [selectedFrequency, setSelectedFrequency] = useState<number>(1); // 預定預定期程:選擇的頻率
   const [selectedDays, setSelectedDays] = useState<string[]>([]); // 預定收集日:選擇的收集日
   const [hasSelectedDays, setHasSelectedDays] = useState(false); // 預定收集日:是否已選擇收集日
   const [showDaysError, setShowDaysError] = useState(false); // 預定收集日:是否顯示收集日錯誤提示
@@ -171,7 +160,7 @@ const Subscribe = () => {
   // 處理價格計算 只要方案、收日頻率、收運日改變，就重新計算總價格
   useEffect(() => {
     if (plan) {
-      updateTotalPrice(plan.Price, selectedFrequency);
+      updateTotalPrice(plan.Price, selectedFrequency.toString());
     }
   }, [plan, selectedFrequency, updateTotalPrice]);
 
@@ -193,7 +182,7 @@ const Subscribe = () => {
 
   // 處理週期選擇
   const handleFrequencyChange = (frequency: string) => {
-    setSelectedFrequency(frequency);
+    setSelectedFrequency(parseInt(frequency));
   };
 
   // 處理收集日選擇
@@ -227,6 +216,22 @@ const Subscribe = () => {
       return;
     }
 
+    // 將選擇的日期轉換為數字格式（1-7）
+    const formattedDays = selectedDays
+      .map((day) => {
+        const dayMap: { [key: string]: string } = {
+          一: '1',
+          二: '2',
+          三: '3',
+          四: '4',
+          五: '5',
+          六: '6',
+          日: '7',
+        };
+        return dayMap[day];
+      })
+      .join(',');
+
     // 將選擇的數據傳遞到下一個頁面
     navigate('/customer/subscribe-data', {
       state: {
@@ -237,45 +242,24 @@ const Subscribe = () => {
         price: plan?.Price,
         planPeople: plan?.PlanPeople,
         planDescription: plan?.PlanDescription,
-        frequency: selectedFrequency,
-        days: selectedDays,
+        frequency: selectedFrequency.toString(),
+        days: formattedDays,
         startDate,
         totalPrice,
       },
     });
   };
 
+  const steps = [
+    { number: 1, text: '選擇方案' },
+    { number: 2, text: '填選收運資料' },
+    { number: 3, text: '結帳' },
+  ];
+
   return (
     <PageWrapper>
-      {/* 固定在頂部的進度指示器 */}
-      <FixedStepsContainer>
-        <StepWrapper>
-          <StepItem>
-            <StepNumber $active={true}>1</StepNumber>
-            <StepText $active={true}>選擇方案</StepText>
-          </StepItem>
+      <SubscribeProgressSteps steps={steps} currentStep={1} />
 
-          <StepConnector>
-            <StepLine $active={hasSelectedDays} />
-          </StepConnector>
-
-          <StepItem>
-            <StepNumber>2</StepNumber>
-            <StepText>填選收運資料</StepText>
-          </StepItem>
-
-          <StepConnector>
-            <StepLine />
-          </StepConnector>
-
-          <StepItem>
-            <StepNumber>3</StepNumber>
-            <StepText>結帳</StepText>
-          </StepItem>
-        </StepWrapper>
-      </FixedStepsContainer>
-
-      {/* 可滾動的內容區域 */}
       <ScrollableContent>
         {/* 已選方案 */}
         <SectionTitle>
@@ -303,12 +287,12 @@ const Subscribe = () => {
                   onClick={() => handlePlanChange(availablePlan)}
                 >
                   <PlanOptionTitle>
-                    <div>
+                    <PlanOptionMainTitle>
                       {availablePlan.PlanName} ({availablePlan.PlanPeople})
-                    </div>
-                    <div>
+                    </PlanOptionMainTitle>
+                    <PlanOptionSubtitle>
                       {availablePlan.Liter}L / {availablePlan.kg}kg
-                    </div>
+                    </PlanOptionSubtitle>
                   </PlanOptionTitle>
                 </PlanOption>
               ))}
@@ -324,10 +308,10 @@ const Subscribe = () => {
 
         <FrequencyOptions>
           <FrequencyOption
-            $active={selectedFrequency === '1'}
+            $active={selectedFrequency === 1}
             onClick={() => handleFrequencyChange('1')}
           >
-            <RadioButton $active={selectedFrequency === '1'} />
+            <RadioButton $active={selectedFrequency === 1} />
             <FrequencyTextContainer>
               <FrequencyText>1 個月</FrequencyText>
               <FrequencySubtext>(共收運4週)</FrequencySubtext>
@@ -335,10 +319,10 @@ const Subscribe = () => {
           </FrequencyOption>
 
           <FrequencyOption
-            $active={selectedFrequency === '3'}
+            $active={selectedFrequency === 3}
             onClick={() => handleFrequencyChange('3')}
           >
-            <RadioButton $active={selectedFrequency === '3'} />
+            <RadioButton $active={selectedFrequency === 3} />
             <FrequencyTextContainer>
               <FrequencyText>3 個月</FrequencyText>
               <FrequencySubtext>(共收運12週)</FrequencySubtext>
@@ -347,10 +331,10 @@ const Subscribe = () => {
           </FrequencyOption>
 
           <FrequencyOption
-            $active={selectedFrequency === '6'}
+            $active={selectedFrequency === 6}
             onClick={() => handleFrequencyChange('6')}
           >
-            <RadioButton $active={selectedFrequency === '6'} />
+            <RadioButton $active={selectedFrequency === 6} />
             <FrequencyTextContainer>
               <FrequencyText>6 個月</FrequencyText>
               <FrequencySubtext>(共收運24週)</FrequencySubtext>
@@ -359,7 +343,7 @@ const Subscribe = () => {
           </FrequencyOption>
         </FrequencyOptions>
 
-        {/* 定期收集日 */}
+        {/* 每周收運日 */}
         <SectionTitle id="weekdays-section">
           <SectionMainTitle>每周收運日</SectionMainTitle>
           <SectionSubtitle>請點選每週固定收運時間</SectionSubtitle>
@@ -392,25 +376,15 @@ const Subscribe = () => {
             onChange={(e) => setStartDate(e.target.value)}
           />
         </DatePickerContainer>
-
-        {/* 總計金額與下一步 */}
-        <TotalPrice>
-          <TotalPriceText>總金額</TotalPriceText>
-          <TotalPriceContainer>
-            <TotalPriceTCount>NT${totalPrice}</TotalPriceTCount>
-            {discount > 0 && (
-              <PriceDetails>
-                <OriginalPriceText>NT${originalPrice}</OriginalPriceText>
-                <DiscountText>節省 NT${discount}</DiscountText>
-              </PriceDetails>
-            )}
-          </TotalPriceContainer>
-        </TotalPrice>
-
-        <NextButton onClick={handleNext} $active={hasSelectedDays}>
-          下一步
-        </NextButton>
       </ScrollableContent>
+
+      <SubscribeBottom
+        totalPrice={totalPrice}
+        originalPrice={originalPrice}
+        discount={discount}
+        isActive={hasSelectedDays}
+        onNext={handleNext}
+      />
     </PageWrapper>
   );
 };

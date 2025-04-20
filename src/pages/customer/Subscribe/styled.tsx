@@ -9,22 +9,22 @@ export const LoadingMessage = styled.div`
   color: var(--color-gray-500);
 `;
 
-// 整個頁面的容器
+//// 整個頁面的容器
 export const PageWrapper = styled.div`
+  background-color: var(--color-background-secondary);
   display: flex;
   flex-direction: column;
   height: 100vh;
   max-width: 480px;
   margin: 0 auto;
-  background-color: var(--color-gray-0);
 `;
 
-// 固定在頂部的進度指示器
+//// 固定在頂部的進度指示器
 export const FixedStepsContainer = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: var(--color-gray-0);
+  background-color: var(--color-primary);
   padding: var(--spacing-lg) 0 var(--spacing-md) 0;
 `;
 
@@ -52,7 +52,7 @@ export const StepConnector = styled.div`
 // 步驟連接線
 export const StepLine = styled.div<StyledProps>`
   background-color: ${(props) =>
-    props.$active ? 'var(--color-gray-600)' : 'var(--color-gray-300)'};
+    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
   border-radius: var(--border-radius-round);
   height: 2px;
   width: 70px;
@@ -76,8 +76,9 @@ export const StepItem = styled.div<StyledProps>`
 // 步驟號碼
 export const StepNumber = styled.div<StyledProps>`
   background-color: ${(props) =>
-    props.$active ? 'var(--color-gray-600)' : 'var(--color-gray-300)'};
-  color: var(--color-gray-0);
+    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
+  color: ${(props) =>
+    props.$active ? 'var(--color-primary)' : 'var(--color-white)'};
   border-radius: 50%;
 
   width: 24px;
@@ -97,7 +98,7 @@ export const StepNumber = styled.div<StyledProps>`
 // 步驟文字
 export const StepText = styled.div<StyledProps>`
   color: ${(props) =>
-    props.$active ? 'var(--color-gray-600)' : 'var(--color-gray-300)'};
+    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   text-align: center;
@@ -125,6 +126,8 @@ export const SectionTitle = styled.div`
 
 // 區段主標題 模板
 export const SectionMainTitle = styled.h2`
+  color: var(--color-text-primary);
+
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
 
@@ -133,9 +136,10 @@ export const SectionMainTitle = styled.h2`
 
 // 區段副標題 模板
 export const SectionSubtitle = styled.p`
+  color: var(--color-text-tertiary);
+
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-gray-400);
+  font-weight: var(--font-weight-normal);
 `;
 
 // 已選定方案 最大容器
@@ -149,7 +153,7 @@ export const PlanSelector = styled.div`
 // 已選定方案 頭部
 export const PlanSelectorHeader = styled.div<StyledProps>`
   background-color: var(--color-gray-100);
-  border: 2px solid var(--color-gray-200);
+  border: 2px solid var(--color-secondary);
   border-radius: ${(props) =>
     props.$open
       ? 'var(--border-radius-lg) var(--border-radius-lg) 0 0'
@@ -182,7 +186,7 @@ export const DropdownIcon = styled.div`
 
 // 方案下拉菜單
 export const PlanDropdown = styled.div`
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--color-secondary);
   border-top: none;
   border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
   overflow: hidden;
@@ -194,7 +198,7 @@ export const PlanOption = styled.div<StyledProps>`
   background-color: ${(props) =>
     props.$active ? 'var(--color-gray-200)' : 'var(--color-gray-0)'};
   cursor: pointer;
-  border-bottom: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid var(--color-secondary);
 
   &:last-child {
     border-bottom: none;
@@ -215,6 +219,22 @@ export const PlanOptionTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+// 方案選項主標題
+export const PlanOptionMainTitle = styled.div`
+  color: var(--color-text-tertiary);
+
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+`;
+
+// 方案選項副標題
+export const PlanOptionSubtitle = styled.div`
+  color: var(--color-secondary);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 `;
 
 // 方案標題
@@ -242,7 +262,7 @@ export const FrequencyOption = styled.div<StyledProps>`
   background-color: var(--color-gray-0);
   border: 1px solid
     ${(props) =>
-      props.$active ? 'var(--color-gray-400)' : 'var(--color-gray-300)'};
+      props.$active ? 'var(--color-primary)' : 'var(--color-secondary)'};
   border-radius: var(--border-radius-xl);
 
   display: flex;
@@ -260,7 +280,7 @@ export const RadioButton = styled.div<StyledProps>`
   border-radius: 50%;
   border: 2px solid
     ${(props) =>
-      props.$active ? 'var(--color-gray-600)' : 'var(--color-gray-300)'};
+      props.$active ? 'var(--color-secondary)' : 'var(--color-secondary)'};
   margin-right: var(--spacing-md);
   display: flex;
   align-items: center;
@@ -297,36 +317,37 @@ export const FrequencySubtext = styled.span`
 
 // 預定期程 折扣標籤
 export const DiscountTag = styled.span`
+  color: var(--color-white);
+  background-color: var(--color-secondary);
+  border-radius: var(--border-radius-sm);
+
   position: absolute;
   right: var(--spacing-md);
   padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: var(--color-gray-200);
-  border-radius: var(--border-radius-sm);
   font-size: var(--font-size-xs);
 `;
 
 //// 每周收運日 大容器
 export const WeekdaysContainer = styled.div<StyledProps>`
+  background-color: var(--color-white);
   border: 1px solid
     ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
+      props.$error ? 'var(--color-red-500)' : 'var(--color-secondary)'};
   border-radius: var(--border-radius-lg);
   display: flex;
   justify-content: space-between;
   margin-bottom: ${(props) =>
     props.$error ? 'var(--spacing-xs)' : 'var(--spacing-lg)'};
   padding: var(--spacing-md);
-  background-color: ${(props) =>
-    props.$error ? 'var(--color-red-50)' : 'transparent'};
 `;
 
 // 每周收運日 按鈕
 export const WeekdayButton = styled.button<StyledProps>`
   background-color: ${(props) =>
-    props.$active ? 'var(--color-gray-500)' : 'var(--color-gray-0)'};
+    props.$active ? 'var(--color-primary)' : 'var(--color-neutral-200)'};
   color: ${(props) =>
-    props.$active ? 'var(--color-gray-0)' : 'var(--color-gray-500)'};
-  border: 1px solid var(--color-gray-300);
+    props.$active ? 'var(--color-white)' : 'var(--color-text-secondary)'};
+  border: 1px solid var(--color-secondary);
   border-radius: 50%;
 
   width: 36px;
@@ -340,22 +361,36 @@ export const WeekdayButton = styled.button<StyledProps>`
 
   &:hover {
     background-color: ${(props) =>
-      props.$active ? 'var(--color-gray-700)' : 'var(--color-gray-0)'};
+      props.$active
+        ? 'var(--color-primary-hover)'
+        : 'var(--color-neutral-300)'};
   }
 `;
 
 //// 日期選擇器 大容器
 export const DatePickerContainer = styled.div`
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 `;
 
 // 日期輸入
 export const DateInput = styled.input`
   width: 100%;
   padding: var(--spacing-md);
-  border: 1px solid var(--color-gray-300);
+  border: 1px solid var(--color-secondary);
   border-radius: var(--border-radius-md);
   font-size: var(--font-size-md);
+`;
+
+//// 總計價格與下一步 大容器
+export const BottomInfoContainer = styled.div`
+  background-color: var(--color-white);
+  border-top: 1px solid var(--color-secondary);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: var(--spacing-md);
 `;
 
 //// 總計價格 最外容器
@@ -365,6 +400,8 @@ export const TotalPrice = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  margin-bottom: var(--spacing-md);
 `;
 
 // 總計價格 文字
@@ -389,13 +426,14 @@ export const PriceDetails = styled.div`
 
 // 總計價格 數字
 export const TotalPriceTCount = styled.div`
+  color: var(--color-primary);
   font-size: var(--font-size-2xl);
 `;
 
 // 原始價格（有刪除線）
 export const OriginalPriceText = styled.div`
   font-size: var(--font-size-xs);
-  color: var(--color-gray-400);
+  color: var(--color-text-tertiary);
   text-decoration: line-through;
 
   margin-right: var(--spacing-xs);
@@ -410,10 +448,10 @@ export const DiscountText = styled.div`
 // 下一步按鈕
 export const NextButton = styled.button<StyledProps>`
   width: 100%;
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   background-color: ${(props) =>
-    props.$active ? 'var(--color-gray-500)' : 'var(--color-gray-300)'};
-  color: var(--color-gray-0);
+    props.$active ? 'var(--color-primary)' : 'var(--color-text-disabled)'};
+  color: var(--color-white);
   border: none;
   border-radius: var(--border-radius-round);
   font-size: var(--font-size-md);

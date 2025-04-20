@@ -2,53 +2,91 @@ import styled from 'styled-components';
 
 // 登入頁面 最外層容器
 export const LoginSectionStyled = styled.div`
-  background-color: var(--color-gray-50);
+  background: var(--color-primary);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      radial-gradient(
+        circle at 20% 20%,
+        rgba(68, 93, 179, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        rgba(247, 221, 151, 0.05) 0%,
+        transparent 50%
+      );
+    pointer-events: none;
+  }
 `;
 
 // 登入頁面 圖片
 export const Logo = styled.img`
-  width: 120px;
-  height: 120px;
-  margin-bottom: var(--spacing-4);
+  width: 185px;
+  height: 100%;
+  margin-bottom: var(--spacing-12);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
-// 登入頁面 歡迎文字
+// 登入頁面 文字容器
 export const WelcomeText = styled.h1`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: var(--spacing-4xl);
+  width: 200px;
+  margin-bottom: var(--spacing-2xl);
 `;
 
 // 登入頁面 歡迎文字 主要文字
 export const TextMain = styled.span`
-  color: var(--color-primary);
-  font-size: var(--font-size-2xl);
+  color: var(--color-white);
+  font-size: var(--font-size-3xl);
   font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: var(--spacing-2);
 `;
 
 // 登入頁面 歡迎文字 副文字
 export const TextSub = styled.span`
-  color: var(--color-tertiary);
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-14);
-`;
+  color: var(--color-white);
+  width: 100%;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-// 登入頁面 歡迎文字 內容文字
-export const TextContent = styled.span`
-  color: var(--color-text-tertiary);
-  font-size: 1rem;
+  span {
+    display: block;
+    text-align: center;
+    flex: 1;
+  }
 `;
 
 // 登入頁面 身分選擇
 export const RoleSelection = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
+  margin: var(--spacing-4) 0;
 `;
 
 // 登入頁面 身分選擇 按鈕
@@ -58,27 +96,34 @@ export const RoleButton = styled.button<{
   $isExiting: boolean;
 }>`
   background-color: ${({ $selected }) =>
-    $selected ? 'var(--color-green-line-50)' : 'white'};
-  color: ${({ $selected }) =>
-    $selected ? 'var(--color-green-line-0)' : 'var(--color-gray-600)'};
+    $selected ? 'var(--color-primary)' : 'white'};
+  color: ${({ $selected }) => ($selected ? 'white' : 'var(--color-primary)')};
   border: 2px solid
     ${({ $selected }) =>
-      $selected ? 'var(--color-green-line-0)' : 'var(--color-gray-300)'};
-  box-shadow: var(--btn-shadow);
+      $selected ? 'var(--color-primary)' : 'var(--color-secondary)'};
+  box-shadow: ${({ $selected }) =>
+    $selected
+      ? '0 4px 6px rgba(68, 93, 179, 0.2)'
+      : '0 2px 4px rgba(0, 0, 0, 0.1)'};
   border-radius: var(--border-radius-round);
-  padding: var(--spacing-md) var(--spacing-lg);
+  padding: var(--spacing-12) var(--spacing-xl);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: ${({ $isExiting }) =>
     $isExiting ? 'scale(0.95) translateY(5px)' : 'scale(1) translateY(0)'};
   opacity: ${({ $isExiting }) => ($isExiting ? '0' : '1')};
 
   &:hover {
-    border-color: var(--color-green-line-0);
-    background-color: var(--color-green-line-50);
-    color: var(--color-green-line-0);
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(68, 93, 179, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 `;
 
@@ -88,14 +133,16 @@ export const SelectedRoleContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-4);
+  padding: var(--spacing-6);
 `;
 
 // 登入頁面 選擇身分 文字
 export const SelectedRoleText = styled.div`
-  color: var(--color-gray-500);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-medium);
+  color: var(--color-secondary);
   margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-md);
+  letter-spacing: 0.1em;
+  font-weight: var(--font-weight-medium);
 `;
 
 export const ButtonGroup = styled.div`
@@ -103,6 +150,7 @@ export const ButtonGroup = styled.div`
   flex-direction: column;
   gap: var(--spacing-4);
   width: 100%;
+  max-width: 300px;
 `;
 
 // 登入頁面 使用 LINE 登入 按鈕
@@ -110,11 +158,15 @@ export const LineButton = styled.button<{
   $isAnimating: boolean;
   $isExiting: boolean;
 }>`
-  background-color: var(--color-green-line-0);
+  background: linear-gradient(
+    135deg,
+    var(--color-green-line-light) 0%,
+    var(--color-green-line-0) 100%
+  );
   color: white;
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  padding: 12px 24px;
+  padding: var(--spacing-12) var(--spacing-2xl);
   margin-bottom: var(--spacing-md);
   border-radius: var(--border-radius-round);
   cursor: pointer;
@@ -122,19 +174,25 @@ export const LineButton = styled.button<{
   align-items: center;
   justify-content: center;
   width: 100%;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: ${({ $isExiting }) =>
     $isExiting ? 'translateY(-10px)' : 'translateY(0)'};
   opacity: ${({ $isExiting }) => ($isExiting ? '0' : '1')};
+  box-shadow: 0 4px 6px rgba(0, 200, 83, 0.2);
 
   &:hover {
-    background-color: var(--color-green-line-100);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 200, 83, 0.3);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 `;
 
 export const IconStyled = styled.div`
   margin-right: var(--spacing-12);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-sm);
 `;
 
 export const BackButton = styled.button<{
@@ -142,10 +200,10 @@ export const BackButton = styled.button<{
   $isExiting: boolean;
 }>`
   background-color: var(--color-gray-50);
-  color: var(--color-gray-300);
-  font-size: var(--font-size-lg);
+  color: var(--color-gray-600);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  padding: 12px 24px;
+  padding: var(--spacing-12) var(--spacing-2xl);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -153,50 +211,29 @@ export const BackButton = styled.button<{
   width: 100%;
   border: 2px solid var(--color-gray-300);
   border-radius: var(--border-radius-round);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: ${({ $isExiting }) =>
     $isExiting ? 'translateY(-10px)' : 'translateY(0)'};
   opacity: ${({ $isExiting }) => ($isExiting ? '0' : '1')};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    color: var(--color-gray-400);
+    color: var(--color-gray-700);
     border-color: var(--color-gray-400);
-  }
-`;
-
-export const LineLoginButton = styled.button<{
-  $isAnimating: boolean;
-  $isExiting: boolean;
-}>`
-  background-color: #06c755;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-right: 12px;
-
-  &:hover {
-    background-color: #05b54a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
-  ${({ $isAnimating }) =>
-    $isAnimating &&
-    `
-    animation: fadeIn 0.2s ease-in-out;
-  `}
-
-  ${({ $isExiting }) =>
-    $isExiting &&
-    `
-    animation: fadeOut 0.2s ease-in-out;
-  `}
+  &:active {
+    transform: translateY(1px);
+  }
 `;
 
 export const LineButtonTest = styled.button`
-  margin-top: 10px;
+  margin-top: var(--spacing-2xl);
   padding: 12px 24px;
-  background-color: #666;
+  background: var(--color-tertiary);
+  color: var(--color-neutral-600);
+  border-radius: var(--border-radius-round);
+  font-weight: var(--font-weight-medium);
 `;
