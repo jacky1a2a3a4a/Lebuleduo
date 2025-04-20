@@ -1,24 +1,17 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  HiDocumentText,
-  HiMiniUser,
-  HiMapPin,
-  HiPhone,
-  HiChevronLeft,
-} from 'react-icons/hi2';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { useEffect, useState, useCallback } from 'react';
-import { TaskStatus } from '../Card';
+import axios from 'axios';
+import { MdArrowBackIosNew, MdLocationOn } from 'react-icons/md';
 import {
   FullHeightContainer,
   HeaderContainer,
   PageTitle,
   PageSubtitle,
   IconStyled,
+  Title,
   DetailCard,
   DetailRow,
   DetailTime,
-  DetailStatus,
   DetailSign,
   DetailLabel,
   DetailValue,
@@ -34,6 +27,28 @@ import {
   ErrorMessage,
 } from './styled';
 
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { TaskStatus } from '../../../../types/deliver';
+import { formatTime } from '../../../../utils/formatTime';
+import LoadingMessage from '../../../../components/common/LoadingMessage';
+import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
+
+// 定義 API 回傳的任務類型
+type ApiTaskItem = {
+  OrderDetailID: number;
+  ServiceTime: string | null;
+  OrderDetailsNumber: string;
+  Addresses: string;
+  CustomerNumber: string;
+  CustomerName: string;
+  Notes: string;
+  Photo: string[];
+  Status: string;
+  PlanName: string;
+  PlanKG: number;
+  Liter: number;
+};
+
 // 定義任務類型
 type TaskItem = {
   id: string;
@@ -48,12 +63,20 @@ type TaskItem = {
 };
 
 // 定義需要的 Google Maps 庫（'places' 用於地理編碼）
-const libraries = ['places'];
+const libraries: (
+  | 'places'
+  | 'drawing'
+  | 'geometry'
+  | 'localContext'
+  | 'visualization'
+)[] = ['places'];
 
 function OrderDetails() {
   const navigate = useNavigate();
   const { taskId } = useParams();
   const [task, setTask] = useState<TaskItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // 使用 useJsApiLoader 來處理 Google Maps API 載入
   const { isLoaded, loadError } = useJsApiLoader({
@@ -75,17 +98,60 @@ function OrderDetails() {
   //追蹤是否已嘗試過地理編碼，避免重複操作
   const [geocodeAttempted, setGeocodeAttempted] = useState(false);
 
-  // 從 localStorage 讀取任務資訊
+  // 從 API 讀取任務資訊
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
-      const tasks: TaskItem[] = JSON.parse(savedTasks);
-      const currentTask = tasks.find((t) => t.id === taskId);
-      if (currentTask) {
-        setTask(currentTask);
+    const fetchTaskDetails = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`api/GET/driver/today/7/${taskId}`);
+
+        if (response.data.status && response.data.result.Orders.length > 0) {
+          const apiTask = response.data.result.Orders[0];
+          const mappedTask: TaskItem = {
+            id: apiTask.OrderDetailsNumber,
+            status: mapApiStatusToTaskStatus(apiTask.Status),
+            time: apiTask.ServiceTime || '',
+            address: apiTask.Addresses,
+            customerName: apiTask.CustomerName,
+            phone: apiTask.CustomerNumber,
+            notes: apiTask.Notes,
+            weight: apiTask.PlanKG.toString(),
+            photos: apiTask.Photo,
+          };
+          setTask(mappedTask);
+        } else {
+          setError('找不到任務資訊');
+        }
+      } catch (err) {
+        setError('獲取任務資訊時發生錯誤');
+        console.error('Error fetching task details:', err);
+      } finally {
+        setLoading(false);
       }
+    };
+
+    if (taskId) {
+      fetchTaskDetails();
     }
   }, [taskId]);
+
+  // 將 API 狀態映射到 TaskStatus
+  const mapApiStatusToTaskStatus = (apiStatus: string): TaskStatus => {
+    switch (apiStatus) {
+      case '已排定':
+        return 'scheduled';
+      case '進行中':
+        return 'ongoing';
+      case '已完成':
+        return 'completed';
+      case '已抵達':
+        return 'arrived';
+      case '異常':
+        return 'abnormal';
+      default:
+        return 'scheduled';
+    }
+  };
 
   // 地理編碼函數 使用 useCallback 以避免不必要的重新創建
   const geocodeAddress = useCallback(async (address: string) => {
@@ -160,12 +226,18 @@ function OrderDetails() {
     navigate(-1);
   };
 
-  // 如果找不到任務，顯示載入中或錯誤訊息
-  if (!task) {
+  // 載入狀態
+  if (loading) {
+    return <LoadingMessage />;
+  }
+
+  // 錯誤狀態
+  if (error) {
     return (
       <FullHeightContainer>
         <HeaderContainer>
-          <PageTitle>載入中...</PageTitle>
+          <PageTitle>錯誤</PageTitle>
+          <PageSubtitle>{error}</PageSubtitle>
         </HeaderContainer>
       </FullHeightContainer>
     );
@@ -173,57 +245,45 @@ function OrderDetails() {
 
   return (
     <FullHeightContainer>
+      {/* NavHeader  */}
       <HeaderContainer>
         <PageTitle onClick={handleBack}>
           <IconStyled>
-            <HiChevronLeft />
+            <MdArrowBackIosNew />
           </IconStyled>
           訂單詳情
         </PageTitle>
-        <PageSubtitle>定單編號: {task.id}</PageSubtitle>
+        <PageSubtitle>訂單編號: {task.id}</PageSubtitle>
       </HeaderContainer>
+
+      {/* 時間卡片 */}
+      <DetailCard>
+        <DetailRow>
+          <DetailTime>{formatTime(task.time)}</DetailTime>
+          <StatusTagDeliver status={task.status} />
+        </DetailRow>
+      </DetailCard>
+
+      {/* 客戶資訊 */}
+      <Title>客戶資訊</Title>
 
       <DetailCard>
         <DetailRow>
-          <DetailTime>{task.time}</DetailTime>
-          <DetailStatus>代收運</DetailStatus>
-        </DetailRow>
-        <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiDocumentText />
-            </DetailSign>
-            訂單編號
-          </DetailLabel>
+          <DetailLabel>訂單編號</DetailLabel>
           <DetailValue>{task.id}</DetailValue>
         </DetailRow>
 
         <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiMiniUser />
-            </DetailSign>
-            聯絡人
-          </DetailLabel>
+          <DetailLabel>聯絡人</DetailLabel>
           <DetailValue>{task.customerName}</DetailValue>
         </DetailRow>
 
         <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiPhone />
-            </DetailSign>
-            電話
-          </DetailLabel>
+          <DetailLabel>電話</DetailLabel>
           <DetailValue>{task.phone}</DetailValue>
         </DetailRow>
         <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiMapPin />
-            </DetailSign>
-            放置固定點
-          </DetailLabel>
+          <DetailLabel>放置固定點</DetailLabel>
           <DetailValue>{task.notes}</DetailValue>
         </DetailRow>
 
@@ -249,7 +309,7 @@ function OrderDetails() {
         <DetailRow>
           <DetailLabel>
             <DetailSign>
-              <HiMapPin />
+              <MdLocationOn />
             </DetailSign>
             地址
           </DetailLabel>

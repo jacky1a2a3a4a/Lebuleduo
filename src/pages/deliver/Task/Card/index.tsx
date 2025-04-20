@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { HiDocumentText, HiMiniTruck, HiXCircle } from 'react-icons/hi2';
 import StatusTag from '../../../../components/deliver/StatusTagDeliver';
 import { TaskStatus } from '../../../../types/deliver';
+import { formatTime } from '../../../../utils/formatTime';
 
 // 添加 BASE_URL 常數
 const BASE_URL = 'http://lebuleduo.rocket-coding.com';
@@ -30,6 +31,7 @@ export type TaskCardProps = {
   notes: string;
   onStatusChange?: (taskId: string, newStatus: TaskStatus) => void;
   photos?: string[];
+  isDisabled?: boolean;
 };
 
 //函式本體
@@ -42,22 +44,10 @@ export const TaskCard = ({
   notes,
   onStatusChange,
   photos,
+  isDisabled = false,
 }: TaskCardProps) => {
   // 路由 跳轉
   const navigate = useNavigate();
-
-  // 格式化時間顯示
-  // "09:30" → "9:30 AM"
-  // "14:30" → "2:30 PM"
-  const formatTime = (timeStr: string | null) => {
-    if (!timeStr) return '-';
-
-    const [hours, minutes] = timeStr.split(':');
-    const hour = parseInt(hours, 10);
-    const period = hour < 12 ? 'AM' : 'PM';
-    const formattedHour = hour % 12 || 12; // 將 0 轉換為 12
-    return `${formattedHour}:${minutes} ${period}`;
-  };
 
   // 訂單詳情 路由
   const handleOrderDetail = () => {
@@ -120,7 +110,9 @@ export const TaskCard = ({
           <TaskCardButton
             $styledType={status === 'ongoing' ? 'secondary' : 'primary'}
             onClick={handleStatusChange}
-            $disabled={status === 'completed' || status === 'abnormal'}
+            $disabled={
+              status === 'completed' || status === 'abnormal' || isDisabled
+            }
           >
             {status === 'ongoing' ? <HiXCircle /> : <HiMiniTruck />}
             {getActionButtonText()}

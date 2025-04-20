@@ -1,31 +1,35 @@
 import styled from 'styled-components';
 
-// 最外層容器
+// === 最外層容器 ===
 export const FullHeightContainer = styled.div`
-  background-color: var(--color-gray-100);
+  background-color: var(--color-white);
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  max-width: var(--mobile-min-width);
   min-height: 100vh;
-  padding: var(--spacing-14);
+  padding: var(--spacing-md);
+  margin: 0 auto;
 `;
 
-// 頁面標題容器
+// === 導航 大容器 ===
 export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: calc(var(--min-width-mobile) - 2rem);
+  max-width: var(--mobile-min-width);
 
   margin: var(--spacing-sm) 0 var(--spacing-md) 0;
 `;
 
+// === 導航 文字容器 ===
 export const PageTitle = styled.div`
   color: var(--color-text-primary);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,6 +42,7 @@ export const PageTitle = styled.div`
   }
 `;
 
+//  導航 圖示
 export const IconStyled = styled.div`
   height: 24px;
   display: flex;
@@ -45,24 +50,39 @@ export const IconStyled = styled.div`
   align-items: center;
 `;
 
+// 導航 副標題
 export const PageSubtitle = styled.div`
-  color: var(--color-gray-400);
+  color: var(--color-text-tertiary);
   font-size: var(--font-size-xs);
-  font-weight: 500;
+  font-weight: var(--font-weight-normal);
 `;
 
-// 訂單詳情卡片
+// === 通用大標題文字 ===
+export const Title = styled.div`
+  color: var(--color-text-primary);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+
+  margin-bottom: var(--spacing-xs);
+`;
+
+// === 通用容器卡片 ===
 export const DetailCard = styled.div`
   background-color: var(--color-gray-0);
   border: 1.5px solid var(--color-gray-300);
   border-radius: var(--border-radius-lg);
   width: 100%;
-  max-width: calc(var(--min-width-mobile) - 2rem);
+  max-width: calc(var(--mobile-min-width) - 2rem);
   padding: var(--spacing-md);
   margin-bottom: 1rem;
 `;
 
-// 訂單詳情容器
+// 通用容器 水平分散
 export const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
@@ -70,9 +90,12 @@ export const DetailRow = styled.div`
   margin-bottom: var(--spacing-xs);
 `;
 
+//時間
 export const DetailTime = styled.div`
-  font-size: var(--font-size-2xl);
-  font-weight: 600;
+  color: var(--color-text-primary);
+
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
 `;
 
 export const DetailStatus = styled.div`

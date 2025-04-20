@@ -261,6 +261,19 @@ function Task() {
   // 更新任務狀態
   const handleTaskStatusChange = (taskId: string, newStatus: TaskStatus) => {
     setTasks((prevTasks) => {
+      // 如果新狀態是 ongoing，檢查是否已經有進行中的任務
+      if (newStatus === 'ongoing') {
+        const hasOngoingTask = prevTasks.some(
+          (task) => task.status === 'ongoing' && task.id !== taskId,
+        );
+
+        // 如果已經有進行中的任務，則不允許更改狀態
+        if (hasOngoingTask) {
+          return prevTasks;
+        }
+      }
+
+      // 更新任務狀態
       const updatedTasks = prevTasks.map((task) =>
         task.id === taskId ? { ...task, status: newStatus } : task,
       );
@@ -363,7 +376,7 @@ function Task() {
           </DeliverGreeting>
 
           {/* 進行中的任務 */}
-          {ongoingTask && ongoingTask[0] && (
+          {ongoingTask && ongoingTask.length > 0 && (
             <OngoingTaskContainer>
               <OngoingTaskTitle>進行中的任務</OngoingTaskTitle>
               <TaskCard
@@ -373,6 +386,7 @@ function Task() {
                 address={ongoingTask[0].address}
                 notes={ongoingTask[0].notes}
                 onStatusChange={handleTaskStatusChange}
+                photos={ongoingTask[0].photos}
               />
             </OngoingTaskContainer>
           )}
@@ -400,7 +414,7 @@ function Task() {
 
                 <StatusItem $isEmpty={true}>
                   <Label>異常:</Label>
-                  <span>0</span>
+                  <span>{abnormalTasks.length}</span>
                 </StatusItem>
               </ProgressStatus>
             </DeliverProgressHeader>
@@ -454,6 +468,9 @@ function Task() {
               notes={task.notes}
               onStatusChange={handleTaskStatusChange}
               photos={task.photos}
+              isDisabled={
+                ongoingTask && ongoingTask[0] && task.status === 'scheduled'
+              }
             />
           ))}
         </TaskCardsContainer>

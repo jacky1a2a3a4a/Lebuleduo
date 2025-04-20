@@ -169,6 +169,7 @@ export const TaskCardButton = styled.button<{
     height: 1.25rem;
   }
 
+  // 訂單詳情按鈕
   &:first-child {
     background-color: var(--color-gray-0);
     color: var(--color-primary);
@@ -181,6 +182,7 @@ export const TaskCardButton = styled.button<{
     }
   }
 
+  // 確認前往/取消前往 按鈕
   &:last-child {
     background-color: ${({ $styledType }) =>
       $styledType === 'secondary'
@@ -188,8 +190,8 @@ export const TaskCardButton = styled.button<{
         : 'var(--color-primary)'};
     color: ${({ $styledType }) =>
       $styledType === 'secondary'
-        ? 'var(--color-text-tertiary)'
-        : 'var(--color-gray-0)'};
+        ? 'var(--color-white)'
+        : 'var(--color-white)'};
     flex: 1.5;
     border: ${({ $styledType }) =>
       $styledType === 'secondary'
