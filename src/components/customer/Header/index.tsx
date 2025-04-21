@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { HiMiniPlus } from 'react-icons/hi2';
+import logo from '../../../assets/logotype/logotype-customer-white.png';
 
 import CommonHeader, { ActionButton } from '../../common/Header';
 
@@ -51,6 +52,7 @@ function CustomerHeader() {
     <CommonHeader
       title="Lebu-leduo"
       titlePath="/customer"
+      titleImage={logo}
       actionButton={subscribeButtonComponent}
     />
   );

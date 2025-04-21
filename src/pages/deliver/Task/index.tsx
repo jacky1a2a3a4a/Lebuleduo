@@ -27,6 +27,7 @@ import {
 } from './styled';
 import TaskCard from './Card';
 import Loading from '../../../components/common/LoadingMessage';
+import ErrorReport from '../../../components/common/ErrorReport';
 import { TaskStatus } from '../../../types/deliver';
 
 // API 回傳的資料結構
@@ -361,11 +362,6 @@ function Task() {
   return (
     <TaskSectionStyled $topPosition={topPosition}>
       {isLoading && <Loading />}
-      {error && (
-        <div>
-          錯誤: {error} <button onClick={fetchTasks}>重試</button>
-        </div>
-      )}
 
       {/* 外送員卡片 */}
       <DeliverContainer ref={deliverContainerRef}>
@@ -455,6 +451,9 @@ function Task() {
             </CategoryTab>
           </TaskCategoryContainer>
         </TaskCategoryWrapper>
+
+        {/* 錯誤訊息 */}
+        {error && <ErrorReport title="錯誤" error={error} />}
 
         {/* 任務卡片 */}
         <TaskCardsContainer>

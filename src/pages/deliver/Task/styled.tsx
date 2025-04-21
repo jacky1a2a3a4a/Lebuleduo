@@ -48,7 +48,7 @@ export const DeliverContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
 
-  padding: var(--spacing-20) var(--spacing-md);
+  padding: var(--spacing-md);
 `;
 
 // === 外送員卡片 容器===

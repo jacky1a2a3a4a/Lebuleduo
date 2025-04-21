@@ -10,16 +10,13 @@ export const ActionButton = styled.button`
   background-color: transparent;
 `;
 
-/**
- * 通用頁首屬性接口
- */
+// 通用頁首屬性接口
 export interface HeaderProps {
-  /** 頁首標題文字 */
-  title: string;
-  /** 點擊標題跳轉的路徑 */
-  titlePath?: string;
-  /** 右側自定義操作按鈕 */
-  actionButton?: ReactNode;
+  title: string; //頁首標題文字
+  titlePath?: string; //點擊標題跳轉的路徑
+  actionButton?: ReactNode; //右側自定義操作按鈕
+  titleImage?: string; //標題圖片
+  imageHeight?: string; // 標題圖片高度
 }
 
 const minWidthMobilePlus = 403;
@@ -47,7 +44,7 @@ const HeaderContainer = styled.header`
 `;
 
 // Header 標題
-const HeaderTitle = styled.button`
+const HeaderTitle = styled.button<{ imageHeight?: string }>`
   color: var(--color-white);
 
   display: flex;
@@ -56,14 +53,11 @@ const HeaderTitle = styled.button`
   text-align: center;
   height: 100%;
 
-  font-size: var(--font-size-2xl);
-  font-weight: 700;
-  line-height: 1;
-  padding: 0;
-  margin: 0;
+  cursor: pointer;
 
-  &:hover {
-    /* color: var(--color-gray-100); */
+  img {
+    height: ${(props) => props.imageHeight || '20px'};
+    width: auto;
   }
 `;
 
@@ -71,14 +65,25 @@ const HeaderTitle = styled.button`
  * 通用頁首組件
  * 包含漢堡按鈕、標題和可選的右側操作按鈕
  */
-function CommonHeader({ title, titlePath = '/', actionButton }: HeaderProps) {
+function CommonHeader({
+  title,
+  titlePath = '/',
+  actionButton,
+  titleImage,
+  imageHeight,
+}: HeaderProps) {
   const navigate = useNavigate();
 
   return (
     <HeaderWrapper>
       <HeaderContainer>
         <BurgerButton />
-        <HeaderTitle onClick={() => navigate(titlePath)}>{title}</HeaderTitle>
+        <HeaderTitle
+          onClick={() => navigate(titlePath)}
+          imageHeight={imageHeight}
+        >
+          {titleImage ? <img src={titleImage} alt={title} /> : title}
+        </HeaderTitle>
         {actionButton}
       </HeaderContainer>
     </HeaderWrapper>
