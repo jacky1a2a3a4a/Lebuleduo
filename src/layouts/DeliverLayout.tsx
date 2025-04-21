@@ -8,18 +8,16 @@ const AppLayoutStyled = styled.section`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
-  width: 100%;
+  width: var(--mobile-min-width);
   height: 100vh;
-  overflow-x: hidden;
+  margin: 0 auto;
 `;
 
 const Main = styled.main`
-  /* background-color: var(--color-gray-500); */
-  /* padding: 0.5rem var(--spacing-14); */
+  background-color: var(--color-gray-200);
   height: 100%;
   overflow: hidden;
 `;
-
 
 function DeliverLayout() {
   return (

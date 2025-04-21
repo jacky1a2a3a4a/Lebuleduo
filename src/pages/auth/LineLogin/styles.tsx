@@ -56,12 +56,13 @@ export const WelcomeText = styled.h1`
 `;
 
 // 登入頁面 歡迎文字 主要文字
-export const TextMain = styled.span`
+export const LogoType = styled.img`
   color: var(--color-white);
-  font-size: var(--font-size-3xl);
-  font-weight: bold;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: var(--spacing-2);
+
+  width: 100%;
+  max-width: 160px;
+
+  margin: var(--spacing-md) 0 var(--spacing-sm);
 `;
 
 // 登入頁面 歡迎文字 副文字
@@ -166,7 +167,7 @@ export const LineButton = styled.button<{
   color: white;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  padding: var(--spacing-12) var(--spacing-2xl);
+  padding: var(--spacing-md) var(--spacing-2xl);
   margin-bottom: var(--spacing-md);
   border-radius: var(--border-radius-round);
   cursor: pointer;
@@ -192,15 +193,15 @@ export const LineButton = styled.button<{
 
 export const IconStyled = styled.div`
   margin-right: var(--spacing-12);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
 `;
 
 export const BackButton = styled.button<{
   $isAnimating: boolean;
   $isExiting: boolean;
 }>`
-  background-color: var(--color-gray-50);
-  color: var(--color-gray-600);
+  background-color: var(--color-white);
+  color: var(--color-text-disabled);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   padding: var(--spacing-12) var(--spacing-2xl);
@@ -209,7 +210,6 @@ export const BackButton = styled.button<{
   align-items: center;
   justify-content: center;
   width: 100%;
-  border: 2px solid var(--color-gray-300);
   border-radius: var(--border-radius-round);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: ${({ $isExiting }) =>

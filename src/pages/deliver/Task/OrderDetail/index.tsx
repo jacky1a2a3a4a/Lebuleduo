@@ -1,28 +1,21 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  HiDocumentText,
-  HiMiniUser,
-  HiMapPin,
-  HiPhone,
-  HiChevronLeft,
-} from 'react-icons/hi2';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { useEffect, useState, useCallback } from 'react';
-import { TaskStatus } from '../Card';
+import axios from 'axios';
+import { MdArrowBackIosNew, MdLocationOn } from 'react-icons/md';
 import {
   FullHeightContainer,
   HeaderContainer,
   PageTitle,
   PageSubtitle,
   IconStyled,
+  Title,
   DetailCard,
   DetailRow,
+  DetailFlex,
   DetailTime,
-  DetailStatus,
   DetailSign,
   DetailLabel,
   DetailValue,
-  Divider,
   DetailImgContainer,
   DetailImg,
   DetailAddress,
@@ -34,26 +27,43 @@ import {
   ErrorMessage,
 } from './styled';
 
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { TaskStatus } from '../../../../types/deliver';
+import { formatTime } from '../../../../utils/formatTime';
+import LoadingMessage from '../../../../components/common/LoadingMessage';
+import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
+
 // 定義任務類型
 type TaskItem = {
-  id: string;
+  id: number;
+  number: string;  
   status: TaskStatus;
   time: string;
   address: string;
   customerName: string;
   phone: string;
   notes: string;
-  weight?: string;
-  photos?: string[];
+  plan: string;
+  weight?: number;
+  liter?: number;
+  dropPointPhotos?: string[]; //放置點圖片
 };
 
 // 定義需要的 Google Maps 庫（'places' 用於地理編碼）
-const libraries = ['places'];
+const libraries: (
+  | 'places'
+  | 'drawing'
+  | 'geometry'
+  | 'localContext'
+  | 'visualization'
+)[] = ['places'];
 
 function OrderDetails() {
   const navigate = useNavigate();
   const { taskId } = useParams();
   const [task, setTask] = useState<TaskItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // 使用 useJsApiLoader 來處理 Google Maps API 載入
   const { isLoaded, loadError } = useJsApiLoader({
@@ -75,17 +85,66 @@ function OrderDetails() {
   //追蹤是否已嘗試過地理編碼，避免重複操作
   const [geocodeAttempted, setGeocodeAttempted] = useState(false);
 
-  // 從 localStorage 讀取任務資訊
+  // 從 API 讀取任務資訊
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
-      const tasks: TaskItem[] = JSON.parse(savedTasks);
-      const currentTask = tasks.find((t) => t.id === taskId);
-      if (currentTask) {
-        setTask(currentTask);
+    const fetchTaskDetails = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`api/GET/driver/today/7/${taskId}`);
+
+        if (response.data.status && response.data.result.Orders.length > 0) {
+          const apiTask = response.data.result.Orders[0];
+          const TaskDetail: TaskItem = {
+            id: apiTask.OrderDetailID, //ID
+            number: apiTask.OrderDetailsNumber, //訂單編號
+            status: mapApiStatusToTaskStatus(apiTask.Status),
+            time: apiTask.ServiceTime || '',
+            address: apiTask.Addresses,
+            customerName: apiTask.CustomerName,
+            phone: apiTask.OrderDetailsNumber,
+            notes: apiTask.Notes,
+            plan: apiTask.PlanName,
+            weight: apiTask.PlanKG.toString(),
+            liter: apiTask.Liter.toString(),
+            dropPointPhotos: apiTask.Photo?.map(
+              (photo) => `${import.meta.env.VITE_API_DOMAIN_URL}${photo}`,
+            ),
+          };
+          setTask(TaskDetail);
+          console.log('處理完成的任務:', TaskDetail);
+        } else {
+          setError('找不到任務資訊');
+        }
+      } catch (err) {
+        setError('獲取任務資訊時發生錯誤');
+        console.error('Error fetching task details:', err);
+      } finally {
+        setLoading(false);
       }
+    };
+
+    if (taskId) {
+      fetchTaskDetails();
     }
   }, [taskId]);
+
+  // 將 API 中文狀態轉換成英文映射到 TaskStatus.ts
+  const mapApiStatusToTaskStatus = (apiStatus: string): TaskStatus => {
+    switch (apiStatus) {
+      case '已排定':
+        return 'scheduled';
+      case '進行中':
+        return 'ongoing';
+      case '已完成':
+        return 'completed';
+      case '已抵達':
+        return 'arrived';
+      case '異常':
+        return 'abnormal';
+      default:
+        return 'scheduled';
+    }
+  };
 
   // 地理編碼函數 使用 useCallback 以避免不必要的重新創建
   const geocodeAddress = useCallback(async (address: string) => {
@@ -148,7 +207,7 @@ function OrderDetails() {
     if (savedTasks) {
       const tasks: TaskItem[] = JSON.parse(savedTasks);
       const updatedTasks = tasks.map((task) =>
-        task.id === taskId
+        task.id === task.id
           ? {
               ...task,
               status: task.status === 'ongoing' ? 'waiting' : 'ongoing',
@@ -160,12 +219,18 @@ function OrderDetails() {
     navigate(-1);
   };
 
-  // 如果找不到任務，顯示載入中或錯誤訊息
-  if (!task) {
+  // 載入狀態
+  if (loading) {
+    return <LoadingMessage />;
+  }
+
+  // 錯誤狀態
+  if (error) {
     return (
       <FullHeightContainer>
         <HeaderContainer>
-          <PageTitle>載入中...</PageTitle>
+          <PageTitle>錯誤</PageTitle>
+          <PageSubtitle>{error}</PageSubtitle>
         </HeaderContainer>
       </FullHeightContainer>
     );
@@ -173,71 +238,50 @@ function OrderDetails() {
 
   return (
     <FullHeightContainer>
+      {/* NavHeader  */}
       <HeaderContainer>
         <PageTitle onClick={handleBack}>
           <IconStyled>
-            <HiChevronLeft />
+            <MdArrowBackIosNew />
           </IconStyled>
           訂單詳情
         </PageTitle>
-        <PageSubtitle>定單編號: {task.id}</PageSubtitle>
+        <PageSubtitle>訂單編號: {task.id}</PageSubtitle>
       </HeaderContainer>
+
+      {/* 時間卡片 */}
+      <DetailCard>
+        <DetailRow>
+          <DetailTime>{formatTime(task.time)}</DetailTime>
+          <StatusTagDeliver status={task.status} />
+        </DetailRow>
+      </DetailCard>
+
+      {/* 客戶資訊 */}
+      <Title>客戶資訊</Title>
 
       <DetailCard>
         <DetailRow>
-          <DetailTime>{task.time}</DetailTime>
-          <DetailStatus>代收運</DetailStatus>
-        </DetailRow>
-        <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiDocumentText />
-            </DetailSign>
-            訂單編號
-          </DetailLabel>
-          <DetailValue>{task.id}</DetailValue>
-        </DetailRow>
-
-        <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiMiniUser />
-            </DetailSign>
-            聯絡人
-          </DetailLabel>
+          <DetailLabel>聯絡人</DetailLabel>
           <DetailValue>{task.customerName}</DetailValue>
         </DetailRow>
 
         <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiPhone />
-            </DetailSign>
-            電話
-          </DetailLabel>
+          <DetailLabel>電話</DetailLabel>
           <DetailValue>{task.phone}</DetailValue>
         </DetailRow>
         <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiMapPin />
-            </DetailSign>
-            放置固定點
-          </DetailLabel>
+          <DetailLabel>放置固定點</DetailLabel>
           <DetailValue>{task.notes}</DetailValue>
         </DetailRow>
 
-        <Divider />
-
         {/* 放置點圖片 */}
         <DetailImgContainer>
-          <DetailImg>
-            {/* 可以在這裡添加實際的圖片標籤 */}
-            {/* <img src="/路徑/到/圖片.jpg" alt="放置點" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> */}
-          </DetailImg>
-          <DetailImg>
-            {/* <img src="/路徑/到/圖片2.jpg" alt="放置點" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> */}
-          </DetailImg>
+          {task.dropPointPhotos?.map((photo, index) => (
+            <DetailImg key={index}>
+              <img src={photo} alt={`放置點照片 ${index + 1}`} />
+            </DetailImg>
+          ))}
         </DetailImgContainer>
       </DetailCard>
 
@@ -246,17 +290,15 @@ function OrderDetails() {
       </HeaderContainer>
 
       <DetailCard>
-        <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <HiMapPin />
-            </DetailSign>
-            地址
-          </DetailLabel>
+        <DetailFlex>
+          <DetailSign>
+            <MdLocationOn />
+          </DetailSign>
+
           <DetailValue>
             <DetailAddress>{task.address}</DetailAddress>
           </DetailValue>
-        </DetailRow>
+        </DetailFlex>
 
         <MapContainer>
           {loadError && (
@@ -268,7 +310,7 @@ function OrderDetails() {
             <GoogleMap
               mapContainerStyle={{
                 width: '100%',
-                height: '200px',
+                height: '150px',
                 borderRadius: 'var(--border-radius-md)',
               }}
               center={mapCenter || { lat: 25.033, lng: 121.5654 }} // 默認台北市中心
@@ -286,10 +328,12 @@ function OrderDetails() {
       </HeaderContainer>
 
       <DetailCard>
-        <PlanTitle>標準方案(50L / 10kg)</PlanTitle>
-        <PlanContent>一般垃圾+回收+廚餘 = 50公升</PlanContent>
+        <PlanTitle>{task.plan}</PlanTitle>
+        <PlanContent>
+          一般垃圾+回收+廚餘 = {task.liter}L / {task.weight}kg
+        </PlanContent>
 
-        {task.status === 'completed' && (
+        {/* {task.status === 'completed' && (
           <>
             <Divider />
             <HeaderContainer>
@@ -317,14 +361,14 @@ function OrderDetails() {
               ))}
             </DetailImgContainer>
           </>
-        )}
+        )} */}
       </DetailCard>
 
       <DetailButtons>
         <Button
           onClick={handleStatusChange}
           disabled={task.status === 'completed'}
-          isCancel={task.status === 'ongoing'}
+          $isCancel={task.status === 'ongoing'}
         >
           {task.status === 'completed'
             ? '已完成'

@@ -8,7 +8,7 @@ import {
 } from 'react-icons/hi2';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useEffect, useState, useRef } from 'react';
-import { TaskStatus } from '../Card';
+import { TaskStatus } from '../../../../types/deliver';
 import Webcam from 'react-webcam';
 import {
   FullHeightContainer,

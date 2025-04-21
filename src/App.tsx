@@ -37,7 +37,7 @@ import CompletedFinishedTask from './pages/customer/OrderTaskStatus/CompletedFin
 
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
-import OrderDetails from './pages/deliver/Task/OrderDetails';
+import OrderDetailDeliver from './pages/deliver/Task/OrderDetail';
 import OrderInProcess from './pages/deliver/Task/OrderInProcess';
 import ScanOrder from './pages/deliver/ScanOrder';
 import Calendar from './pages/deliver/Calendar';
@@ -239,7 +239,7 @@ const AppContent = () => {
         }
       />
 
-      {/* DOG路由 */}
+      {/* 汪汪員路由 */}
       <Route
         path="/deliver"
         element={
@@ -259,7 +259,7 @@ const AppContent = () => {
         path="/deliver/task/:taskId"
         element={
           <ProtectedRoute role="deliver">
-            <OrderDetails />
+            <OrderDetailDeliver />
           </ProtectedRoute>
         }
       />
