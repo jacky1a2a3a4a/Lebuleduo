@@ -5,7 +5,7 @@ import { TaskStatus } from '../../../../types/deliver';
 import { formatTime } from '../../../../utils/formatTime';
 
 // 添加 BASE_URL 常數
-const BASE_URL = 'http://lebuleduo.rocket-coding.com';
+const BASE_URL = 'https://lebuleduo.rocket-coding.com';
 
 import {
   TaskCardWrapper,

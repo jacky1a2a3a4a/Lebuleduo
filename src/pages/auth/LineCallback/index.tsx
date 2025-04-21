@@ -63,7 +63,7 @@ const LineCallback = () => {
 
         // 驗證授權碼(code)
         if (!code) {
-          throw new Error('無法獲取授權碼');
+          throw new Error('授權碼為空，請重新登入');
         }
 
         // 驗證 state 參數
@@ -89,7 +89,7 @@ const LineCallback = () => {
           });
 
           const response = await axios.post(
-            '/api/auth/line/callback',
+            `/api/auth/line/callback`,
             {
               code,
               role: userRole,
@@ -97,9 +97,6 @@ const LineCallback = () => {
             {
               headers: {
                 'Content-Type': 'application/json',
-              },
-              validateStatus: function (status) {
-                return status >= 200 && status < 500; // 接受 400 狀態碼
               },
             },
           );

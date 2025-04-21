@@ -50,7 +50,7 @@ import {
 } from './styled';
 
 // 虛擬機URL(照片會用到)
-const BASE_URL = 'http://lebuleduo.rocket-coding.com';
+const BASE_URL = 'https://lebuleduo.rocket-coding.com';
 
 // 組件本體
 function MyOrder() {
