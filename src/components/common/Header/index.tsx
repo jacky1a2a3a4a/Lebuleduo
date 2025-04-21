@@ -44,7 +44,7 @@ const HeaderContainer = styled.header`
 `;
 
 // Header 標題
-const HeaderTitle = styled.button<{ imageHeight?: string }>`
+const HeaderTitle = styled.button<{ $imageHeight?: string }>`
   color: var(--color-white);
 
   display: flex;
@@ -56,7 +56,7 @@ const HeaderTitle = styled.button<{ imageHeight?: string }>`
   cursor: pointer;
 
   img {
-    height: ${(props) => props.imageHeight || '20px'};
+    height: ${(props) => props.$imageHeight || '20px'};
     width: auto;
   }
 `;
@@ -80,7 +80,7 @@ function CommonHeader({
         <BurgerButton />
         <HeaderTitle
           onClick={() => navigate(titlePath)}
-          imageHeight={imageHeight}
+          $imageHeight={imageHeight}
         >
           {titleImage ? <img src={titleImage} alt={title} /> : title}
         </HeaderTitle>
