@@ -11,11 +11,11 @@ import {
   Title,
   DetailCard,
   DetailRow,
+  DetailFlex,
   DetailTime,
   DetailSign,
   DetailLabel,
   DetailValue,
-  Divider,
   DetailImgContainer,
   DetailImg,
   DetailAddress,
@@ -33,33 +33,20 @@ import { formatTime } from '../../../../utils/formatTime';
 import LoadingMessage from '../../../../components/common/LoadingMessage';
 import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 
-// 定義 API 回傳的任務類型
-type ApiTaskItem = {
-  OrderDetailID: number;
-  ServiceTime: string | null;
-  OrderDetailsNumber: string;
-  Addresses: string;
-  CustomerNumber: string;
-  CustomerName: string;
-  Notes: string;
-  Photo: string[];
-  Status: string;
-  PlanName: string;
-  PlanKG: number;
-  Liter: number;
-};
-
 // 定義任務類型
 type TaskItem = {
-  id: string;
+  id: number;
+  number: string;  
   status: TaskStatus;
   time: string;
   address: string;
   customerName: string;
   phone: string;
   notes: string;
-  weight?: string;
-  photos?: string[];
+  plan: string;
+  weight?: number;
+  liter?: number;
+  dropPointPhotos?: string[]; //放置點圖片
 };
 
 // 定義需要的 Google Maps 庫（'places' 用於地理編碼）
@@ -107,18 +94,24 @@ function OrderDetails() {
 
         if (response.data.status && response.data.result.Orders.length > 0) {
           const apiTask = response.data.result.Orders[0];
-          const mappedTask: TaskItem = {
-            id: apiTask.OrderDetailsNumber,
+          const TaskDetail: TaskItem = {
+            id: apiTask.OrderDetailID, //ID
+            number: apiTask.OrderDetailsNumber, //訂單編號
             status: mapApiStatusToTaskStatus(apiTask.Status),
             time: apiTask.ServiceTime || '',
             address: apiTask.Addresses,
             customerName: apiTask.CustomerName,
-            phone: apiTask.CustomerNumber,
+            phone: apiTask.OrderDetailsNumber,
             notes: apiTask.Notes,
+            plan: apiTask.PlanName,
             weight: apiTask.PlanKG.toString(),
-            photos: apiTask.Photo,
+            liter: apiTask.Liter.toString(),
+            dropPointPhotos: apiTask.Photo?.map(
+              (photo) => `${import.meta.env.VITE_API_DOMAIN_URL}${photo}`,
+            ),
           };
-          setTask(mappedTask);
+          setTask(TaskDetail);
+          console.log('處理完成的任務:', TaskDetail);
         } else {
           setError('找不到任務資訊');
         }
@@ -135,7 +128,7 @@ function OrderDetails() {
     }
   }, [taskId]);
 
-  // 將 API 狀態映射到 TaskStatus
+  // 將 API 中文狀態轉換成英文映射到 TaskStatus.ts
   const mapApiStatusToTaskStatus = (apiStatus: string): TaskStatus => {
     switch (apiStatus) {
       case '已排定':
@@ -214,7 +207,7 @@ function OrderDetails() {
     if (savedTasks) {
       const tasks: TaskItem[] = JSON.parse(savedTasks);
       const updatedTasks = tasks.map((task) =>
-        task.id === taskId
+        task.id === task.id
           ? {
               ...task,
               status: task.status === 'ongoing' ? 'waiting' : 'ongoing',
@@ -269,11 +262,6 @@ function OrderDetails() {
 
       <DetailCard>
         <DetailRow>
-          <DetailLabel>訂單編號</DetailLabel>
-          <DetailValue>{task.id}</DetailValue>
-        </DetailRow>
-
-        <DetailRow>
           <DetailLabel>聯絡人</DetailLabel>
           <DetailValue>{task.customerName}</DetailValue>
         </DetailRow>
@@ -287,17 +275,13 @@ function OrderDetails() {
           <DetailValue>{task.notes}</DetailValue>
         </DetailRow>
 
-        <Divider />
-
         {/* 放置點圖片 */}
         <DetailImgContainer>
-          <DetailImg>
-            {/* 可以在這裡添加實際的圖片標籤 */}
-            {/* <img src="/路徑/到/圖片.jpg" alt="放置點" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> */}
-          </DetailImg>
-          <DetailImg>
-            {/* <img src="/路徑/到/圖片2.jpg" alt="放置點" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> */}
-          </DetailImg>
+          {task.dropPointPhotos?.map((photo, index) => (
+            <DetailImg key={index}>
+              <img src={photo} alt={`放置點照片 ${index + 1}`} />
+            </DetailImg>
+          ))}
         </DetailImgContainer>
       </DetailCard>
 
@@ -306,17 +290,15 @@ function OrderDetails() {
       </HeaderContainer>
 
       <DetailCard>
-        <DetailRow>
-          <DetailLabel>
-            <DetailSign>
-              <MdLocationOn />
-            </DetailSign>
-            地址
-          </DetailLabel>
+        <DetailFlex>
+          <DetailSign>
+            <MdLocationOn />
+          </DetailSign>
+
           <DetailValue>
             <DetailAddress>{task.address}</DetailAddress>
           </DetailValue>
-        </DetailRow>
+        </DetailFlex>
 
         <MapContainer>
           {loadError && (
@@ -328,7 +310,7 @@ function OrderDetails() {
             <GoogleMap
               mapContainerStyle={{
                 width: '100%',
-                height: '200px',
+                height: '150px',
                 borderRadius: 'var(--border-radius-md)',
               }}
               center={mapCenter || { lat: 25.033, lng: 121.5654 }} // 默認台北市中心
@@ -346,10 +328,12 @@ function OrderDetails() {
       </HeaderContainer>
 
       <DetailCard>
-        <PlanTitle>標準方案(50L / 10kg)</PlanTitle>
-        <PlanContent>一般垃圾+回收+廚餘 = 50公升</PlanContent>
+        <PlanTitle>{task.plan}</PlanTitle>
+        <PlanContent>
+          一般垃圾+回收+廚餘 = {task.liter}L / {task.weight}kg
+        </PlanContent>
 
-        {task.status === 'completed' && (
+        {/* {task.status === 'completed' && (
           <>
             <Divider />
             <HeaderContainer>
@@ -377,14 +361,14 @@ function OrderDetails() {
               ))}
             </DetailImgContainer>
           </>
-        )}
+        )} */}
       </DetailCard>
 
       <DetailButtons>
         <Button
           onClick={handleStatusChange}
           disabled={task.status === 'completed'}
-          isCancel={task.status === 'ongoing'}
+          $isCancel={task.status === 'ongoing'}
         >
           {task.status === 'completed'
             ? '已完成'

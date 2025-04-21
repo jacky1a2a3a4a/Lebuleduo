@@ -21,7 +21,7 @@ export const HeaderContainer = styled.div`
   width: 100%;
   max-width: var(--mobile-min-width);
 
-  margin: var(--spacing-sm) 0 var(--spacing-md) 0;
+  margin: var(--spacing-sm) 0;
 `;
 
 // === 導航 文字容器 ===
@@ -76,10 +76,12 @@ export const DetailCard = styled.div`
   background-color: var(--color-gray-0);
   border: 1.5px solid var(--color-gray-300);
   border-radius: var(--border-radius-lg);
+
   width: 100%;
-  max-width: calc(var(--mobile-min-width) - 2rem);
   padding: var(--spacing-md);
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
+
+  font-size: var(--font-size-sm);
 `;
 
 // 通用容器 水平分散
@@ -90,29 +92,20 @@ export const DetailRow = styled.div`
   margin-bottom: var(--spacing-xs);
 `;
 
+// 通用容器 普通
+export const DetailFlex = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+`;
+
 //時間
 export const DetailTime = styled.div`
   color: var(--color-text-primary);
 
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-`;
-
-export const DetailStatus = styled.div`
-  background-color: var(--color-gray-300);
-  color: var(--color-gray-700);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-xs);
-  font-weight: 500;
-  padding: var(--spacing-xs) var(--spacing-sm);
-`;
-
-export const DetailSign = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 2rem;
-  height: 2rem;
 `;
 
 export const DetailLabel = styled.div`
@@ -122,8 +115,17 @@ export const DetailLabel = styled.div`
   font-weight: 500;
 `;
 
+export const DetailSign = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  margin-right: var(--spacing-xs);
+`;
+
 export const DetailValue = styled.div`
-  font-weight: 600;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
   text-align: right;
 `;
 
@@ -164,7 +166,7 @@ export const DetailAddress = styled.div`
 // 地圖容器
 export const MapContainer = styled.div`
   width: 100%;
-  height: 100px;
+  height: 100%;
   border-radius: var(--border-radius-lg);
   overflow: hidden;
 `;
@@ -200,7 +202,10 @@ export const DetailButtons = styled.div`
 `;
 
 // 按鈕
-export const Button = styled.button<{ disabled?: boolean; isCancel?: boolean }>`
+export const Button = styled.button<{
+  disabled?: boolean;
+  $isCancel?: boolean;
+}>`
   padding: 0.75rem 1rem;
   border-radius: var(--border-radius-round);
   font-weight: 500;
@@ -221,18 +226,18 @@ export const Button = styled.button<{ disabled?: boolean; isCancel?: boolean }>`
 
   &:last-child {
     background-color: ${(props) =>
-      props.isCancel ? 'var(--color-gray-200)' : 'var(--color-gray-600)'};
+      props.$isCancel ? 'var(--color-gray-200)' : 'var(--color-gray-600)'};
     color: ${(props) =>
-      props.isCancel ? 'var(--color-gray-600)' : 'var(--color-gray-0)'};
+      props.$isCancel ? 'var(--color-gray-600)' : 'var(--color-gray-0)'};
     flex: 2;
 
     &:hover {
       background-color: ${(props) =>
         props.disabled
-          ? props.isCancel
+          ? props.$isCancel
             ? 'var(--color-gray-300)'
             : 'var(--color-gray-700)'
-          : props.isCancel
+          : props.$isCancel
             ? 'var(--color-gray-400)'
             : 'var(--color-gray-800)'};
     }

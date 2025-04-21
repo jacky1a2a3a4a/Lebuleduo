@@ -200,8 +200,8 @@ export const BackButton = styled.button<{
   $isAnimating: boolean;
   $isExiting: boolean;
 }>`
-  background-color: var(--color-gray-50);
-  color: var(--color-text-tertiary);
+  background-color: var(--color-white);
+  color: var(--color-text-disabled);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   padding: var(--spacing-12) var(--spacing-2xl);
@@ -210,7 +210,6 @@ export const BackButton = styled.button<{
   align-items: center;
   justify-content: center;
   width: 100%;
-  border: 2px solid var(--color-gray-300);
   border-radius: var(--border-radius-round);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: ${({ $isExiting }) =>
