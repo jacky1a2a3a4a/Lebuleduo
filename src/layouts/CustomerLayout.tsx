@@ -10,8 +10,8 @@ const AppLayoutStyled = styled.section`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
-  height: 100vh;
   width: var(--mobile-min-width);
+  height: 100vh;
   margin: 0 auto;
 `;
 

@@ -1,8 +1,9 @@
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { HiBell } from 'react-icons/hi2';
 
 import CommonHeader from '../../common/Header';
+import logo from '../../../assets/logotype/logotype-deliver-white.png';
 
 // 鈴鐺容器，控制位置
 const BellContainer = styled.div`
@@ -38,7 +39,9 @@ function DeliverHeader() {
     <CommonHeader
       title="Lebu-Dog"
       titlePath="/deliver"
+      titleImage={logo}
       actionButton={notificationButton}
+      imageHeight="27px"
     />
   );
 }

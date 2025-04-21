@@ -2,27 +2,28 @@ import styled from 'styled-components';
 
 // 型別定義
 type ProgressBarProps = {
-  progress: number;
+  $progress: number;
 };
 
 type CategoryPositionProps = {
-  topPosition: number;
+  $topPosition: number;
 };
 
 type CategoryTabProps = {
-  isActive?: boolean;
+  $isActive?: boolean;
 };
 
 type TaskCardsContainerProps = {
-  topPosition: number;
+  $topPosition: number;
 };
 
 // 最外層容器
-export const TaskSectionStyled = styled.section`
+export const TaskSectionStyled = styled.section<{ $topPosition: number }>`
   background-color: var(--color-primary);
 
   position: relative;
   width: 100%;
+  max-width: var(--min-width-mobile);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -35,20 +36,32 @@ export const TaskSectionStyled = styled.section`
   }
 `;
 
-// 外送員卡片 最外層容器
+// === 外送員卡片 最外層容器 ===
 export const DeliverContainer = styled.div`
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-xl);
-
   position: fixed;
   z-index: 20;
   width: 100%;
-  max-width: calc(var(--min-width-mobile) - 2rem);
+  max-width: var(--mobile-min-width);
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+
+  padding: var(--spacing-md);
+`;
+
+// === 外送員卡片 容器===
+export const DeliverCard = styled.div`
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-xl);
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   padding: var(--spacing-20) var(--spacing-md);
 `;
@@ -71,8 +84,8 @@ export const TaskGreetingItem = styled.div`
 
 // 外送員卡片 外送員編號
 export const TaskId = styled.div`
-  color: var(--color-text-Tertiary);
-  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
 `;
 
 // 外送員卡片 本日收運進度
@@ -135,8 +148,6 @@ export const DeliverDate = styled.div`
   font-weight: var(--font-weight-bold);
 `;
 
-
-
 // 外送員卡片 進度 狀態大容器
 export const ProgressStatus = styled.div`
   display: flex;
@@ -145,9 +156,11 @@ export const ProgressStatus = styled.div`
 `;
 
 // 外送員卡片 進度 狀態個別容器
-export const StatusItem = styled.div<{ isEmpty?: boolean }>`
+export const StatusItem = styled.div<{ $isEmpty?: boolean }>`
   color: ${(props) =>
-    props.isEmpty ? 'var(--color-text-disabled)' : 'var(--color-text-primary)'};
+    props.$isEmpty
+      ? 'var(--color-text-disabled)'
+      : 'var(--color-text-primary)'};
   display: flex;
   align-items: center;
   white-space: nowrap;
@@ -178,7 +191,7 @@ export const DeliverProgressBarFill = styled.div<ProgressBarProps>`
     var(--color-secondary)
   );
 
-  width: ${({ progress }) => progress}%;
+  width: ${({ $progress }) => $progress}%;
   height: 100%;
 
   border-radius: var(--border-radius-round);
@@ -203,26 +216,44 @@ export const OngoingTaskTitle = styled.div`
   font-size: var(--font-size-sm);
 `;
 
-// 分類標籤 最外層容器
-export const TaskCategoryWrapper = styled.div<CategoryPositionProps>`
-  background-color: var(--color-white);
+// === 任務卡片列表 最外層容器 ===
+export const TaskCardsSection = styled.div<TaskCardsContainerProps>`
+  background-color: var(--color-background-secondary);
   border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
 
   position: fixed;
-  z-index: 15;
-  top: ${({ topPosition }) => `${topPosition - 16}px`};
+  z-index: 10;
+  top: ${({ $topPosition }) => `${$topPosition - 45}px`};
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: calc(var(--min-width-mobile));
+  max-width: var(--mobile-min-width);
+  height: calc(100vh - ${({ $topPosition }) => `${$topPosition - 45}px`});
+  padding: var(--spacing-xs) var(--spacing-md) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md)
-    var(--spacing-md);
+  overflow: hidden;
+  transition: top 0.3s ease;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+// === 分類標籤 最外層容器 ===
+export const TaskCategoryWrapper = styled.div<CategoryPositionProps>`
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+
+  width: 100%;
+  max-width: var(--mobile-min-width);
+  padding: var(--spacing-md) 0;
   transition: top 0.3s ease;
 `;
 
-// 分類標籤 最外層容器
+// 分類標籤 容器
 export const TaskCategoryContainer = styled.div`
   position: relative;
   width: 100%;
@@ -244,18 +275,18 @@ export const TaskCategoryContainer = styled.div`
 `;
 
 export const CategoryTab = styled.button<CategoryTabProps>`
-  background-color: ${({ isActive }) =>
-    isActive ? 'var(--color-tertiary)' : 'var(--color-white)'};
-  color: ${({ isActive }) =>
-    isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)'};
-  border: ${({ isActive }) =>
-    isActive ? 'none' : '1px solid var(--color-neutral-300)'};
+  background-color: ${({ $isActive }) =>
+    $isActive ? 'var(--color-tertiary)' : 'var(--color-white)'};
+  color: ${({ $isActive }) =>
+    $isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)'};
+  border: ${({ $isActive }) =>
+    $isActive ? 'none' : '1px solid var(--color-neutral-300)'};
   border-radius: var(--border-radius-round);
 
   padding: 0.5rem 1rem;
   font-size: var(--font-size-sm);
-  font-weight: ${({ isActive }) =>
-    isActive ? 'var(--font-weight-medium)' : 'var(--font-weight-normal)'};
+  font-weight: ${({ $isActive }) =>
+    $isActive ? 'var(--font-weight-medium)' : 'var(--font-weight-normal)'};
   white-space: nowrap;
 
   cursor: pointer;
@@ -264,7 +295,9 @@ export const CategoryTab = styled.button<CategoryTabProps>`
 
   &:hover {
     background-color: ${(props) =>
-      props.isActive ? 'var(--color-tertiary-hover)' : 'var(--color-gray-100)'};
+      props.$isActive
+        ? 'var(--color-tertiary-hover)'
+        : 'var(--color-gray-100)'};
   }
 
   &:active {
@@ -272,45 +305,17 @@ export const CategoryTab = styled.button<CategoryTabProps>`
   }
 `;
 
-export const TaskCardsContainer = styled.div<TaskCardsContainerProps>`
-  background-color: var(--color-white);
-
-  position: fixed;
-  z-index: 10;
-  top: ${({ topPosition }) => `${topPosition + 56}px`};
-  left: 50%;
-  transform: translateX(-50%);
+// === 任務卡片列表 容器 ===
+export const TaskCardsContainer = styled.div`
   width: 100%;
   max-width: calc(var(--min-width-mobile));
-  height: calc(100vh - ${({ topPosition }) => `${topPosition + 56}px`} - 4rem);
-  padding: 0.5rem 0;
-  padding-bottom: 5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
+  height: calc(100% - 60px);
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  transition: top 0.3s ease;
+  padding-bottom: var(--spacing-2xl); //底部預留空間以免卡片被遮住
 
   &::-webkit-scrollbar {
     display: none;
   }
 `;
-
-//底部淡出效果
-// export const BottomFadeEffect = styled.div`
-//   background: linear-gradient(to top, var(--color-gray-100) 30%, transparent);
-
-//   position: fixed;
-//   z-index: 11;
-//   bottom: 4rem;
-//   left: 50%;
-//   transform: translateX(-50%);
-//   width: 100%;
-//   max-width: calc(var(--min-width-mobile) - 2rem);
-//   height: 8rem;
-
-//   pointer-events: none;
-// `;

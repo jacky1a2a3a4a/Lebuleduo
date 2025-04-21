@@ -1,6 +1,8 @@
 // 登入頁面 切版
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
 import Loginlogo from '../../../assets/Lebuledou_truck_login_border.png';
+import LogotypeCustomer from '../../../assets/logotype/logotype-customer-white.png';
+import LogotypeDeliver from '../../../assets/logotype/logotype-deliver-white.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLineConfig, saveLineState } from '../../../configs/lineConfig';
@@ -8,7 +10,7 @@ import {
   LoginSectionStyled,
   Logo,
   WelcomeText,
-  TextMain,
+  LogoType,
   TextSub,
   RoleSelection,
   RoleButton,
@@ -27,9 +29,9 @@ const mockLogin = false; //模擬登入狀態
 const LineLogin = () => {
   const [selectedRole, setSelectedRole] = useState<
     'customer' | 'deliver' | null
-  >(null); // 選擇身分
-  const [isAnimating, setIsAnimating] = useState(false); // 進入動畫
-  const [isExiting, setIsExiting] = useState(false); // 退出動畫
+  >(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   const navigate = useNavigate();
 
@@ -115,7 +117,10 @@ const LineLogin = () => {
     <LoginSectionStyled>
       <Logo src={Loginlogo} />
       <WelcomeText>
-        <TextMain>Lebu-ledou</TextMain>
+        <LogoType
+          src={selectedRole === 'deliver' ? LogotypeDeliver : LogotypeCustomer}
+          alt="Lebu-ledou"
+        />
         <TextSub>
           <span>垃</span>
           <span>不</span>

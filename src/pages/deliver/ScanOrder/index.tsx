@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { TaskStatus } from '../Task/Card';
+import { TaskStatus } from '../../../../src/types/deliver';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 
 // 定義任務類型
