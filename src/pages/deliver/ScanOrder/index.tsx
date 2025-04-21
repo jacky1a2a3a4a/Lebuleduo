@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { TaskStatus } from '../../../../src/types/deliver';
-import Webcam from 'react-webcam';
-import jsQR from 'jsqr';
-import { QRCodeSVG } from 'qrcode.react';
+import { TaskStatus } from '../../../../src/types/deliver'; //任務狀態類型
+import Webcam from 'react-webcam'; //react相機套件
+import jsQR from 'jsqr'; //QR碼解碼套件
+import { QRCodeSVG } from 'qrcode.react'; //QR碼生成套件
 import axios from 'axios';
 import {
   ScanOrderSectionStyled,
@@ -20,56 +20,63 @@ import {
   TestQRCodeContainer,
 } from './styles';
 
-// 定義任務類型
+// API 回傳的訂單類型(照api順序)
+type ApiData = {
+  Addresses: string;
+  CustomerName: string;
+  CustomerNumber: string;
+  Liter: number;
+  Notes: string;
+  OrderDetailID: number;
+  OrderDetailsNumber: string; //電話號碼
+  Photo: string[];
+  PlanKG: number;
+  PlanName: string;
+  ServiceTime: string | null;
+  Status: string;
+};
+
+// 定義任務類型(照api順序)
 type TaskItem = {
-  id: string;
-  status: TaskStatus;
-  time: string;
   address: string;
   customer: string;
+  number: string;
+  liter: number;
+  notes: string;
+  id: string;
+  phone: string;
+  photos: string[];
+  kg: number;
+  plan: string;
+  time: string;
+  status: TaskStatus;
 };
 
-// 定義訂單類型
+// 掃描後獲得的訂單任務類型
 type OrderInfo = {
-  orderNumber: string;
-  planName: string;
-  planPeople: string;
-  frequency: string;
-  totalPrice: string;
-  timestamp: string;
-};
-
-// API 回傳的訂單類型
-type ApiOrder = {
-  OrderDetailID: number;
-  ServiceTime: string | null;
-  OrderDetailsNumber: string;
-  Addresses: string;
-  CustomerNumber: string;
-  CustomerName: string;
-  Notes: string;
-  Photo: string[];
-  Status: string;
-  PlanName: string;
-  PlanKG: number;
-  Liter: number;
+  orderNumber: string; //訂單編號
+  planName: string; //方案名稱
+  planPeople: string; //方案人數
+  frequency: string; //訂閱時長
+  totalPrice: string; //訂單金額
+  timestamp: string; //訂單時間
 };
 
 const userId = localStorage.getItem('UsersID');
 
 function ScanOrder() {
   const navigate = useNavigate();
-  const [onGoingTask, setOnGoingTask] = useState<TaskItem | null>(null);
+  const webcamRef = useRef<Webcam>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [ongoingOrderData, setOngoingOrderData] = useState<ApiData | null>(
+    null,
+  ); //保存原始數據
+  const [onGoingTask, setOnGoingTask] = useState<TaskItem | null>(null); //提取前端需要的數據
   const [isScanning, setIsScanning] = useState(false);
   const [scannedOrder, setScannedOrder] = useState<OrderInfo | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
-  const webcamRef = useRef<Webcam>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [ongoingOrderData, setOngoingOrderData] = useState<ApiOrder | null>(
-    null,
-  );
 
-  // 從 API 獲取今日訂單
+  // 從 API 獲取今日訂單，過濾出 前往中 任務
   useEffect(() => {
     const fetchTodayOrders = async () => {
       try {
@@ -80,18 +87,26 @@ function ScanOrder() {
 
         // 尋找狀態為"前往中"的訂單
         const ongoingOrder = orders.find(
-          (order: ApiOrder) => order.Status === '前往中',
+          (order: ApiData) => order.Status === '前往中',
         );
-        console.log('API 前往中訂單:', ongoingOrder);
+        console.log('API 前往中任務:', ongoingOrder);
 
         if (ongoingOrder) {
           setOngoingOrderData(ongoingOrder);
+
           setOnGoingTask({
-            id: ongoingOrder.OrderDetailID.toString(),
-            status: 'ongoing',
-            time: ongoingOrder.ServiceTime || '',
             address: ongoingOrder.Addresses,
             customer: ongoingOrder.CustomerName,
+            number: ongoingOrder.OrderDetailsNumber,
+            liter: ongoingOrder.Liter,
+            notes: ongoingOrder.Notes,
+            id: ongoingOrder.OrderDetailID.toString(),
+            phone: ongoingOrder.OrderDetailsNumber,
+            photos: ongoingOrder.Photo,
+            kg: ongoingOrder.PlanKG,
+            plan: ongoingOrder.PlanName,
+            time: ongoingOrder.ServiceTime || '',
+            status: 'ongoing', //直接設定狀態，跳過引用(比較方便)
           });
         }
       } catch (error) {
@@ -107,11 +122,19 @@ function ScanOrder() {
     if (!ongoingOrderData) return null;
 
     return {
+      OrderDetailID: ongoingOrderData.OrderDetailID,
+      CustomerNumber: ongoingOrderData.OrderDetailsNumber,
+      ServiceTime: ongoingOrderData.ServiceTime,
+      Status: 'arrived', // 掃描後改變狀態已抵達
+      CustomerName: ongoingOrderData.CustomerName,
+      Notes: ongoingOrderData.Notes,
+      Addresses: ongoingOrderData.Addresses,
+      PlanName: ongoingOrderData.PlanName,
+      PlanKG: ongoingOrderData.PlanKG,
+      Liter: ongoingOrderData.Liter,
+      Photo: ongoingOrderData.Photo,
       orderNumber: ongoingOrderData.OrderDetailsNumber,
       planName: ongoingOrderData.PlanName,
-      planPeople: `${ongoingOrderData.PlanKG}公斤`,
-      frequency: '1', // 假設每次配送為一個月
-      totalPrice: '1800', // 這裡可以根據實際情況計算
       timestamp: ongoingOrderData.ServiceTime || new Date().toISOString(),
     };
   }, [ongoingOrderData]);
@@ -122,13 +145,13 @@ function ScanOrder() {
       // 解析掃描到的JSON數據
       const orderData = JSON.parse(result) as OrderInfo;
       setScannedOrder(orderData);
-      setIsScanning(false);
-      setScanError(null);
+      setIsScanning(false); //掃描成功後關閉掃描
+      setScanError(null); //掃描錯誤訊息清空
 
       // 可以在這裡將訂單數據儲存到localStorage或其他狀態管理中
       localStorage.setItem('scannedOrder', result);
     } catch (error) {
-      console.error('無效的QR碼格式:', error);
+      console.error('無效的QR碼:', error);
       setScanError('掃描到無效的QR碼格式，請重試');
     }
   }, []);
@@ -172,7 +195,7 @@ function ScanOrder() {
     setIsScanning(false);
   };
 
-  // 掃描循環
+  // 連續掃描(可以掃描大量訂單)
   useEffect(() => {
     let intervalId: number;
 
@@ -207,25 +230,18 @@ function ScanOrder() {
     return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
   };
 
-  // 生成測試用的訂單數據
-  const testOrderData = {
-    orderNumber: 'TEST-123456',
-    planName: '測試方案',
-    planPeople: '2人',
-    frequency: '3',
-    totalPrice: '1800',
-    timestamp: new Date().toISOString(),
-  };
-
   return (
     <ScanOrderSectionStyled>
       {!isScanning && !scannedOrder && (
         <>
+          {/* 掃描按鈕 */}  
           <ScanButton onClick={startScanning}>掃描QR碼</ScanButton>
+          {/* 有前往中的訂單 */}
           {onGoingTask ? (
             <>
               <StatusMessage>已找到前往中的訂單，可以掃描</StatusMessage>
               <TestQRCodeContainer>
+                {/* 訂單 QR Code */}
                 <StatusMessage>訂單 QR Code：</StatusMessage>
                 {generateOrderQRData() && (
                   <QRCodeSVG
@@ -244,6 +260,7 @@ function ScanOrder() {
         </>
       )}
 
+      {/* 掃描相機容器 */}
       {isScanning && (
         <ScannerContainer>
           <Webcam
@@ -264,6 +281,7 @@ function ScanOrder() {
         </ScannerContainer>
       )}
 
+      {/* 訂單資訊容器 */}
       {scannedOrder && (
         <OrderInfoContainer>
           <OrderInfoTitle>訂單資訊</OrderInfoTitle>
