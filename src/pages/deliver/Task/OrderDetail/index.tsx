@@ -22,8 +22,6 @@ import {
   MapContainer,
   PlanTitle,
   PlanContent,
-  DetailButtons,
-  Button,
   ErrorMessage,
 } from './styled';
 
@@ -36,7 +34,7 @@ import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 // 定義任務類型
 type TaskItem = {
   id: number;
-  number: string;  
+  number: string;
   status: TaskStatus;
   time: string;
   address: string;
@@ -57,6 +55,8 @@ const libraries: (
   | 'localContext'
   | 'visualization'
 )[] = ['places'];
+
+const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用者 ID
 
 function OrderDetails() {
   const navigate = useNavigate();
@@ -90,7 +90,9 @@ function OrderDetails() {
     const fetchTaskDetails = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`api/GET/driver/today/7/${taskId}`);
+        const response = await axios.get(
+          `api/GET/driver/today/${userId}/${taskId}`,
+        );
 
         if (response.data.status && response.data.result.Orders.length > 0) {
           const apiTask = response.data.result.Orders[0];
@@ -133,7 +135,7 @@ function OrderDetails() {
     switch (apiStatus) {
       case '已排定':
         return 'scheduled';
-      case '進行中':
+      case '前往中':
         return 'ongoing';
       case '已完成':
         return 'completed';
@@ -199,25 +201,6 @@ function OrderDetails() {
     navigate(-1);
   };
 
-  // 處理確認前往/取消前往按鈕點擊
-  const handleStatusChange = () => {
-    if (task?.status === 'completed') return;
-
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
-      const tasks: TaskItem[] = JSON.parse(savedTasks);
-      const updatedTasks = tasks.map((task) =>
-        task.id === task.id
-          ? {
-              ...task,
-              status: task.status === 'ongoing' ? 'waiting' : 'ongoing',
-            }
-          : task,
-      );
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-    }
-    navigate(-1);
-  };
 
   // 載入狀態
   if (loading) {
@@ -363,20 +346,6 @@ function OrderDetails() {
           </>
         )} */}
       </DetailCard>
-
-      <DetailButtons>
-        <Button
-          onClick={handleStatusChange}
-          disabled={task.status === 'completed'}
-          $isCancel={task.status === 'ongoing'}
-        >
-          {task.status === 'completed'
-            ? '已完成'
-            : task.status === 'ongoing'
-              ? '取消前往'
-              : '確認前往'}
-        </Button>
-      </DetailButtons>
     </FullHeightContainer>
   );
 }

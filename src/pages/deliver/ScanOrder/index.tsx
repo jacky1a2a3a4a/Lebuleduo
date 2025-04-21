@@ -1,8 +1,24 @@
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { TaskStatus } from '../../../../src/types/deliver';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import Webcam from 'react-webcam';
+import jsQR from 'jsqr';
+import { QRCodeSVG } from 'qrcode.react';
+import axios from 'axios';
+import {
+  ScanOrderSectionStyled,
+  ScannerContainer,
+  ScanButton,
+  StatusMessage,
+  OrderInfoContainer,
+  OrderInfoTitle,
+  OrderInfoItem,
+  OrderInfoLabel,
+  OrderInfoValue,
+  Divider,
+  ProcessOrderButton,
+  TestQRCodeContainer,
+} from './styles';
 
 // 定義任務類型
 type TaskItem = {
@@ -23,129 +39,23 @@ type OrderInfo = {
   timestamp: string;
 };
 
-// 最外層 大容器
-const ScanOrderSectionStyled = styled.section`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: var(--spacing-md);
-`;
+// API 回傳的訂單類型
+type ApiOrder = {
+  OrderDetailID: number;
+  ServiceTime: string | null;
+  OrderDetailsNumber: string;
+  Addresses: string;
+  CustomerNumber: string;
+  CustomerName: string;
+  Notes: string;
+  Photo: string[];
+  Status: string;
+  PlanName: string;
+  PlanKG: number;
+  Liter: number;
+};
 
-// 掃描器容器
-const ScannerContainer = styled.div`
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: var(--spacing-lg);
-`;
-
-// 掃描按鈕
-const ScanButton = styled.button`
-  background-color: var(--color-gray-700);
-  color: var(--color-gray-0);
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-md) var(--spacing-lg);
-  cursor: pointer;
-  font-weight: 500;
-  margin-bottom: var(--spacing-md);
-
-  &:hover {
-    background-color: var(--color-gray-800);
-  }
-`;
-
-// 測試按鈕
-const TestButton = styled.button`
-  background-color: var(--color-gray-700);
-  color: var(--color-gray-0);
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-md) var(--spacing-lg);
-  cursor: pointer;
-  font-weight: 500;
-
-  &:hover {
-    background-color: var(--color-gray-800);
-  }
-`;
-
-// 狀態訊息
-const StatusMessage = styled.div`
-  color: var(--color-gray-600);
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  text-align: center;
-  margin-top: var(--spacing-md);
-`;
-
-// 訂單資訊容器
-const OrderInfoContainer = styled.div`
-  width: 100%;
-  max-width: 400px;
-  background-color: var(--color-gray-100);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  margin-top: var(--spacing-lg);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-`;
-
-// 訂單資訊標題
-const OrderInfoTitle = styled.h3`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-md);
-  color: var(--color-gray-700);
-`;
-
-// 訂單資訊項目
-const OrderInfoItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: var(--spacing-sm);
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-// 訂單資訊標籤
-const OrderInfoLabel = styled.span`
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-500);
-`;
-
-// 訂單資訊值
-const OrderInfoValue = styled.span`
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-gray-700);
-`;
-
-// 分隔線
-const Divider = styled.div`
-  height: 1px;
-  width: 100%;
-  background-color: var(--color-gray-300);
-  margin: var(--spacing-md) 0;
-`;
-
-// 處理訂單按鈕
-const ProcessOrderButton = styled.button`
-  background-color: var(--color-gray-700);
-  color: var(--color-gray-0);
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-md);
-  width: 100%;
-  font-size: var(--font-size-md);
-  cursor: pointer;
-  margin-top: var(--spacing-lg);
-
-  &:hover {
-    background-color: var(--color-gray-800);
-  }
-`;
+const userId = localStorage.getItem('UsersID');
 
 function ScanOrder() {
   const navigate = useNavigate();
@@ -153,104 +63,129 @@ function ScanOrder() {
   const [isScanning, setIsScanning] = useState(false);
   const [scannedOrder, setScannedOrder] = useState<OrderInfo | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
-  const [scanner, setScanner] = useState<Html5QrcodeScanner | null>(null);
+  const webcamRef = useRef<Webcam>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [ongoingOrderData, setOngoingOrderData] = useState<ApiOrder | null>(
+    null,
+  );
 
-  // 檢查是否有前往中的訂單
+  // 從 API 獲取今日訂單
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
-      const tasks: TaskItem[] = JSON.parse(savedTasks);
-      const onGoingTask = tasks.find((task) => task.status === 'ongoing');
-      // 如果有找到，則設定為前往中的訂單
-      setOnGoingTask(onGoingTask);
-    }
+    const fetchTodayOrders = async () => {
+      try {
+        const response = await axios.get(`api/GET/driver/today/${userId}`);
+        const orders = response.data.result.Orders;
+        console.log('API 原始資料:', response.data);
+        console.log('API 任務資料:', orders);
+
+        // 尋找狀態為"前往中"的訂單
+        const ongoingOrder = orders.find(
+          (order: ApiOrder) => order.Status === '前往中',
+        );
+        console.log('API 前往中訂單:', ongoingOrder);
+
+        if (ongoingOrder) {
+          setOngoingOrderData(ongoingOrder);
+          setOnGoingTask({
+            id: ongoingOrder.OrderDetailID.toString(),
+            status: 'ongoing',
+            time: ongoingOrder.ServiceTime || '',
+            address: ongoingOrder.Addresses,
+            customer: ongoingOrder.CustomerName,
+          });
+        }
+      } catch (error) {
+        console.error('獲取今日訂單失敗:', error);
+      }
+    };
+
+    fetchTodayOrders();
   }, []);
 
+  // 生成訂單 QR Code 數據
+  const generateOrderQRData = useCallback(() => {
+    if (!ongoingOrderData) return null;
+
+    return {
+      orderNumber: ongoingOrderData.OrderDetailsNumber,
+      planName: ongoingOrderData.PlanName,
+      planPeople: `${ongoingOrderData.PlanKG}公斤`,
+      frequency: '1', // 假設每次配送為一個月
+      totalPrice: '1800', // 這裡可以根據實際情況計算
+      timestamp: ongoingOrderData.ServiceTime || new Date().toISOString(),
+    };
+  }, [ongoingOrderData]);
+
   // 處理QR碼掃描結果
-  const handleScanResult = (decodedText: string) => {
+  const handleScanResult = useCallback((result: string) => {
     try {
       // 解析掃描到的JSON數據
-      const orderData = JSON.parse(decodedText) as OrderInfo;
+      const orderData = JSON.parse(result) as OrderInfo;
       setScannedOrder(orderData);
       setIsScanning(false);
       setScanError(null);
 
-      // 停止掃描
-      if (scanner) {
-        scanner.clear();
-      }
-
       // 可以在這裡將訂單數據儲存到localStorage或其他狀態管理中
-      localStorage.setItem('scannedOrder', decodedText);
+      localStorage.setItem('scannedOrder', result);
     } catch (error) {
       console.error('無效的QR碼格式:', error);
       setScanError('掃描到無效的QR碼格式，請重試');
     }
-  };
+  }, []);
+
+  // 掃描 QR Code
+  const scanQRCode = useCallback(() => {
+    if (!webcamRef.current || !canvasRef.current) return;
+
+    const video = webcamRef.current.video;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+
+    if (!video || !context) return;
+
+    // 設置 canvas 尺寸與視頻相同
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // 繪製視頻幀到 canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // 獲取圖像數據
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+    // 使用 jsQR 解碼
+    const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+    if (code) {
+      handleScanResult(code.data);
+    }
+  }, [handleScanResult]);
 
   // 開始掃描
   const startScanning = () => {
     setIsScanning(true);
     setScanError(null);
-
-    try {
-      // 初始化掃描器
-      const html5QrcodeScanner = new Html5QrcodeScanner(
-        'qr-reader',
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-          rememberLastUsedCamera: true,
-        },
-        false,
-      );
-
-      setScanner(html5QrcodeScanner);
-
-      // 開始掃描
-      html5QrcodeScanner.render(
-        (decodedText) => {
-          // 成功回調
-          handleScanResult(decodedText);
-        },
-        (errorMessage) => {
-          // 錯誤回調（這裡通常不需處理，因為許多是臨時性的錯誤）
-          console.log(errorMessage);
-        },
-      );
-    } catch (error) {
-      console.error('掃描器初始化失敗:', error);
-      setScanError('掃描器初始化失敗，請檢查相機權限');
-      setIsScanning(false);
-    }
   };
 
   // 停止掃描
   const stopScanning = () => {
-    if (scanner) {
-      scanner.clear();
-      setScanner(null);
-    }
     setIsScanning(false);
   };
 
-  // 模擬掃描 QR Code 成功
-  const handleTestScan = () => {
-    if (onGoingTask) {
-      // 模擬訂單數據
-      const mockOrderData: OrderInfo = {
-        orderNumber: `LBL${Date.now()}${Math.floor(Math.random() * 900000) + 100000}`,
-        planName: '標準方案',
-        planPeople: '1-2人',
-        frequency: '3',
-        totalPrice: '1200',
-        timestamp: new Date().toISOString(),
-      };
+  // 掃描循環
+  useEffect(() => {
+    let intervalId: number;
 
-      setScannedOrder(mockOrderData);
-      localStorage.setItem('scannedOrder', JSON.stringify(mockOrderData));
+    if (isScanning) {
+      intervalId = window.setInterval(scanQRCode, 100);
     }
-  };
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [isScanning, scanQRCode]);
 
   // 處理訂單
   const handleProcessOrder = () => {
@@ -272,23 +207,37 @@ function ScanOrder() {
     return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
   };
 
-  // 清理掃描器資源
-  useEffect(() => {
-    return () => {
-      if (scanner) {
-        scanner.clear();
-      }
-    };
-  }, [scanner]);
+  // 生成測試用的訂單數據
+  const testOrderData = {
+    orderNumber: 'TEST-123456',
+    planName: '測試方案',
+    planPeople: '2人',
+    frequency: '3',
+    totalPrice: '1800',
+    timestamp: new Date().toISOString(),
+  };
 
   return (
     <ScanOrderSectionStyled>
       {!isScanning && !scannedOrder && (
         <>
           <ScanButton onClick={startScanning}>掃描QR碼</ScanButton>
-          <TestButton onClick={handleTestScan}>模擬掃描</TestButton>
           {onGoingTask ? (
-            <StatusMessage>已找到前往中的訂單，可以掃描</StatusMessage>
+            <>
+              <StatusMessage>已找到前往中的訂單，可以掃描</StatusMessage>
+              <TestQRCodeContainer>
+                <StatusMessage>訂單 QR Code：</StatusMessage>
+                {generateOrderQRData() && (
+                  <QRCodeSVG
+                    value={JSON.stringify(generateOrderQRData())}
+                    size={200}
+                    level="H"
+                    includeMargin={true}
+                  />
+                )}
+                <StatusMessage>請掃描此 QR Code 進行測試</StatusMessage>
+              </TestQRCodeContainer>
+            </>
           ) : (
             <StatusMessage>目前沒有確認前往的訂單，無法掃描</StatusMessage>
           )}
@@ -297,7 +246,19 @@ function ScanOrder() {
 
       {isScanning && (
         <ScannerContainer>
-          <div id="qr-reader" style={{ width: '100%' }}></div>
+          <Webcam
+            ref={webcamRef}
+            audio={false}
+            videoConstraints={{
+              facingMode: 'environment',
+            }}
+            style={{
+              width: '100%',
+              maxWidth: '500px',
+              margin: '0 auto',
+            }}
+          />
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
           <ScanButton onClick={stopScanning}>取消掃描</ScanButton>
           {scanError && <StatusMessage>{scanError}</StatusMessage>}
         </ScannerContainer>

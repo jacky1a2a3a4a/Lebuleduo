@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { HiDocumentText, HiMiniTruck, HiXCircle } from 'react-icons/hi2';
-import StatusTag from '../../../../components/deliver/StatusTagDeliver';
+import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 import { TaskStatus } from '../../../../types/deliver';
 import { formatTime } from '../../../../utils/formatTime';
+import axios from 'axios';
 
 // 添加 BASE_URL 常數
 const BASE_URL = 'https://lebuleduo.rocket-coding.com';
@@ -54,18 +55,38 @@ export const TaskCard = ({
     navigate(`/deliver/task/${taskId}`);
   };
 
+  // 更新任務狀態的 API 呼叫
+  const updateOrderStatus = async (newStatus: number) => {
+    try {
+      await axios.put(`api/driver/orders/status/${taskId}`, {
+        OrderStatus: newStatus,
+      });
+      return true;
+    } catch (error) {
+      console.error('更新訂單狀態失敗:', error);
+      return false;
+    }
+  };
+
   // 確認前往/取消前往 按鈕 狀態改變
-  const handleStatusChange = () => {
+  const handleStatusChange = async () => {
     let newStatus: TaskStatus;
+    let orderStatus: number;
+
     if (status === 'scheduled') {
       newStatus = 'ongoing';
+      orderStatus = 2; // 前往中
     } else if (status === 'ongoing') {
       newStatus = 'scheduled';
+      orderStatus = 1; // 已排定
     } else {
       return;
     }
 
-    onStatusChange?.(taskId, newStatus);
+    const success = await updateOrderStatus(orderStatus);
+    if (success) {
+      onStatusChange?.(taskId, newStatus);
+    }
   };
 
   // 卡片按鈕文字
@@ -92,7 +113,7 @@ export const TaskCard = ({
           <TaskDetailContainer>
             <TaskCardHeader>
               <TaskTitle>{formatTime(time)}</TaskTitle>
-              <StatusTag status={status} />
+              <StatusTagDeliver status={status} />
             </TaskCardHeader>
             <TaskUserContent>
               <MainContent>{address}</MainContent>
