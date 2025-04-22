@@ -43,7 +43,8 @@ const LineCallback = () => {
         console.log('當前完整 URL:', window.location.href);
 
         // 從 URL 參數中獲取 code 和 state
-        const urlParams = new URLSearchParams(window.location.search);
+        const hash = window.location.hash;
+        const urlParams = new URLSearchParams(hash.split('?')[1]);
         const code = urlParams.get('code');
         const state = urlParams.get('state');
 
