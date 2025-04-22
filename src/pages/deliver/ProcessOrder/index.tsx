@@ -1,15 +1,23 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
-import { MdArrowBackIosNew, MdLocationOn } from 'react-icons/md';
+import {
+  MdArrowBackIosNew,
+  MdLocationOn,
+  MdAdd,
+  MdClose,
+  MdCamera,
+} from 'react-icons/md';
 import {
   FullHeightContainer,
   HeaderContainer,
-  PageTitle,
-  PageSubtitle,
-  IconStyled,
   Title,
+  IconStyled,
+  NavTitle,
+  NavTitleText,
+  NavSubtitle,
   DetailCard,
+  CardSection,
   DetailRow,
   DetailFlex,
   DetailTime,
@@ -23,6 +31,21 @@ import {
   PlanTitle,
   PlanContent,
   ErrorMessage,
+  Divider,
+  PageTitle,
+  PageSubtitle,
+  WeightInput,
+  PhotoUploadContainer,
+  PhotoUploadBox,
+  PreviewImage,
+  PlusIcon,
+  UploadText,
+  CameraPreview,
+  CloseButton,
+  CameraContainer,
+  CameraVideo,
+  CameraControls,
+  CameraButton,
 } from './styled';
 
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
@@ -45,6 +68,7 @@ type TaskItem = {
   weight?: number;
   liter?: number;
   dropPointPhotos?: string[]; //放置點圖片
+  actualWeight?: number; // 實際重量
 };
 
 // 定義需要的 Google Maps 庫（'places' 用於地理編碼）
@@ -64,6 +88,19 @@ function OrderDetails() {
   const [task, setTask] = useState<TaskItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actualWeight, setActualWeight] = useState<number | undefined>(
+    undefined,
+  );
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [showCamera, setShowCamera] = useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number | null>(
+    null,
+  );
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [isWebCameraSupported, setIsWebCameraSupported] = useState<
+    boolean | null
+  >(null);
 
   // 使用 useJsApiLoader 來處理 Google Maps API 載入
   const { isLoaded, loadError } = useJsApiLoader({
@@ -109,8 +146,9 @@ function OrderDetails() {
             weight: apiTask.PlanKG.toString(),
             liter: apiTask.Liter.toString(),
             dropPointPhotos: apiTask.Photo?.map(
-              (photo) => `${import.meta.env.VITE_API_DOMAIN_URL}${photo}`,
+              (photo) => `${import.meta.env.VITE_API_URL}${photo}`,
             ),
+            actualWeight: apiTask.ActualKG,
           };
           setTask(TaskDetail);
           console.log('處理完成的任務:', TaskDetail);
@@ -197,10 +235,114 @@ function OrderDetails() {
     }
   }, [isLoaded, task, geocodeAddress, geocodeAttempted]);
 
+  useEffect(() => {
+    // 檢查是否支援網頁相機
+    const checkCameraSupport = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        stream.getTracks().forEach((track) => track.stop());
+        setIsWebCameraSupported(true);
+      } catch (err) {
+        setIsWebCameraSupported(false);
+      }
+    };
+    checkCameraSupport();
+  }, []);
+
   const handleBack = () => {
     navigate(-1);
   };
 
+  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
+    setActualWeight(isNaN(value) ? undefined : value);
+  };
+
+  const startCamera = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment' },
+        audio: false,
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        streamRef.current = stream;
+      }
+    } catch (err) {
+      console.error('無法開啟相機:', err);
+    }
+  }, []);
+
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+  }, []);
+
+  const handleTakePhoto = useCallback(() => {
+    if (videoRef.current && currentPhotoIndex !== null) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(videoRef.current, 0, 0);
+        const newPhotos = [...photos];
+        newPhotos[currentPhotoIndex] = canvas.toDataURL('image/jpeg');
+        setPhotos(newPhotos);
+        stopCamera();
+        setShowCamera(false);
+      }
+    }
+  }, [currentPhotoIndex, photos, stopCamera]);
+
+  const handleOpenCamera = useCallback(
+    (index: number) => {
+      if (isWebCameraSupported === null) return;
+
+      if (isWebCameraSupported) {
+        // 使用網頁相機
+        setCurrentPhotoIndex(index);
+        setShowCamera(true);
+      } else {
+        // 使用手機內建相機
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'environment';
+
+        input.onchange = (e) => {
+          const file = (e.target as HTMLInputElement).files?.[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const newPhotos = [...photos];
+              newPhotos[index] = event.target?.result as string;
+              setPhotos(newPhotos);
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+
+        input.click();
+      }
+    },
+    [isWebCameraSupported, photos],
+  );
+
+  useEffect(() => {
+    if (showCamera) {
+      startCamera();
+    } else {
+      stopCamera();
+    }
+    return () => {
+      stopCamera();
+    };
+  }, [showCamera, startCamera, stopCamera]);
 
   // 載入狀態
   if (loading) {
@@ -224,13 +366,13 @@ function OrderDetails() {
     <FullHeightContainer>
       {/* NavHeader  */}
       <HeaderContainer>
-        <PageTitle onClick={handleBack}>
+        <NavTitle onClick={handleBack}>
           <IconStyled>
             <MdArrowBackIosNew />
           </IconStyled>
-          訂單詳情
-        </PageTitle>
-        <PageSubtitle>訂單編號: {task.id}</PageSubtitle>
+          <NavTitleText>填寫收運狀況</NavTitleText>
+        </NavTitle>
+        <NavSubtitle>訂單編號: {task.id}</NavSubtitle>
       </HeaderContainer>
 
       {/* 時間卡片 */}
@@ -243,7 +385,6 @@ function OrderDetails() {
 
       {/* 客戶資訊 */}
       <Title>客戶資訊</Title>
-
       <DetailCard>
         <DetailRow>
           <DetailLabel>聯絡人</DetailLabel>
@@ -269,9 +410,7 @@ function OrderDetails() {
         </DetailImgContainer>
       </DetailCard>
 
-      <HeaderContainer>
-        <PageTitle>地圖導航</PageTitle>
-      </HeaderContainer>
+      <Title>地圖導航</Title>
 
       <DetailCard>
         <DetailFlex>
@@ -307,9 +446,7 @@ function OrderDetails() {
         </MapContainer>
       </DetailCard>
 
-      <HeaderContainer>
-        <PageTitle>收運方案</PageTitle>
-      </HeaderContainer>
+      <Title>收運方案</Title>
 
       <DetailCard>
         <PlanTitle>{task.plan}</PlanTitle>
@@ -317,36 +454,63 @@ function OrderDetails() {
           一般垃圾+回收+廚餘 = {task.liter}L / {task.weight}kg
         </PlanContent>
 
-        {/* {task.status === 'completed' && (
-          <>
-            <Divider />
-            <HeaderContainer>
-              <PageTitle>實際重量 (kg)</PageTitle>
-            </HeaderContainer>
-            <PlanContent>{task.weight} kg</PlanContent>
+        <Divider />
+        <CardSection>
+          <PageTitle>實際重量 (kg)</PageTitle>
+          <WeightInput
+            type="number"
+            value={actualWeight || ''}
+            onChange={handleWeightChange}
+            placeholder="請輸入實際重量"
+          />
+        </CardSection>
 
-            <Divider />
-            <HeaderContainer>
-              <PageTitle>收運照片</PageTitle>
-            </HeaderContainer>
-            <DetailImgContainer>
-              {task.photos?.map((photo, index) => (
-                <DetailImg key={index}>
-                  <img
-                    src={photo}
-                    alt={`收運照片 ${index + 1}`}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                </DetailImg>
-              ))}
-            </DetailImgContainer>
-          </>
-        )} */}
+        <CardSection>
+          <PageTitle>照片記錄</PageTitle>
+          <PageSubtitle>請上傳2張收運照片，務必拍攝掛秤數字</PageSubtitle>
+          <PhotoUploadContainer>
+            {[0, 1].map((index) => (
+              <PhotoUploadBox
+                key={index}
+                onClick={() => handleOpenCamera(index)}
+              >
+                {photos[index] ? (
+                  <PreviewImage src={photos[index]} alt={`照片 ${index + 1}`} />
+                ) : (
+                  <>
+                    <PlusIcon>
+                      <MdAdd />
+                    </PlusIcon>
+                    <UploadText>
+                      {isWebCameraSupported === null
+                        ? '載入中...'
+                        : isWebCameraSupported
+                          ? '點擊拍照'
+                          : '開啟相機'}
+                    </UploadText>
+                  </>
+                )}
+              </PhotoUploadBox>
+            ))}
+          </PhotoUploadContainer>
+        </CardSection>
       </DetailCard>
+
+      {showCamera && isWebCameraSupported && (
+        <CameraPreview>
+          <CloseButton onClick={() => setShowCamera(false)}>
+            <MdClose />
+          </CloseButton>
+          <CameraContainer>
+            <CameraVideo ref={videoRef} autoPlay playsInline />
+          </CameraContainer>
+          <CameraControls>
+            <CameraButton onClick={handleTakePhoto}>
+              <MdCamera />
+            </CameraButton>
+          </CameraControls>
+        </CameraPreview>
+      )}
     </FullHeightContainer>
   );
 }

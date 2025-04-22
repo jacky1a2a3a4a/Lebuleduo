@@ -68,7 +68,8 @@ const GlobalStyles = createGlobalStyle`
   --color-text-primary: #1F2A52;
   --color-text-secondary: #323232;
   --color-text-tertiary: #7B7B7B;
-  --color-text-disabled: #BDBDBD; 
+  --color-text-disabled: #BDBDBD;
+  --color-text-black: #000000;
 
   --color-neutral-600: #757575;
   --color-neutral-500: #9E9E9E;
