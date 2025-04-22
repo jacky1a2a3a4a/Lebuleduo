@@ -43,13 +43,16 @@ const LineCallback = () => {
         console.log('當前完整 URL:', window.location.href);
 
         // 從 URL 參數中獲取 code 和 state
-        const hash = window.location.hash;
-        const urlParams = new URLSearchParams(hash.split('?')[1]);
-        const code = urlParams.get('code');
-        const state = urlParams.get('state');
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get('code');
+        const state = searchParams.get('state');
 
-        console.log('code', code);
-        console.log('state', state);
+        console.log('URL 參數:', {
+          search: window.location.search,
+          code,
+          state,
+          hash: window.location.hash,
+        });
 
         // 更新除錯資訊
         setDebugInfo({
