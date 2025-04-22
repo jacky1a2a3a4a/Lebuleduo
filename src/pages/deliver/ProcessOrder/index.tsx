@@ -7,6 +7,9 @@ import {
   MdAdd,
   MdClose,
   MdCamera,
+  MdDelete,
+  MdReportProblem,
+  MdEdit,
 } from 'react-icons/md';
 import {
   FullHeightContainer,
@@ -46,15 +49,27 @@ import {
   CameraVideo,
   CameraControls,
   CameraButton,
+  DeleteButton,
+  ReportButton,
+  ReportBlock,
+  ReportBlockTitle,
+  ReportBlockContent,
+  ReportBlockDescription,
+  EditIcon,
+  CompleteButton,
+  ValidationMessage,
 } from './styled';
+import ReportModal from './ReportModal'; // 異常回報組件
+import SuccessMessage from '../../../components/deliver/SuccessMessage'; // 完成收運組件
+import LoadingMessage from '../../../components/common/LoadingMessage'; // 載入中組件
+import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver'; // 狀態標籤組件
+import ErrorReport from '../../../components/common/ErrorReport';
 
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { TaskStatus } from '../../../types/deliver';
 import { formatTime } from '../../../utils/formatTime';
-import LoadingMessage from '../../../components/common/LoadingMessage';
-import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver';
 
-// 定義任務類型
+// 定義任務資料
 type TaskItem = {
   id: number;
   number: string;
@@ -84,23 +99,29 @@ const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用
 
 function OrderDetails() {
   const navigate = useNavigate();
-  const { taskId } = useParams();
+  const { taskId } = useParams(); // 從 URL 獲取任務 ID
   const [task, setTask] = useState<TaskItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actualWeight, setActualWeight] = useState<number | undefined>(
     undefined,
-  );
-  const [photos, setPhotos] = useState<string[]>([]);
-  const [showCamera, setShowCamera] = useState(false);
+  ); // 實際重量
+  const [photos, setPhotos] = useState<string[]>([]); // 照片
+  const [showCamera, setShowCamera] = useState(false); // 相機
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number | null>(
     null,
-  );
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  ); // 當前照片索引
+  const videoRef = useRef<HTMLVideoElement>(null); // 視頻引用
+  const streamRef = useRef<MediaStream | null>(null); // 媒體流引用
   const [isWebCameraSupported, setIsWebCameraSupported] = useState<
     boolean | null
-  >(null);
+  >(null); // 是否支援網頁相機
+  const [showReportModal, setShowReportModal] = useState(false); // 異常回報視窗
+  const [reportedIssue, setReportedIssue] = useState<{
+    issue: string;
+    otherIssue: string;
+  } | null>(null); // 異常回報內容(包含異常原因和備註)
+  const [showSuccess, setShowSuccess] = useState(false); // 完成收運
 
   // 使用 useJsApiLoader 來處理 Google Maps API 載入
   const { isLoaded, loadError } = useJsApiLoader({
@@ -150,7 +171,7 @@ function OrderDetails() {
             ),
             actualWeight: apiTask.ActualKG,
           };
-          setTask(TaskDetail);
+          setTask(TaskDetail); // 設置任務資料
           console.log('處理完成的任務:', TaskDetail);
         } else {
           setError('找不到任務資訊');
@@ -163,12 +184,13 @@ function OrderDetails() {
       }
     };
 
+    // 如果任務 ID 存在，則獲取任務資訊
     if (taskId) {
       fetchTaskDetails();
     }
   }, [taskId]);
 
-  // 將 API 中文狀態轉換成英文映射到 TaskStatus.ts
+  // 將 API 接收到的狀態(中文) 轉成英文(狀態組件吃英文)
   const mapApiStatusToTaskStatus = (apiStatus: string): TaskStatus => {
     switch (apiStatus) {
       case '已排定':
@@ -235,8 +257,8 @@ function OrderDetails() {
     }
   }, [isLoaded, task, geocodeAddress, geocodeAttempted]);
 
+  // 檢查是否支援網頁相機
   useEffect(() => {
-    // 檢查是否支援網頁相機
     const checkCameraSupport = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -251,15 +273,18 @@ function OrderDetails() {
     checkCameraSupport();
   }, []);
 
+  // 返回上一頁
   const handleBack = () => {
     navigate(-1);
   };
 
+  // === 實際重量變更 ===
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
+    const value = parseFloat(e.target.value); //將字串轉換成浮點小數
     setActualWeight(isNaN(value) ? undefined : value);
   };
 
+  // === 開啟相機(決定使用網頁還是手機相機) ===
   const startCamera = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -275,33 +300,13 @@ function OrderDetails() {
     }
   }, []);
 
-  const stopCamera = useCallback(() => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
-    }
-  }, []);
-
-  const handleTakePhoto = useCallback(() => {
-    if (videoRef.current && currentPhotoIndex !== null) {
-      const canvas = document.createElement('canvas');
-      canvas.width = videoRef.current.videoWidth;
-      canvas.height = videoRef.current.videoHeight;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(videoRef.current, 0, 0);
-        const newPhotos = [...photos];
-        newPhotos[currentPhotoIndex] = canvas.toDataURL('image/jpeg');
-        setPhotos(newPhotos);
-        stopCamera();
-        setShowCamera(false);
-      }
-    }
-  }, [currentPhotoIndex, photos, stopCamera]);
-
+  // === 開啟相機(實際開啟相機) ===
   const handleOpenCamera = useCallback(
     (index: number) => {
       if (isWebCameraSupported === null) return;
+
+      // 如果該位置已經有照片，則不允許再次拍照
+      if (photos[index]) return;
 
       if (isWebCameraSupported) {
         // 使用網頁相機
@@ -333,6 +338,43 @@ function OrderDetails() {
     [isWebCameraSupported, photos],
   );
 
+  // === 停止相機 ===
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+  }, []);
+
+  // === 拍照 ===
+  const handleTakePhoto = useCallback(() => {
+    if (videoRef.current && currentPhotoIndex !== null) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(videoRef.current, 0, 0);
+        const newPhotos = [...photos];
+        newPhotos[currentPhotoIndex] = canvas.toDataURL('image/jpeg');
+        setPhotos(newPhotos);
+        stopCamera();
+        setShowCamera(false);
+      }
+    }
+  }, [currentPhotoIndex, photos, stopCamera]);
+
+  // === 刪除照片 ===
+  const handleDeletePhoto = useCallback(
+    (index: number) => {
+      const newPhotos = [...photos];
+      newPhotos[index] = '';
+      setPhotos(newPhotos);
+    },
+    [photos],
+  );
+
+  // 管理相機開啟關閉
   useEffect(() => {
     if (showCamera) {
       startCamera();
@@ -344,6 +386,82 @@ function OrderDetails() {
     };
   }, [showCamera, startCamera, stopCamera]);
 
+  // === 提交異常回報 ===
+  const handleReportSubmit = async (issue: string, otherIssue: string) => {
+    try {
+      // TODO: 實作提交異常回報的API
+      console.log('提交異常回報:', {
+        issue,
+        otherIssue,
+      });
+      setReportedIssue({ issue, otherIssue });
+      setShowReportModal(false);
+    } catch (error) {
+      console.error('提交異常回報失敗:', error);
+    }
+  };
+
+  // 取得異常回報文字
+  const getIssueText = (issue: string) => {
+    switch (issue) {
+      case 'overweight':
+        return '垃圾量超過方案限制';
+      case 'no_bag':
+        return '未找到垃圾袋，用戶無回應';
+      case 'no_qrcode':
+        return '無 QR 碼，用戶無回應';
+      case 'broken_bag':
+        return '垃圾袋破損嚴重';
+      case 'no_contact':
+        return '面交未見用戶，已聯絡無回應';
+      default:
+        return issue;
+    }
+  };
+
+  // 驗證必要資訊是否已填寫
+  const validateCompletion = () => {
+    const validations = {
+      weight: actualWeight !== undefined && actualWeight > 0,
+      photos: photos.filter(Boolean).length === 2,
+    };
+
+    return {
+      isValid: validations.weight && validations.photos, // 驗證是否已填寫必要資訊
+      validations, // 回傳驗證結果
+    };
+  };
+
+  // === 提交完成收運(跳轉成功頁面) ===
+  const handleComplete = async () => {
+    const { isValid } = validateCompletion();
+    if (!isValid) return;
+
+    try {
+      // TODO: 實作提交完成收運的API
+      console.log('完成收運:', {
+        actualWeight,
+        photos,
+        reportedIssue,
+      });
+      setShowSuccess(true);
+    } catch (error) {
+      console.error('完成收運失敗:', error);
+    }
+    console.log('完成收運:', {
+      'actualWeight': actualWeight,
+      'photos': photos,
+      'reportedIssue': reportedIssue,
+    });
+  };
+
+  // === 跳轉回首頁(非同步) ===
+  const handleSuccessFinish = useCallback(() => {
+    navigate('/deliver');
+  }, [navigate]);
+
+  const { isValid: validationsAreValid, validations } = validateCompletion();
+
   // 載入狀態
   if (loading) {
     return <LoadingMessage />;
@@ -353,11 +471,7 @@ function OrderDetails() {
   if (error) {
     return (
       <FullHeightContainer>
-        123
-        {/* <HeaderContainer>
-          <PageTitle>錯誤</PageTitle>
-          <PageSubtitle>{error}</PageSubtitle>
-        </HeaderContainer> */}
+        <ErrorReport error={error} />
       </FullHeightContainer>
     );
   }
@@ -446,7 +560,7 @@ function OrderDetails() {
         </MapContainer>
       </DetailCard>
 
-      <Title>收運方案</Title>
+      <Title>垃圾收運量</Title>
 
       <DetailCard>
         <PlanTitle>{task.plan}</PlanTitle>
@@ -455,6 +569,7 @@ function OrderDetails() {
         </PlanContent>
 
         <Divider />
+
         <CardSection>
           <PageTitle>實際重量 (kg)</PageTitle>
           <WeightInput
@@ -463,6 +578,9 @@ function OrderDetails() {
             onChange={handleWeightChange}
             placeholder="請輸入實際重量"
           />
+          {!validations.weight && (
+            <ValidationMessage>請輸入實際重量</ValidationMessage>
+          )}
         </CardSection>
 
         <CardSection>
@@ -475,7 +593,20 @@ function OrderDetails() {
                 onClick={() => handleOpenCamera(index)}
               >
                 {photos[index] ? (
-                  <PreviewImage src={photos[index]} alt={`照片 ${index + 1}`} />
+                  <div style={{ position: 'relative' }}>
+                    <PreviewImage
+                      src={photos[index]}
+                      alt={`照片 ${index + 1}`}
+                    />
+                    <DeleteButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeletePhoto(index);
+                      }}
+                    >
+                      <MdDelete />
+                    </DeleteButton>
+                  </div>
                 ) : (
                   <>
                     <PlusIcon>
@@ -493,8 +624,43 @@ function OrderDetails() {
               </PhotoUploadBox>
             ))}
           </PhotoUploadContainer>
+          {!validations.photos && (
+            <ValidationMessage>請上傳2張收運照片</ValidationMessage>
+          )}
         </CardSection>
+
+        {/* 回報異常按鈕或異常回報區塊 */}
+        {!reportedIssue ? (
+          <ReportButton onClick={() => setShowReportModal(true)}>
+            <MdReportProblem />
+            發現異常？點我回報
+          </ReportButton>
+        ) : (
+          <ReportBlock onClick={() => setShowReportModal(true)}>
+            <ReportBlockTitle>
+              <MdReportProblem />
+              異常回報
+            </ReportBlockTitle>
+            <ReportBlockContent>
+              {getIssueText(reportedIssue.issue)}
+            </ReportBlockContent>
+            {reportedIssue.otherIssue && (
+              <ReportBlockDescription>
+                {reportedIssue.otherIssue}
+              </ReportBlockDescription>
+            )}
+            <EditIcon>
+              <MdEdit />
+            </EditIcon>
+          </ReportBlock>
+        )}
       </DetailCard>
+
+      <CompleteButton $disabled={!validationsAreValid} onClick={handleComplete}>
+        完成收運
+      </CompleteButton>
+
+      {showSuccess && <SuccessMessage onFinish={handleSuccessFinish} />}
 
       {showCamera && isWebCameraSupported && (
         <CameraPreview>
@@ -511,6 +677,13 @@ function OrderDetails() {
           </CameraControls>
         </CameraPreview>
       )}
+
+      {/* 異常回報視窗 */}
+      <ReportModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        onSubmit={handleReportSubmit}
+      />
     </FullHeightContainer>
   );
 }

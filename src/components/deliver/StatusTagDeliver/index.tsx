@@ -14,7 +14,7 @@ interface StatusTagProps {
   status: string;
 }
 
-// 英轉中(汪汪員版)
+// 顯示用 英轉中(汪汪員版)
 const getDisplayStatus = (status: string) => {
   switch (status) {
     case 'abnormal':
