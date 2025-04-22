@@ -227,7 +227,7 @@ function ScanOrder() {
                   <QRCodeSVG
                     value={JSON.stringify(generateOrderQRData())}
                     size={200}
-                    level="H"
+                    level="M"
                     includeMargin={true}
                   />
                 )}
