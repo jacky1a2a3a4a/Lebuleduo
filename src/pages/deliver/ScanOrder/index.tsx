@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { TaskStatus } from '../../../../src/types/deliver'; //任務狀態類型
+// import { TaskStatus } from '../../../../src/types/deliver'; //任務狀態類型
 import Webcam from 'react-webcam'; //react相機套件
 import jsQR from 'jsqr'; //QR碼解碼套件
 import { QRCodeSVG } from 'qrcode.react'; //QR碼生成套件
@@ -15,7 +15,6 @@ import {
   OrderInfoItem,
   OrderInfoLabel,
   OrderInfoValue,
-  Divider,
   ProcessOrderButton,
   TestQRCodeContainer,
 } from './styles';
@@ -28,7 +27,7 @@ type ApiData = {
   Liter: number;
   Notes: string;
   OrderDetailID: number;
-  OrderDetailsNumber: string; //電話號碼
+  OrderDetailsNumber: string; // 訂單編號
   Photo: string[];
   PlanKG: number;
   PlanName: string;
@@ -36,30 +35,16 @@ type ApiData = {
   Status: string;
 };
 
-// 定義任務類型(照api順序)
+// 定義任務類型(比對API回傳的任務資料)
 type TaskItem = {
-  address: string;
-  customer: string;
   number: string;
-  liter: number;
-  notes: string;
   id: string;
-  phone: string;
-  photos: string[];
-  kg: number;
-  plan: string;
-  time: string;
-  status: TaskStatus;
 };
 
 // 掃描後獲得的訂單任務類型
 type OrderInfo = {
-  orderNumber: string; //訂單編號
-  planName: string; //方案名稱
-  planPeople: string; //方案人數
-  frequency: string; //訂閱時長
-  totalPrice: string; //訂單金額
-  timestamp: string; //訂單時間
+  OrderDetailID: number;
+  CustomerNumber: string;
 };
 
 const userId = localStorage.getItem('UsersID');
@@ -79,6 +64,11 @@ function ScanOrder() {
   // 從 API 獲取今日訂單，過濾出 前往中 任務
   useEffect(() => {
     const fetchTodayOrders = async () => {
+      if (!userId) {
+        console.error('用戶ID不存在');
+        return;
+      }
+
       try {
         const response = await axios.get(`api/GET/driver/today/${userId}`);
         const orders = response.data.result.Orders;
@@ -93,20 +83,9 @@ function ScanOrder() {
 
         if (ongoingOrder) {
           setOngoingOrderData(ongoingOrder);
-
           setOnGoingTask({
-            address: ongoingOrder.Addresses,
-            customer: ongoingOrder.CustomerName,
             number: ongoingOrder.OrderDetailsNumber,
-            liter: ongoingOrder.Liter,
-            notes: ongoingOrder.Notes,
             id: ongoingOrder.OrderDetailID.toString(),
-            phone: ongoingOrder.OrderDetailsNumber,
-            photos: ongoingOrder.Photo,
-            kg: ongoingOrder.PlanKG,
-            plan: ongoingOrder.PlanName,
-            time: ongoingOrder.ServiceTime || '',
-            status: 'ongoing', //直接設定狀態，跳過引用(比較方便)
           });
         }
       } catch (error) {
@@ -124,18 +103,6 @@ function ScanOrder() {
     return {
       OrderDetailID: ongoingOrderData.OrderDetailID,
       CustomerNumber: ongoingOrderData.OrderDetailsNumber,
-      ServiceTime: ongoingOrderData.ServiceTime,
-      Status: 'arrived', // 掃描後改變狀態已抵達
-      CustomerName: ongoingOrderData.CustomerName,
-      Notes: ongoingOrderData.Notes,
-      Addresses: ongoingOrderData.Addresses,
-      PlanName: ongoingOrderData.PlanName,
-      PlanKG: ongoingOrderData.PlanKG,
-      Liter: ongoingOrderData.Liter,
-      Photo: ongoingOrderData.Photo,
-      orderNumber: ongoingOrderData.OrderDetailsNumber,
-      planName: ongoingOrderData.PlanName,
-      timestamp: ongoingOrderData.ServiceTime || new Date().toISOString(),
     };
   }, [ongoingOrderData]);
 
@@ -145,6 +112,7 @@ function ScanOrder() {
       // 解析掃描到的JSON數據
       const orderData = JSON.parse(result) as OrderInfo;
       setScannedOrder(orderData);
+      console.log('掃描到的訂單資料:', orderData);
       setIsScanning(false); //掃描成功後關閉掃描
       setScanError(null); //掃描錯誤訊息清空
 
@@ -162,9 +130,18 @@ function ScanOrder() {
 
     const video = webcamRef.current.video;
     const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d', { willReadFrequently: true });
 
-    if (!video || !context) return;
+    if (!video || !context) {
+      console.error('無法訪問相機或畫布');
+      return;
+    }
+
+    // 確保視頻已經準備好
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+      console.error('視頻尚未準備好');
+      return;
+    }
 
     // 設置 canvas 尺寸與視頻相同
     canvas.width = video.videoWidth;
@@ -176,7 +153,7 @@ function ScanOrder() {
     // 獲取圖像數據
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-    // 使用 jsQR 解碼
+    // === 使用 jsQR 解碼 ===
     const code = jsQR(imageData.data, imageData.width, imageData.height);
 
     if (code) {
@@ -212,29 +189,32 @@ function ScanOrder() {
 
   // 處理訂單
   const handleProcessOrder = () => {
-    if (scannedOrder && onGoingTask) {
+    if (!scannedOrder || !onGoingTask) return;
+
+    try {
       // 儲存掃描到的訂單與進行中任務的關聯
-      localStorage.setItem(
-        `order_${onGoingTask.id}`,
-        JSON.stringify(scannedOrder),
-      );
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(
+          `order_${onGoingTask.id}`,
+          JSON.stringify(scannedOrder),
+        );
+      } else {
+        console.error('localStorage 不可用');
+        return;
+      }
 
       // 導航到處理訂單頁面
-      navigate(`/deliver/task/${onGoingTask.id}/process-order`);
+      navigate(`/deliver/scan-order/process-order/${onGoingTask.id}`);
+    } catch (error) {
+      console.error('處理訂單時發生錯誤:', error);
     }
-  };
-
-  // 格式化日期時間
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
   };
 
   return (
     <ScanOrderSectionStyled>
       {!isScanning && !scannedOrder && (
         <>
-          {/* 掃描按鈕 */}  
+          {/* 掃描按鈕 */}
           <ScanButton onClick={startScanning}>掃描QR碼</ScanButton>
           {/* 有前往中的訂單 */}
           {onGoingTask ? (
@@ -286,30 +266,12 @@ function ScanOrder() {
         <OrderInfoContainer>
           <OrderInfoTitle>訂單資訊</OrderInfoTitle>
           <OrderInfoItem>
-            <OrderInfoLabel>訂單編號：</OrderInfoLabel>
-            <OrderInfoValue>{scannedOrder.orderNumber}</OrderInfoValue>
+            <OrderInfoLabel>顧客編號：</OrderInfoLabel>
+            <OrderInfoValue>{scannedOrder.CustomerNumber}</OrderInfoValue>
+            <OrderInfoLabel>任務編號：</OrderInfoLabel>
+            <OrderInfoValue>{scannedOrder.OrderDetailID}</OrderInfoValue>
           </OrderInfoItem>
-          <Divider />
-          <OrderInfoItem>
-            <OrderInfoLabel>方案名稱：</OrderInfoLabel>
-            <OrderInfoValue>
-              {scannedOrder.planName} ({scannedOrder.planPeople})
-            </OrderInfoValue>
-          </OrderInfoItem>
-          <OrderInfoItem>
-            <OrderInfoLabel>訂閱時長：</OrderInfoLabel>
-            <OrderInfoValue>{scannedOrder.frequency}個月</OrderInfoValue>
-          </OrderInfoItem>
-          <OrderInfoItem>
-            <OrderInfoLabel>訂單金額：</OrderInfoLabel>
-            <OrderInfoValue>NT$ {scannedOrder.totalPrice}</OrderInfoValue>
-          </OrderInfoItem>
-          <OrderInfoItem>
-            <OrderInfoLabel>訂單時間：</OrderInfoLabel>
-            <OrderInfoValue>
-              {formatDate(scannedOrder.timestamp)}
-            </OrderInfoValue>
-          </OrderInfoItem>
+
           <ProcessOrderButton
             onClick={handleProcessOrder}
             disabled={!onGoingTask}
