@@ -9,12 +9,18 @@ const fadeIn = keyframes`
   }
 `;
 
-const scaleIn = keyframes`
-  from {
-    transform: scale(0.5);
+const rotateShake = keyframes`
+  0%, 100% {
+    transform: rotate(0deg);
   }
-  to {
-    transform: scale(1);
+  25% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(3deg);
   }
 `;
 
@@ -33,28 +39,11 @@ export const Container = styled.div`
   animation: ${fadeIn} 0.3s ease-out;
 `;
 
-export const IconWrapper = styled.div`
-  width: 120px;
-  height: 120px;
-  background-color: var(--color-background-secondary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--spacing-xl);
-  animation: ${scaleIn} 0.5s ease-out;
-
-  svg {
-    color: var(--color-primary);
-    font-size: 60px;
-  }
-`;
-
 export const Title = styled.h2`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
   animation: ${fadeIn} 0.5s ease-out 0.3s both;
 `;
 
@@ -63,4 +52,16 @@ export const Message = styled.p`
   font-size: var(--font-size-md);
   text-align: center;
   animation: ${fadeIn} 0.5s ease-out 0.5s both;
+`;
+
+export const ImageWrapper = styled.div`
+  margin-bottom: var(--spacing-xl);
+  animation: ${fadeIn} 0.5s ease-out 0.7s both;
+
+  img {
+    width: 200px;
+    height: auto;
+    animation: ${rotateShake} 0.8s linear infinite;
+    transform-origin: center center;
+  }
 `;

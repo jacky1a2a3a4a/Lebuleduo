@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { MdCheckCircle } from 'react-icons/md';
-import { Container, IconWrapper, Title, Message } from './styled';
+import { Container, Title, Message, ImageWrapper } from './styled';
+import scoreImage from '../../../assets/Lebuledou_score.png';
 
 interface SuccessMessageProps {
   onFinish: () => void;
@@ -18,11 +18,11 @@ const SuccessMessage = ({ onFinish, delay = 2000 }: SuccessMessageProps) => {
 
   return (
     <Container>
-      <IconWrapper>
-        <MdCheckCircle />
-      </IconWrapper>
-      <Title>收運完成！</Title>
-      <Message>感謝您的服務，即將返回首頁</Message>
+      <ImageWrapper>
+        <img src={scoreImage} alt="Lebuledou Score" />
+      </ImageWrapper>
+      <Title>任務完成！</Title>
+      <Message>繼續接單，即將返回首頁</Message>
     </Container>
   );
 };

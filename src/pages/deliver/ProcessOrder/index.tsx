@@ -10,6 +10,7 @@ import {
   MdDelete,
   MdReportProblem,
   MdEdit,
+  MdOutlineTaskAlt,
 } from 'react-icons/md';
 import {
   FullHeightContainer,
@@ -57,6 +58,7 @@ import {
   ReportBlockDescription,
   EditIcon,
   CompleteButton,
+  CompleteIcon,
   ValidationMessage,
 } from './styled';
 import ReportModal from './ReportModal'; // 異常回報組件
@@ -449,9 +451,9 @@ function OrderDetails() {
       console.error('完成收運失敗:', error);
     }
     console.log('完成收運:', {
-      'actualWeight': actualWeight,
-      'photos': photos,
-      'reportedIssue': reportedIssue,
+      actualWeight: actualWeight,
+      photos: photos,
+      reportedIssue: reportedIssue,
     });
   };
 
@@ -636,27 +638,32 @@ function OrderDetails() {
             發現異常？點我回報
           </ReportButton>
         ) : (
-          <ReportBlock onClick={() => setShowReportModal(true)}>
+          <>
             <ReportBlockTitle>
               <MdReportProblem />
               異常回報
             </ReportBlockTitle>
-            <ReportBlockContent>
-              {getIssueText(reportedIssue.issue)}
-            </ReportBlockContent>
-            {reportedIssue.otherIssue && (
-              <ReportBlockDescription>
-                {reportedIssue.otherIssue}
-              </ReportBlockDescription>
-            )}
-            <EditIcon>
-              <MdEdit />
-            </EditIcon>
-          </ReportBlock>
+            <ReportBlock onClick={() => setShowReportModal(true)}>
+              <ReportBlockContent>
+                {getIssueText(reportedIssue.issue)}
+              </ReportBlockContent>
+              {reportedIssue.otherIssue && (
+                <ReportBlockDescription>
+                  {reportedIssue.otherIssue}
+                </ReportBlockDescription>
+              )}
+              <EditIcon>
+                <MdEdit />
+              </EditIcon>
+            </ReportBlock>
+          </>
         )}
       </DetailCard>
 
       <CompleteButton $disabled={!validationsAreValid} onClick={handleComplete}>
+        <CompleteIcon>
+          <MdOutlineTaskAlt />
+        </CompleteIcon>
         完成收運
       </CompleteButton>
 

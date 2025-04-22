@@ -68,13 +68,13 @@ export const ReportSectionTitle = styled.h3`
 export const ReportOption = styled.div<{ $selected: boolean }>`
   background-color: ${({ $selected }) =>
     $selected
-      ? 'var(--color-background-secondary)'
+      ? 'var(--color-background-error)'
       : 'var(--color-background-primary)'};
   color: ${({ $selected }) =>
-    $selected ? 'var(--color-primary)' : 'var(--color-text-secondary)'};
+    $selected ? 'var(--color-error)' : 'var(--color-text-secondary)'};
   border: 1px solid
     ${({ $selected }) =>
-      $selected ? 'var(--color-primary)' : 'var(--color-neutral-300)'};
+      $selected ? 'var(--color-error)' : 'var(--color-neutral-300)'};
   border-radius: var(--border-radius-lg);
 
   padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
@@ -86,7 +86,7 @@ export const ReportOption = styled.div<{ $selected: boolean }>`
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: var(--color-primary);
+    border-color: var(--color-error);
   }
 `;
 
@@ -102,7 +102,7 @@ export const ReportTextarea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--color-error);
   }
 
   &::placeholder {

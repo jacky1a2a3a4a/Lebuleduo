@@ -576,7 +576,7 @@ export const ReportBlock = styled.button`
   border: 1px solid var(--color-error);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-md);
-  margin-top: var(--spacing-md);
+  margin-top: var(--spacing-sm);
   width: 100%;
   text-align: left;
   cursor: pointer;
@@ -591,9 +591,8 @@ export const ReportBlock = styled.button`
 
 export const ReportBlockTitle = styled.div`
   color: var(--color-error);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-xs);
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -601,7 +600,7 @@ export const ReportBlockTitle = styled.div`
 `;
 
 export const ReportBlockContent = styled.div`
-  color: var(--color-text-primary);
+  color: var(--color-error);
   font-size: var(--font-size-sm);
   margin-bottom: var(--spacing-xs);
 `;
@@ -625,24 +624,36 @@ export const EditIcon = styled.div`
   justify-content: center;
 `;
 
+// 完成收運按鈕
 export const CompleteButton = styled.button<{ $disabled: boolean }>`
   width: 100%;
-  padding: var(--spacing-md);
+  padding: var(--spacing-12);
   background-color: ${({ $disabled }) =>
     $disabled ? 'var(--color-neutral-300)' : 'var(--color-primary)'};
   color: var(--color-white);
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
+  border-radius: var(--border-radius-round);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   transition: all 0.2s ease;
-  margin-top: var(--spacing-lg);
+  margin-top: var(--spacing-sm);
 
-  &:hover {
-    background-color: ${({ $disabled }) =>
-      $disabled ? 'var(--color-neutral-300)' : 'var(--color-primary-hover)'};
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  line-height: 1;
+`;
+
+// 完成收運按鈕圖示
+export const CompleteIcon = styled.div`
+  font-size: var(--font-size-md);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin-top: 1px;
 `;
 
 export const ValidationMessage = styled.div`
