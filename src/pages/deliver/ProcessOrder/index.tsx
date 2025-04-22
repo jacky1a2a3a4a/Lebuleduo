@@ -26,10 +26,10 @@ import {
 } from './styled';
 
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { TaskStatus } from '../../../../types/deliver';
-import { formatTime } from '../../../../utils/formatTime';
-import LoadingMessage from '../../../../components/common/LoadingMessage';
-import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
+import { TaskStatus } from '../../../types/deliver';
+import { formatTime } from '../../../utils/formatTime';
+import LoadingMessage from '../../../components/common/LoadingMessage';
+import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver';
 
 // 定義任務類型
 type TaskItem = {
@@ -211,10 +211,11 @@ function OrderDetails() {
   if (error) {
     return (
       <FullHeightContainer>
-        <HeaderContainer>
+        123
+        {/* <HeaderContainer>
           <PageTitle>錯誤</PageTitle>
           <PageSubtitle>{error}</PageSubtitle>
-        </HeaderContainer>
+        </HeaderContainer> */}
       </FullHeightContainer>
     );
   }

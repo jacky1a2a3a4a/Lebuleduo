@@ -3,8 +3,6 @@
 
 import axios from 'axios';
 
-// API 基礎路徑
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 // 使用者資料介面
 export interface UserData {
@@ -24,7 +22,7 @@ const authService = {
   // LINE 登入回調
   lineCallback: async (code: string, role: UserRole) => {
     try {
-      const response = await axios.post(`${API_URL}/api/auth/line/callback`, {
+      const response = await axios.post(`/api/auth/line/callback`, {
         code,
         role,
       });
@@ -44,7 +42,7 @@ const authService = {
     }
 
     try {
-      const response = await axios.get(`${API_URL}/api/auth/user`, {
+      const response = await axios.get(`/api/auth/user`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

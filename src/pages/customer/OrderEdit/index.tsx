@@ -37,7 +37,7 @@ import AddressAutocomplete from '../SubscribeData/AddressAutocomplete';
 import LoadingMessage from '../../../components/common/LoadingMessage';
 
 // 虛擬機URL
-const BASE_URL = 'http://lebuleduo.rocket-coding.com';
+const BASE_URL = 'https://lebuleduo.rocket-coding.com';
 
 // 圖片類型
 interface Image {

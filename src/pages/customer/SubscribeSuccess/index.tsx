@@ -6,7 +6,6 @@ import {
   IoIosCloudDownload,
   IoIosRocket,
 } from 'react-icons/io';
-import QRCode from 'react-qr-code';
 import {
   PageWrapper,
   SuccessContainer,
@@ -19,7 +18,6 @@ import {
   OrderItemLabel,
   OrderItemValue,
   Divider,
-  QRCodeContainer,
   QRcodeTextItems,
   QRCodeTextItem,
   TextIcon,
@@ -87,16 +85,6 @@ const SubscribeSuccess = () => {
       setOrderNumber(orderId);
     }
   }, [orderId]);
-
-  // 生成QR碼內容（訂單資訊的JSON字符串）
-  const qrCodeValue = JSON.stringify({
-    orderNumber: orderNumber || `LBL${Date.now()}`,
-    planName: planName || defaultData.planName,
-    planPeople: planPeople || defaultData.planPeople,
-    frequency: frequency || defaultData.frequency,
-    totalPrice: totalPrice || defaultData.totalPrice,
-    timestamp: new Date().toISOString(),
-  });
 
   // 返回首頁
   const handleBackToHome = () => {
@@ -173,14 +161,6 @@ const SubscribeSuccess = () => {
           </OrderItem>
         </OrderInfoContainer>
 
-        <QRCodeContainer>
-          <QRCode
-            value={qrCodeValue}
-            size={200}
-            level="H"
-            style={{ width: '100%', maxWidth: '130px', height: 'auto' }}
-          />
-        </QRCodeContainer>
         <QRcodeTextItems>
           <QRCodeTextItem>
             <TextIcon>

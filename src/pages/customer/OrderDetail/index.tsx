@@ -33,7 +33,7 @@ import {
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 import LoadingMessage from '../../../components/common/LoadingMessage';
 // 虛擬機URL
-const BASE_URL = 'http://lebuleduo.rocket-coding.com';
+const BASE_URL = 'https://lebuleduo.rocket-coding.com';
 
 function OrderDetail() {
   const navigate = useNavigate();

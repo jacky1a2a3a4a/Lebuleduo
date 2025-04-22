@@ -38,8 +38,9 @@ import CompletedFinishedTask from './pages/customer/OrderTaskStatus/CompletedFin
 // 外送員(deliver) 頁面組件
 import Task from './pages/deliver/Task';
 import OrderDetailDeliver from './pages/deliver/Task/OrderDetail';
-import OrderInProcess from './pages/deliver/Task/OrderInProcess';
+// import OrderInProcess from './pages/deliver/Task/_OrderInProcess';
 import ScanOrder from './pages/deliver/ScanOrder';
+import ProcessOrder from './pages/deliver/ProcessOrder';
 import Calendar from './pages/deliver/Calendar';
 
 //// 臨時頁面組件
@@ -266,10 +267,10 @@ const AppContent = () => {
 
       {/* 訂單處理頁面 - 獨立路由，不使用 DeliverLayout */}
       <Route
-        path="/deliver/task/:taskId/process-order"
+        path="/deliver/scan-order/process-order/:taskId"
         element={
           <ProtectedRoute role="deliver">
-            <OrderInProcess />
+            <ProcessOrder />
           </ProtectedRoute>
         }
       />
