@@ -10,8 +10,12 @@ interface LineConfig {
 }
 
 // 獲取基礎 URL
-const BASE_URL = import.meta.env.VITE_APP_URL; //http://localhost:5173
-console.log('BASE_URL from lineConfig.ts', BASE_URL);
+const BASE_URL = import.meta.env.VITE_APP_URL || 'https://lebuleduo.vercel.app';
+console.log('環境變數檢查:', {
+  VITE_APP_URL: import.meta.env.VITE_APP_URL,
+  BASE_URL: BASE_URL,
+  VITE_LINE_CHANNEL_ID: import.meta.env.VITE_LINE_CHANNEL_ID,
+});
 
 // 顧客配置
 const CUSTOMER_CONFIG: LineConfig = {
