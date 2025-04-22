@@ -3,7 +3,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 // import { TaskStatus } from '../../../../src/types/deliver'; //任務狀態類型
 import Webcam from 'react-webcam'; //react相機套件
 import jsQR from 'jsqr'; //QR碼解碼套件
-import { QRCodeSVG } from 'qrcode.react'; //QR碼生成套件
+import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react'; //QR碼生成套件
 import axios from 'axios';
 import {
   ScanOrderSectionStyled,
@@ -107,22 +107,30 @@ function ScanOrder() {
   }, [ongoingOrderData]);
 
   // 處理QR碼掃描結果
-  const handleScanResult = useCallback((result: string) => {
-    try {
-      // 解析掃描到的JSON數據
-      const orderData = JSON.parse(result) as OrderInfo;
-      setScannedOrder(orderData);
-      console.log('掃描到的訂單資料:', orderData);
-      setIsScanning(false); //掃描成功後關閉掃描
-      setScanError(null); //掃描錯誤訊息清空
+  const handleScanResult = useCallback(
+    (result: string) => {
+      try {
+        // 解析掃描到的JSON數據
+        const orderData = JSON.parse(result) as OrderInfo;
+        setScannedOrder(orderData);
+        console.log('掃描到的訂單資料:', orderData);
+        setIsScanning(false); //掃描成功後關閉掃描
+        setScanError(null); //掃描錯誤訊息清空
 
-      // 可以在這裡將訂單數據儲存到localStorage或其他狀態管理中
-      localStorage.setItem('scannedOrder', result);
-    } catch (error) {
-      console.error('無效的QR碼:', error);
-      setScanError('掃描到無效的QR碼格式，請重試');
-    }
-  }, []);
+        // 儲存掃描到的訂單數據
+        localStorage.setItem('scannedOrder', result);
+
+        // 立即跳轉到處理訂單頁面
+        if (onGoingTask) {
+          navigate(`/deliver/scan-order/process-order/${onGoingTask.id}`);
+        }
+      } catch (error) {
+        console.error('無效的QR碼:', error);
+        setScanError('掃描到無效的QR碼格式，請重試');
+      }
+    },
+    [navigate, onGoingTask],
+  );
 
   // 掃描 QR Code
   const scanQRCode = useCallback(() => {
@@ -210,6 +218,22 @@ function ScanOrder() {
     }
   };
 
+  // 下載 QR Code
+  const downloadQRCode = useCallback(() => {
+    if (!generateOrderQRData()) return;
+
+    const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const dataUrl = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `order_qr_${onGoingTask?.number || 'unknown'}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, [generateOrderQRData, onGoingTask]);
+
   return (
     <ScanOrderSectionStyled>
       {!isScanning && !scannedOrder && (
@@ -224,12 +248,25 @@ function ScanOrder() {
                 {/* 訂單 QR Code */}
                 <StatusMessage>訂單 QR Code：</StatusMessage>
                 {generateOrderQRData() && (
-                  <QRCodeSVG
-                    value={JSON.stringify(generateOrderQRData())}
-                    size={200}
-                    level="M"
-                    includeMargin={true}
-                  />
+                  <>
+                    <QRCodeSVG
+                      value={JSON.stringify(generateOrderQRData())}
+                      size={200}
+                      level="M"
+                      includeMargin={true}
+                    />
+                    <QRCodeCanvas
+                      id="qr-canvas"
+                      value={JSON.stringify(generateOrderQRData())}
+                      size={200}
+                      level="M"
+                      includeMargin={true}
+                      style={{ display: 'none' }}
+                    />
+                    <ScanButton onClick={downloadQRCode}>
+                      下載 QR Code
+                    </ScanButton>
+                  </>
                 )}
                 <StatusMessage>請掃描此 QR Code 進行測試</StatusMessage>
               </TestQRCodeContainer>
