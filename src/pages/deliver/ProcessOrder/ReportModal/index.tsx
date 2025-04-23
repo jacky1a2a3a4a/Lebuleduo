@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   ReportModal as StyledReportModal,
   ReportModalTitle,
@@ -15,16 +14,21 @@ interface ReportModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (issue: string, otherIssue: string) => void;
+  selectedIssue: string | null;
+  otherIssue: string;
+  onSelectedIssueChange: (issue: string | null) => void;
+  onOtherIssueChange: (issue: string) => void;
 }
 
 const ReportModalComponent = ({
   isOpen,
   onClose,
   onSubmit,
+  selectedIssue,
+  otherIssue,
+  onSelectedIssueChange,
+  onOtherIssueChange,
 }: ReportModalProps) => {
-  const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
-  const [otherIssue, setOtherIssue] = useState('');
-
   const handleSubmit = () => {
     if (!selectedIssue) {
       alert('請選擇異常問題');
@@ -32,13 +36,12 @@ const ReportModalComponent = ({
     }
 
     onSubmit(selectedIssue, otherIssue);
-    setSelectedIssue(null);
-    setOtherIssue('');
+    // 提交後重置狀態
+    onSelectedIssueChange(null);
+    onOtherIssueChange('');
   };
 
   const handleCancel = () => {
-    setSelectedIssue(null);
-    setOtherIssue('');
     onClose();
   };
 
@@ -50,31 +53,31 @@ const ReportModalComponent = ({
         <ReportSectionTitle>* 請選擇異常問題 *</ReportSectionTitle>
         <ReportOption
           $selected={selectedIssue === 'overweight'}
-          onClick={() => setSelectedIssue('overweight')}
+          onClick={() => onSelectedIssueChange('overweight')}
         >
           垃圾量超過方案限制
         </ReportOption>
         <ReportOption
           $selected={selectedIssue === 'no_bag'}
-          onClick={() => setSelectedIssue('no_bag')}
+          onClick={() => onSelectedIssueChange('no_bag')}
         >
           未找到垃圾袋，用戶無回應
         </ReportOption>
         <ReportOption
           $selected={selectedIssue === 'no_qrcode'}
-          onClick={() => setSelectedIssue('no_qrcode')}
+          onClick={() => onSelectedIssueChange('no_qrcode')}
         >
           無 QR 碼，用戶無回應
         </ReportOption>
         <ReportOption
           $selected={selectedIssue === 'broken_bag'}
-          onClick={() => setSelectedIssue('broken_bag')}
+          onClick={() => onSelectedIssueChange('broken_bag')}
         >
           垃圾袋破損嚴重
         </ReportOption>
         <ReportOption
           $selected={selectedIssue === 'no_contact'}
-          onClick={() => setSelectedIssue('no_contact')}
+          onClick={() => onSelectedIssueChange('no_contact')}
         >
           面交未見用戶，已聯絡無回應
         </ReportOption>
@@ -85,7 +88,7 @@ const ReportModalComponent = ({
         <ReportTextarea
           placeholder="請描述其他異常情況..."
           value={otherIssue}
-          onChange={(e) => setOtherIssue(e.target.value)}
+          onChange={(e) => onOtherIssueChange(e.target.value)}
         />
       </ReportSection>
 

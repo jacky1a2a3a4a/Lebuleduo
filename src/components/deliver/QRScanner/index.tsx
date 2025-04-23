@@ -110,6 +110,7 @@ const QRScanner = ({ onScanResult, onError }: QRScannerProps) => {
           aspectRatio: '1/1',
           margin: '0 auto',
           objectFit: 'cover',
+          borderRadius: 'var(--border-radius-lg)',
         }}
       />
       <canvas ref={canvasRef} style={{ display: 'none' }} />

@@ -179,7 +179,7 @@ function OrderDetails() {
           <IconStyled>
             <MdArrowBackIosNew />
           </IconStyled>
-          <NavTitleText>填寫收運狀況</NavTitleText>
+          <NavTitleText>任務詳情</NavTitleText>
         </NavTitle>
         <NavSubtitle>任務編號: {task.number}</NavSubtitle>
       </HeaderContainer>

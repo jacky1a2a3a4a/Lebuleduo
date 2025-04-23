@@ -86,6 +86,7 @@ type TaskItem = {
   liter?: number;
   dropPointPhotos?: string[]; //放置點圖片
   actualWeight?: number; // 實際重量
+  driverPhotos?: string[]; // 汪汪員拍攝照片
 };
 
 const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用者 ID
@@ -99,7 +100,7 @@ function OrderDetails() {
   const [actualWeight, setActualWeight] = useState<number | undefined>(
     undefined,
   ); // 實際重量
-  const [photos, setPhotos] = useState<string[]>([]); // 照片
+  const [driverPhotos, setDriverPhotos] = useState<string[]>([]); // 汪汪員拍攝照片
   const [showCamera, setShowCamera] = useState(false); // 相機
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number | null>(
     null,
@@ -110,10 +111,20 @@ function OrderDetails() {
     boolean | null
   >(null); // 是否支援網頁相機
   const [showReportModal, setShowReportModal] = useState(false); // 異常回報視窗
-  const [reportedIssue, setReportedIssue] = useState<{
-    issue: string;
+  const [reportForm, setReportForm] = useState<{
+    issue: string | null;
     otherIssue: string;
-  } | null>(null); // 異常回報內容(包含異常原因和備註)
+    isSubmitted: boolean;
+    lastSubmitted: {
+      issue: string | null;
+      otherIssue: string;
+    } | null;
+  }>({
+    issue: null,
+    otherIssue: '',
+    isSubmitted: false,
+    lastSubmitted: null,
+  }); // 異常回報表單狀態
   const [showSuccess, setShowSuccess] = useState(false); // 完成收運
 
   // 從 API 讀取任務資訊
@@ -124,6 +135,7 @@ function OrderDetails() {
         const response = await axios.get(
           `api/GET/driver/day/${userId}/${getTodayDate()}/${taskId}`,
         );
+        console.log('原始任務資訊:', response.data.result.Orders[0]);
 
         if (response.data.status && response.data.result.Orders.length > 0) {
           const apiTask = response.data.result.Orders[0];
@@ -142,6 +154,7 @@ function OrderDetails() {
             dropPointPhotos: apiTask.Photo?.map(
               (photo) => `${import.meta.env.VITE_API_URL}${photo}`,
             ),
+            driverPhotos: apiTask.DriverPhotos,
             actualWeight: apiTask.ActualKG,
           };
           setTask(TaskDetail); // 設置任務資料
@@ -206,6 +219,7 @@ function OrderDetails() {
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value); //將字串轉換成浮點小數
     setActualWeight(isNaN(value) ? undefined : value);
+    console.log('實際重量:', actualWeight);
   };
 
   // === 開啟相機(決定使用網頁還是手機相機) ===
@@ -230,7 +244,7 @@ function OrderDetails() {
       if (isWebCameraSupported === null) return;
 
       // 如果該位置已經有照片，則不允許再次拍照
-      if (photos[index]) return;
+      if (driverPhotos[index]) return;
 
       if (isWebCameraSupported) {
         // 使用網頁相機
@@ -248,9 +262,9 @@ function OrderDetails() {
           if (file) {
             const reader = new FileReader();
             reader.onload = (event) => {
-              const newPhotos = [...photos];
+              const newPhotos = [...driverPhotos];
               newPhotos[index] = event.target?.result as string;
-              setPhotos(newPhotos);
+              setDriverPhotos(newPhotos);
             };
             reader.readAsDataURL(file);
           }
@@ -259,7 +273,7 @@ function OrderDetails() {
         input.click();
       }
     },
-    [isWebCameraSupported, photos],
+    [isWebCameraSupported, driverPhotos],
   );
 
   // === 停止相機 ===
@@ -279,23 +293,23 @@ function OrderDetails() {
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(videoRef.current, 0, 0);
-        const newPhotos = [...photos];
+        const newPhotos = [...driverPhotos];
         newPhotos[currentPhotoIndex] = canvas.toDataURL('image/jpeg');
-        setPhotos(newPhotos);
+        setDriverPhotos(newPhotos);
         stopCamera();
         setShowCamera(false);
       }
     }
-  }, [currentPhotoIndex, photos, stopCamera]);
+  }, [currentPhotoIndex, driverPhotos, stopCamera]);
 
   // === 刪除照片 ===
   const handleDeletePhoto = useCallback(
     (index: number) => {
-      const newPhotos = [...photos];
+      const newPhotos = [...driverPhotos];
       newPhotos[index] = '';
-      setPhotos(newPhotos);
+      setDriverPhotos(newPhotos);
     },
-    [photos],
+    [driverPhotos],
   );
 
   // 管理相機開啟關閉
@@ -318,11 +332,30 @@ function OrderDetails() {
         issue,
         otherIssue,
       });
-      setReportedIssue({ issue, otherIssue });
+      setReportForm({
+        issue,
+        otherIssue,
+        isSubmitted: true,
+        lastSubmitted: {
+          issue,
+          otherIssue,
+        },
+      });
       setShowReportModal(false);
     } catch (error) {
       console.error('提交異常回報失敗:', error);
     }
+  };
+
+  // 開啟 modal 時重置狀態，但保留上次提交的內容
+  const handleOpenReportModal = () => {
+    setShowReportModal(true);
+    setReportForm((prev) => ({
+      ...prev,
+      isSubmitted: false,
+      issue: prev.lastSubmitted?.issue || null,
+      otherIssue: prev.lastSubmitted?.otherIssue || '',
+    }));
   };
 
   // 取得異常回報文字
@@ -347,7 +380,7 @@ function OrderDetails() {
   const validateCompletion = () => {
     const validations = {
       weight: actualWeight !== undefined && actualWeight > 0,
-      photos: photos.filter(Boolean).length === 2,
+      photos: driverPhotos.filter(Boolean).length === 2,
     };
 
     return {
@@ -362,20 +395,24 @@ function OrderDetails() {
     if (!isValid) return;
 
     try {
-      // 更新訂單狀態為已完成
+      // 根據是否有異常回報決定訂單狀態
+      const orderStatus = reportForm.isSubmitted ? 5 : 4; // 5:異常, 4:已完成
+
+      // 更新訂單狀態
       const response = await axios.put(`api/driver/orders/status/${taskId}`, {
-        OrderStatus: 4, // 4:已完成
+        OrderStatus: orderStatus,
         KG: actualWeight,
-        CommonIssues: reportedIssue?.issue,
-        OtherIssues: reportedIssue?.otherIssue,
-        DriverImageUrl: photos,
+        CommonIssues: reportForm.issue,
+        OtherIssues: reportForm.otherIssue,
+        DriverImageUrl: driverPhotos,
       });
 
       if (response.data.status) {
         console.log('完成收運成功:', {
           actualWeight,
-          photos,
-          reportedIssue,
+          driverPhotos,
+          reportForm,
+          orderStatus,
         });
         setShowSuccess(true);
       } else {
@@ -509,10 +546,10 @@ function OrderDetails() {
                 key={index}
                 onClick={() => handleOpenCamera(index)}
               >
-                {photos[index] ? (
+                {driverPhotos[index] ? (
                   <div style={{ position: 'relative' }}>
                     <PreviewImage
-                      src={photos[index]}
+                      src={driverPhotos[index]}
                       alt={`照片 ${index + 1}`}
                     />
                     <DeleteButton
@@ -547,8 +584,8 @@ function OrderDetails() {
         </CardSection>
 
         {/* 回報異常按鈕或異常回報區塊 */}
-        {!reportedIssue ? (
-          <ReportButton onClick={() => setShowReportModal(true)}>
+        {!reportForm.isSubmitted ? (
+          <ReportButton onClick={handleOpenReportModal}>
             <MdReportProblem />
             發現異常？點我回報
           </ReportButton>
@@ -559,20 +596,20 @@ function OrderDetails() {
               異常回報
             </ReportBlockTitle>
 
-            <ReportBlock onClick={() => setShowReportModal(true)}>
+            <ReportBlock onClick={handleOpenReportModal}>
               <ReportContent>
                 <ReportBlockContent>
-                  {getIssueText(reportedIssue.issue)}
+                  {getIssueText(reportForm.lastSubmitted?.issue || '')}
                 </ReportBlockContent>
-                {reportedIssue.otherIssue && (
-                  <ReportBlockDescription>
-                    {reportedIssue.otherIssue}
-                  </ReportBlockDescription>
-                )}
+                <EditIcon>
+                  <MdEdit />
+                </EditIcon>
               </ReportContent>
-              <EditIcon>
-                <MdEdit />
-              </EditIcon>
+              {reportForm.lastSubmitted?.otherIssue && (
+                <ReportBlockDescription>
+                  {reportForm.lastSubmitted.otherIssue}
+                </ReportBlockDescription>
+              )}
             </ReportBlock>
           </>
         )}
@@ -608,6 +645,14 @@ function OrderDetails() {
         isOpen={showReportModal}
         onClose={() => setShowReportModal(false)}
         onSubmit={handleReportSubmit}
+        selectedIssue={reportForm.issue}
+        otherIssue={reportForm.otherIssue}
+        onSelectedIssueChange={(issue) =>
+          setReportForm((prev) => ({ ...prev, issue }))
+        }
+        onOtherIssueChange={(otherIssue) =>
+          setReportForm((prev) => ({ ...prev, otherIssue }))
+        }
       />
     </FullHeightContainer>
   );

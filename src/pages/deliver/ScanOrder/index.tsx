@@ -4,10 +4,12 @@ import axios from 'axios';
 import QRScanner from '../../../components/deliver/QRScanner';
 import QRCodeGenerator from '../../../components/common/QRCodeGenerator';
 import { getTodayDate } from '../../../utils/getTodayDate';
+import { MdQrCodeScanner } from 'react-icons/md';
 import {
   ScanOrderSectionStyled,
   ScannerContainer,
   StatusMessage,
+  ScanText,
 } from './styles';
 
 // API 回傳的訂單類型(照api順序)
@@ -39,6 +41,7 @@ type OrderInfo = {
 };
 
 const userId = localStorage.getItem('UsersID');
+const test = true;
 
 function ScanOrder() {
   const navigate = useNavigate();
@@ -160,11 +163,15 @@ function ScanOrder() {
       {/* 掃描相機容器 */}
       <ScannerContainer>
         <QRScanner onScanResult={handleScanResult} onError={setScanError} />
-        {scanError && <StatusMessage>{scanError}</StatusMessage>}
       </ScannerContainer>
+      <ScanText>
+        <MdQrCodeScanner />
+        請掃描垃圾袋上的QRCode
+      </ScanText>
+      {scanError && <StatusMessage>{scanError}</StatusMessage>}
 
       {/* 有前往中的訂單時顯示 QR Code */}
-      {executingTask && (
+      {test && executingTask && (
         <QRCodeGenerator
           data={generateOrderQRData()}
           size={150}

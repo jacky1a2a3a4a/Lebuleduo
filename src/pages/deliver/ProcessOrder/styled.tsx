@@ -571,19 +571,31 @@ export const ReportCancelButton = styled.button`
   }
 `;
 
+// ==異常回報 標題==
+export const ReportBlockTitle = styled.div`
+  color: var(--color-error);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding-right: var(--spacing-xl);
+`;
+
+// ==異常回報 內容容器==
 export const ReportBlock = styled.button`
   background-color: var(--color-background-error);
   border: 1px solid var(--color-error);
   border-radius: var(--border-radius-md);
 
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
   margin-top: var(--spacing-sm);
   width: 100%;
-  text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -596,43 +608,37 @@ export const ReportBlock = styled.button`
 
 export const ReportContent = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-`;
-
-export const ReportBlockTitle = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding-right: var(--spacing-xl);
+  width: 100%;
 `;
 
+// 異常回報 內容
 export const ReportBlockContent = styled.div`
   color: var(--color-error);
   font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-xs);
 `;
 
-export const ReportBlockDescription = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-xs);
-`;
-
+// 異常回報 編輯按鈕
 export const EditIcon = styled.div`
-  position: absolute;
-  right: var(--spacing-md);
-  top: 50%;
-  transform: translateY(-50%);
+  color: var(--color-error);
   width: 20px;
   height: 20px;
-  color: var(--color-error);
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+// 異常回報 其他問題
+export const ReportBlockDescription = styled.div`
+  color: var(--color-text-tertiary);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin: var(--spacing-md) 0;
+  font-size: var(--font-size-xs);
+  
 `;
 
 // 完成收運按鈕
