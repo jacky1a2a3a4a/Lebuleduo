@@ -575,6 +575,11 @@ export const ReportBlock = styled.button`
   background-color: var(--color-background-error);
   border: 1px solid var(--color-error);
   border-radius: var(--border-radius-md);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   padding: var(--spacing-md);
   margin-top: var(--spacing-sm);
   width: 100%;
@@ -587,6 +592,13 @@ export const ReportBlock = styled.button`
     background-color: var(--color-background-error);
     opacity: 0.9;
   }
+`;
+
+export const ReportContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 `;
 
 export const ReportBlockTitle = styled.div`
@@ -608,7 +620,6 @@ export const ReportBlockContent = styled.div`
 export const ReportBlockDescription = styled.div`
   color: var(--color-text-tertiary);
   font-size: var(--font-size-xs);
-  margin-top: var(--spacing-xs);
 `;
 
 export const EditIcon = styled.div`

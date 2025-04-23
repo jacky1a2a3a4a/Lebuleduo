@@ -34,7 +34,6 @@ import {
   MapContainer,
   PlanTitle,
   PlanContent,
-  ErrorMessage,
   Divider,
   PageTitle,
   PageSubtitle,
@@ -56,6 +55,7 @@ import {
   ReportBlockTitle,
   ReportBlockContent,
   ReportBlockDescription,
+  ReportContent,
   EditIcon,
   CompleteButton,
   CompleteIcon,
@@ -66,10 +66,10 @@ import SuccessMessage from '../../../components/deliver/SuccessMessage'; // 完�
 import LoadingMessage from '../../../components/common/LoadingMessage'; // 載入中組件
 import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver'; // 狀態標籤組件
 import ErrorReport from '../../../components/common/ErrorReport';
-
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMapComponent } from '../../../components/common/GoogleMap';
 import { TaskStatus } from '../../../types/deliver';
 import { formatTime } from '../../../utils/formatTime';
+import { getTodayDate } from '../../../utils/getTodayDate';
 
 // 定義任務資料
 type TaskItem = {
@@ -87,15 +87,6 @@ type TaskItem = {
   dropPointPhotos?: string[]; //放置點圖片
   actualWeight?: number; // 實際重量
 };
-
-// 定義需要的 Google Maps 庫（'places' 用於地理編碼）
-const libraries: (
-  | 'places'
-  | 'drawing'
-  | 'geometry'
-  | 'localContext'
-  | 'visualization'
-)[] = ['places'];
 
 const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用者 ID
 
@@ -125,33 +116,13 @@ function OrderDetails() {
   } | null>(null); // 異常回報內容(包含異常原因和備註)
   const [showSuccess, setShowSuccess] = useState(false); // 完成收運
 
-  // 使用 useJsApiLoader 來處理 Google Maps API 載入
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
-    libraries: libraries as any,
-    id: 'google-map-script',
-    version: 'weekly',
-    language: 'zh-TW',
-    region: 'TW',
-  });
-
-  // 定義地圖中心位置和載入狀態
-  const [mapCenter, setMapCenter] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
-  //追蹤地圖是否已載入完成
-  const [mapLoaded, setMapLoaded] = useState(false);
-  //追蹤是否已嘗試過地理編碼，避免重複操作
-  const [geocodeAttempted, setGeocodeAttempted] = useState(false);
-
   // 從 API 讀取任務資訊
   useEffect(() => {
     const fetchTaskDetails = async () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `api/GET/driver/today/${userId}/${taskId}`,
+          `api/GET/driver/day/${userId}/${getTodayDate()}/${taskId}`,
         );
 
         if (response.data.status && response.data.result.Orders.length > 0) {
@@ -210,55 +181,6 @@ function OrderDetails() {
     }
   };
 
-  // 地理編碼函數 使用 useCallback 以避免不必要的重新創建
-  const geocodeAddress = useCallback(async (address: string) => {
-    //API可用性檢查
-    if (!window.google || !window.google.maps || !window.google.maps.Geocoder) {
-      console.error('Google Maps API 尚未完全載入');
-      return false;
-    }
-
-    try {
-      const geocoder = new window.google.maps.Geocoder();
-      return new Promise((resolve) => {
-        geocoder.geocode({ address }, (results, status) => {
-          if (status === 'OK' && results && results[0]) {
-            const location = results[0].geometry.location;
-            setMapCenter({
-              lat: location.lat(),
-              lng: location.lng(),
-            });
-            setMapLoaded(true);
-            resolve(true);
-            console.log(results, status);
-          } else {
-            console.error('地理編碼失敗:', status);
-            setMapLoaded(true); // 即使失敗也標記為已載入，使用默認位置
-            resolve(false);
-          }
-          setGeocodeAttempted(true);
-        });
-      });
-    } catch (error) {
-      console.error('地理編碼過程發生錯誤:', error);
-      setMapLoaded(true);
-      setGeocodeAttempted(true);
-      return false;
-    }
-  }, []);
-
-  // 當 API 載入成功且任務地址可用時，執行地理編碼
-  useEffect(() => {
-    if (isLoaded && task?.address && !geocodeAttempted) {
-      // 添加短暫延遲，確保 Google Maps API 完全初始化
-      const timer = setTimeout(() => {
-        geocodeAddress(task.address);
-      }, 500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isLoaded, task, geocodeAddress, geocodeAttempted]);
-
   // 檢查是否支援網頁相機
   useEffect(() => {
     const checkCameraSupport = async () => {
@@ -268,7 +190,7 @@ function OrderDetails() {
         });
         stream.getTracks().forEach((track) => track.stop());
         setIsWebCameraSupported(true);
-      } catch (err) {
+      } catch {
         setIsWebCameraSupported(false);
       }
     };
@@ -440,21 +362,29 @@ function OrderDetails() {
     if (!isValid) return;
 
     try {
-      // TODO: 實作提交完成收運的API
-      console.log('完成收運:', {
-        actualWeight,
-        photos,
-        reportedIssue,
+      // 更新訂單狀態為已完成
+      const response = await axios.put(`api/driver/orders/status/${taskId}`, {
+        OrderStatus: 4, // 4:已完成
+        KG: actualWeight,
+        CommonIssues: reportedIssue?.issue,
+        OtherIssues: reportedIssue?.otherIssue,
+        DriverImageUrl: photos,
       });
-      setShowSuccess(true);
+
+      if (response.data.status) {
+        console.log('完成收運成功:', {
+          actualWeight,
+          photos,
+          reportedIssue,
+        });
+        setShowSuccess(true);
+      } else {
+        throw new Error('完成收運失敗');
+      }
     } catch (error) {
       console.error('完成收運失敗:', error);
+      setError('完成收運失敗，請重試');
     }
-    console.log('完成收運:', {
-      actualWeight: actualWeight,
-      photos: photos,
-      reportedIssue: reportedIssue,
-    });
   };
 
   // === 跳轉回首頁(非同步) ===
@@ -488,7 +418,7 @@ function OrderDetails() {
           </IconStyled>
           <NavTitleText>填寫收運狀況</NavTitleText>
         </NavTitle>
-        <NavSubtitle>訂單編號: {task.id}</NavSubtitle>
+        <NavSubtitle>任務編號: {task.number}</NavSubtitle>
       </HeaderContainer>
 
       {/* 時間卡片 */}
@@ -540,25 +470,10 @@ function OrderDetails() {
         </DetailFlex>
 
         <MapContainer>
-          {loadError && (
-            <ErrorMessage>地圖載入失敗: {loadError.message}</ErrorMessage>
-          )}
-          {!isLoaded ? (
-            <div>正在載入地圖...</div>
-          ) : (
-            <GoogleMap
-              mapContainerStyle={{
-                width: '100%',
-                height: '150px',
-                borderRadius: 'var(--border-radius-md)',
-              }}
-              center={mapCenter || { lat: 25.033, lng: 121.5654 }} // 默認台北市中心
-              zoom={15}
-              onLoad={() => console.log('地圖已成功載入')}
-            >
-              {mapCenter && <Marker position={mapCenter} />}
-            </GoogleMap>
-          )}
+          <GoogleMapComponent
+            address={task.address}
+            onMapLoad={() => console.log('地圖已成功載入')}
+          />
         </MapContainer>
       </DetailCard>
 
@@ -643,15 +558,18 @@ function OrderDetails() {
               <MdReportProblem />
               異常回報
             </ReportBlockTitle>
+
             <ReportBlock onClick={() => setShowReportModal(true)}>
-              <ReportBlockContent>
-                {getIssueText(reportedIssue.issue)}
-              </ReportBlockContent>
-              {reportedIssue.otherIssue && (
-                <ReportBlockDescription>
-                  {reportedIssue.otherIssue}
-                </ReportBlockDescription>
-              )}
+              <ReportContent>
+                <ReportBlockContent>
+                  {getIssueText(reportedIssue.issue)}
+                </ReportBlockContent>
+                {reportedIssue.otherIssue && (
+                  <ReportBlockDescription>
+                    {reportedIssue.otherIssue}
+                  </ReportBlockDescription>
+                )}
+              </ReportContent>
               <EditIcon>
                 <MdEdit />
               </EditIcon>

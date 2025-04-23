@@ -1,22 +1,18 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState, useRef, useCallback } from 'react';
-// import { TaskStatus } from '../../../../src/types/deliver'; //任務狀態類型
-import Webcam from 'react-webcam'; //react相機套件
-import jsQR from 'jsqr'; //QR碼解碼套件
-import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react'; //QR碼生成套件
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import QRScanner from '../../../components/deliver/QRScanner';
+import QRCodeGenerator from '../../../components/common/QRCodeGenerator';
+import { getTodayDate } from '../../../utils/getTodayDate';
 import {
   ScanOrderSectionStyled,
   ScannerContainer,
-  ScanButton,
   StatusMessage,
   OrderInfoContainer,
   OrderInfoTitle,
   OrderInfoItem,
   OrderInfoLabel,
   OrderInfoValue,
-  ProcessOrderButton,
-  TestQRCodeContainer,
 } from './styles';
 
 // API 回傳的訂單類型(照api順序)
@@ -37,7 +33,6 @@ type ApiData = {
 
 // 定義任務類型(比對API回傳的任務資料)
 type TaskItem = {
-  number: string;
   id: string;
 };
 
@@ -45,23 +40,21 @@ type TaskItem = {
 type OrderInfo = {
   OrderDetailID: number;
   CustomerNumber: string;
+  Status?: string; // 新增可選的 Status 欄位
 };
 
 const userId = localStorage.getItem('UsersID');
 
 function ScanOrder() {
   const navigate = useNavigate();
-  const webcamRef = useRef<Webcam>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [ongoingOrderData, setOngoingOrderData] = useState<ApiData | null>(
+  const [executingOrderData, setExecutingOrderData] = useState<ApiData | null>(
     null,
-  ); //保存原始數據
-  const [onGoingTask, setOnGoingTask] = useState<TaskItem | null>(null); //提取前端需要的數據
-  const [isScanning, setIsScanning] = useState(false);
+  );
+  const [executingTask, setExecutingTask] = useState<TaskItem | null>(null);
   const [scannedOrder, setScannedOrder] = useState<OrderInfo | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
 
-  // 從 API 獲取今日訂單，過濾出 前往中 任務
+  // 從 API 獲取今日訂單，過濾出 前往中/已抵達 任務
   useEffect(() => {
     const fetchTodayOrders = async () => {
       if (!userId) {
@@ -70,22 +63,24 @@ function ScanOrder() {
       }
 
       try {
-        const response = await axios.get(`api/GET/driver/today/${userId}`);
+        const response = await axios.get(
+          `api/GET/driver/day/${userId}/${getTodayDate()}`,
+        );
         const orders = response.data.result.Orders;
         console.log('API 原始資料:', response.data);
         console.log('API 任務資料:', orders);
 
-        // 尋找狀態為"前往中"的訂單
-        const ongoingOrder = orders.find(
-          (order: ApiData) => order.Status === '前往中',
+        // 尋找狀態為"前往中"或"已抵達"的訂單
+        const executingOrder = orders.find(
+          (order: ApiData) =>
+            order.Status === '前往中' || order.Status === '已抵達',
         );
-        console.log('API 前往中任務:', ongoingOrder);
+        console.log('API 執行中任務:', executingOrder);
 
-        if (ongoingOrder) {
-          setOngoingOrderData(ongoingOrder);
-          setOnGoingTask({
-            number: ongoingOrder.OrderDetailsNumber,
-            id: ongoingOrder.OrderDetailID.toString(),
+        if (executingOrder) {
+          setExecutingOrderData(executingOrder);
+          setExecutingTask({
+            id: executingOrder.OrderDetailID.toString(),
           });
         }
       } catch (error) {
@@ -98,204 +93,94 @@ function ScanOrder() {
 
   // 生成訂單 QR Code 數據
   const generateOrderQRData = useCallback(() => {
-    if (!ongoingOrderData) return null;
+    if (!executingOrderData) return null;
 
     return {
-      OrderDetailID: ongoingOrderData.OrderDetailID,
-      CustomerNumber: ongoingOrderData.OrderDetailsNumber,
+      OrderDetailID: executingOrderData.OrderDetailID,
+      CustomerNumber: executingOrderData.CustomerNumber,
+      Status: executingOrderData.Status,
     };
-  }, [ongoingOrderData]);
+  }, [executingOrderData]);
 
   // 處理QR碼掃描結果
   const handleScanResult = useCallback(
-    (result: string) => {
+    async (result: string) => {
       try {
         // 解析掃描到的JSON數據
         const orderData = JSON.parse(result) as OrderInfo;
         setScannedOrder(orderData);
         console.log('掃描到的訂單資料:', orderData);
-        setIsScanning(false); //掃描成功後關閉掃描
         setScanError(null); //掃描錯誤訊息清空
 
-        // 儲存掃描到的訂單數據
-        localStorage.setItem('scannedOrder', result);
+        if (!executingOrderData) {
+          setScanError('找不到對應的訂單資料');
+          return;
+        }
 
-        // 立即跳轉到處理訂單頁面
-        if (onGoingTask) {
-          navigate(`/deliver/scan-order/process-order/${onGoingTask.id}`);
+        const currentOrderStatus = executingOrderData.Status;
+        const currentOrderID = executingOrderData.OrderDetailID;
+        const currentOrderCustomerNumber =
+          executingOrderData.OrderDetailsNumber;
+
+        console.log('訂單ID:', currentOrderID);
+        console.log('訂單狀態:', currentOrderStatus);
+        console.log('訂單顧客編號:', currentOrderCustomerNumber);
+
+        let response;
+        switch (currentOrderStatus) {
+          case '已抵達':
+            // 如果訂單已經是已抵達狀態，直接跳轉到處理訂單頁面
+            navigate(`/deliver/scan-order/process-order/${currentOrderID}`);
+            break;
+          case '前往中':
+            // 更新訂單狀態為已抵達
+            response = await axios.put(
+              `api/driver/orders/status/${currentOrderID}`,
+              {
+                OrderStatus: 3, // 3:已抵達
+              },
+            );
+            console.log('訂單狀態更新成功:', response.data);
+
+            // 儲存掃描到的訂單數據
+            localStorage.setItem('scannedOrder', result);
+
+            // 跳轉到處理訂單頁面
+            navigate(
+              `/deliver/scan-order/process-order/${orderData.OrderDetailID}`,
+            );
+            break;
+          default:
+            setScanError('目前沒有可處理的任務');
+            break;
         }
       } catch (error) {
         console.error('無效的QR碼:', error);
         setScanError('掃描到無效的QR碼格式，請重試');
       }
     },
-    [navigate, onGoingTask],
+    [navigate, executingOrderData],
   );
-
-  // 掃描 QR Code
-  const scanQRCode = useCallback(() => {
-    if (!webcamRef.current || !canvasRef.current) return;
-
-    const video = webcamRef.current.video;
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d', { willReadFrequently: true });
-
-    if (!video || !context) {
-      console.error('無法訪問相機或畫布');
-      return;
-    }
-
-    // 確保視頻已經準備好
-    if (video.videoWidth === 0 || video.videoHeight === 0) {
-      console.error('視頻尚未準備好');
-      return;
-    }
-
-    // 設置 canvas 尺寸與視頻相同
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    // 繪製視頻幀到 canvas
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    // 獲取圖像數據
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-
-    // === 使用 jsQR 解碼 ===
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-    if (code) {
-      handleScanResult(code.data);
-    }
-  }, [handleScanResult]);
-
-  // 開始掃描
-  const startScanning = () => {
-    setIsScanning(true);
-    setScanError(null);
-  };
-
-  // 停止掃描
-  const stopScanning = () => {
-    setIsScanning(false);
-  };
-
-  // 連續掃描(可以掃描大量訂單)
-  useEffect(() => {
-    let intervalId: number;
-
-    if (isScanning) {
-      intervalId = window.setInterval(scanQRCode, 100);
-    }
-
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [isScanning, scanQRCode]);
-
-  // 處理訂單
-  const handleProcessOrder = () => {
-    if (!scannedOrder || !onGoingTask) return;
-
-    try {
-      // 儲存掃描到的訂單與進行中任務的關聯
-      if (typeof window !== 'undefined' && window.localStorage) {
-        localStorage.setItem(
-          `order_${onGoingTask.id}`,
-          JSON.stringify(scannedOrder),
-        );
-      } else {
-        console.error('localStorage 不可用');
-        return;
-      }
-
-      // 導航到處理訂單頁面
-      navigate(`/deliver/scan-order/process-order/${onGoingTask.id}`);
-    } catch (error) {
-      console.error('處理訂單時發生錯誤:', error);
-    }
-  };
-
-  // 下載 QR Code
-  const downloadQRCode = useCallback(() => {
-    if (!generateOrderQRData()) return;
-
-    const canvas = document.getElementById('qr-canvas') as HTMLCanvasElement;
-    if (!canvas) return;
-
-    const dataUrl = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = `order_qr_${onGoingTask?.number || 'unknown'}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, [generateOrderQRData, onGoingTask]);
 
   return (
     <ScanOrderSectionStyled>
-      {!isScanning && !scannedOrder && (
-        <>
-          {/* 掃描按鈕 */}
-          <ScanButton onClick={startScanning}>掃描QR碼</ScanButton>
-          {/* 有前往中的訂單 */}
-          {onGoingTask ? (
-            <>
-              <StatusMessage>已找到前往中的訂單，可以掃描</StatusMessage>
-              <TestQRCodeContainer>
-                {/* 訂單 QR Code */}
-                <StatusMessage>訂單 QR Code：</StatusMessage>
-                {generateOrderQRData() && (
-                  <>
-                    <QRCodeSVG
-                      value={JSON.stringify(generateOrderQRData())}
-                      size={200}
-                      level="M"
-                      includeMargin={true}
-                    />
-                    <QRCodeCanvas
-                      id="qr-canvas"
-                      value={JSON.stringify(generateOrderQRData())}
-                      size={200}
-                      level="M"
-                      includeMargin={true}
-                      style={{ display: 'none' }}
-                    />
-                    <ScanButton onClick={downloadQRCode}>
-                      下載 QR Code
-                    </ScanButton>
-                  </>
-                )}
-                <StatusMessage>請掃描此 QR Code 進行測試</StatusMessage>
-              </TestQRCodeContainer>
-            </>
-          ) : (
-            <StatusMessage>目前沒有確認前往的訂單，無法掃描</StatusMessage>
-          )}
-        </>
-      )}
-
       {/* 掃描相機容器 */}
-      {isScanning && (
-        <ScannerContainer>
-          <Webcam
-            ref={webcamRef}
-            audio={false}
-            videoConstraints={{
-              facingMode: 'environment',
-            }}
-            style={{
-              width: '100%',
-              maxWidth: '500px',
-              margin: '0 auto',
-            }}
-          />
-          <canvas ref={canvasRef} style={{ display: 'none' }} />
-          <ScanButton onClick={stopScanning}>取消掃描</ScanButton>
-          {scanError && <StatusMessage>{scanError}</StatusMessage>}
-        </ScannerContainer>
+      <ScannerContainer>
+        <QRScanner onScanResult={handleScanResult} onError={setScanError} />
+        {scanError && <StatusMessage>{scanError}</StatusMessage>}
+      </ScannerContainer>
+
+      {/* 有前往中的訂單時顯示 QR Code */}
+      {executingTask && (
+        <QRCodeGenerator
+          data={generateOrderQRData()}
+          size={150}
+          level="H"
+          includeMargin={true}
+          onDownload={(fileName) => {
+            console.log(`QR Code downloaded as: ${fileName}`);
+          }}
+        />
       )}
 
       {/* 訂單資訊容器 */}
@@ -308,22 +193,23 @@ function ScanOrder() {
             <OrderInfoLabel>任務編號：</OrderInfoLabel>
             <OrderInfoValue>{scannedOrder.OrderDetailID}</OrderInfoValue>
           </OrderInfoItem>
-
-          <ProcessOrderButton
-            onClick={handleProcessOrder}
-            disabled={!onGoingTask}
-          >
-            {onGoingTask ? '處理此訂單' : '請先前往任務'}
-          </ProcessOrderButton>
-          <ScanButton
+          <button
             onClick={() => {
               setScannedOrder(null);
               setScanError(null);
             }}
-            style={{ marginTop: 'var(--spacing-md)' }}
+            style={{
+              marginTop: 'var(--spacing-md)',
+              padding: '8px 16px',
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+            }}
           >
             重新掃描
-          </ScanButton>
+          </button>
         </OrderInfoContainer>
       )}
     </ScanOrderSectionStyled>
