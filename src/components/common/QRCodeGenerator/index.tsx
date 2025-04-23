@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
-import { downloadButtonStyles, canvasStyles } from './styles';
+import { canvasStyles, QRCodeContainer, QRCodeDownloadButton } from './styles';
 import logo from '../../../assets/Lebuledou.png';
 
 interface QRCodeGeneratorProps {
@@ -53,7 +53,7 @@ const QRCodeGenerator = ({
   if (!data) return null;
 
   return (
-    <div>
+    <QRCodeContainer>
       <QRCodeSVG
         value={JSON.stringify(data)}
         size={size}
@@ -71,11 +71,11 @@ const QRCodeGenerator = ({
         imageSettings={imageSettings}
       />
       {showDownloadButton && (
-        <button onClick={downloadQRCode} style={downloadButtonStyles}>
+        <QRCodeDownloadButton onClick={downloadQRCode}>
           下載 QR Code
-        </button>
+        </QRCodeDownloadButton>
       )}
-    </div>
+    </QRCodeContainer>
   );
 };
 

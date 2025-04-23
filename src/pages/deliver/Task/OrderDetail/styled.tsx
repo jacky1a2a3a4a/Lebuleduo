@@ -377,110 +377,7 @@ export const ReportButton = styled.button`
   }
 `;
 
-export const ReportModal = styled.div<{ $isOpen: boolean }>`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--color-white);
-  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-  padding: var(--spacing-lg);
-  transform: translateY(${({ $isOpen }) => ($isOpen ? '0' : '100%')});
-  transition: transform 0.3s ease-out;
-  z-index: 1000;
-  box-shadow: var(--shadow-lg);
-`;
-
-export const ReportModalTitle = styled.h3`
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-lg);
-`;
-
-export const ReportSection = styled.div`
-  margin-bottom: var(--spacing-xl);
-`;
-
-export const ReportSectionTitle = styled.h4`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
-`;
-
-export const ReportOption = styled.div<{ $selected: boolean }>`
-  padding: var(--spacing-md);
-  border: 1px solid
-    ${({ $selected }) =>
-      $selected ? 'var(--color-primary)' : 'var(--color-neutral-300)'};
-  border-radius: var(--border-radius-md);
-  margin-bottom: var(--spacing-sm);
-  cursor: pointer;
-  background-color: ${({ $selected }) =>
-    $selected ? 'var(--color-background-secondary)' : 'var(--color-white)'};
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-background-secondary);
-  }
-`;
-
-export const ReportTextarea = styled.textarea`
-  width: 100%;
-  min-height: 100px;
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-md);
-  resize: vertical;
-  font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-lg);
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-primary);
-  }
-`;
-
-export const ReportButtonGroup = styled.div`
-  display: flex;
-  gap: var(--spacing-md);
-`;
-
-export const ReportSubmitButton = styled.button`
-  flex: 1;
-  padding: var(--spacing-md);
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-primary-hover);
-  }
-`;
-
-export const ReportCancelButton = styled.button`
-  flex: 1;
-  padding: var(--spacing-md);
-  background-color: var(--color-neutral-200);
-  color: var(--color-text-tertiary);
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: var(--color-neutral-300);
-  }
-`;
-
+// ===異常回報區塊===
 export const ReportBlock = styled.button`
   background-color: var(--color-background-error);
   border: 1px solid var(--color-error);
@@ -499,6 +396,15 @@ export const ReportBlock = styled.button`
   }
 `;
 
+// 異常回報區塊 內容容器
+export const ReportContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+`;
+
+// 異常回報區塊 標題
 export const ReportBlockTitle = styled.div`
   color: var(--color-error);
   font-size: var(--font-size-md);
@@ -509,33 +415,18 @@ export const ReportBlockTitle = styled.div`
   padding-right: var(--spacing-xl);
 `;
 
+
+// 異常回報區塊 內容
 export const ReportBlockContent = styled.div`
   color: var(--color-error);
   font-size: var(--font-size-sm);
   margin-bottom: var(--spacing-xs);
 `;
 
+// 異常回報區塊 描述
 export const ReportBlockDescription = styled.div`
   color: var(--color-text-tertiary);
   font-size: var(--font-size-xs);
   margin-top: var(--spacing-xs);
 `;
 
-export const EditIcon = styled.div`
-  position: absolute;
-  right: var(--spacing-md);
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
-  color: var(--color-error);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const ValidationMessage = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-xs);
-`;

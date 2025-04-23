@@ -1,7 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { MdArrowBackIosNew, MdLocationOn } from 'react-icons/md';
+import {
+  MdArrowBackIosNew,
+  MdLocationOn,
+  MdReportProblem,
+} from 'react-icons/md';
 
 import {
   FullHeightContainer,
@@ -29,8 +33,13 @@ import {
   PageSubtitle,
   PlanContent,
   PageContent,
-  PhotoContainer, 
+  PhotoContainer,
   PhotoBox,
+  ReportBlockTitle,
+  ReportBlockContent,
+  ReportBlock,
+  ReportContent,
+  ReportBlockDescription,
 } from './styled';
 
 import { TaskStatus } from '../../../../types/deliver';
@@ -55,6 +64,8 @@ type TaskItem = {
   liter?: number;
   dropPointPhotos?: string[]; //放置點圖片
   driverPhotos?: string[]; //司機照片
+  commonIssues?: string; //常見異常
+  issueDescription?: string; //異常描述
 };
 
 const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用者 ID
@@ -100,6 +111,8 @@ function OrderDetails() {
               apiTask.DriverPhotos?.map(
                 (photo) => `${import.meta.env.VITE_API_URL}${photo}`,
               ) || [],
+            commonIssues: apiTask.CommonIssues || '無異常',
+            issueDescription: apiTask.IssueDescription || '無異常詳細描述',
           };
           setTask(TaskDetail);
           console.log('處理完成的任務:', TaskDetail);
@@ -258,6 +271,24 @@ function OrderDetails() {
                 ))}
           </PhotoContainer>
         </CardSection>
+
+        {task.status === 'abnormal' && (
+          <>
+            <ReportBlockTitle>
+              <MdReportProblem />
+              異常回報
+            </ReportBlockTitle>
+
+            <ReportBlock>
+              <ReportContent>
+                <ReportBlockContent>{task.commonIssues}</ReportBlockContent>
+                <ReportBlockDescription>
+                  {task.issueDescription}
+                </ReportBlockDescription>
+              </ReportContent>
+            </ReportBlock>
+          </>
+        )}
       </DetailCard>
     </FullHeightContainer>
   );

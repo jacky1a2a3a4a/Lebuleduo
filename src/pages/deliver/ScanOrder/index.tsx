@@ -8,11 +8,6 @@ import {
   ScanOrderSectionStyled,
   ScannerContainer,
   StatusMessage,
-  OrderInfoContainer,
-  OrderInfoTitle,
-  OrderInfoItem,
-  OrderInfoLabel,
-  OrderInfoValue,
 } from './styles';
 
 // API 回傳的訂單類型(照api順序)
@@ -51,7 +46,6 @@ function ScanOrder() {
     null,
   );
   const [executingTask, setExecutingTask] = useState<TaskItem | null>(null);
-  const [scannedOrder, setScannedOrder] = useState<OrderInfo | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
 
   // 從 API 獲取今日訂單，過濾出 前往中/已抵達 任務
@@ -108,7 +102,6 @@ function ScanOrder() {
       try {
         // 解析掃描到的JSON數據
         const orderData = JSON.parse(result) as OrderInfo;
-        setScannedOrder(orderData);
         console.log('掃描到的訂單資料:', orderData);
         setScanError(null); //掃描錯誤訊息清空
 
@@ -181,36 +174,6 @@ function ScanOrder() {
             console.log(`QR Code downloaded as: ${fileName}`);
           }}
         />
-      )}
-
-      {/* 訂單資訊容器 */}
-      {scannedOrder && (
-        <OrderInfoContainer>
-          <OrderInfoTitle>訂單資訊</OrderInfoTitle>
-          <OrderInfoItem>
-            <OrderInfoLabel>顧客編號：</OrderInfoLabel>
-            <OrderInfoValue>{scannedOrder.CustomerNumber}</OrderInfoValue>
-            <OrderInfoLabel>任務編號：</OrderInfoLabel>
-            <OrderInfoValue>{scannedOrder.OrderDetailID}</OrderInfoValue>
-          </OrderInfoItem>
-          <button
-            onClick={() => {
-              setScannedOrder(null);
-              setScanError(null);
-            }}
-            style={{
-              marginTop: 'var(--spacing-md)',
-              padding: '8px 16px',
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-            }}
-          >
-            重新掃描
-          </button>
-        </OrderInfoContainer>
       )}
     </ScanOrderSectionStyled>
   );

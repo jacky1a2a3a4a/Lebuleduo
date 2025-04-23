@@ -102,11 +102,14 @@ const QRScanner = ({ onScanResult, onError }: QRScannerProps) => {
         audio={false}
         videoConstraints={{
           facingMode: 'environment',
+          aspectRatio: 1,
         }}
         style={{
           width: '100%',
           maxWidth: '500px',
+          aspectRatio: '1/1',
           margin: '0 auto',
+          objectFit: 'cover',
         }}
       />
       <canvas ref={canvasRef} style={{ display: 'none' }} />

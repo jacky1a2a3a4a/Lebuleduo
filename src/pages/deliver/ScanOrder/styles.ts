@@ -58,45 +58,6 @@ export const StatusMessage = styled.div`
   font-size: var(--font-size-sm);
 `;
 
-// 訂單資訊容器
-export const OrderInfoContainer = styled.div`
-  width: 100%;
-  max-width: 500px;
-  padding: var(--spacing-lg);
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--box-shadow-md);
-`;
-
-// 訂單資訊標題
-export const OrderInfoTitle = styled.h2`
-  margin-bottom: var(--spacing-md);
-  color: var(--color-primary);
-  font-size: var(--font-size-lg);
-  text-align: center;
-`;
-
-// 訂單資訊項目
-export const OrderInfoItem = styled.div`
-  margin-bottom: var(--spacing-md);
-`;
-
-// 訂單資訊標籤
-export const OrderInfoLabel = styled.span`
-  display: block;
-  margin-bottom: var(--spacing-xs);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-`;
-
-// 訂單資訊值
-export const OrderInfoValue = styled.span`
-  display: block;
-  color: var(--color-text-primary);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-`;
-
 // 分隔線
 export const Divider = styled.div`
   height: 1px;
