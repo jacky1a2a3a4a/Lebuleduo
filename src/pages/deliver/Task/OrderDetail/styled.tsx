@@ -185,7 +185,7 @@ export const DetailImg = styled.div`
 
 export const DetailAddress = styled.div`
   color: var(--color-neutral-500);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   text-decoration: underline;
   letter-spacing: 0.05em;
@@ -324,6 +324,8 @@ export const Button = styled.button<{
 
 // ===拍照上傳 大容器===
 export const PhotoContainer = styled.div`
+  color: var(--color-text-tertiary);
+
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
@@ -378,7 +380,7 @@ export const ReportButton = styled.button`
 `;
 
 // ===異常回報區塊===
-export const ReportBlock = styled.button`
+export const ReportBlock = styled.div`
   background-color: var(--color-background-error);
   border: 1px solid var(--color-error);
   border-radius: var(--border-radius-md);

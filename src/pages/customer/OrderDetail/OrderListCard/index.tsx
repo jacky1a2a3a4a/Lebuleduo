@@ -137,6 +137,19 @@ function OrderListCard({
     if (currentStatus === 'normal' && canModify()) {
       setIsModalOpen(true);
     }
+
+    if (
+      currentStatus === 'active' ||
+      currentStatus === 'ongoing' ||
+      currentStatus === 'arrived' ||
+      currentStatus === 'finished' ||
+      currentStatus === 'abnormal'
+    ) {
+      navigate(
+        `/customer/order-task/scheduled-task/${ordersId}/${orderDetailId}`,
+      );
+    }
+    
   };
 
   // 確認修改日期

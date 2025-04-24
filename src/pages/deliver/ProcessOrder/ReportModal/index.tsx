@@ -20,6 +20,13 @@ interface ReportModalProps {
   onOtherIssueChange: (issue: string) => void;
 }
 
+//異常回報 選項
+// 1 = 垃圾量超過方案限制
+// 2 = 未找到垃圾袋，用戶無回應
+// 3 = 無 QR 碼，用戶無回應
+// 4 = 垃圾袋破損嚴重
+// 5 = 面交未見用戶，已聯絡無回應
+
 const ReportModalComponent = ({
   isOpen,
   onClose,
@@ -36,9 +43,6 @@ const ReportModalComponent = ({
     }
 
     onSubmit(selectedIssue, otherIssue);
-    // 提交後重置狀態
-    onSelectedIssueChange(null);
-    onOtherIssueChange('');
   };
 
   const handleCancel = () => {
@@ -52,32 +56,32 @@ const ReportModalComponent = ({
       <ReportSection>
         <ReportSectionTitle>* 請選擇異常問題 *</ReportSectionTitle>
         <ReportOption
-          $selected={selectedIssue === 'overweight'}
-          onClick={() => onSelectedIssueChange('overweight')}
+          $selected={selectedIssue === '1'}
+          onClick={() => onSelectedIssueChange('1')}
         >
           垃圾量超過方案限制
         </ReportOption>
         <ReportOption
-          $selected={selectedIssue === 'no_bag'}
-          onClick={() => onSelectedIssueChange('no_bag')}
+          $selected={selectedIssue === '2'}
+          onClick={() => onSelectedIssueChange('2')}
         >
           未找到垃圾袋，用戶無回應
         </ReportOption>
         <ReportOption
-          $selected={selectedIssue === 'no_qrcode'}
-          onClick={() => onSelectedIssueChange('no_qrcode')}
+          $selected={selectedIssue === '3'}
+          onClick={() => onSelectedIssueChange('3')}
         >
           無 QR 碼，用戶無回應
         </ReportOption>
         <ReportOption
-          $selected={selectedIssue === 'broken_bag'}
-          onClick={() => onSelectedIssueChange('broken_bag')}
+          $selected={selectedIssue === '4'}
+          onClick={() => onSelectedIssueChange('4')}
         >
           垃圾袋破損嚴重
         </ReportOption>
         <ReportOption
-          $selected={selectedIssue === 'no_contact'}
-          onClick={() => onSelectedIssueChange('no_contact')}
+          $selected={selectedIssue === '5'}
+          onClick={() => onSelectedIssueChange('5')}
         >
           面交未見用戶，已聯絡無回應
         </ReportOption>

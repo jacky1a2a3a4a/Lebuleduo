@@ -65,7 +65,7 @@ import ReportModal from './ReportModal'; // 異常回報組件
 import SuccessMessage from '../../../components/deliver/SuccessMessage'; // 完成收運組件
 import LoadingMessage from '../../../components/common/LoadingMessage'; // 載入中組件
 import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver'; // 狀態標籤組件
-import ErrorReport from '../../../components/common/ErrorReport';
+import ErrorReport from '../../../components/common/ErrorReport'; //錯誤回報組件
 import { GoogleMapComponent } from '../../../components/common/GoogleMap';
 import { TaskStatus } from '../../../types/deliver';
 import { formatTime } from '../../../utils/formatTime';
@@ -94,13 +94,11 @@ const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用
 function OrderDetails() {
   const navigate = useNavigate();
   const { taskId } = useParams(); // 從 URL 獲取任務 ID
-  const [task, setTask] = useState<TaskItem | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [actualWeight, setActualWeight] = useState<number | undefined>(
-    undefined,
-  ); // 實際重量
-  const [driverPhotos, setDriverPhotos] = useState<string[]>([]); // 汪汪員拍攝照片
+
+  const [task, setTask] = useState<TaskItem | null>(null); // 任務資料
+  const [loading, setLoading] = useState(true); // 載入狀態
+  const [error, setError] = useState<string | null>(null); // 錯誤訊息
+
   const [showCamera, setShowCamera] = useState(false); // 相機
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number | null>(
     null,
@@ -110,6 +108,11 @@ function OrderDetails() {
   const [isWebCameraSupported, setIsWebCameraSupported] = useState<
     boolean | null
   >(null); // 是否支援網頁相機
+
+  const [actualWeight, setActualWeight] = useState<number | undefined>(
+    undefined,
+  ); // 實際重量
+  const [driverPhotos, setDriverPhotos] = useState<string[]>([]); // 汪汪員拍攝照片
   const [showReportModal, setShowReportModal] = useState(false); // 異常回報視窗
   const [reportForm, setReportForm] = useState<{
     issue: string | null;
@@ -125,6 +128,7 @@ function OrderDetails() {
     isSubmitted: false,
     lastSubmitted: null,
   }); // 異常回報表單狀態
+  console.log('異常回報表單狀態:', reportForm);
   const [showSuccess, setShowSuccess] = useState(false); // 完成收運
 
   // 從 API 讀取任務資訊
@@ -149,13 +153,13 @@ function OrderDetails() {
             phone: apiTask.OrderDetailsNumber,
             notes: apiTask.Notes,
             plan: apiTask.PlanName,
-            weight: apiTask.PlanKG.toString(),
+            weight: apiTask.PlanKG,
             liter: apiTask.Liter.toString(),
             dropPointPhotos: apiTask.Photo?.map(
               (photo) => `${import.meta.env.VITE_API_URL}${photo}`,
             ),
             driverPhotos: apiTask.DriverPhotos,
-            actualWeight: apiTask.ActualKG,
+            actualWeight: apiTask.KG,
           };
           setTask(TaskDetail); // 設置任務資料
           console.log('處理完成的任務:', TaskDetail);
@@ -260,6 +264,11 @@ function OrderDetails() {
         input.onchange = (e) => {
           const file = (e.target as HTMLInputElement).files?.[0];
           if (file) {
+            // 檢查檔案大小（5MB = 5 * 1024 * 1024 bytes）
+            if (file.size > 5 * 1024 * 1024) {
+              alert('照片大小不能超過 5MB');
+              return;
+            }
             const reader = new FileReader();
             reader.onload = (event) => {
               const newPhotos = [...driverPhotos];
@@ -327,18 +336,13 @@ function OrderDetails() {
   // === 提交異常回報 ===
   const handleReportSubmit = async (issue: string, otherIssue: string) => {
     try {
-      // TODO: 實作提交異常回報的API
-      console.log('提交異常回報:', {
-        issue,
-        otherIssue,
-      });
       setReportForm({
-        issue,
-        otherIssue,
+        issue: issue || null,
+        otherIssue: otherIssue || '',
         isSubmitted: true,
         lastSubmitted: {
-          issue,
-          otherIssue,
+          issue: issue || null,
+          otherIssue: otherIssue || '',
         },
       });
       setShowReportModal(false);
@@ -361,15 +365,15 @@ function OrderDetails() {
   // 取得異常回報文字
   const getIssueText = (issue: string) => {
     switch (issue) {
-      case 'overweight':
+      case '1':
         return '垃圾量超過方案限制';
-      case 'no_bag':
+      case '2':
         return '未找到垃圾袋，用戶無回應';
-      case 'no_qrcode':
+      case '3':
         return '無 QR 碼，用戶無回應';
-      case 'broken_bag':
+      case '4':
         return '垃圾袋破損嚴重';
-      case 'no_contact':
+      case '5':
         return '面交未見用戶，已聯絡無回應';
       default:
         return issue;
@@ -397,30 +401,74 @@ function OrderDetails() {
     try {
       // 根據是否有異常回報決定訂單狀態
       const orderStatus = reportForm.isSubmitted ? 5 : 4; // 5:異常, 4:已完成
+      const orderStatusText = orderStatus === 5 ? '異常' : '已完成';
+
+      // 建立 FormData
+      const formData = new FormData();
+      formData.append('KG', actualWeight?.toString() || '');
+      formData.append('OrderStatus', orderStatusText);
+
+      // 確保異常回報的值被正確加入
+      if (reportForm.issue && reportForm.isSubmitted) {
+        formData.append('CommonIssues', reportForm.issue);
+      }
+      if (reportForm.otherIssue && reportForm.isSubmitted) {
+        formData.append('IssueDescription', reportForm.otherIssue);
+      }
+
+      // 添加照片
+      driverPhotos.filter(Boolean).forEach((photo, index) => {
+        // 將 base64 轉換為 Blob
+        const base64Data = photo.split(',')[1];
+        const byteCharacters = atob(base64Data);
+        const byteArrays = [];
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteArrays.push(byteCharacters.charCodeAt(i));
+        }
+        const byteArray = new Uint8Array(byteArrays);
+        const blob = new Blob([byteArray], { type: 'image/jpeg' });
+        formData.append(`DriverImageUrl`, blob, `photo_${index}.jpg`);
+      });
+
+      console.log('準備發送的請求資料:', {
+        taskId,
+        formData,
+      });
 
       // 更新訂單狀態
-      const response = await axios.put(`api/driver/orders/status/${taskId}`, {
-        OrderStatus: orderStatus,
-        KG: actualWeight,
-        CommonIssues: reportForm.issue,
-        OtherIssues: reportForm.otherIssue,
-        DriverImageUrl: driverPhotos,
-      });
+      const response = await axios.put(
+        `api/PUT/driver/orders/${taskId}/weight`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
 
       if (response.data.status) {
         console.log('完成收運成功:', {
           actualWeight,
           driverPhotos,
           reportForm,
-          orderStatus,
+          orderStatusText,
         });
         setShowSuccess(true);
       } else {
-        throw new Error('完成收運失敗');
+        throw new Error(response.data.message || '完成收運失敗');
       }
     } catch (error) {
       console.error('完成收運失敗:', error);
-      setError('完成收運失敗，請重試');
+      if (axios.isAxiosError(error) && error.response) {
+        console.error('API 錯誤詳情:', {
+          status: error.response.status,
+          data: error.response.data,
+          headers: error.response.headers,
+        });
+        setError(`完成收運失敗: ${error.response.data.message || '請重試'}`);
+      } else {
+        setError('完成收運失敗，請重試');
+      }
     }
   };
 

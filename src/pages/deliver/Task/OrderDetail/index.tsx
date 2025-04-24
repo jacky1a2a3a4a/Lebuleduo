@@ -150,6 +150,24 @@ function OrderDetails() {
     }
   };
 
+  // 將異常回報的狀態數字轉換成文字
+  const getIssueText = (issue: number) => {
+    switch (issue) {
+      case 1:
+        return '垃圾量超過方案限制';
+      case 2:
+        return '未找到垃圾袋，用戶無回應';
+      case 3:
+        return '無 QR 碼，用戶無回應';
+      case 4:
+        return '垃圾袋破損嚴重';
+      case 5:
+        return '面交未見用戶，已聯絡無回應';
+      default:
+        return issue;
+    }
+  };
+
   const handleBack = () => {
     navigate(-1);
   };
@@ -281,7 +299,9 @@ function OrderDetails() {
 
             <ReportBlock>
               <ReportContent>
-                <ReportBlockContent>{task.commonIssues}</ReportBlockContent>
+                <ReportBlockContent>
+                  {getIssueText(Number(task.commonIssues))} 
+                </ReportBlockContent>
                 <ReportBlockDescription>
                   {task.issueDescription}
                 </ReportBlockDescription>
