@@ -1,4 +1,4 @@
-import truckImage from '../../../assets/Lebuledou_truck.png';
+import truckImage from '../../../assets/images/Lebuledou_truck.png';
 import {
   LoadingContainer,
   TruckContainer,

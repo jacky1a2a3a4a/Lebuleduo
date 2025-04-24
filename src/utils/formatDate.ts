@@ -1,9 +1,9 @@
 /**
- * 格式化日期時間
+ * 格式化日期與時間
  * @param dateString ISO 格式的日期時間字串 (e.g. "2025-04-24T07:39:41.32")
  * @returns 格式化後的日期時間字串 (e.g. "2025/04/24 07:39")
  */
-export const formatDateTime = (dateString: string): string => {
+export const getFormattedDateTime = (dateString: string): string => {
   const date = new Date(dateString);
 
   // 如果日期無效，返回原始字串
@@ -25,7 +25,7 @@ export const formatDateTime = (dateString: string): string => {
  * @param dateString ISO 格式的日期時間字串
  * @returns 格式化後的日期字串 (e.g. "2025/04/24")
  */
-export const formatDate = (dateString: string): string => {
+export const getFormattedDate = (dateString: string): string => {
   const date = new Date(dateString);
 
   if (isNaN(date.getTime())) {
@@ -44,7 +44,7 @@ export const formatDate = (dateString: string): string => {
  * @param dateString ISO 格式的日期時間字串
  * @returns 格式化後的時間字串 (e.g. "07:39")
  */
-export const formatTime = (dateString: string): string => {
+export const getFormattedTime = (dateString: string): string => {
   const date = new Date(dateString);
 
   if (isNaN(date.getTime())) {

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
 import { canvasStyles, QRCodeContainer, QRCodeDownloadButton } from './styles';
-import logo from '../../../assets/Lebuledou.png';
+import logo from '../../../assets/icons/Lebuledou_icon.png';
 
 interface QRCodeGeneratorProps {
   data: string | object;

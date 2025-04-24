@@ -11,7 +11,7 @@ import OrderTaskStatusRecordContainer from '../../../../components/customer/Orde
 import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail/index.tsx'; //收運紀錄詳情
 import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
 import Loading from '../../../../components/common/LoadingMessage/index.tsx'; //加載中
-import { formatDateTime } from '../../../../utils/dateFormatter'; // 時間格式化工具
+import { getFormattedDateTime } from '../../../../utils/formatDate'; // 時間格式化工具
 
 // 訂單詳情
 interface OrderDetail {
@@ -138,7 +138,7 @@ function FinishedTask() {
     {
       title: '前往中',
       time: orderTaskDetail?.OngoingAt
-        ? formatDateTime(orderTaskDetail.OngoingAt)
+        ? getFormattedDateTime(orderTaskDetail.OngoingAt)
         : '-',
       isCompleted:
         status === '前往中' || status === '已抵達' || status === '已完成',
@@ -146,14 +146,14 @@ function FinishedTask() {
     {
       title: '已抵達',
       time: orderTaskDetail?.ArrivedAt
-        ? formatDateTime(orderTaskDetail.ArrivedAt)
+        ? getFormattedDateTime(orderTaskDetail.ArrivedAt)
         : '-',
       isCompleted: status === '已抵達' || status === '已完成',
     },
     {
       title: '已完成',
       time: orderTaskDetail?.CompletedAt
-        ? formatDateTime(orderTaskDetail.CompletedAt)
+        ? getFormattedDateTime(orderTaskDetail.CompletedAt)
         : '-',
       isCompleted: status === '已完成',
       isLast: true,

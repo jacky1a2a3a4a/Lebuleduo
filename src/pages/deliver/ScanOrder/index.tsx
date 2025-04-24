@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
+
 import QRScanner from '../../../components/deliver/QRScanner';
 import QRCodeGenerator from '../../../components/common/QRCodeGenerator';
-import { getTodayDate } from '../../../utils/getTodayDate';
+import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
+import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
+
 import { MdQrCodeScanner } from 'react-icons/md';
 import {
   ScanOrderSectionStyled,
@@ -11,34 +13,7 @@ import {
   StatusMessage,
   ScanText,
 } from './styles';
-
-// API 回傳的訂單類型(照api順序)
-type ApiData = {
-  Addresses: string;
-  CustomerName: string;
-  CustomerNumber: string;
-  Liter: number;
-  Notes: string;
-  OrderDetailID: number;
-  OrderDetailsNumber: string; // 訂單編號
-  Photo: string[];
-  PlanKG: number;
-  PlanName: string;
-  ServiceTime: string | null;
-  Status: string;
-};
-
-// 定義任務類型(比對API回傳的任務資料)
-type TaskItem = {
-  id: string;
-};
-
-// 掃描後獲得的訂單任務類型
-type OrderInfo = {
-  OrderDetailID: number;
-  CustomerNumber: string;
-  Status?: string; // 新增可選的 Status 欄位
-};
+import { ApiData, OrderInfo } from './types';
 
 const userId = localStorage.getItem('UsersID');
 const test = true;
@@ -47,11 +22,9 @@ function ScanOrder() {
   const navigate = useNavigate();
   const [executingOrderData, setExecutingOrderData] = useState<ApiData | null>(
     null,
-  );
-  const [executingTask, setExecutingTask] = useState<TaskItem | null>(null);
-  const [scanError, setScanError] = useState<string | null>(null);
+  ); // 執行中的任務資料
+  const [scanError, setScanError] = useState<string | null>(null); // 掃描錯誤訊息
 
-  // 從 API 獲取今日訂單，過濾出 前往中/已抵達 任務
   useEffect(() => {
     const fetchTodayOrders = async () => {
       if (!userId) {
@@ -60,14 +33,9 @@ function ScanOrder() {
       }
 
       try {
-        const response = await axios.get(
-          `api/GET/driver/day/${userId}/${getTodayDate()}`,
-        );
-        const orders = response.data.result.Orders;
-        console.log('API 原始資料:', response.data);
-        console.log('API 任務資料:', orders);
+        const orders = await getTodayOrders(userId);
+        console.log('API 原始資料:', orders);
 
-        // 尋找狀態為"前往中"或"已抵達"的訂單
         const executingOrder = orders.find(
           (order: ApiData) =>
             order.Status === '前往中' || order.Status === '已抵達',
@@ -76,9 +44,6 @@ function ScanOrder() {
 
         if (executingOrder) {
           setExecutingOrderData(executingOrder);
-          setExecutingTask({
-            id: executingOrder.OrderDetailID.toString(),
-          });
         }
       } catch (error) {
         console.error('獲取今日訂單失敗:', error);
@@ -103,10 +68,9 @@ function ScanOrder() {
   const handleScanResult = useCallback(
     async (result: string) => {
       try {
-        // 解析掃描到的JSON數據
         const orderData = JSON.parse(result) as OrderInfo;
         console.log('掃描到的訂單資料:', orderData);
-        setScanError(null); //掃描錯誤訊息清空
+        setScanError(null);
 
         if (!executingOrderData) {
           setScanError('找不到對應的訂單資料');
@@ -122,26 +86,13 @@ function ScanOrder() {
         console.log('訂單狀態:', currentOrderStatus);
         console.log('訂單顧客編號:', currentOrderCustomerNumber);
 
-        let response;
         switch (currentOrderStatus) {
           case '已抵達':
-            // 如果訂單已經是已抵達狀態，直接跳轉到處理訂單頁面
             navigate(`/deliver/scan-order/process-order/${currentOrderID}`);
             break;
           case '前往中':
-            // 更新訂單狀態為已抵達
-            response = await axios.put(
-              `api/driver/orders/status/${currentOrderID}`,
-              {
-                OrderStatus: 3, // 3:已抵達
-              },
-            );
-            console.log('訂單狀態更新成功:', response.data);
-
-            // 儲存掃描到的訂單數據
+            await updateOrderStatus(currentOrderID, 3);
             localStorage.setItem('scannedOrder', result);
-
-            // 跳轉到處理訂單頁面
             navigate(
               `/deliver/scan-order/process-order/${orderData.OrderDetailID}`,
             );
@@ -171,7 +122,7 @@ function ScanOrder() {
       {scanError && <StatusMessage>{scanError}</StatusMessage>}
 
       {/* 有前往中的訂單時顯示 QR Code */}
-      {test && executingTask && (
+      {test && executingOrderData && (
         <QRCodeGenerator
           data={generateOrderQRData()}
           size={150}

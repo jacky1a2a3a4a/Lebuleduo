@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdError } from 'react-icons/md';
-import dogImage from '../../../assets/Lebuledou_lying.png';
-import dogTruckImage from '../../../assets/Lebuledou_truck.png';
+import dogImage from '../../../assets/images/Lebuledou_lying.png';
+import dogTruckImage from '../../../assets/images/Lebuledou_truck.png';
 import LoadingMessage from '../../../components/common/LoadingMessage';
 
 import {
