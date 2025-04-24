@@ -20,8 +20,25 @@ const CalendarComponent = () => {
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
 
+  // 休假日期的假資料
+  const holidays = [
+    new Date(2025, 3, 11), // 4月11日
+    new Date(2025, 3, 20), // 4月20日
+    new Date(2025, 3, 30), // 4月30日
+  ];
+
   const handleDateChange = (date: Date) => {
     setSelectedDate(date);
+  };
+
+  // 檢查日期是否為休假日
+  const isHoliday = (date: Date) => {
+    return holidays.some(
+      (holiday) =>
+        holiday.getDate() === date.getDate() &&
+        holiday.getMonth() === date.getMonth() &&
+        holiday.getFullYear() === date.getFullYear(),
+    );
   };
 
   // 自定義日期格式
@@ -48,6 +65,10 @@ const CalendarComponent = () => {
               calendarType="gregory"
               formatDay={formatDay}
               showNavigation={true}
+              tileClassName={({ date }) => (isHoliday(date) ? 'holiday' : '')}
+              tileContent={({ date }) =>
+                isHoliday(date) ? <div>休假</div> : null
+              }
             />
           </CalendarContainer>
 

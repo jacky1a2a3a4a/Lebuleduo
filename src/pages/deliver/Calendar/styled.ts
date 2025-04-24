@@ -49,7 +49,7 @@ export const DeliverDataItems = styled.div`
 
 export const DeliverName = styled.div`
   color: var(--color-text-primary);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
 `;
 
@@ -126,12 +126,23 @@ export const CalendarContainer = styled.div`
     padding: var(--spacing-sm);
     font-size: var(--font-size-xs);
     text-align: center;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
   }
 
   /* 確保日期只顯示數字 */
   .react-calendar__tile abbr {
     text-decoration: none;
     display: block;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* 選中日期 */
@@ -151,6 +162,12 @@ export const CalendarContainer = styled.div`
     color: var(--color-white);
     border-radius: var(--border-radius-lg);
     border: 3px solid var(--color-primary);
+  }
+
+  /* 休假日期的樣式 */
+  .react-calendar__tile.holiday {
+    color: var(--color-white);
+    background-color: var(--color-secondary);
   }
 `;
 
@@ -200,7 +217,7 @@ export const TaskListContainer = styled.div`
 
   position: fixed;
   z-index: 10;
-  top: 500px;
+  top: 550px;
   width: 100%;
   max-width: var(--mobile-min-width);
   height: 100%;

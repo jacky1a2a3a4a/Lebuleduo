@@ -11,6 +11,7 @@ import OrderTaskStatusRecordContainer from '../../../../components/customer/Orde
 import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail/index.tsx'; //收運紀錄詳情
 import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
 import Loading from '../../../../components/common/LoadingMessage/index.tsx'; //加載中
+import { formatDateTime } from '../../../../utils/dateFormatter'; // 時間格式化工具
 
 // 訂單詳情
 interface OrderDetail {
@@ -136,18 +137,25 @@ function FinishedTask() {
   const steps = [
     {
       title: '前往中',
-      time: orderTaskDetail?.OngoingAt || '尚未前往',
-      isCompleted: !!orderTaskDetail?.OngoingAt,
+      time: orderTaskDetail?.OngoingAt
+        ? formatDateTime(orderTaskDetail.OngoingAt)
+        : '-',
+      isCompleted:
+        status === '前往中' || status === '已抵達' || status === '已完成',
     },
     {
       title: '已抵達',
-      time: orderTaskDetail?.ArrivedAt || '尚未抵達',
-      isCompleted: !!orderTaskDetail?.ArrivedAt,
+      time: orderTaskDetail?.ArrivedAt
+        ? formatDateTime(orderTaskDetail.ArrivedAt)
+        : '-',
+      isCompleted: status === '已抵達' || status === '已完成',
     },
     {
       title: '已完成',
-      time: orderTaskDetail?.CompletedAt || '尚未完成',
-      isCompleted: !!orderTaskDetail?.CompletedAt,
+      time: orderTaskDetail?.CompletedAt
+        ? formatDateTime(orderTaskDetail.CompletedAt)
+        : '-',
+      isCompleted: status === '已完成',
       isLast: true,
     },
   ];
@@ -156,7 +164,7 @@ function FinishedTask() {
     <ContainerStyled>
       {/* 導航標題 */}
       <OrderNavHeader
-        title="已結束任務"
+        title="已排定任務"
         orderNumber={orderDetail?.OrderNumber || '未知訂單號'}
       />
 

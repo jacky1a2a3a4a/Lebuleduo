@@ -1,5 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { HiDocumentText, HiMiniTruck, HiXCircle } from 'react-icons/hi2';
+import {
+  HiDocumentText,
+  HiMiniTruck,
+  HiXCircle,
+  HiQrCode,
+} from 'react-icons/hi2';
 import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 import { TaskStatus } from '../../../../types/deliver';
 import { formatTime } from '../../../../utils/formatTime';
@@ -26,6 +31,7 @@ import {
 
 export type TaskCardProps = {
   taskId: string;
+  number: string;
   status: TaskStatus;
   time: string;
   address: string;
@@ -39,6 +45,7 @@ export type TaskCardProps = {
 //傳入參數，同時定義型別
 export const TaskCard = ({
   taskId,
+  number,
   status,
   time,
   address,
@@ -89,6 +96,11 @@ export const TaskCard = ({
     }
   };
 
+  // 處理掃描訂單按鈕點擊
+  const handleScanOrder = () => {
+    navigate('/deliver/scan-order');
+  };
+
   // 卡片按鈕文字
   const getActionButtonText = () => {
     switch (status) {
@@ -98,8 +110,22 @@ export const TaskCard = ({
         return '已完成';
       case 'abnormal':
         return '已回報';
+      case 'arrived':
+        return '掃描訂單';
       default:
         return '確認前往';
+    }
+  };
+
+  // 獲取按鈕圖標
+  const getActionButtonIcon = () => {
+    switch (status) {
+      case 'ongoing':
+        return <HiXCircle />;
+      case 'arrived':
+        return <HiQrCode />;
+      default:
+        return <HiMiniTruck />;
     }
   };
 
@@ -118,7 +144,7 @@ export const TaskCard = ({
             <TaskUserContent>
               <MainContent>{address}</MainContent>
               <SubContent>固定放置點: {notes}</SubContent>
-              <TertiaryContent>訂單編號: {taskId}</TertiaryContent>
+              <TertiaryContent>任務編號: {number}</TertiaryContent>
             </TaskUserContent>
           </TaskDetailContainer>
         </TaskCardContent>
@@ -130,12 +156,14 @@ export const TaskCard = ({
           </TaskCardButton>
           <TaskCardButton
             $styledType={status === 'ongoing' ? 'secondary' : 'primary'}
-            onClick={handleStatusChange}
+            onClick={
+              status === 'arrived' ? handleScanOrder : handleStatusChange
+            }
             $disabled={
               status === 'completed' || status === 'abnormal' || isDisabled
             }
           >
-            {status === 'ongoing' ? <HiXCircle /> : <HiMiniTruck />}
+            {getActionButtonIcon()}
             {getActionButtonText()}
           </TaskCardButton>
         </TaskCardButtons>
