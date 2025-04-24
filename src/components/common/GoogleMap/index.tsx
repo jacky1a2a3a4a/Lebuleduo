@@ -2,13 +2,9 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import { useState, useCallback, useEffect } from 'react';
 
 // 定義需要的 Google Maps 庫
-const libraries: (
-  | 'places'
-  | 'drawing'
-  | 'geometry'
-  | 'localContext'
-  | 'visualization'
-)[] = ['places'];
+const libraries: ('places' | 'drawing' | 'geometry' | 'visualization')[] = [
+  'places',
+];
 
 interface GoogleMapProps {
   address: string;
