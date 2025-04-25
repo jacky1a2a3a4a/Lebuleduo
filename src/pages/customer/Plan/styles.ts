@@ -45,22 +45,37 @@ export const PlanContainer = styled.div`
   flex-direction: column;
 `;
 
-//方案介紹 最外層容器
+//===方案介紹 最外層容器 ===
 export const PlanDescription = styled.div`
-  margin: 0 var(--spacing-lg) var(--spacing-md) var(--spacing-lg);
-`;
-
-//訂閱方案 方案介紹標題
-export const PlanDescriptionTitle = styled.div`
-  color: var(--color-white);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-md);
+  margin: var(--spacing-sm) var(--spacing-lg);
 `;
 
 //訂閱方案 方案介紹內容
 export const PlanDescriptionContent = styled.div`
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
   font-weight: var(--font-weight-medium);
+`;
+
+//訂閱方案 方案介紹內容 文字容器
+export const PlanDescriptionText = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+//訂閱方案 方案介紹內容 圖片容器
+export const PlanDescriptionImg = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  justify-self: end;
+  align-self: end;
+
+  width: 100%;
+  max-width: 80px;
+  height: 100%;
+
+  padding-bottom: var(--spacing-12);
 `;
 
 //訂閱方案 方案介紹內容項目
@@ -76,10 +91,10 @@ export const IconCheckedStyled = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--spacing-12);
+  margin-right: var(--spacing-xs);
 
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
 
   font-size: var(--font-size-2xl);
 `;
@@ -154,7 +169,7 @@ export const PlanCardPrice = styled.p`
 export const Divider = styled.div`
   border-bottom: 1px solid var(--color-gray-200);
   width: 100%;
-  margin:var(--spacing-12) 0 var(--spacing-sm) 0;
+  margin: var(--spacing-12) 0 var(--spacing-sm) 0;
 `;
 
 //訂閱方案 卡片描述

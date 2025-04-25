@@ -10,7 +10,7 @@ export const MyOrderSectionStyled = styled.section`
   display: flex;
   flex-direction: column;
 
-  padding: var(--spacing-md);
+  padding: 0 var(--spacing-md) var(--spacing-md);
 
   overflow: hidden;
 `;
@@ -19,7 +19,7 @@ export const MyOrderSectionStyled = styled.section`
 export const UserCardSection = styled.section`
   display: grid;
   grid-template-columns: 1.6fr 1fr;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
   padding: 0 var(--spacing-md);
 `;
 
@@ -30,11 +30,11 @@ export const ImageContainer = styled.div`
   align-items: center;
 
   position: fixed; /* 改為 fixed 定位 */
-  top: 71px; /* 調整固定垂直位置 */
+  top: 78px; /* 調整固定垂直位置 */
   left: calc(50% + 90px); /* 從中心點向右偏移固定距離 */
   transform: translateX(-50%); /* 修正偏移 */
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   z-index: 10;
 `;
 
@@ -64,10 +64,21 @@ export const UserGreeting = styled.h1`
 // 使用者卡片 項目
 export const UserCardItem = styled.div`
   display: flex;
+  justify-content: flex-start;
   align-items: flex-end;
+  gap: var(--spacing-sm);
+  width: 100%;
+  height: 100%;
+  margin-bottom: var(--spacing-xs);
+`;
+
+export const UserCardItemColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   width: 100%;
 
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
 `;
 
 // 使用者卡片 標題
@@ -75,21 +86,48 @@ export const UserCardTitle = styled.div`
   color: var(--color-tertiary);
 
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
+  height: 100%;
 
   margin-right: var(--spacing-sm);
+
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
 `;
 
 // 使用者卡片 查看詳情按鈕
 export const UserCardButton = styled.button`
-  background-color: var(--color-primary);
-  color: var(--color-neutral-400);
-  border: none;
-  border-radius: var(--border-radius-round);
+  color: var(--color-tertiary);
+  opacity: 0.7;
+
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 100%;
 
   font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   text-decoration: underline;
+
+  svg {
+    padding-top: 1px;
+    font-size: var(--font-size-xs);
+  }
+`;
+
+// 使用者卡片 收運日期
+export const UserCardDate = styled.div`
+  color: var(--color-white);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+`;
+
+// 使用者卡片 收運時間
+export const UserCardTime = styled.div`
+  color: var(--color-white);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.05em;
 `;
 
 // 使用者卡片 圖示

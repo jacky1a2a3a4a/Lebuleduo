@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
+
 import SubscribeBottom from '../../../components/customer/SubscribeBottom';
 import {
   PageWrapper,
@@ -28,38 +28,14 @@ import {
   FixedPointImagesGrid,
   FixedPointImage,
   RadioButton,
-} from './styled';
+} from './styles';
 
-interface SubscriptionData {
-  // 方案資訊
-  planId: number;
-  planName: string;
-  planPeople: string;
-  planKg: number;
-  liter: number;
-  planDescription: string;
-  price: number;
+import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
+import LoadingMessage from '../../../components/common/LoadingMessage';
+import ErrorReport from '../../../components/common/ErrorReport';
+import { SubscriptionData, Step } from './types';
 
-  // 訂閱資訊
-  frequency: number;
-  days: string;
-  startDate: string;
-  totalPrice: number;
-
-  // 收運資訊
-  name: string;
-  phone: string;
-  address: string;
-  deliveryMethod: 'fixedpoint' | 'ereceipt';
-  notes: string;
-  fixedPointImages?: Array<{
-    id: string;
-    url: string;
-    file?: File; // 添加檔案屬性
-  }>;
-}
-
-const steps = [
+const steps: Step[] = [
   { number: 1, text: '選擇方案' },
   { number: 2, text: '填選收運資料' },
   { number: 3, text: '結帳' },
@@ -176,6 +152,10 @@ const SubscribeCheckout = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log('api提交成功:', response.data);
+
+      //回傳回來的訂單ID
+      const orderID = response.data.orderId;
 
       if (response.data) {
         navigate('/customer/subscribe-success', {

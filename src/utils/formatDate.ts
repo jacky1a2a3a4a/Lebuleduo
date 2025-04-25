@@ -40,6 +40,29 @@ export const getFormattedDate = (dateString: string): string => {
 };
 
 /**
+ * 格式化日期並加入星期幾
+ * @param dateString ISO 格式的日期時間字串
+ * @returns 格式化後的日期字串 (e.g. "2025/04/24 (四)")
+ */
+export const getFormattedDateWithDay = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  if (isNaN(date.getTime())) {
+    return dateString;
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  // 星期幾的中文表示
+  const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+  const dayOfWeek = weekdays[date.getDay()];
+
+  return `${year}/${month}/${day} (${dayOfWeek})`;
+};
+
+/**
  * 格式化時間
  * @param dateString ISO 格式的日期時間字串
  * @returns 格式化後的時間字串 (e.g. "07:39")
@@ -56,3 +79,5 @@ export const getFormattedTime = (dateString: string): string => {
 
   return `${hours}:${minutes}`;
 };
+
+

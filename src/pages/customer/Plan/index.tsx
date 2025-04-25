@@ -1,15 +1,16 @@
 import { MdAddShoppingCart, MdOutlineTaskAlt } from 'react-icons/md';
+import Lebuledou_trashcan from '../../../assets/images/Lebuledou_trashcan.png';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getPlans } from '../../../apis/customer/getPlan';
 import {
-  LoadingMessage,
-  ErrorMessage,
   EmptyMessage,
   PlanSectionStyled,
   PlanContainer,
   PlanDescription,
-  PlanDescriptionTitle,
   PlanDescriptionContent,
+  PlanDescriptionText,
+  PlanDescriptionImg,
   ContentItem,
   IconCheckedStyled,
   ContentText,
@@ -26,7 +27,10 @@ import {
   PlanButtons,
   PlanButton,
   IconStyled,
-} from './styled';
+} from './styles';
+
+import LoadingMessage from '../../../components/common/LoadingMessage';
+import ErrorReport from '../../../components/common/ErrorReport';
 
 const Plan = () => {
   const [plans, setPlans] = useState([]);
@@ -34,27 +38,12 @@ const Plan = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // API使用代理路徑
-  // 路徑設定 > vite.config.ts
-  const API_Path = '/api/GET/user/plans';
-
   useEffect(() => {
     const fetchPlans = async () => {
       try {
         setIsLoading(true);
-        //fetch取得API資料，使用相對路徑經過代理
-        const response = await fetch(API_Path);
-        //解析JSON回應
-        const data = await response.json();
-        console.log('API 回應數據:', data);
-
-        //更新狀態 - 從response中獲取Plans數組
-        if (data && data.Plans && Array.isArray(data.Plans)) {
-          setPlans(data.Plans);
-        } else {
-          setPlans([]);
-          console.warn('API返回的數據結構中沒有Plans數組或格式不正確');
-        }
+        const plansData = await getPlans();
+        setPlans(plansData);
       } catch (error) {
         console.error('獲取計劃數據時出錯:', error);
         setError(error.message);
@@ -94,9 +83,9 @@ const Plan = () => {
   return (
     <PlanSectionStyled>
       <PlanContainer>
-        {isLoading && <LoadingMessage>載入中...</LoadingMessage>}
+        {isLoading && <LoadingMessage />}
 
-        {error && <ErrorMessage>錯誤: {error}</ErrorMessage>}
+        {error && <ErrorReport error={error} />}
 
         {!isLoading && !error && plans.length === 0 && (
           <EmptyMessage>沒有可用的方案</EmptyMessage>
@@ -104,43 +93,49 @@ const Plan = () => {
 
         {/* 方案描述 */}
         <PlanDescription>
-          <PlanDescriptionTitle>方案介紹</PlanDescriptionTitle>
+         
           <PlanDescriptionContent>
-            <ContentItem>
-              <IconCheckedStyled>
-                <MdOutlineTaskAlt />
-              </IconCheckedStyled>
-              <ContentText>
-                <ContentMainText>大包小包一次搞定</ContentMainText>
-                <ContentSubText>
-                  每次收運同時處理「一般垃圾＋回收＋廚餘」
-                </ContentSubText>
-              </ContentText>
-            </ContentItem>
+            <PlanDescriptionText>
+              <ContentItem>
+                <IconCheckedStyled>
+                  <MdOutlineTaskAlt />
+                </IconCheckedStyled>
+                <ContentText>
+                  <ContentMainText>大包小包一次搞定</ContentMainText>
+                  <ContentSubText>
+                    每次收運同時處理「一般垃圾＋回收＋廚餘」
+                  </ContentSubText>
+                </ContentText>
+              </ContentItem>
 
-            <ContentItem>
-              <IconCheckedStyled>
-                <MdOutlineTaskAlt />
-              </IconCheckedStyled>
-              <ContentText>
-                <ContentMainText>每週收運自由選</ContentMainText>
-                <ContentSubText>
-                  每週1～7天彈性安排，依你生活節奏自由調整
-                </ContentSubText>
-              </ContentText>
-            </ContentItem>
+              <ContentItem>
+                <IconCheckedStyled>
+                  <MdOutlineTaskAlt />
+                </IconCheckedStyled>
+                <ContentText>
+                  <ContentMainText>每週收運自由選</ContentMainText>
+                  <ContentSubText>
+                    每週1～7天彈性安排，依你生活節奏自由調整
+                  </ContentSubText>
+                </ContentText>
+              </ContentItem>
 
-            <ContentItem>
-              <IconCheckedStyled>
-                <MdOutlineTaskAlt />
-              </IconCheckedStyled>
-              <ContentText>
-                <ContentMainText>line即時提醒</ContentMainText>
-                <ContentSubText>
-                  收運前後自動推播通知，隨時更新垃圾處理狀況
-                </ContentSubText>
-              </ContentText>
-            </ContentItem>
+              <ContentItem>
+                <IconCheckedStyled>
+                  <MdOutlineTaskAlt />
+                </IconCheckedStyled>
+                <ContentText>
+                  <ContentMainText>line即時提醒</ContentMainText>
+                  <ContentSubText>
+                    收運前後自動推播通知，隨時更新垃圾處理狀況
+                  </ContentSubText>
+                </ContentText>
+              </ContentItem>
+            </PlanDescriptionText>
+
+            <PlanDescriptionImg>
+              <img src={Lebuledou_trashcan} alt="Lebuledou_trashcan" />
+            </PlanDescriptionImg>
           </PlanDescriptionContent>
         </PlanDescription>
 
