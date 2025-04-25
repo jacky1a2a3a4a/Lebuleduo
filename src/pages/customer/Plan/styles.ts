@@ -1,33 +1,9 @@
 import styled from 'styled-components';
 
-////載入中訊息
-//訂閱方案 載入中訊息
-export const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: var(--font-size-md);
-  color: var(--color-gray-500);
-`;
-
-//訂閱方案 錯誤訊息
-export const ErrorMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: var(--font-size-md);
-  color: red;
-`;
-
-//訂閱方案 空訊息
-export const EmptyMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: var(--font-size-md);
-  color: var(--color-gray-500);
-`;
 
 ////訂閱方案 最大外容器
 export const PlanSectionStyled = styled.section`
-  background-color: var(--color-gray-200);
+  background-color: var(--color-background-secondary);
   width: 100%;
   height: 100%;
   overflow-y: auto;
@@ -43,6 +19,7 @@ export const PlanContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 //===方案介紹 最外層容器 ===
@@ -109,7 +86,7 @@ export const ContentText = styled.div`
 //訂閱方案 方案介紹內容項目主文字
 export const ContentMainText = styled.p`
   color: var(--color-tertiary);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
 `;
 
@@ -120,7 +97,7 @@ export const ContentSubText = styled.p`
   font-weight: var(--font-weight-normal);
 `;
 
-////卡片列表
+//=== 卡片列表 ===
 // 訂閱方案 卡片列表容器
 export const PlanCardListContainer = styled.div`
   background-color: var(--color-background-secondary);
@@ -129,6 +106,9 @@ export const PlanCardListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+
+  flex: 1;
+  min-height: 0;
 
   padding: var(--spacing-lg) var(--spacing-md);
 `;

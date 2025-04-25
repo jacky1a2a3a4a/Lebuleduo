@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPlans } from '../../../apis/customer/getPlan';
 import {
-  EmptyMessage,
   PlanSectionStyled,
   PlanContainer,
   PlanDescription,
@@ -83,17 +82,8 @@ const Plan = () => {
   return (
     <PlanSectionStyled>
       <PlanContainer>
-        {isLoading && <LoadingMessage />}
-
-        {error && <ErrorReport error={error} />}
-
-        {!isLoading && !error && plans.length === 0 && (
-          <EmptyMessage>沒有可用的方案</EmptyMessage>
-        )}
-
         {/* 方案描述 */}
         <PlanDescription>
-         
           <PlanDescriptionContent>
             <PlanDescriptionText>
               <ContentItem>
@@ -141,6 +131,10 @@ const Plan = () => {
 
         {/* 方案卡片列表 */}
         <PlanCardListContainer>
+          {isLoading && <LoadingMessage size="mini" />}
+
+          {error && <ErrorReport error={error} />}
+
           {plans.map((plan, index) => {
             // 使用解構賦值簡化plan對象的處理
             const {
