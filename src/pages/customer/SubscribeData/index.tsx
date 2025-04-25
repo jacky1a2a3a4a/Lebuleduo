@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IoAdd, IoClose } from 'react-icons/io5';
-import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
+import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
 import AddressAutocomplete from './AddressAutocomplete';
 import {
   PageWrapper,
@@ -31,7 +31,7 @@ import {
   PhotoInstructions,
   LoadingMessage,
 } from './styled';
-import SubscribeBottom from '../../../components/customer/SubscribeBottom';
+import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
 
 // 圖片類型
 interface FixedPointImage {
@@ -302,7 +302,7 @@ const SubscribeData = () => {
 
   return (
     <PageWrapper>
-      <SubscribeProgressSteps currentStep={2} steps={steps} />
+      <ProgressSteps currentStep={2} steps={steps} />
       <ScrollableContent>
         <SectionTitle>
           <SectionMainTitle>收運資料</SectionMainTitle>

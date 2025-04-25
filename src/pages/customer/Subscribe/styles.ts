@@ -1,14 +1,6 @@
 import styled from 'styled-components';
 import { StyledProps } from './types';
 
-// 載入訊息
-export const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: var(--font-size-md);
-  color: var(--color-gray-500);
-`;
-
 //// 整個頁面的容器
 export const PageWrapper = styled.div`
   background-color: var(--color-background-secondary);
@@ -250,7 +242,7 @@ export const PlanTitle = styled.div`
 `;
 
 // 預定期程 大容器
-export const FrequencyOptions = styled.div`
+export const ButtonCardOptions = styled.div`
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
@@ -369,16 +361,24 @@ export const WeekdayButton = styled.button<StyledProps>`
 
 //// 日期選擇器 大容器
 export const DatePickerContainer = styled.div`
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
+  background-color: var(--color-background-primary);
+  transition: border-color 0.2s ease;
   margin-bottom: var(--spacing-md);
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
 `;
 
-// 日期輸入
-export const DateInput = styled.input`
-  width: 100%;
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-secondary);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
+export const DateDisplay = styled.div`
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  padding: var(--spacing-12);
 `;
 
 //// 總計價格與下一步 大容器
@@ -471,4 +471,16 @@ export const ErrorMessage = styled.div`
   font-size: var(--font-size-xs);
   margin-bottom: var(--spacing-lg);
   padding-left: var(--spacing-sm);
+`;
+
+export const IconButton = styled.button`
+  width: 100%;
+  height: 100%;
+
+  svg {
+    color: var(--color-secondary);
+    font-size: var(--font-size-lg);
+    width: 24px;
+    height: 24px;
+  }
 `;

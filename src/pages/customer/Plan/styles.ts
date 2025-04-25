@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 ////訂閱方案 最大外容器
 export const PlanSectionStyled = styled.section`
-  background-color: var(--color-background-secondary);
+  background-color: var(--color-background);
   width: 100%;
   height: 100%;
   overflow-y: auto;
@@ -17,9 +17,8 @@ export const PlanSectionStyled = styled.section`
 export const PlanContainer = styled.div`
   background-color: var(--color-primary);
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  display: grid;
+  grid-template-rows: 1fr 3.2fr;
 `;
 
 //===方案介紹 最外層容器 ===

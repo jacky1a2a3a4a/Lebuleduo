@@ -1,15 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import { Plan } from './types';
-import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
+import { MdInfoOutline } from 'react-icons/md';
+
 import {
-  LoadingMessage,
   PageWrapper,
   ScrollableContent,
-  SectionTitle,
-  SectionMainTitle,
-  SectionSubtitle,
   PlanSelector,
   PlanSelectorHeader,
   PlanInfo,
@@ -20,20 +16,25 @@ import {
   PlanOptionTitle,
   PlanOptionMainTitle,
   PlanOptionSubtitle,
-  FrequencyOptions,
-  FrequencyOption,
-  RadioButton,
-  FrequencyTextContainer,
-  FrequencyText,
-  FrequencySubtext,
+  ButtonCardOptions,
   DiscountTag,
   WeekdaysContainer,
   WeekdayButton,
   ErrorMessage,
-  DatePickerContainer,
-  DateInput,
-} from './styled';
-import SubscribeBottom from '../../../components/customer/SubscribeBottom';
+  IconButton,
+} from './styles';
+import { Plan } from './types';
+
+import LoadingMessage from '../../../components/common/LoadingMessage';
+import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
+import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
+import ButtonCard from '../../../components/customer/Subscribe/ButtonCard';
+import DatePicker from '../../../components/customer/Subscribe/DatePicker';
+import SectionTitle from '../../../components/customer/Subscribe/SectionTitle';
+import Modal from '../../../components/common/Modal'; //通用Modal
+import QRCodeInfo from '../../../components/customer/Subscribe/QRCodeInfo';
+
+import { getPlans } from '../../../apis/customer/getPlan'; //api 取得方案
 
 // 週期天數選項
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
@@ -64,11 +65,14 @@ const Subscribe = () => {
   const [hasSelectedDays, setHasSelectedDays] = useState(false); // 預定收集日:是否已選擇收集日
   const [showDaysError, setShowDaysError] = useState(false); // 預定收集日:是否顯示收集日錯誤提示
 
-  const [startDate, setStartDate] = useState(''); // 開始日期
+  const [qrCodeMethod, setQrCodeMethod] = useState<'print' | 'ship'>('print'); // QR code 取得方式
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [originalPrice, setOriginalPrice] = useState(0); // 折扣前總價格
   const [discount, setDiscount] = useState(0); // 折扣金額
   const [totalPrice, setTotalPrice] = useState(0); // 折扣後總價格
+
+  const [isQRInfoModalOpen, setIsQRInfoModalOpen] = useState(false); // QR code 資訊 Modal
 
   // 獲取所有可用方案
   useEffect(() => {
@@ -77,23 +81,8 @@ const Subscribe = () => {
         setIsLoading(true);
 
         // 使用API取得所有方案
-        const response = await fetch('/api/GET/user/plans');
-        const data = await response.json();
-
-        // 處理API數據
-        let apiPlans: Plan[] = [];
-        if (data && data.Plans && Array.isArray(data.Plans)) {
-          // 將API返回的數據映射成Plan類型
-          apiPlans = data.Plans.map((p) => ({
-            PlanID: p.PlanID,
-            PlanName: p.PlanName,
-            Liter: p.Liter,
-            kg: p.PlanKG, // 注意這裡的字段名不同
-            Price: p.Price,
-            PlanPeople: p.PlanPeople,
-            PlanDescription: p.PlanDescription,
-          }));
-        }
+        const apiPlans = await getPlans();
+        console.log('api 所有方案', apiPlans);
 
         // 設置所有可用方案列表
         setAvailablePlans(apiPlans);
@@ -114,11 +103,6 @@ const Subscribe = () => {
           // 否則默認選中第一個方案
           setPlan(apiPlans[0]);
         }
-
-        // 設置今天日期為默認開始日期
-        const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0];
-        setStartDate(formattedDate);
       } catch (error) {
         console.error('獲取方案詳情失敗:', error);
       } finally {
@@ -128,6 +112,20 @@ const Subscribe = () => {
 
     fetchPlans();
   }, [planId, planName, liter, price, planKg, planPeople, planDescription]);
+
+  // 監聽 QR code 取得方式的變化
+  useEffect(() => {
+    const today = new Date();
+    if (qrCodeMethod === 'ship') {
+      // 如果是郵寄貼紙，設置為三天後的日期
+      const threeDaysLater = new Date(today);
+      threeDaysLater.setDate(today.getDate() + 3);
+      setSelectedDate(threeDaysLater);
+    } else {
+      // 如果是自行列印，設置為今天日期
+      setSelectedDate(today);
+    }
+  }, [qrCodeMethod]);
 
   // 總價格計算函式 只重新計算有改變的參數
   const updateTotalPrice = useCallback(
@@ -166,7 +164,7 @@ const Subscribe = () => {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage>載入中...</LoadingMessage>;
+    return <LoadingMessage size="normal" animationType="bounce" />;
   }
 
   // 處理方案切換
@@ -232,7 +230,7 @@ const Subscribe = () => {
       })
       .join(',');
 
-    // 將選擇的數據傳遞到下一個頁面
+    // 在需要傳遞日期時轉換格式
     navigate('/customer/subscribe-data', {
       state: {
         planId: plan?.PlanID,
@@ -244,10 +242,20 @@ const Subscribe = () => {
         planDescription: plan?.PlanDescription,
         frequency: selectedFrequency.toString(),
         days: formattedDays,
-        startDate,
+        startDate: selectedDate.toISOString().split('T')[0],
         totalPrice,
       },
     });
+  };
+
+  // 處理 QR code 取得方式選擇
+  const handleQrCodeMethodChange = (method: 'print' | 'ship') => {
+    setQrCodeMethod(method);
+  };
+
+  // 處理開始日期選擇
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
   };
 
   const steps = [
@@ -258,14 +266,11 @@ const Subscribe = () => {
 
   return (
     <PageWrapper>
-      <SubscribeProgressSteps steps={steps} currentStep={1} />
+      <ProgressSteps steps={steps} currentStep={1} />
 
       <ScrollableContent>
         {/* 已選方案 */}
-        <SectionTitle>
-          <SectionMainTitle>已選方案</SectionMainTitle>
-          <SectionSubtitle>請選擇您要訂閱的方案</SectionSubtitle>
-        </SectionTitle>
+        <SectionTitle mainTitle="已選方案" subTitle="請選擇您要訂閱的方案" />
 
         {/* 方案下拉選擇器 */}
         <PlanSelector>
@@ -301,53 +306,41 @@ const Subscribe = () => {
         </PlanSelector>
 
         {/* 取貨頻率 */}
-        <SectionTitle>
-          <SectionMainTitle>預定期程</SectionMainTitle>
-          <SectionSubtitle>週期越長越優惠</SectionSubtitle>
-        </SectionTitle>
+        <SectionTitle mainTitle="預定期程" subTitle="週期越長越優惠" />
 
-        <FrequencyOptions>
-          <FrequencyOption
+        <ButtonCardOptions>
+          <ButtonCard
+            title="1 個月"
+            subtitle="(共收運4週)"
             $active={selectedFrequency === 1}
             onClick={() => handleFrequencyChange('1')}
-          >
-            <RadioButton $active={selectedFrequency === 1} />
-            <FrequencyTextContainer>
-              <FrequencyText>1 個月</FrequencyText>
-              <FrequencySubtext>(共收運4週)</FrequencySubtext>
-            </FrequencyTextContainer>
-          </FrequencyOption>
+          />
 
-          <FrequencyOption
+          <ButtonCard
+            title="3 個月"
+            subtitle="(共收運12週)"
             $active={selectedFrequency === 3}
             onClick={() => handleFrequencyChange('3')}
           >
-            <RadioButton $active={selectedFrequency === 3} />
-            <FrequencyTextContainer>
-              <FrequencyText>3 個月</FrequencyText>
-              <FrequencySubtext>(共收運12週)</FrequencySubtext>
-            </FrequencyTextContainer>
             <DiscountTag>9 折優惠</DiscountTag>
-          </FrequencyOption>
+          </ButtonCard>
 
-          <FrequencyOption
+          <ButtonCard
+            title="6 個月"
+            subtitle="(共收運24週)"
             $active={selectedFrequency === 6}
             onClick={() => handleFrequencyChange('6')}
           >
-            <RadioButton $active={selectedFrequency === 6} />
-            <FrequencyTextContainer>
-              <FrequencyText>6 個月</FrequencyText>
-              <FrequencySubtext>(共收運24週)</FrequencySubtext>
-            </FrequencyTextContainer>
             <DiscountTag>85 折優惠</DiscountTag>
-          </FrequencyOption>
-        </FrequencyOptions>
+          </ButtonCard>
+        </ButtonCardOptions>
 
         {/* 每周收運日 */}
-        <SectionTitle id="weekdays-section">
-          <SectionMainTitle>每周收運日</SectionMainTitle>
-          <SectionSubtitle>請點選每週固定收運時間</SectionSubtitle>
-        </SectionTitle>
+        <SectionTitle
+          mainTitle="每周收運日"
+          subTitle="請點選每週固定收運時間"
+          id="weekdays-section"
+        />
 
         <WeekdaysContainer $error={showDaysError}>
           {WEEKDAYS.map((day, index) => (
@@ -363,19 +356,40 @@ const Subscribe = () => {
 
         {showDaysError && <ErrorMessage>*請至少選擇一個收運日</ErrorMessage>}
 
-        {/* 開始日期 */}
-        <SectionTitle>
-          <SectionMainTitle>開始日期</SectionMainTitle>
-          <SectionSubtitle>請選擇開始收運的日期</SectionSubtitle>
+        {/* QR code 取得方式 */}
+        <SectionTitle
+          mainTitle="QR code 取得方式"
+          subTitle="請選擇您希望QR Code 專屬貼紙取得的方式"
+        >
+          <IconButton onClick={() => setIsQRInfoModalOpen(true)}>
+            <MdInfoOutline />
+          </IconButton>
         </SectionTitle>
 
-        <DatePickerContainer>
-          <DateInput
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+        <ButtonCardOptions>
+          <ButtonCard
+            title="自行列印"
+            subtitle="(下單 24 小時後可用）"
+            $active={qrCodeMethod === 'print'}
+            onClick={() => handleQrCodeMethodChange('print')}
           />
-        </DatePickerContainer>
+
+          <ButtonCard
+            title="郵寄貼紙"
+            subtitle="(3 天後可用）"
+            $active={qrCodeMethod === 'ship'}
+            onClick={() => handleQrCodeMethodChange('ship')}
+          />
+        </ButtonCardOptions>
+
+        {/* 開始日期 */}
+        <SectionTitle mainTitle="開始日期" subTitle="請選擇開始收運的日期" />
+
+        <DatePicker
+          selectedDate={selectedDate}
+          onDateSelect={handleDateSelect}
+          qrCodeMethod={qrCodeMethod}
+        />
       </ScrollableContent>
 
       <SubscribeBottom
@@ -385,6 +399,14 @@ const Subscribe = () => {
         isActive={hasSelectedDays}
         onNext={handleNext}
       />
+
+      {/* QR code 資訊 Modal */}
+      <Modal
+        isOpen={isQRInfoModalOpen}
+        onClose={() => setIsQRInfoModalOpen(false)}
+      >
+        <QRCodeInfo />
+      </Modal>
     </PageWrapper>
   );
 };

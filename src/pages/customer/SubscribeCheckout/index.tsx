@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import SubscribeBottom from '../../../components/customer/SubscribeBottom';
+import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
 import {
   PageWrapper,
   ScrollableContent,
@@ -30,7 +30,7 @@ import {
   RadioButton,
 } from './styles';
 
-import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
+import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
 import LoadingMessage from '../../../components/common/LoadingMessage';
 import ErrorReport from '../../../components/common/ErrorReport';
 import { SubscriptionData, Step } from './types';
@@ -179,7 +179,7 @@ const SubscribeCheckout = () => {
 
   return (
     <PageWrapper>
-      <SubscribeProgressSteps steps={steps} currentStep={3} />
+      <ProgressSteps steps={steps} currentStep={3} />
 
       <ScrollableContent>
         <SectionTitle>訂單明細</SectionTitle>

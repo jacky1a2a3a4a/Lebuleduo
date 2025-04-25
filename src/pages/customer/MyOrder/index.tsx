@@ -310,7 +310,7 @@ function MyOrder() {
         {/* 訂單列表 */}
         <OrderListSection>
           {isLoading ? (
-            <LoadingMessage size="mini" />
+            <LoadingMessage size="mini" animationType="moving" />
           ) : error ? (
             <div
               style={{

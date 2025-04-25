@@ -2,7 +2,6 @@ import { MdAddShoppingCart, MdOutlineTaskAlt } from 'react-icons/md';
 import Lebuledou_trashcan from '../../../assets/images/Lebuledou_trashcan.png';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPlans } from '../../../apis/customer/getPlan';
 import {
   PlanSectionStyled,
   PlanContainer,
@@ -28,6 +27,7 @@ import {
   IconStyled,
 } from './styles';
 
+import { getPlans } from '../../../apis/customer/getPlan'; //api 取得方案
 import LoadingMessage from '../../../components/common/LoadingMessage';
 import ErrorReport from '../../../components/common/ErrorReport';
 
@@ -36,7 +36,7 @@ const Plan = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -131,7 +131,7 @@ const Plan = () => {
 
         {/* 方案卡片列表 */}
         <PlanCardListContainer>
-          {isLoading && <LoadingMessage size="mini" />}
+          {isLoading && <LoadingMessage size="mini" animationType="moving" />}
 
           {error && <ErrorReport error={error} />}
 
