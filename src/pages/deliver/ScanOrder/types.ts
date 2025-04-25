@@ -1,4 +1,4 @@
-// API 回傳的任務類型
+// API 回傳的任務
 export type ApiData = {
   Addresses: string;
   CustomerName: string;
@@ -14,14 +14,15 @@ export type ApiData = {
   Status: string;
 };
 
-// 定義任務類型
+// 定義任務
 export type TaskItem = {
   id: string;
 };
 
-// 掃描後獲得的訂單任務類型
+// 掃描後獲得的任務
 export type OrderInfo = {
   OrderDetailID: number;
   CustomerNumber: string;
+  OrderDetailsNumber: string;
   Status?: string;
 };

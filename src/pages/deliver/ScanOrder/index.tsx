@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 
 import QRScanner from '../../../components/deliver/QRScanner';
-import QRCodeGenerator from '../../../components/common/QRCodeGenerator';
 import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
 import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
 
@@ -16,7 +15,6 @@ import {
 import { ApiData, OrderInfo } from './types';
 
 const userId = localStorage.getItem('UsersID');
-const test = true;
 
 function ScanOrder() {
   const navigate = useNavigate();
@@ -33,7 +31,7 @@ function ScanOrder() {
       }
 
       try {
-        const orders = await getTodayOrders(userId);
+        const orders = await getTodayOrders(userId); //api獲取今日任務
         console.log('API 原始資料:', orders);
 
         const executingOrder = orders.find(
@@ -53,17 +51,6 @@ function ScanOrder() {
     fetchTodayOrders();
   }, []);
 
-  // 生成訂單 QR Code 數據
-  const generateOrderQRData = useCallback(() => {
-    if (!executingOrderData) return null;
-
-    return {
-      OrderDetailID: executingOrderData.OrderDetailID,
-      CustomerNumber: executingOrderData.CustomerNumber,
-      Status: executingOrderData.Status,
-    };
-  }, [executingOrderData]);
-
   // 處理QR碼掃描結果
   const handleScanResult = useCallback(
     async (result: string) => {
@@ -73,34 +60,47 @@ function ScanOrder() {
         setScanError(null);
 
         if (!executingOrderData) {
-          setScanError('找不到對應的訂單資料');
+          setScanError(
+            `目前沒有進行中的任務\n1. 請點選"今日任務"\n2. 選擇一筆要執行的任務\n3. 點選"確認前往"按鈕`,
+          );
           return;
         }
 
-        const currentOrderStatus = executingOrderData.Status;
         const currentOrderID = executingOrderData.OrderDetailID;
-        const currentOrderCustomerNumber =
-          executingOrderData.OrderDetailsNumber;
+        const currentOrderCustomerNumber = executingOrderData.CustomerNumber;
+        const currentOrderNumber = executingOrderData.OrderDetailsNumber;
+        const currentOrderStatus = executingOrderData.Status;
 
-        console.log('訂單ID:', currentOrderID);
-        console.log('訂單狀態:', currentOrderStatus);
-        console.log('訂單顧客編號:', currentOrderCustomerNumber);
-
-        switch (currentOrderStatus) {
-          case '已抵達':
-            navigate(`/deliver/scan-order/process-order/${currentOrderID}`);
-            break;
-          case '前往中':
-            await updateOrderStatus(currentOrderID, 3);
-            localStorage.setItem('scannedOrder', result);
-            navigate(
-              `/deliver/scan-order/process-order/${orderData.OrderDetailID}`,
-            );
-            break;
-          default:
-            setScanError('目前沒有可處理的任務');
-            break;
+        // 驗證三個條件
+        if (orderData.OrderDetailsNumber !== currentOrderNumber) {
+          setScanError(
+            `．掃描到的訂單編號 ${orderData.OrderDetailsNumber}\n．當前執行任務的訂單編號 ${currentOrderNumber}\n．兩者編號不相符，請重新確認。`,
+          );
+          return;
         }
+
+        if (orderData.OrderDetailID !== currentOrderID) {
+          setScanError('掃描的任務ID與當前執行中的任務不符，請重新確認。');
+          return;
+        }
+
+        if (orderData.CustomerNumber !== currentOrderCustomerNumber) {
+          setScanError('掃描的顧客編號與當前執行中的任務不符，請重新確認。');
+          return;
+        }
+
+        if (
+          currentOrderStatus !== '前往中' &&
+          currentOrderStatus !== '已抵達'
+        ) {
+          setScanError('當前任務狀態不是"前往中"或"已抵達"，無法進行處理');
+          return;
+        }
+
+        // 所有條件都通過，更新狀態並導航
+        await updateOrderStatus(currentOrderID, 3); // api 更新任務狀態為前往中
+        localStorage.setItem('scannedOrder', result);
+        navigate(`/deliver/scan-order/process-order/${currentOrderID}`);
       } catch (error) {
         console.error('無效的QR碼:', error);
         setScanError('掃描到無效的QR碼格式，請重試');
@@ -120,19 +120,6 @@ function ScanOrder() {
         請掃描垃圾袋上的QRCode
       </ScanText>
       {scanError && <StatusMessage>{scanError}</StatusMessage>}
-
-      {/* 有前往中的訂單時顯示 QR Code */}
-      {test && executingOrderData && (
-        <QRCodeGenerator
-          data={generateOrderQRData()}
-          size={150}
-          level="H"
-          includeMargin={true}
-          onDownload={(fileName) => {
-            console.log(`QR Code downloaded as: ${fileName}`);
-          }}
-        />
-      )}
     </ScanOrderSectionStyled>
   );
 }

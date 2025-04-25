@@ -38,13 +38,14 @@ export const ReportModal = styled.div<{ $isOpen: boolean }>`
   width: 100%;
   max-width: var(--mobile-min-width);
   z-index: 1000;
-  
+
   padding: var(--spacing-md);
-  
+
   animation: ${({ $isOpen }) => ($isOpen ? slideUp : slideDown)} 0.3s ease-out;
   animation-fill-mode: forwards;
   visibility: ${({ $isOpen }) => ($isOpen ? 'visible' : 'hidden')};
-  transition: visibility 0.5s ease-out;
+  transition: visibility 0.3s ease-out;
+  pointer-events: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
 `;
 
 export const ReportModalTitle = styled.h2`
@@ -77,7 +78,8 @@ export const ReportOption = styled.div<{ $selected: boolean }>`
       $selected ? 'var(--color-error)' : 'var(--color-neutral-300)'};
   border-radius: var(--border-radius-lg);
 
-  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm)
+    var(--spacing-md);
   margin-bottom: var(--spacing-sm);
 
   font-size: var(--font-size-sm);

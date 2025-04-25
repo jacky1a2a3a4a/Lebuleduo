@@ -42,6 +42,7 @@ import OrderDetailDeliver from './pages/deliver/Task/OrderDetail';
 import ScanOrder from './pages/deliver/ScanOrder';
 import ProcessOrder from './pages/deliver/ProcessOrder';
 import Calendar from './pages/deliver/Calendar';
+import MockQRGenerator from './pages/deliver/MockQRGenerator';
 
 //// 臨時頁面組件
 // line登入 頁面組件
@@ -63,7 +64,7 @@ const PageNotFound = () => <div>404 - 頁面未找到</div>;
 // const Task = () => <div>任務清單</div>;
 // const ScanOrder = () => <div>掃描訂單</div>;
 // const Settlement = () => <div>行事曆</div>;
-const ReportBackend = () => <div>回報後台</div>;
+// const ReportBackend = () => <div>回報後台</div>;
 
 // 當獲取官方提供的參數後，重定向到我們指定的line callback頁面
 const AppContent = () => {
@@ -82,7 +83,6 @@ const AppContent = () => {
       navigate('/auth/line/callback', { replace: true });
     }
   }, []);
-
 
   return (
     <Routes>
@@ -253,7 +253,7 @@ const AppContent = () => {
         <Route index element={<Task />} />
         <Route path="scan-order" element={<ScanOrder />} />
         <Route path="calendar" element={<Calendar />} />
-        <Route path="report" element={<ReportBackend />} />
+        <Route path="report" element={<MockQRGenerator />} />
       </Route>
 
       {/* 訂單詳情頁面 - 獨立路由，不使用 DeliverLayout */}
