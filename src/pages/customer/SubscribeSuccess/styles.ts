@@ -2,11 +2,10 @@ import styled from 'styled-components';
 
 // 最外層容器
 export const PageWrapper = styled.div`
-  background-color: var(--color-gray-0);
+  background-color: var(--color-background-secondary);
   display: flex;
-  flex-direction: column;
   height: 100vh;
-  max-width: 500px;
+  max-width: var(--max-mobile-width);
   margin: 0 auto;
 `;
 
@@ -15,32 +14,25 @@ export const SuccessContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: var(--spacing-lg);
 `;
 
-// 成功圖標
-export const SuccessIcon = styled.div`
-  width: 50px;
-  height: 50px;
-  background-color: var(--color-gray-600);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--color-gray-0);
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-md);
+// 成功圖片
+export const SuccessImage = styled.img`
+  width: 120px;
+  height: auto;
+  margin-bottom: var(--spacing-sm);
 `;
 
 // 成功標題
 export const SuccessTitle = styled.h1`
-  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-gray-700);
   text-align: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
 `;
 
 // 成功副標題
@@ -64,9 +56,9 @@ export const OrderInfoContainer = styled.div`
 
 // 訂單號碼
 export const OrderNumber = styled.div`
+  color: var(--color-text-primary);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
-  color: var(--color-gray-600);
   margin-bottom: var(--spacing-md);
   text-align: center;
 `;
@@ -75,7 +67,7 @@ export const OrderNumber = styled.div`
 export const OrderItem = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
 
   &:last-child {
     margin-bottom: 0;
@@ -116,7 +108,8 @@ export const QRCodeContainer = styled.div`
 export const QRcodeTextItems = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
   margin-bottom: var(--spacing-lg);
 `;
 
@@ -135,16 +128,15 @@ export const TextIcon = styled.div`
 
 // QR碼提示文字
 export const QRCodeText = styled.p`
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   color: var(--color-gray-500);
   text-align: left;
 `;
 
 // 返回按鈕
 export const HomeButton = styled.button`
-  background-color: var(--color-gray-600);
-  color: var(--color-gray-0);
-  border: none;
+  background-color: var(--color-primary);
+  color: var(--color-white);
   border-radius: var(--border-radius-round);
   padding: var(--spacing-md) var(--spacing-lg);
   font-size: var(--font-size-md);

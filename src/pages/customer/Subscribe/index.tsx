@@ -37,6 +37,7 @@ import QRCodeInfo from '../../../components/customer/Subscribe/QRCodeInfo';
 import { getPlans } from '../../../apis/customer/getPlan'; //api 取得方案
 import { getTomorrowDate } from '../../../utils/getDate';
 import { SubscribeSteps } from '../../../components/customer/Subscribe/SubscribeSteps';
+import { formatWeekdaysToNumbers } from '../../../utils/formatDate';
 
 // 週期天數選項
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
@@ -217,21 +218,8 @@ const Subscribe = () => {
     }
 
     // 將選擇的日期轉換為數字格式（1-7）
-    const formattedDays = selectedDays
-      .map((day) => {
-        const dayMap: { [key: string]: string } = {
-          一: '1',
-          二: '2',
-          三: '3',
-          四: '4',
-          五: '5',
-          六: '6',
-          日: '7',
-        };
-        return dayMap[day];
-      })
-      .join(',');
- 
+    const formattedDays = formatWeekdaysToNumbers(selectedDays);
+
     //將qrcode取得方式轉換成數字格式
     const formattedQrCodeMethod = qrCodeMethod === 'print' ? 1 : 2;
 
@@ -270,8 +258,6 @@ const Subscribe = () => {
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
   };
-
-
 
   return (
     <PageWrapper>

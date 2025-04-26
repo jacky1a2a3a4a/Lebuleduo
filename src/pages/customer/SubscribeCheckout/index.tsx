@@ -110,6 +110,14 @@ const SubscribeCheckout = () => {
 
       const orderId = response.orders.OrdersID;
 
+      // 更新 subscriptionData 並存入 session storage
+      const updatedData = {
+        ...subscriptionData,
+        orderId: orderId,
+      };
+      setSubscriptionData(updatedData);
+      sessionStorage.setItem('subscriptionData', JSON.stringify(updatedData));
+
       if (response) {
         // 呼叫藍新金流 API
         try {

@@ -80,4 +80,40 @@ export const getFormattedTime = (dateString: string): string => {
   return `${hours}:${minutes}`;
 };
 
+/**
+ * 將中文星期幾轉換為數字格式
+ * @param weekdays 中文星期幾的陣列 (e.g. ['一', '二', '三'])
+ * @returns 數字格式的星期幾字串 (e.g. "1,2,3")
+ */
+export const formatWeekdaysToNumbers = (weekdays: string[]): string => {
+  const dayMap: { [key: string]: string } = {
+    一: '1',
+    二: '2',
+    三: '3',
+    四: '4',
+    五: '5',
+    六: '6',
+    日: '7',
+  };
 
+  return weekdays.map((day) => dayMap[day]).join(',');
+};
+
+/**
+ * 將數字格式的星期幾轉換為中文
+ * @param numbers 數字格式的星期幾字串 (e.g. "1,2,3")
+ * @returns 中文星期幾的陣列 (e.g. ['一', '二', '三'])
+ */
+export const formatNumbersToWeekdays = (numbers: string): string[] => {
+  const numberMap: { [key: string]: string } = {
+    '1': '一',
+    '2': '二',
+    '3': '三',
+    '4': '四',
+    '5': '五',
+    '6': '六',
+    '7': '日',
+  };
+
+  return numbers.split(',').map((num) => numberMap[num]);
+};
