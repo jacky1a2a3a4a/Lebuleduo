@@ -120,12 +120,6 @@ function ModifyDateModal({
     }
   }, [isOpen, isVisible, usersId, ordersId, orderDetailId]);
 
-  // 將日期字符串（YYYY/MM/DD 格式）轉換為 Date 對象
-  // const getDateFromString = (dateStr: string) => {
-  //   const [year, month, day] = dateStr.split('/').map(Number);
-  //   return new globalThis.Date(year, month - 1, day);
-  // };
-
   // 將 ISO 格式的日期字符串（YYYY-MM-DDTHH:mm:ss 格式）轉換為 Date 對象
   const getDateFromISOString = (dateStr: string) => {
     return new globalThis.Date(dateStr);
@@ -221,9 +215,9 @@ function ModifyDateModal({
                   locale="zh-TW"
                   defaultView="month"
                   showNeighboringMonth={false}
-                  formatDay={(locale, date) => date.getDate().toString()} //讓日曆只顯示日期數字，例如：1, 2, 3...31
-                  tileClassName={({ date }) => getDateStatus(date).className} //為日曆中的每一天添加 CSS 類別
-                  tileDisabled={({ date }) => getDateStatus(date).isDisabled} //禁用某些日期
+                  formatDay={(locale, date) => date.getDate().toString()}
+                  tileClassName={({ date }) => getDateStatus(date).className}
+                  tileDisabled={({ date }) => getDateStatus(date).isDisabled}
                 />
               </CalendarContainer>
 
@@ -248,12 +242,16 @@ function ModifyDateModal({
               <NoticeText>
                 ※ 溫興提醒：
                 <br />• 可選擇的日期範圍為 今天 到 方案結束日
-                <br />• 訂單修改的最終決定權為垃不垃多公司所有
+                <br />• 已排定的日期無法選擇
+                <br />• 修改後無法再更改
               </NoticeText>
 
               <ButtonGroup>
                 <CancelButton onClick={onClose}>取消</CancelButton>
-                <ConfirmButton onClick={handleConfirm} disabled={!selectedDate}>
+                <ConfirmButton
+                  onClick={handleConfirm}
+                  disabled={!selectedDate || isLoading}
+                >
                   確認修改
                 </ConfirmButton>
               </ButtonGroup>

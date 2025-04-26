@@ -10,6 +10,8 @@ interface QRCodeGeneratorProps {
   includeMargin?: boolean;
   onDownload?: (fileName: string) => void;
   showDownloadButton?: boolean;
+  className?: string;
+  isPrintMode?: boolean;
   imageSettings?: {
     src: string;
     height: number;
@@ -25,6 +27,8 @@ const QRCodeGenerator = ({
   includeMargin = true, //預設包含邊框
   onDownload,
   showDownloadButton = true,
+  className,
+  isPrintMode = false,
   imageSettings = {
     src: logo,
     height: 30,
@@ -53,10 +57,10 @@ const QRCodeGenerator = ({
   if (!data) return null;
 
   return (
-    <QRCodeContainer>
+    <QRCodeContainer className={className} data-print-mode={isPrintMode}>
       <QRCodeSVG
         value={JSON.stringify(data)}
-        size={size}
+        size={isPrintMode ? 200 : size}
         level={level}
         includeMargin={includeMargin}
         imageSettings={imageSettings}
@@ -64,13 +68,13 @@ const QRCodeGenerator = ({
       <QRCodeCanvas
         id="qr-canvas"
         value={JSON.stringify(data)}
-        size={size}
+        size={isPrintMode ? 200 : size}
         level={level}
         includeMargin={includeMargin}
         style={canvasStyles}
         imageSettings={imageSettings}
       />
-      {showDownloadButton && (
+      {showDownloadButton && !isPrintMode && (
         <QRCodeDownloadButton onClick={downloadQRCode}>
           下載 QR Code
         </QRCodeDownloadButton>

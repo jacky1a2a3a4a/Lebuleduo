@@ -14,8 +14,8 @@ import {
   IconStyled,
   IconStyledLarge,
   ErrorText,
-} from './styled';
-import ModifyDateModal from './ModifyDateModal'; // 修改日期行事曆
+} from './styles';
+import CalendarModal from '../CalendarModal';
 
 // 訂單卡片狀態類型
 type OrderStatusType =
@@ -27,7 +27,6 @@ type OrderStatusType =
   | 'finished'; // 已結束
 
 // 任務卡片 props 類型
-//這些props是從父元件傳遞過來的
 type OrderListCardProps = {
   date: string;
   time: string;
@@ -35,7 +34,7 @@ type OrderListCardProps = {
   ordersId: number;
   orderDetailId: number;
   usersId: number;
-  onDateModified?: () => void; // 添加新的屬性
+  onDateModified?: () => void;
 };
 
 // ===組件本體===
@@ -77,8 +76,8 @@ function OrderListCard({
   const canModify = () => {
     try {
       // 處理api獲得的收運日期date
-      const [year, month, day] = date.split('/').map(Number); //收運日期 將字串轉換成數字陣列
-      const serviceDate = new globalThis.Date(year, month - 1, day); // 收運日期 將日期數字陣列轉換成Date
+      const [year, month, day] = date.split('/').map(Number);
+      const serviceDate = new globalThis.Date(year, month - 1, day);
 
       //獲取當天日期
       const today = new globalThis.Date();
@@ -149,7 +148,6 @@ function OrderListCard({
         `/customer/order-task/scheduled-task/${ordersId}/${orderDetailId}`,
       );
     }
-    
   };
 
   // 確認修改日期
@@ -158,7 +156,7 @@ function OrderListCard({
       // TODO: 實現修改日期的 API 調用
       console.log('修改日期為：', newDate);
       setIsModalOpen(false);
-      onDateModified?.(); // 調用 onDateModified 函數
+      onDateModified?.();
     } catch (error) {
       console.error('修改日期失敗：', error);
     }
@@ -209,7 +207,7 @@ function OrderListCard({
         )}
       </OrderListCardContainer>
 
-      <ModifyDateModal
+      <CalendarModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirmModify}

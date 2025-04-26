@@ -199,10 +199,7 @@ export const ActionButton = styled.button<{
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-sm);
   white-space: nowrap;
-
-  /* pointer-events: ${({ $disabled }) => ($disabled ? 'none' : 'auto')}; */
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
-
   transition: all 0.2s ease;
   svg {
     font-size: var(--font-size-md);
@@ -238,4 +235,4 @@ export const ErrorText = styled.div`
   font-size: var(--font-size-xs);
   margin-top: var(--spacing-sm);
   padding: 0 var(--spacing-md);
-`;
+`; 
