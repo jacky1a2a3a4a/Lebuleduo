@@ -7,14 +7,6 @@ interface StyledProps {
   $error?: boolean;
 }
 
-// 載入訊息
-export const LoadingMessage = styled.div`
-  text-align: center;
-  padding: 2rem;
-  font-size: var(--font-size-md);
-  color: var(--color-gray-500);
-`;
-
 // 整個頁面的容器
 export const PageWrapper = styled.div`
   display: flex;
@@ -149,16 +141,13 @@ export const DeliveryOptions = styled.div`
 export const DeliveryOption = styled.div<StyledProps>`
   display: flex;
   align-items: flex-start;
+  gap: var(--spacing-md);
   padding: var(--spacing-md);
   border: 1px solid
     ${(props) =>
       props.$active ? 'var(--color-gray-400)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-md);
   cursor: pointer;
-
-  &:hover {
-    border-color: var(--color-gray-400);
-  }
 `;
 
 // 單選按鈕
@@ -189,7 +178,6 @@ export const DeliveryOptionContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-left: var(--spacing-md);
 `;
 
 // 收貨方式文本容器

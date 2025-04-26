@@ -52,7 +52,7 @@ import {
 } from './styles';
 
 import LoadingMessage from '../../../components/common/LoadingMessage';
-import { getTodayDate } from '../../../utils/getTodayDate';
+import { getTodayDate } from '../../../utils/getDate';
 import { getFormattedDateWithDay } from '../../../utils/formatDate';
 import { getUsersID, getUserName } from '../../../utils/getUserLocalData';
 

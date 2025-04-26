@@ -5,7 +5,7 @@
 // Date:2025-04-24
 
 import axios from 'axios';
-import { getTodayDate } from '../../utils/getTodayDate';
+import { getTodayDate } from '../../utils/getDate';
 
 export const getTodayOrders = async (userId: string) => {
   try {

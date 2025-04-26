@@ -61,7 +61,7 @@ export const OriginalPriceText = styled.span`
 `;
 
 export const DiscountText = styled.span`
-  color: var(--color-error-hover);
+  color: var(--color-error);
   font-size: var(--font-size-xs);
 `;
 

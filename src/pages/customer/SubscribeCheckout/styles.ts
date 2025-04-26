@@ -1,13 +1,5 @@
 import styled from 'styled-components';
 
-interface StyledProps {
-  $active?: boolean;
-  $light?: boolean;
-  $open?: boolean;
-  $error?: boolean;
-  selected?: boolean;
-}
-
 //最外層大容器
 export const PageWrapper = styled.div`
   background-color: var(--color-background-secondary);
@@ -54,6 +46,10 @@ export const Section = styled.div`
   background-color: var(--color-white);
   border: 1px solid var(--color-secondary);
   border-radius: var(--border-radius-lg);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
@@ -131,93 +127,7 @@ export const DateText = styled.div`
   font-weight: var(--font-weight-medium);
 `;
 
-//付款方式 大容器
-export const PaymentMethod = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-`;
-
-//付款方式子容器
-export const PaymentMethodItem = styled.div<StyledProps>`
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-md);
-  border: 1px solid
-    ${(props) =>
-      props.selected ? 'var(--color-primary)' : 'var(--color-gray-200)'};
-  border-radius: var(--border-radius-md);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background-color: ${(props) =>
-    props.selected ? 'var(--color-primary-light)' : 'var(--color-white)'};
-
-  &:hover {
-    border-color: var(--color-primary);
-    background-color: var(--color-primary-light);
-  }
-`;
-
-//付款方式 選項按鈕
-export const RadioButton = styled.div<StyledProps>`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid
-    ${(props) =>
-      props.selected ? 'var(--color-primary)' : 'var(--color-gray-300)'};
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &::after {
-    content: '';
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: var(--color-primary);
-    display: ${(props) => (props.selected ? 'block' : 'none')};
-  }
-`;
-
-export const PaymentIcon = styled.img`
-  width: 24px;
-  height: 24px;
-  margin-right: var(--spacing-sm);
-`;
-
-//付款方式文字容器
-export const PaymentTextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-`;
-
-//付款方式文字
-export const PaymentText = styled.span`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-`;
-
-//付款方式副文字
-export const PaymentSubtext = styled.span`
-  color: var(--color-text-tertiary);
-  font-size: 8px;
-`;
-
-export const TotalAmount = styled.div`
-  text-align: right;
-  margin-top: var(--spacing-md);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-`;
-
-export const FixedPointImagesContainer = styled.div`
-`;
+export const FixedPointImagesContainer = styled.div``;
 
 export const FixedPointImagesTitle = styled.div`
   margin-bottom: var(--spacing-xs);

@@ -14,6 +14,8 @@ export interface SubscriptionData {
   days: string;
   startDate: string;
   totalPrice: number;
+  qrCodeMethod: number; // 1: print, 2: ship
+  paymentMethod: string; // linePay or creditCard
 
   // 收運資訊
   name: string;

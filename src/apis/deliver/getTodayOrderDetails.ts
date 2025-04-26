@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getTodayDate } from '../../utils/getTodayDate';
+import { getTodayDate } from '../../utils/getDate';
 
 export interface TodayOrderDetails {
   OrderDetailID: number;

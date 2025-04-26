@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   StyledCalendar,
   CalendarHeader,
@@ -32,6 +32,24 @@ const Calendar = ({
 }: CalendarProps) => {
   const [currentMonth, setCurrentMonth] = useState(initialSelectedDate);
   const [selectedDate, setSelectedDate] = useState(initialSelectedDate);
+
+  // 監聽 qrCodeMethod 的變化
+  useEffect(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (qrCodeMethod === 'ship') {
+      // 如果是郵寄貼紙，設置為三天後的日期
+      const threeDaysLater = new Date(today);
+      threeDaysLater.setDate(today.getDate() + 3);
+      setSelectedDate(threeDaysLater);
+    } else {
+      // 如果是自行列印，設置為明天
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      setSelectedDate(tomorrow);
+    }
+  }, [qrCodeMethod]);
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
@@ -115,8 +133,10 @@ const Calendar = ({
       return date < threeDaysLater;
     }
 
-    // 如果是自行列印，只能選擇今天之後的日期
-    return date <= today;
+    // 如果是自行列印，只能選擇明天之後的日期
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return date < tomorrow;
   };
 
   return (

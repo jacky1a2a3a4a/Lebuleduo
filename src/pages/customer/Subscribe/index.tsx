@@ -35,6 +35,8 @@ import Modal from '../../../components/common/Modal'; //通用Modal
 import QRCodeInfo from '../../../components/customer/Subscribe/QRCodeInfo';
 
 import { getPlans } from '../../../apis/customer/getPlan'; //api 取得方案
+import { getTomorrowDate } from '../../../utils/getDate';
+import { SubscribeSteps } from '../../../components/customer/Subscribe/SubscribeSteps';
 
 // 週期天數選項
 const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
@@ -66,7 +68,7 @@ const Subscribe = () => {
   const [showDaysError, setShowDaysError] = useState(false); // 預定收集日:是否顯示收集日錯誤提示
 
   const [qrCodeMethod, setQrCodeMethod] = useState<'print' | 'ship'>('print'); // QR code 取得方式
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(getTomorrowDate());
 
   const [originalPrice, setOriginalPrice] = useState(0); // 折扣前總價格
   const [discount, setDiscount] = useState(0); // 折扣金額
@@ -115,15 +117,15 @@ const Subscribe = () => {
 
   // 監聽 QR code 取得方式的變化
   useEffect(() => {
-    const today = new Date();
+    const tomorrow = getTomorrowDate();
     if (qrCodeMethod === 'ship') {
       // 如果是郵寄貼紙，設置為三天後的日期
-      const threeDaysLater = new Date(today);
-      threeDaysLater.setDate(today.getDate() + 3);
+      const threeDaysLater = new Date(tomorrow);
+      threeDaysLater.setDate(tomorrow.getDate() + 3);
       setSelectedDate(threeDaysLater);
     } else {
       // 如果是自行列印，設置為今天日期
-      setSelectedDate(today);
+      setSelectedDate(tomorrow);
     }
   }, [qrCodeMethod]);
 
@@ -229,23 +231,34 @@ const Subscribe = () => {
         return dayMap[day];
       })
       .join(',');
+ 
+    //將qrcode取得方式轉換成數字格式
+    const formattedQrCodeMethod = qrCodeMethod === 'print' ? 1 : 2;
 
-    // 在需要傳遞日期時轉換格式
-    navigate('/customer/subscribe-data', {
-      state: {
-        planId: plan?.PlanID,
-        planName: plan?.PlanName,
-        liter: plan?.Liter,
-        planKg: plan?.kg,
-        price: plan?.Price,
-        planPeople: plan?.PlanPeople,
-        planDescription: plan?.PlanDescription,
-        frequency: selectedFrequency.toString(),
-        days: formattedDays,
-        startDate: selectedDate.toISOString().split('T')[0],
-        totalPrice,
-      },
-    });
+    // 準備要儲存的資料
+    const subscriptionData = {
+      planId: plan?.PlanID,
+      planName: plan?.PlanName,
+      liter: plan?.Liter,
+      planKg: plan?.kg,
+      price: plan?.Price,
+      planPeople: plan?.PlanPeople,
+      planDescription: plan?.PlanDescription,
+      frequency: selectedFrequency.toString(),
+      days: formattedDays,
+      qrCodeMethod: formattedQrCodeMethod,
+      startDate: selectedDate.toISOString().split('T')[0],
+      totalPrice,
+    };
+
+    // 儲存到 Session Storage
+    sessionStorage.setItem(
+      'subscriptionData',
+      JSON.stringify(subscriptionData),
+    );
+
+    // 導航到下一頁
+    navigate('/customer/subscribe-data');
   };
 
   // 處理 QR code 取得方式選擇
@@ -258,15 +271,11 @@ const Subscribe = () => {
     setSelectedDate(date);
   };
 
-  const steps = [
-    { number: 1, text: '選擇方案' },
-    { number: 2, text: '填選收運資料' },
-    { number: 3, text: '結帳' },
-  ];
+
 
   return (
     <PageWrapper>
-      <ProgressSteps steps={steps} currentStep={1} />
+      <ProgressSteps steps={SubscribeSteps} currentStep={1} />
 
       <ScrollableContent>
         {/* 已選方案 */}
