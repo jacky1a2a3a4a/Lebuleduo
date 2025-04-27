@@ -31,5 +31,5 @@
     "noFallthroughCasesInSwitch": false, // 從 true 改為 false
     "noUncheckedSideEffectImports": false // 從 true 改為 false
   },
-  "include": ["src"]
+  "include": ["src", "src/layouts/AdminLayout/index.tsx"]
 }
