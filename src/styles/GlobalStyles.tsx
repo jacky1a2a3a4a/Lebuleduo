@@ -111,6 +111,7 @@ const GlobalStyles = createGlobalStyle`
   --font-weight-extra-bold: 900;
 
   /* 間距 */
+  --spacing-2xs: 0.125rem;  /* 2px */
   --spacing-xs: 0.25rem;  /* 4px */
   --spacing-sm: 0.5rem;   /* 8px */
   --spacing-12: 0.75rem;  /* 12px */

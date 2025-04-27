@@ -7,6 +7,7 @@ import {
   Numbers,
   Value,
   Subtitle,
+  Text,
 } from './styles';
 
 interface StatCardProps {
@@ -21,10 +22,12 @@ const StatCard = ({ title, value, subtitle, icon }: StatCardProps) => {
     <StatCardContainer>
       <Icon>{icon}</Icon>
       <Content>
-        <Title>{title}</Title>
+        <Text>
+          <Title>{title}</Title>
+          <Subtitle>{subtitle}</Subtitle>
+        </Text>
         <Numbers>
           <Value>{value}</Value>
-          <Subtitle>{subtitle}</Subtitle>
         </Numbers>
       </Content>
     </StatCardContainer>

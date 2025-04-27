@@ -4,22 +4,27 @@ export const Container = styled.div`
   display: flex;
   max-width: 1400px;
   min-height: 100vh;
-
   margin: 0 auto;
+  padding-left: 110px;
 `;
 
 export const Sidebar = styled.div`
-  width: 140px;
+  width: 110px;
   background-color: var(--color-primary);
   color: var(--color-white);
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
 `;
 
 export const SidebarHeader = styled.div`
   padding: var(--spacing-md);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
   border-bottom: 1px solid var(--color-white);
   display: flex;
@@ -31,6 +36,8 @@ export const NavItems = styled.div`
   display: flex;
   flex-direction: column;
 
+  width: 100%;
+  padding: 0 var(--spacing-sm);
   margin-top: var(--spacing-md);
 `;
 
@@ -41,8 +48,8 @@ export const NavItem = styled.div<{ active?: boolean }>`
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  font-size: var(--font-size-xs);
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-3xs);
   cursor: pointer;
 
   &:hover {

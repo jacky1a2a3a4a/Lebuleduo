@@ -1,19 +1,32 @@
 import styled from 'styled-components';
 
+// === 最外層 ===
 export const Container = styled.div`
   background-color: var(--color-background-secondary);
   display: flex;
   height: 100vh;
 `;
 
+// === 主內容容器 ===
 export const MainContent = styled.div<{ $assignmentPanelOpen: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
   transition: all 0.3s;
   margin-right: ${(props) => (props.$assignmentPanelOpen ? '350px' : '0')};
+  height: 100vh;
 `;
 
+// === 內容區域 ===
+export const ContentWrapper = styled.div`
+  height: 100%;
+  padding: var(--spacing-sm);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+`;
+
+// === 內容區域 ===
 export const Content = styled.div`
   padding: var(--spacing-sm) var(--spacing-md);
   flex: 1;
@@ -22,37 +35,50 @@ export const Content = styled.div`
   overflow: hidden;
 `;
 
+// === 統計卡片區域 ===
 export const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
   flex-shrink: 0;
 `;
 
+// === 表格容器 最外層 ===
 export const TableContainer = styled.div`
   background-color: var(--color-background-primary);
   border-radius: var(--border-radius-md);
   box-shadow: var(--card-shadow);
-  overflow: auto;
-  flex: 1;
+  width: 100%;
+  margin-top: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
 `;
 
+// 表格標題
 export const TableHeader = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+  flex-direction: column;
+  padding: var(--spacing-md) var(--spacing-md) 0;
+  flex-shrink: 0;
+
+  h1 {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
 
   .header-left {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-
-    h1 {
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-bold);
-    }
 
     .filters {
       display: flex;
@@ -64,8 +90,8 @@ export const TableHeader = styled.div`
         border: 1px solid var(--color-neutral-300);
         border-radius: var(--border-radius-sm);
         background-color: var(--color-background-primary);
-        font-size: var(--font-size-xs);
-        min-width: 120px;
+        font-size: var(--font-size-3xs);
+        min-width: 80px;
 
         &:focus {
           outline: none;
@@ -74,7 +100,7 @@ export const TableHeader = styled.div`
       }
 
       input {
-        width: 200px;
+        width: 150px;
         &::placeholder {
           color: var(--color-neutral-500);
         }
@@ -83,36 +109,26 @@ export const TableHeader = styled.div`
   }
 
   .header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+
+    p {
+      font-size: var(--font-size-3xs);
+    }
+
     select {
       padding: var(--spacing-xs) var(--spacing-sm);
       border: 1px solid var(--color-neutral-300);
       border-radius: var(--border-radius-sm);
       background-color: var(--color-background-primary);
-      font-size: var(--font-size-xs);
+      font-size: var(--font-size-3xs);
 
       &:focus {
         outline: none;
         border-color: var(--color-primary);
       }
     }
-  }
-`;
-
-export const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  th,
-  td {
-    padding: var(--spacing-12) var(--spacing-md);
-    text-align: left;
-    border-bottom: 1px solid var(--color-neutral-200);
-  }
-  th {
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-primary);
-  }
-  tr:last-child td {
-    border-bottom: none;
   }
 `;
 

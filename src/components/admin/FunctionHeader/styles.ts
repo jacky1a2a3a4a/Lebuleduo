@@ -7,7 +7,7 @@ export const PageHeader = styled.div`
   
   .date-picker {
     input {
-      padding: var(--spacing-sm);
+      padding: var(--spacing-xs) var(--spacing-md);
       border: 1px solid var(--color-neutral-300);
       border-radius: var(--border-radius-sm);
       outline: none;

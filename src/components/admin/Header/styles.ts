@@ -4,7 +4,7 @@ export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   background-color: var(--color-white);
   border-bottom: 1px solid var(--color-gray-200);
 `;
@@ -14,10 +14,10 @@ export const SearchInput = styled.div`
   align-items: center;
   background-color: var(--color-gray-100);
   border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  width: 300px;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  width: 200px;
 
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-2xs);
 
   input {
     border: none;
@@ -25,7 +25,6 @@ export const SearchInput = styled.div`
     margin-left: var(--spacing-sm);
     width: 100%;
     outline: none;
-    font-size: var(--font-size-xs);
   }
 `;
 
@@ -33,23 +32,24 @@ export const UserInfo = styled.div`
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  margin-right: var(--spacing-sm);
 
   .avatar {
     color: var(--color-white);
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     background-color: var(--color-primary);
     border-radius: var(--border-radius-round);
 
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
   }
 
   span {
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-2xs);
     color: var(--color-text-primary);
   }
 `;
