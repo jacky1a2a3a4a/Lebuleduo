@@ -6,11 +6,12 @@
 
 import axios from 'axios';
 import { getTodayDate } from '../../utils/getDate';
+import { getFormattedDateDash } from '../../utils/formatDate';
 
 export const getTodayOrders = async (userId: string) => {
   try {
     const response = await axios.get(
-      `api/GET/driver/day/${userId}/${getTodayDate()}`,
+      `api/GET/driver/day/${userId}/${getFormattedDateDash(getTodayDate())}`,
     );
     return response.data.result.Orders;
   } catch (error) {
