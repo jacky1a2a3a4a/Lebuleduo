@@ -31,7 +31,7 @@ import ErrorReport from '../../../components/common/ErrorReport';
 
 import { MdCalendarToday } from 'react-icons/md';
 import { TaskStatus } from '../../../types/deliver';
-import { getFormattedDate } from '../../../utils/formatDate';
+import { getFormattedDateDash } from '../../../utils/formatDate';
 import { getTodayDate } from '../../../utils/getDate';
 
 // API 回傳的資料結構
@@ -145,7 +145,7 @@ function Task() {
       ////3. 發送請求
       const driverId = localStorage.getItem('UsersID'); // 從localStorage獲取使用者ID
       const response = await fetch(
-        `api/GET/driver/day/${driverId}/${getFormattedDate(getTodayDate())}`,
+        `api/GET/driver/day/${driverId}/${getFormattedDateDash(getTodayDate())}`,
         {
           method: 'GET',
           signal: controller.signal,
