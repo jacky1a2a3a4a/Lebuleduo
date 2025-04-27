@@ -2,8 +2,8 @@
  * 取得當日日期
  * @returns {Date} 當日的日期物件
  */
-export const getTodayDate = (): Date => {
-  return new Date();
+export const getTodayDate = (): string => {
+  return new Date().toISOString();
 };
 
 /**

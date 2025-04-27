@@ -1,4 +1,4 @@
-import { TaskStatus } from '../../../../types/deliver';
+import { TaskStatus } from '../../../types/deliver';
 
 export interface TaskItem {
   id: number;

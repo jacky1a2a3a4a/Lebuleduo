@@ -9,6 +9,7 @@ import {
   DeliveryOptionImageUpload,
   PhotoInstructions,
 } from './styles';
+import ErrorReport from '../../../common/ErrorReport';
 
 interface FixedPointImage {
   id: string;
@@ -119,7 +120,7 @@ const ImageUpload = ({
         )}
       </DeliveryOptionImages>
 
-      {photoError && <ErrorMessage>{photoError}</ErrorMessage>}
+      {photoError && <ErrorReport error={photoError} />}
 
       <PhotoInstructions>
         *請務必上傳兩張固定點照片，每張不超過5MB
