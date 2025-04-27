@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Container, Title, Message, ImageWrapper } from './styled';
-import scoreImage from '../../../assets/Lebuledou_score.png';
+import scoreImage from '../../../assets/images/Lebuledou_score.png';
 
 interface SuccessMessageProps {
   onFinish: () => void;

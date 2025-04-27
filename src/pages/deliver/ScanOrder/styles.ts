@@ -25,7 +25,8 @@ export const ScannerContainer = styled.div`
 export const ScanText = styled.div`
   color: var(--color-white);
   font-size: var(--font-size-md);
-  margin-top: var(--spacing-sm);
+  margin: var(--spacing-md) 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,6 +46,7 @@ export const ScanText = styled.div`
 export const StatusMessage = styled.div`
   color: var(--color-error);
   font-size: var(--font-size-sm);
-  margin-top: var(--spacing-sm);
-  text-align: center;
+  text-align: left;
+  white-space: pre-line;
+  padding: 0 var(--spacing-xl);
 `;

@@ -1,14 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { IoAdd, IoClose } from 'react-icons/io5';
-import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
-import AddressAutocomplete from './AddressAutocomplete';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import {
   PageWrapper,
   ScrollableContent,
-  SectionTitle,
-  SectionMainTitle,
-  SectionSubtitle,
   FormSection,
   FormGroup,
   InputLabel,
@@ -22,83 +17,32 @@ import {
   DeliveryOptionText,
   DeliveryOptionTitle,
   DeliveryOptionDescription,
-  DeliveryOptionImageContainer,
-  DeliveryOptionImages,
-  DeliveryOptionImage,
-  DeliveryOptionImagePhoto,
-  DeleteImageButton,
-  DeliveryOptionImageUpload,
-  PhotoInstructions,
-  LoadingMessage,
-} from './styled';
-import SubscribeBottom from '../../../components/customer/SubscribeBottom';
+} from './styles';
+import { SubscriptionData, FixedPointImage } from './types';
 
-// 圖片類型
-interface FixedPointImage {
-  id: string;
-  url: string;
-  file: File;
-}
+import LoadingMessage from '../../../components/common/LoadingMessage';
+import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
+import AddressAutocomplete from './AddressAutocomplete';
+import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
+import SectionTitle from '../../../components/customer/Subscribe/SectionTitle';
+import ImageUpload from '../../../components/customer/Subscribe/ImageUpload';
+import { SubscribeSteps } from '../../../components/customer/Subscribe/SubscribeSteps';
 
 // 組件本體
 const SubscribeData = () => {
   // 參考元素用於滾動
-  const nameRef = useRef<HTMLDivElement>(null);
-  const phoneRef = useRef<HTMLDivElement>(null);
-  const addressRef = useRef<HTMLDivElement>(null);
-  const notesRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // const nameRef = useRef<HTMLDivElement>(null);
+  // const phoneRef = useRef<HTMLDivElement>(null);
+  // const addressRef = useRef<HTMLDivElement>(null);
+  // const notesRef = useRef<HTMLDivElement>(null);
 
   // 啟用路由方法
-  const location = useLocation();
   const navigate = useNavigate();
 
-  // 從上一頁獲取方案數據
-  const {
-    planId,
-    planName,
-    liter,
-    price,
-    planKg,
-    planPeople,
-    planDescription,
-    frequency,
-    days,
-    startDate,
-    totalPrice,
-  } = location.state || {};
-
-  // 添加日誌檢查上一頁接收到的數據
-  useEffect(() => {
-    console.log('SubscribeData - 接收到的數據:', {
-      planId,
-      planName,
-      liter,
-      price,
-      planKg,
-      planPeople,
-      planDescription,
-      frequency,
-      days,
-      startDate,
-      totalPrice,
-    });
-  }, [
-    planId,
-    planName,
-    liter,
-    price,
-    planKg,
-    planPeople,
-    planDescription,
-    frequency,
-    days,
-    startDate,
-    totalPrice,
-  ]);
-
   // 狀態管理
-  const [isLoading] = useState(false);
+  const [subscriptionData, setSubscriptionData] =
+    useState<SubscriptionData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState<string | null>(null);
   const [phone, setPhone] = useState('');
@@ -113,65 +57,54 @@ const SubscribeData = () => {
   );
   const [photoError, setPhotoError] = useState<string | null>(null);
 
-  // 處理地址選擇
-  const handleLocationSelect = () => {
-    validateAddress(address);
-  };
-
-  // 處理照片上傳
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-
-      if (!file.type.startsWith('image/')) {
-        setPhotoError('*請上傳圖片格式的檔案');
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        setPhotoError('*圖片大小不得超過5MB');
-        return;
-      }
-
-      if (fixedPointImages.length >= 2) {
-        setPhotoError('*最多只能上傳兩張照片');
-        return;
-      }
-
-      const imageUrl = URL.createObjectURL(file);
-      const imageId = Date.now().toString();
-
-      setFixedPointImages([
-        ...fixedPointImages,
-        {
-          id: imageId,
-          url: imageUrl,
-          file,
-        },
-      ]);
-
-      setPhotoError(null);
-      e.target.value = '';
-    }
-  };
-
-  // 開啟文件選擇器
-  const openFileSelector = () => {
-    fileInputRef.current?.click();
-  };
-
-  // 處理照片刪除
-  const handleDeletePhoto = (id: string) => {
-    const newImages = fixedPointImages.filter((image) => image.id !== id);
-    setFixedPointImages(newImages);
-  };
-
   // 檢查 API 金鑰是否設置
   useEffect(() => {
     if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
       console.error('Google Maps API 金鑰未設置！請檢查 .env 檔案。');
     }
   }, []);
+
+  // 從 Session Storage 讀取資料
+  useEffect(() => {
+    const storedData = sessionStorage.getItem('subscriptionData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setSubscriptionData(parsedData);
+    }
+    setIsLoading(false);
+  }, []);
+
+  // 如果沒有資料，顯示載入中
+  if (isLoading) {
+    return <LoadingMessage size="normal" animationType="bounce" />;
+  }
+
+  // 如果沒有訂閱資料，返回上一頁
+  if (!subscriptionData) {
+    navigate('/customer/subscribe');
+    return null;
+  }
+
+  // 解構訂閱資料
+  const {
+    planId,
+    planName,
+    liter,
+    price,
+    planKg,
+    planPeople,
+    planDescription,
+    frequency,
+    days,
+    startDate,
+    totalPrice,
+    qrCodeMethod,
+  } = subscriptionData;
+
+  // 處理地址選擇
+  const handleLocationSelect = () => {
+    validateAddress(address);
+  };
 
   // 驗證函數
   const validateName = (name: string): boolean => {
@@ -240,19 +173,15 @@ const SubscribeData = () => {
     const isNotesValid = validateNotes(notes);
 
     if (!isNameValid) {
-      nameRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
     if (!isPhoneValid) {
-      phoneRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
     if (!isAddressValid) {
-      addressRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
     if (!isNotesValid) {
-      notesRef.current?.scrollIntoView({ behavior: 'smooth' });
       return;
     }
 
@@ -273,43 +202,38 @@ const SubscribeData = () => {
       days,
       startDate,
       totalPrice,
+      qrCodeMethod,
       name,
       phone,
       address,
       notes,
       deliveryMethod,
+      paymentMethod: 'linePay',
       fixedPointImages: fixedPointImages.map((img) => ({
         id: img.id,
         url: img.url,
-        file: img.file, // 保留檔案物件，以便在結帳頁面使用
+        file: img.file,
       })),
     };
+
+    // 將資料儲存在 session storage 中
+    sessionStorage.setItem(
+      'subscriptionData',
+      JSON.stringify(subscriptionData),
+    );
 
     navigate('/customer/subscribe-checkout', {
       state: { subscriptionData },
     });
   };
 
-  const steps = [
-    { number: 1, text: '選擇方案' },
-    { number: 2, text: '填選收運資料' },
-    { number: 3, text: '結帳' },
-  ];
-
-  if (isLoading) {
-    return <LoadingMessage>載入中...</LoadingMessage>;
-  }
-
   return (
     <PageWrapper>
-      <SubscribeProgressSteps currentStep={2} steps={steps} />
+      <ProgressSteps steps={SubscribeSteps} currentStep={2} />
       <ScrollableContent>
-        <SectionTitle>
-          <SectionMainTitle>收運資料</SectionMainTitle>
-          <SectionSubtitle>請填寫基本收運資料</SectionSubtitle>
-        </SectionTitle>
+        <SectionTitle mainTitle="收運資料" subTitle="請填寫基本收運資料" />
         <FormSection>
-          <FormGroup ref={nameRef}>
+          <FormGroup>
             <InputLabel>聯絡人姓名</InputLabel>
             <StyledInput
               type="text"
@@ -322,7 +246,7 @@ const SubscribeData = () => {
             {nameError && <ErrorMessage>{nameError}</ErrorMessage>}
           </FormGroup>
 
-          <FormGroup ref={phoneRef}>
+          <FormGroup>
             <InputLabel>聯絡電話</InputLabel>
             <StyledInput
               type="tel"
@@ -335,7 +259,7 @@ const SubscribeData = () => {
             {phoneError && <ErrorMessage>{phoneError}</ErrorMessage>}
           </FormGroup>
 
-          <FormGroup ref={addressRef}>
+          <FormGroup>
             <InputLabel>收運地址</InputLabel>
             <AddressAutocomplete
               value={address}
@@ -350,10 +274,7 @@ const SubscribeData = () => {
           </FormGroup>
         </FormSection>
 
-        <SectionTitle>
-          <SectionMainTitle>收運方式</SectionMainTitle>
-          <SectionSubtitle>請選擇收運方式</SectionSubtitle>
-        </SectionTitle>
+        <SectionTitle mainTitle="收運方式" subTitle="請選擇收運方式" />
         <FormSection>
           <DeliveryOptions>
             <DeliveryOption
@@ -371,59 +292,21 @@ const SubscribeData = () => {
                 </DeliveryOptionText>
 
                 {deliveryMethod === 'fixedpoint' && (
-                  <DeliveryOptionImageContainer>
-                    <DeliveryOptionImages>
-                      {fixedPointImages.map((image) => (
-                        <DeliveryOptionImage key={image.id}>
-                          <DeliveryOptionImagePhoto
-                            style={{ backgroundImage: `url(${image.url})` }}
-                          />
-                          <DeleteImageButton
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeletePhoto(image.id);
-                            }}
-                          >
-                            <IoClose />
-                          </DeleteImageButton>
-                        </DeliveryOptionImage>
-                      ))}
-
-                      <input
-                        type="file"
-                        accept="image/*"
-                        ref={fileInputRef}
-                        style={{ display: 'none' }}
-                        onChange={handlePhotoUpload}
-                      />
-
-                      {fixedPointImages.length < 2 && (
-                        <DeliveryOptionImageUpload
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openFileSelector();
-                          }}
-                        >
-                          <IoAdd size={24} />
-                        </DeliveryOptionImageUpload>
-                      )}
-                    </DeliveryOptionImages>
-
-                    {photoError && <ErrorMessage>{photoError}</ErrorMessage>}
-
-                    <PhotoInstructions>
-                      *請務必上傳兩張固定點照片，每張不超過5MB
-                    </PhotoInstructions>
-                  </DeliveryOptionImageContainer>
+                  <ImageUpload
+                    fixedPointImages={fixedPointImages}
+                    setFixedPointImages={setFixedPointImages}
+                    photoError={photoError}
+                    setPhotoError={setPhotoError}
+                  />
                 )}
               </DeliveryOptionContent>
             </DeliveryOption>
 
             <DeliveryOption
-              $active={deliveryMethod === 'ereceipt'}
-              onClick={() => setDeliveryMethod('ereceipt')}
+              $active={deliveryMethod === 'receipt'}
+              onClick={() => setDeliveryMethod('receipt')}
             >
-              <RadioButton $active={deliveryMethod === 'ereceipt'} />
+              <RadioButton $active={deliveryMethod === 'receipt'} />
               <DeliveryOptionText>
                 <DeliveryOptionTitle>面交收運</DeliveryOptionTitle>
                 <DeliveryOptionDescription>
@@ -432,7 +315,7 @@ const SubscribeData = () => {
               </DeliveryOptionText>
             </DeliveryOption>
 
-            <FormGroup ref={notesRef}>
+            <FormGroup>
               <InputLabel>地點備註</InputLabel>
               <StyledTextarea
                 placeholder="請備註放置固定點或面交收運的詳細位置"

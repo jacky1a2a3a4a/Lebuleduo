@@ -36,7 +36,11 @@ export interface ApiTodayOrder {
   number: string;
   name: string;
   date: string;
-  status: '未排定' | '已排定' | '前往中' | '已抵達' | '已完成' | '異常' ;
+  total: number;
+  status: string;
+  driverTime: string;
+  orderDetailsID: number;
+  OrdersID: number;
 }
 
 // API 返回的當前訂單類型
