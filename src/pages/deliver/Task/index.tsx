@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { MdCalendarToday } from 'react-icons/md';
-import { getTodayDate } from '../../../utils/getDate';
+
 import {
   TaskSectionStyled,
   DeliverContainer,
@@ -29,7 +28,11 @@ import {
 import TaskCard from './Card';
 import Loading from '../../../components/common/LoadingMessage';
 import ErrorReport from '../../../components/common/ErrorReport';
+
+import { MdCalendarToday } from 'react-icons/md';
 import { TaskStatus } from '../../../types/deliver';
+import { getFormattedDate } from '../../../utils/formatDate';
+import { getTodayDate } from '../../../utils/getDate';
 
 // API 回傳的資料結構
 type ApiResponse = {
@@ -142,7 +145,7 @@ function Task() {
       ////3. 發送請求
       const driverId = localStorage.getItem('UsersID'); // 從localStorage獲取使用者ID
       const response = await fetch(
-        `api/GET/driver/day/${driverId}/${getTodayDate()}`,
+        `api/GET/driver/day/${driverId}/${getFormattedDate(getTodayDate())}`,
         {
           method: 'GET',
           signal: controller.signal,
