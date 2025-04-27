@@ -10,6 +10,7 @@ import {
   Container,
   Sidebar,
   SidebarHeader,
+  NavItems,
   NavItem,
   MainContent,
 } from './styles';
@@ -26,31 +27,30 @@ const AdminLayout = () => {
     <Container>
       <Sidebar>
         <SidebarHeader>
-          <MdAssignment size={20} />
           Lebu-leduo
         </SidebarHeader>
-        <nav>
+        <NavItems>
           <NavItem>
-            <MdDescription size={18} />
+            <MdDescription size={13} />
             <span>訂單管理</span>
           </NavItem>
           <NavItem active={isActive('')} onClick={() => navigate('/admin')}>
-            <MdAssignment size={18} />
+            <MdAssignment size={13} />
             <span>任務發派</span>
           </NavItem>
           <NavItem>
-            <MdPerson size={18} />
+            <MdPerson size={13} />
             <span>用戶管理</span>
           </NavItem>
           <NavItem>
-            <MdLocalShipping size={18} />
+            <MdLocalShipping size={13} />
             <span>代收員管理</span>
           </NavItem>
           <NavItem>
-            <MdSettings size={18} />
+            <MdSettings size={13} />
             <span>系統設定</span>
           </NavItem>
-        </nav>
+        </NavItems>
       </Sidebar>
       <MainContent assignmentPanelOpen={false}>
         <Outlet />

@@ -222,9 +222,7 @@ const SubscribeData = () => {
       JSON.stringify(subscriptionData),
     );
 
-    navigate('/customer/subscribe-checkout', {
-      state: { subscriptionData },
-    });
+    navigate('/customer/subscribe-checkout');
   };
 
   return (

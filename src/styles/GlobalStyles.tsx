@@ -94,7 +94,8 @@ const GlobalStyles = createGlobalStyle`
   --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
    /* 字體大小 */
-  --font-size-xxs: 0.625rem;   /* 10px */
+  --font-size-3xs: 0.5rem;   /* 8px */
+  --font-size-2xs: 0.625rem;   /* 10px */
   --font-size-xs: 0.75rem;   /* 12px */
   --font-size-sm: 0.875rem;  /* 14px */
   --font-size-md: 1rem;    /* 16px */
