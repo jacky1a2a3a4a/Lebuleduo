@@ -2,11 +2,11 @@ import {
   HashRouter as Router,
   Routes,
   Route,
-  Navigate,
   useNavigate,
 } from 'react-router-dom';
 import { useEffect } from 'react';
 import GlobalStyles from './styles/GlobalStyles';
+import { routes } from './routes';
 
 //頁面 排版
 import ProtectedRoute from './layouts/ProtectedRoute';
@@ -75,8 +75,6 @@ const AppContent = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
-    console.log('code', code);
-    console.log('state', state);
 
     if (code && state) {
       // 直接重定向到回調處理路由
@@ -84,202 +82,19 @@ const AppContent = () => {
     }
   }, []);
 
-  return (
-    <Routes>
-      {/* 根路徑重定向到 auth 登入頁面 */}
-      <Route path="/" element={<Navigate to="/auth" replace />} />
-
-      {/* 登入/註冊 */}
-      <Route path="/auth">
-        <Route index element={<Navigate to="/auth/line-login" replace />} />
-        <Route path="line-login" element={<LineLogin />} />
-        <Route path="line/callback" element={<LineCallback />} />
-      </Route>
-
-      {/* 顧客路由 */}
+  const renderRoutes = (routes) => {
+    return routes.map((route) => (
       <Route
-        path="/customer"
-        element={
-          <ProtectedRoute role="customer">
-            <CustomerLayout />
-          </ProtectedRoute>
-        }
+        key={route.path || 'index'}
+        path={route.path}
+        element={route.element}
       >
-        {/* 首頁 */}
-        <Route index element={<Navigate to="/customer/my-order" replace />} />
-        <Route path="my-order" element={<MyOrder />} />
-        <Route path="Plan" element={<Plan />} />
-        <Route path="account" element={<LoadingMessage />} />
-        <Route path="contact-us" element={<ContactUs />} />
+        {route.children && renderRoutes(route.children)}
       </Route>
+    ));
+  };
 
-      {/* 查看當前方案詳情 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/order-detail/current/:orderId"
-        element={
-          <ProtectedRoute role="customer">
-            <OrderDetail />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 查看已結束方案詳情 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/order-detail/completed/:orderId"
-        element={
-          <ProtectedRoute role="customer">
-            <OrderDetailCompleted />
-          </ProtectedRoute>
-        }
-      />
-      {/* 編輯訂單資料 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/order/:orderId/edit"
-        element={
-          <ProtectedRoute role="customer">
-            <OrderEdit />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 訂閱方案詳情 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/subscribe"
-        element={
-          <ProtectedRoute role="customer">
-            <Subscribe />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 訂閱資料填寫 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/subscribe-data"
-        element={
-          <ProtectedRoute role="customer">
-            <SubscribeData />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 訂閱結帳 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/subscribe-checkout"
-        element={
-          <ProtectedRoute role="customer">
-            <SubscribeCheckout />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 訂閱成功 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/subscribe-success"
-        element={
-          <ProtectedRoute role="customer">
-            <SubscribeSuccess />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 異常任務狀態 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/order-task/abnormal-task/:orderId/:orderDetailId"
-        element={
-          <ProtectedRoute role="customer">
-            <AbnormalTask />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 異常任務狀態-已完成訂單 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/completed-order/order-task/abnormal-task/:orderId/:orderDetailId"
-        element={
-          <ProtectedRoute role="customer">
-            <CompletedAbnormalTask />
-          </ProtectedRoute>
-        }
-      />
-      {/* 已排定任務狀態 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/order-task/scheduled-task/:orderId/:orderDetailId"
-        element={
-          <ProtectedRoute role="customer">
-            <ScheduledTask />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 未排定任務狀態 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/order-task/unscheduled-task/:orderId/:orderDetailId"
-        element={
-          <ProtectedRoute role="customer">
-            <UnScheduledTask />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 已結束任務狀態 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/order-task/finished-task/:orderId/:orderDetailId"
-        element={
-          <ProtectedRoute role="customer">
-            <FinishedTask />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 已結束任務狀態-已完成訂單 - 獨立路由，不使用 CustomerLayout */}
-      <Route
-        path="/customer/completed-order/order-task/finished-task/:orderId/:orderDetailId"
-        element={
-          <ProtectedRoute role="customer">
-            <CompletedFinishedTask />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 汪汪員路由 */}
-      <Route
-        path="/deliver"
-        element={
-          <ProtectedRoute role="deliver">
-            <DeliverLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Task />} />
-        <Route path="scan-order" element={<ScanOrder />} />
-        <Route path="calendar" element={<Calendar />} />
-        <Route path="report" element={<MockQRGenerator />} />
-      </Route>
-
-      {/* 訂單詳情頁面 - 獨立路由，不使用 DeliverLayout */}
-      <Route
-        path="/deliver/task/:taskId"
-        element={
-          <ProtectedRoute role="deliver">
-            <OrderDetailDeliver />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 訂單處理頁面 - 獨立路由，不使用 DeliverLayout */}
-      <Route
-        path="/deliver/scan-order/process-order/:taskId"
-        element={
-          <ProtectedRoute role="deliver">
-            <ProcessOrder />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* 404路由 */}
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
-  );
+  return <Routes>{renderRoutes(routes)}</Routes>;
 };
 
 function App() {

@@ -4,26 +4,15 @@ import { NavLink } from 'react-router-dom';
 export const minWidthMobilePlus = 403;
 
 // 頁尾外層容器
-export const FooterWrapper = styled.div<{
-  $primary?: boolean;
-  $secondary?: boolean;
-}>`
-  background-color: ${({ $primary, $secondary }) => {
-    if ($primary) return 'var(--color-primary)';
-    if ($secondary) return 'var(--color-background-secondary)';
-    return 'transparent';
-  }};
-
+export const FooterWrapper = styled.div`
+  background-color: transparent;
   width: 100%;
   z-index: 99;
 `;
 
 // 頁尾容器
-export const FooterContainer = styled.footer<{
-  $secondary?: boolean;
-}>`
-  background-color: ${({ $secondary }) =>
-    $secondary ? 'var(--color-primary)' : 'var(--color-white)'};
+export const FooterContainer = styled.footer`
+  background-color: var(--color-white);
   border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
 
   display: grid;
@@ -44,29 +33,23 @@ export const ListItem = styled.li`
 
 // 頁尾導航連結
 export const FooterNavLink = styled(NavLink)<{
-  $secondary?: boolean;
+  $active?: boolean;
 }>`
-  color: ${({ $secondary }) =>
-    $secondary ? 'var(--color-gray-300)' : 'var(--color-gray-400)'};
-
+  color: var(--color-gray-400);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-
   transition: color 0.1s ease;
 
   &:hover {
-    color: ${({ $secondary }) =>
-      $secondary ? 'var(--color-white)' : 'var(--color-gray-600)'};
+    color: var(--color-gray-600);
   }
 
   &.active {
-    color: ${({ $secondary }) =>
-      $secondary ? 'var(--color-white)' : 'var(--color-primary)'};
+    color: var(--color-primary);
   }
 `;
 

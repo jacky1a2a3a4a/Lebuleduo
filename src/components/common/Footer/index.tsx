@@ -22,19 +22,15 @@ interface FooterProps {
 function CommonFooter({ navItems }: FooterProps) {
   const location = useLocation();
 
-  const isPrimary = location.pathname === '/customer/my-order';
-  const isSecondary = location.pathname === '/customer/Plan';
-  console.log(location);
-
   return (
-    <FooterWrapper $primary={isPrimary} $secondary={isSecondary}>
-      <FooterContainer $secondary={isSecondary}>
+    <FooterWrapper>
+      <FooterContainer>
         {navItems.map((item, index) => (
           <ListItem key={index}>
             <FooterNavLink
               to={item.path}
-              end={item.path === '/deliver'}
-              $secondary={isSecondary}
+              end={item.path === '/customer' || item.path === '/deliver'}
+              $active={location.pathname.startsWith(item.path)}
             >
               <IconContainer>{<item.icon />}</IconContainer>
               <IconText>{item.label}</IconText>
