@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getTodayDate } from '../../utils/getDate';
+import { getFormattedDateDash } from '../../utils/formatDate';
 
 export interface TodayOrderDetails {
   OrderDetailID: number;
@@ -30,7 +31,7 @@ export const getTodayOrderDetails = async (
 ): Promise<TodayOrderResponse> => {
   try {
     const response = await axios.get(
-      `api/GET/driver/day/${userId}/${getTodayDate()}/${taskId}`,
+      `api/GET/driver/day/${userId}/${getFormattedDateDash(getTodayDate())}/${taskId}`,
     );
     return response.data;
   } catch (error) {
