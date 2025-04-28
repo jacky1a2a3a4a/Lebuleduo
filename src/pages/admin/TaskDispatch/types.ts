@@ -35,9 +35,8 @@ export interface Order {
 
 export interface Filters {
   status: string;
-  district: string;
   planType: string;
-  collector: string;
-  orderId: string;
+  deliver: string;
+  orderDetailId: string;
   region: string;
 }

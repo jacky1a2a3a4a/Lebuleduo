@@ -62,6 +62,7 @@ const Select = ({
                 onChange(option.value);
                 setIsOpen(false);
               }}
+              selected={option.value === value}
             >
               {option.label}
             </Option>

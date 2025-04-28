@@ -11,6 +11,7 @@ export const StatCardContainer = styled.div`
 
   width: 100%;
   height: 100%;
+  max-height: 50px;
 
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-md);
@@ -35,6 +36,8 @@ export const Icon = styled.div`
 export const Content = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-sm);
   width: 100%;
 `;
 
@@ -63,4 +66,5 @@ export const Value = styled.div`
 export const Subtitle = styled.div`
   font-size: var(--font-size-3xs);
   color: var(--color-neutral-500);
+  text-overflow: ellipsis;
 `;

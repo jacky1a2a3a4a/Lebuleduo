@@ -24,7 +24,6 @@ export const ContentWrapper = styled.div`
   overflow: auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 // === 內容區域 ===
@@ -54,6 +53,7 @@ export const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
   min-height: 0;
 `;
 
@@ -130,18 +130,4 @@ export const TableHeader = styled.div`
       }
     }
   }
-`;
-
-export const Badge = styled.span<{ $variant?: 'default' | 'warning' }>`
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-3xs);
-  background-color: ${(props) =>
-    props.$variant === 'warning'
-      ? 'var(--color-yellow-100)'
-      : 'var(--color-neutral-200)'};
-  color: ${(props) =>
-    props.$variant === 'warning'
-      ? 'var(--color-yellow-700)'
-      : 'var(--color-text-primary)'};
 `;

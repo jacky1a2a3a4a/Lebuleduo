@@ -41,9 +41,9 @@ export const NavItems = styled.div`
   margin-top: var(--spacing-md);
 `;
 
-export const NavItem = styled.div<{ active?: boolean }>`
+export const NavItem = styled.div<{ $active?: boolean }>`
   background-color: ${(props) =>
-    props.active ? 'var(--color-primary-hover)' : 'transparent'};
+    props.$active ? 'var(--color-primary-hover)' : 'transparent'};
   border-radius: var(--border-radius-lg);
   display: flex;
   align-items: center;
@@ -70,7 +70,7 @@ export const NavItem = styled.div<{ active?: boolean }>`
   }
 `;
 
-export const MainContent = styled.main<{ assignmentPanelOpen: boolean }>`
+export const MainContent = styled.main<{ $assignmentPanelOpen: boolean }>`
   background-color: var(--color-white);
   flex: 1;
 `;
