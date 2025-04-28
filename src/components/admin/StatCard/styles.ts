@@ -7,7 +7,7 @@ export const StatCardContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
 
   width: 100%;
   height: 100%;
@@ -25,8 +25,8 @@ export const Icon = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   aspect-ratio: 1/1;
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-sm);
@@ -34,14 +34,19 @@ export const Icon = styled.div`
 
 export const Content = styled.div`
   display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+export const Text = styled.div`
+  display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  width: 100%;
 `;
 
 export const Title = styled.div`
   color: var(--color-text-primary);
-  font-size: var(--font-size-2xs);
+  font-size: var(--font-size-3xs);
   font-weight: var(--font-weight-medium);
 `;
 
@@ -51,7 +56,7 @@ export const Numbers = styled.div`
 `;
 
 export const Value = styled.div`
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
 `;
 

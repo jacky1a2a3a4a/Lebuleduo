@@ -1,26 +1,26 @@
 'use client';
 import { useState, useEffect } from 'react';
 import {
-  Container,
-  MainContent,
-  Content,
-  StatsGrid,
-  TableContainer,
-  TableHeader,
-  StyledTable,
-  Badge,
-} from './styles';
-import { Order, Amount, ApiResponse, Filters } from './types';
-import Header from '../../../components/admin/Header';
-import FunctionHeader from '../../../components/admin/FunctionHeader';
-import {
   MdDescription,
   MdLocalShipping,
   MdEditCalendar,
   MdEventAvailable,
 } from 'react-icons/md';
+import {
+  Container,
+  MainContent,
+  StatsGrid,
+  TableContainer,
+  TableHeader,
+  ContentWrapper,
+} from './styles';
+import { Order, Amount, ApiResponse, Filters } from './types';
 
+import Header from '../../../components/admin/Header';
+import FunctionHeader from '../../../components/admin/FunctionHeader';
+import Select from '../../../components/admin/Select';
 import StatCard from '../../../components/admin/StatCard';
+import Table from '../../../components/admin/Table';
 
 export default function TaskDispatchSystem() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -115,9 +115,10 @@ export default function TaskDispatchSystem() {
       <MainContent $assignmentPanelOpen={assignmentPanelOpen}>
         <Header />
 
-        <Content style={{ height: 'calc(100vh - 80px)', overflow: 'hidden' }}>
+        <ContentWrapper>
           <FunctionHeader />
 
+          {/* 狀態卡片 */}
           <StatsGrid>
             <StatCard
               title="任務總數"
@@ -128,13 +129,13 @@ export default function TaskDispatchSystem() {
             <StatCard
               title="未分派任務"
               value={amount.UnScheduled.toString()}
-              subtitle="進行中的任務"
+              subtitle=""
               icon={<MdEditCalendar size={24} />}
             />
             <StatCard
               title="已分派任務"
               value={amount.Scheduled.toString()}
-              subtitle="已完成的任務"
+              subtitle=""
               icon={<MdEventAvailable size={24} />}
             />
             <StatCard
@@ -145,146 +146,80 @@ export default function TaskDispatchSystem() {
             />
           </StatsGrid>
 
-          <TableContainer style={{ height: 'calc(100% - 200px)' }}>
+          <TableContainer>
             <TableHeader>
-              <div className="header-left">
-                <h1>任務列表</h1>
-                <div className="filters">
-                  <select
-                    value={filters.status}
-                    onChange={(e) =>
-                      handleFilterChange('status', e.target.value)
-                    }
-                  >
-                    <option value="">分派狀態</option>
-                    <option value="0">未分派</option>
-                    <option value="1">已分派</option>
-                  </select>
-                  <select
-                    value={filters.planType}
-                    onChange={(e) =>
-                      handleFilterChange('planType', e.target.value)
-                    }
-                  >
-                    <option value="">方案類型</option>
-                    <option value="小資方案">小資方案</option>
-                    <option value="標準方案">標準方案</option>
-                  </select>
-                  <select
-                    value={filters.region}
-                    onChange={(e) =>
-                      handleFilterChange('region', e.target.value)
-                    }
-                  >
-                    <option value="">收運地區</option>
-                    <option value="路竹區">路竹區</option>
-                    <option value="楠梓區">楠梓區</option>
-                    <option value="仁武區">仁武區</option>
-                    <option value="三民區">三民區</option>
-                  </select>
-                  <input
-                    type="text"
-                    placeholder="搜尋訂單編號"
-                    value={filters.orderId}
-                    onChange={(e) =>
-                      handleFilterChange('orderId', e.target.value)
-                    }
+              <h1>任務列表</h1>
+              <div className="header-container">
+                <div className="header-left">
+                  <div className="filters">
+                    <Select
+                      value={filters.status}
+                      onChange={(value) => handleFilterChange('status', value)}
+                      options={[
+                        { value: '', label: '分派狀態' },
+                        { value: '0', label: '未分派' },
+                        { value: '1', label: '已分派' },
+                      ]}
+                    />
+                    <Select
+                      value={filters.planType}
+                      onChange={(value) =>
+                        handleFilterChange('planType', value)
+                      }
+                      options={[
+                        { value: '', label: '方案類型' },
+                        { value: '小資方案', label: '小資方案' },
+                        { value: '標準方案', label: '標準方案' },
+                      ]}
+                    />
+                    <Select
+                      value={filters.region}
+                      onChange={(value) => handleFilterChange('region', value)}
+                      options={[
+                        { value: '', label: '收運地區' },
+                        { value: '路竹區', label: '路竹區' },
+                        { value: '楠梓區', label: '楠梓區' },
+                        { value: '仁武區', label: '仁武區' },
+                        { value: '三民區', label: '三民區' },
+                      ]}
+                    />
+                    <input
+                      type="text"
+                      placeholder="搜尋訂單編號"
+                      value={filters.orderId}
+                      onChange={(e) =>
+                        handleFilterChange('orderId', e.target.value)
+                      }
+                      width="100px"
+                    />
+                  </div>
+                </div>
+                <div className="header-right">
+                  <p>每頁顯示筆數</p>
+                  <Select
+                    value={itemsPerPage.toString()}
+                    onChange={(value) => handleItemsPerPageChange(value)}
+                    options={[
+                      { value: '10', label: '10' },
+                      { value: '20', label: '20' },
+                      { value: '50', label: '50' },
+                    ]}
+                    width="35px"
                   />
                 </div>
               </div>
-              <div className="header-right">
-                <select
-                  value={itemsPerPage}
-                  onChange={(e) => handleItemsPerPageChange(e.target.value)}
-                >
-                  <option value="10">10 筆/頁</option>
-                  <option value="20">20 筆/頁</option>
-                  <option value="50">50 筆/頁</option>
-                </select>
-              </div>
             </TableHeader>
 
-            <div style={{ height: 'calc(100% - 120px)', overflowY: 'auto' }}>
-              <StyledTable>
-                <thead
-                  style={{
-                    position: 'sticky',
-                    top: 0,
-                    background: 'white',
-                    zIndex: 1,
-                  }}
-                >
-                  <tr>
-                    <th>
-                      <input
-                        type="checkbox"
-                        checked={
-                          selectedTasks.length === orders.length &&
-                          orders.length > 0
-                        }
-                        onChange={(e) => handleSelectAll(e.target.checked)}
-                      />
-                    </th>
-                    <th>訂單編號</th>
-                    <th>客戶名稱</th>
-                    <th>分派狀態</th>
-                    <th>方案類型</th>
-                    <th>收運地區</th>
-                    <th>開始時間</th>
-                    <th>結束時間</th>
-                    <th>負責司機</th>
-                    <th>訂單詳情</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredTasks.slice(0, itemsPerPage).map((order) => (
-                    <tr key={order.OrderDetailID}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedTasks.includes(
-                            order.OrderDetailID.toString(),
-                          )}
-                          onChange={(e) =>
-                            handleTaskSelection(
-                              order.OrderDetailID.toString(),
-                              e.target.checked,
-                            )
-                          }
-                        />
-                      </td>
-                      <td>{order.OrderDetailID}</td>
-                      <td>{order.OrderName}</td>
-                      <td>
-                        <Badge $variant="warning">
-                          {order.OrderStatus === 1 ? '進行中' : '已完成'}
-                        </Badge>
-                      </td>
-                      <td>{order.PlanName}</td>
-                      <td>{order.Region}</td>
-                      <td>{order.DriverTimeStart ? '進行中' : '未開始'}</td>
-                      <td>{order.DriverTimeEnd ? '已完成' : '未完成'}</td>
-                      <td>{order.ResponsibleDriver}</td>
-                      <td>
-                        <button
-                          style={{
-                            color: 'var(--color-primary)',
-                            padding: 0,
-                            background: 'none',
-                            border: 'none',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          查看詳情
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </StyledTable>
-            </div>
+            <Table
+              orders={orders}
+              filteredTasks={filteredTasks}
+              itemsPerPage={itemsPerPage}
+              selectedTasks={selectedTasks}
+              handleSelectAll={handleSelectAll}
+              handleTaskSelection={handleTaskSelection}
+            />
           </TableContainer>
-        </Content>
+        </ContentWrapper>
       </MainContent>
     </Container>
   );
