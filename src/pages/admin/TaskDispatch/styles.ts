@@ -20,10 +20,11 @@ export const MainContent = styled.div<{ $assignmentPanelOpen: boolean }>`
 // === 內容區域 ===
 export const ContentWrapper = styled.div`
   height: 100%;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
   overflow: auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 `;
 
 // === 內容區域 ===
@@ -40,8 +41,7 @@ export const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-sm);
-  flex-shrink: 0;
+  flex: 1;
 `;
 
 // === 表格容器 最外層 ===

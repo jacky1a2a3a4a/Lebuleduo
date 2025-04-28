@@ -4,7 +4,7 @@ export const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: var(--spacing-md);
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 100px);
 `;
 
 export const StyledTable = styled.table`

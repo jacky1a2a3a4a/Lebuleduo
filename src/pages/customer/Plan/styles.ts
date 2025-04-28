@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 ////訂閱方案 最大外容器
 export const PlanSectionStyled = styled.section`
   background-color: var(--color-background);
@@ -17,8 +16,9 @@ export const PlanSectionStyled = styled.section`
 export const PlanContainer = styled.div`
   background-color: var(--color-primary);
   width: 100%;
-  display: grid;
-  grid-template-rows: 1fr 3.2fr;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 //===方案介紹 最外層容器 ===
@@ -92,7 +92,7 @@ export const ContentMainText = styled.p`
 //訂閱方案 方案介紹內容項目副文字
 export const ContentSubText = styled.p`
   color: var(--color-white);
-  font-size: var(--font-size-xxs);
+  font-size: var(--font-size-2xs);
   font-weight: var(--font-weight-normal);
 `;
 
@@ -101,15 +101,12 @@ export const ContentSubText = styled.p`
 export const PlanCardListContainer = styled.div`
   background-color: var(--color-background-secondary);
   border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
-
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-
-  flex: 1;
-  min-height: 0;
-
   padding: var(--spacing-lg) var(--spacing-md);
+  margin-bottom: 0;
 `;
 
 //訂閱方案 卡片
