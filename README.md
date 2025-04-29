@@ -1,23 +1,18 @@
-<div style="display: flex; flex-direction: column; align-items: center; margin: 2rem 0">
-  <div style="margin-bottom: 1.5rem">
-    <img src="./public/assets/images/Lebuledou_truck_login_border.png" width="180" alt="垃不垃多圖片" />
-  </div>
-  <div>
-    <img src="./public/assets/logos/logotype-customer-blue.png" width="200" alt="垃不垃多Logo" />
-  </div>
+# 垃不垃多
+
+<div align="center">
+  <img src="./public/assets/images/Lebuledou_truck_login_border.png" width="180" alt="垃不垃多圖片" />
+  <br />
+  <img src="./public/assets/logos/logotype-customer-blue.png" width="200" alt="垃不垃多Logo" />
 </div>
 
-<p align="center" style="font-weight: 700; font-size: 2.5rem; margin-bottom: 0.3rem; color: #445DB3;">垃不垃多</p>
-<p align="center" style="font-weight: 600; font-size: 1.8rem; margin-bottom: 1rem; color: #A2AED9;">專業垃圾代收平台</p>
+## 專業垃圾代收平台
 
-<div align="center" style="margin-bottom: 1.5rem">
-  <a href="https://lebuleduo.vercel.app/" style="display: inline-block; padding: 0.8rem 2rem; background-color: #445DB3; color: white; text-decoration: none; border-radius: 50px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(68, 93, 179, 0.2);">專案網址</a>
-</div>
+[![專案網址](https://img.shields.io/badge/專案網址-lebuleduo.vercel.app-blue)](https://lebuleduo.vercel.app/)
 
-<div align="center" style="margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%); border-radius: 15px; box-shadow: 0 4px 6px rgba(68, 93, 179, 0.1); border: 1px solid rgba(162, 174, 217, 0.3);">
-  <p style="font-size: 1.5rem; margin-bottom: 1rem; color: #445DB3; font-weight: 600;">別讓垃圾控制你，專人代收好安心</p>
-  <p style="font-size: 1.2rem; color: #666; margin: 0;">讓專業的團隊為您解決垃圾處理的煩惱</p>
-</div>
+> 別讓垃圾控制你，專人代收好安心
+>
+> 讓專業的團隊為您解決垃圾處理的煩惱
 
 ## 🚀 功能介紹
 
@@ -154,6 +149,7 @@ Clone 專案
 ├── public/           # 靜態資源
 ├── src/
 │   ├── apis/        # API 相關
+│   │   └── admin/
 │   ├── assets/      # 靜態資源
 │   ├── components/  # 共用元件
 │   │   ├── common/
@@ -213,117 +209,87 @@ Clone 專案
 
 ## 開發環境與技術
 
-<p style="font-weight: 700; font-size: 1.5rem; margin-bottom: 1rem; color: #445DB3;">UI設計</p>
+### UI設計
 
-> **前期發想**
+#### 前期發想
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="miro" src="https://img.shields.io/badge/miro-FFD02F?style=for-the-badge&logo=miro&logoColor=black" />
-  <img alt="v0" src="https://img.shields.io/badge/v0-000000?style=for-the-badge&logo=v0&logoColor=white" />
-  <img alt="lovable" src="https://img.shields.io/badge/lovable-FF69B4?style=for-the-badge&logo=lovable&logoColor=white" />
-  <img alt="gpt" src="https://img.shields.io/badge/gpt-10A37F?style=for-the-badge&logo=openai&logoColor=white" />
-  <img alt="claude" src="https://img.shields.io/badge/claude-FFA500?style=for-the-badge&logo=anthropic&logoColor=white" />
-</div>
+- Miro
+- v0
+- Lovable
+- GPT
+- Claude
 
-> **設計工具:**
+#### 設計工具
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white" />
-  <img alt="canva" src="https://img.shields.io/badge/canva-00C4CC?style=for-the-badge&logo=canva&logoColor=white" />
-  <img alt="react-icons" src="https://img.shields.io/badge/react--icons-E91E63?style=for-the-badge&logo=react&logoColor=white" />
-</div>
+- Figma
+- Canva
+- React Icons
 
-> **團隊協作/任務管理**
+#### 團隊協作/任務管理
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img src="https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white" />
-</div>
+- Notion
 
-<p style="font-weight: 700; font-size: 1.5rem; margin-bottom: 1rem; color: #445DB3;">前端技術</p>
+### 前端技術
 
-> **JavaScript 框架與工具:**
+#### JavaScript 框架與工具
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="javascript" src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img alt="React" src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
-  <img alt="Vite" src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" />
-</div>
+- JavaScript
+- TypeScript
+- React
+- Vite
 
-> **樣式管理:**
+#### 樣式管理
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="styled-components" src="https://img.shields.io/badge/styled--components-db7093?style=for-the-badge&logo=styled-components&logoColor=white" />
-</div>
+- Styled Components
 
-> **版本控制:**
+#### 版本控制
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="React Router" src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" />
-</div>
+- React Router
 
-> **地圖功能:**
+#### 地圖功能
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="Google Maps" src="https://img.shields.io/badge/Google%20Maps-4285F4?style=for-the-badge&logo=google-maps&logoColor=white" />
-</div>
+- Google Maps API
 
-> **掃描功能:**
+#### 掃描功能
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="React QR Scanner" src="https://img.shields.io/badge/React%20QR%20Scanner-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
-</div>
+- React QR Scanner
 
-> **部署平台:**
+#### 部署平台
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="Vercel" src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
-</div>
+- Vercel
 
-> **程式碼品質:**
+#### 程式碼品質
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="ESLINT" src="https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white" />
-  <img alt="PRETTIER" src="https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E" />
-</div>
+- ESLint
+- Prettier
 
-> **API 測試與溝通:**
+#### API 測試與溝通
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="postman" src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white" />
-  <img src="https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white" />
-</div>
+- Postman
+- Notion
 
-> **AI 協作:**
+#### AI 協作
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img alt="claude" src="https://img.shields.io/badge/claude-FFA500?style=for-the-badge&logo=anthropic&logoColor=white" />
-</div>
+- Claude
 
-<p style="font-weight: 700; font-size: 1.5rem; margin-bottom: 1rem; color: #445DB3;">後端技術</p>
+### 後端技術
 
-> **後端框架及語言:**
+#### 後端框架及語言
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img src="https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white" />
-  <img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white" />
-</div>
+- C#
+- .NET Core
 
-> **資料庫:**
+#### 資料庫
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img src="https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white" />
-</div>
+- Microsoft SQL Server
 
-> **雲端 & 伺服器:**
+#### 雲端 & 伺服器
 
-<div style="margin: 0.5rem 0 2.5rem 0">
-  <img src="https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white" />
-</div>
+- Azure
 
 ## Git Flow
 
-<p style="font-weight: 700; font-size: 1.5rem; margin-bottom: 1rem; color: #445DB3;">Branch 命名規範</p>
+### Branch 命名規範
 
 | Category              | Issue Label | example 範例      |
 | --------------------- | ----------- | ----------------- |
@@ -332,7 +298,7 @@ Clone 專案
 | fix-[branch name]     | Bug         | fix-map-location  |
 | hotfix-[branch name]  | Hotfix      | hotfix-upload-api |
 
-<p style="font-weight: 700; font-size: 1.5rem; margin-bottom: 1rem; color: #445DB3;">Commit Message 規範</p>
+### Commit Message 規範
 
 | Type 類型 | Usage 格式       | example 範例                                   |
 | --------- | ---------------- | ---------------------------------------------- |

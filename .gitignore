@@ -34,3 +34,5 @@ dist-ssr
 # Vercel 部署文件
 .vercel
 
+README.local.md
+
