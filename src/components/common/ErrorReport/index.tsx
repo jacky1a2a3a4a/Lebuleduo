@@ -5,7 +5,7 @@ interface ErrorReportProps {
   error: string;
 }
 
-const ErrorReport = ({ title = '發生錯誤', error }: ErrorReportProps) => {
+const ErrorReport = ({ title = '錯誤', error }: ErrorReportProps) => {
   return (
     <ErrorReportContainer>
       <ErrorTitle>{title}</ErrorTitle>

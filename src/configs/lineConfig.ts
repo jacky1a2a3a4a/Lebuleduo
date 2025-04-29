@@ -10,7 +10,9 @@ interface LineConfig {
 }
 
 // 獲取基礎 URL
-const BASE_URL = import.meta.env.VITE_APP_URL || 'https://lebuleduo.vercel.app';
+const BASE_URL = import.meta.env.DEV
+  ? 'http://localhost:5173'
+  : import.meta.env.VITE_APP_URL || 'https://lebuleduo.vercel.app';
 // const BASE_URL = 'https://lebuleduo.vercel.app';
 // const BASE_URL = 'http://localhost:5173';
 

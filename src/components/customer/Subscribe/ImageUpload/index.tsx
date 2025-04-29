@@ -41,8 +41,8 @@ const ImageUpload = ({
         return;
       }
 
-      if (file.size > 5 * 1024 * 1024) {
-        setPhotoError('*圖片大小不得超過5MB');
+      if (file.size > 6 * 1024 * 1024) {
+        setPhotoError('*圖片大小不得超過6MB');
         return;
       }
 
@@ -120,7 +120,7 @@ const ImageUpload = ({
         )}
       </DeliveryOptionImages>
 
-      {photoError && <ErrorReport error={photoError} />}
+      {photoError && <ErrorReport title="" error={photoError} />}
 
       <PhotoInstructions>
         *請務必上傳兩張固定點照片，每張不超過5MB
