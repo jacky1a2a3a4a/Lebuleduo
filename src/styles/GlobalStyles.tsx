@@ -68,7 +68,8 @@ const GlobalStyles = createGlobalStyle`
   --color-text-primary: #1F2A52;
   --color-text-secondary: #323232;
   --color-text-tertiary: #7B7B7B;
-  --color-text-disabled: #BDBDBD; 
+  --color-text-disabled: #BDBDBD;
+  --color-text-black: #000000;
 
   --color-neutral-600: #757575;
   --color-neutral-500: #9E9E9E;
@@ -93,7 +94,8 @@ const GlobalStyles = createGlobalStyle`
   --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
    /* 字體大小 */
-  --font-size-xxs: 0.625rem;   /* 10px */
+  --font-size-3xs: 0.5rem;   /* 8px */
+  --font-size-2xs: 0.625rem;   /* 10px */
   --font-size-xs: 0.75rem;   /* 12px */
   --font-size-sm: 0.875rem;  /* 14px */
   --font-size-md: 1rem;    /* 16px */
@@ -109,6 +111,7 @@ const GlobalStyles = createGlobalStyle`
   --font-weight-extra-bold: 900;
 
   /* 間距 */
+  --spacing-2xs: 0.125rem;  /* 2px */
   --spacing-xs: 0.25rem;  /* 4px */
   --spacing-sm: 0.5rem;   /* 8px */
   --spacing-12: 0.75rem;  /* 12px */

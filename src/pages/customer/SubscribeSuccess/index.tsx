@@ -1,25 +1,24 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   IoMdWalk,
   IoMdQrScanner,
   IoIosCloudDownload,
   IoIosRocket,
 } from 'react-icons/io';
-import QRCode from 'react-qr-code';
+import axios from 'axios';
+import successImage from '../../../assets/images/Lebuledou_score.png';
 import {
   PageWrapper,
   SuccessContainer,
-  SuccessIcon,
+  SuccessImage,
   SuccessTitle,
-  SuccessSubtitle,
   OrderInfoContainer,
   OrderNumber,
   OrderItem,
   OrderItemLabel,
   OrderItemValue,
   Divider,
-  QRCodeContainer,
   QRcodeTextItems,
   QRCodeTextItem,
   TextIcon,
@@ -27,160 +26,136 @@ import {
   HomeButton,
 } from './styles';
 
+import {
+  getFormattedDateTime,
+  formatNumbersToWeekdays,
+} from '../../../utils/formatDate';
+
+interface OrderData {
+  orderId: string;
+  days: number;
+}
+
+interface ApiResponse {
+  OrderNumber: string;
+  TotalAmount: number;
+  PaymentStatus: number;
+  LinePayMethod: string;
+  Months: number;
+  PlanName: string;
+  Liter: number;
+  PlanKG: number;
+  CreatedAt: string;
+  UpdatedAt: string;
+}
+
 const SubscribeSuccess = () => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const [orderNumber, setOrderNumber] = useState(''); //訂單編號
+  const [orderData, setOrderData] = useState<OrderData | null>(null);
+  const [apiData, setApiData] = useState<ApiResponse | null>(null);
 
-  // 訂單編號
-  const [orderNumber, setOrderNumber] = useState('');
-
-  // 測試數據（僅在沒有location.state時使用）
-  const defaultData = {
-    orderId: '',
-    planName: '測試方案',
-    liter: '無',
-    planKg: '無',
-    planPeople: '無',
-    frequency: '無',
-    totalPrice: '無',
-    paymentMethod: '無',
-  };
-
-  // 從上一頁獲取數據或使用默認數據
-  const {
-    orderId,
-    planName,
-    planPeople,
-    frequency,
-    totalPrice,
-    paymentMethod,
-    days,
-  } = location.state || defaultData;
-
-  // 添加日誌檢查
+  // 從session storage獲取數據並呼叫API
   useEffect(() => {
-    console.log('SubscribeSuccess - 接收到的數據:', {
-      orderId,
-      planName,
-      planPeople,
-      frequency,
-      totalPrice,
-      paymentMethod,
-      days,
-    });
-  }, [location.state]);
+    const storedData = sessionStorage.getItem('subscriptionData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setOrderData(parsedData);
+      console.log('session storage 訂單資料:', parsedData);
 
-  // 生成訂單號碼
-  useEffect(() => {
-    console.log('訂單數據:', orderId, planName, totalPrice);
-
-    // 若沒有orderId，則生成一個新的
-    if (!orderId) {
-      // 生成現在時間的時間戳
-      const timestamp = new Date().getTime();
-      // 生成6位隨機數字
-      const randomNum = Math.floor(Math.random() * 900000) + 100000;
-      // 組合訂單號
-      const newOrderId = `LBL${timestamp}${randomNum}`;
-      setOrderNumber(newOrderId);
-    } else {
-      setOrderNumber(orderId);
+      // 呼叫 API
+      if (parsedData.orderId) {
+        axios
+          .get(`api/Get/Orders/${parsedData.orderId}`)
+          .then((response) => {
+            if (response.data.status) {
+              setApiData(response.data.result);
+              setOrderNumber(response.data.result.OrderNumber);
+            }
+            console.log('API 回傳資料:', response.data.result);
+          })
+          .catch((error) => {
+            console.error('API 呼叫失敗:', error);
+          });
+      }
     }
-  }, [orderId]);
-
-  // 生成QR碼內容（訂單資訊的JSON字符串）
-  const qrCodeValue = JSON.stringify({
-    orderNumber: orderNumber || `LBL${Date.now()}`,
-    planName: planName || defaultData.planName,
-    planPeople: planPeople || defaultData.planPeople,
-    frequency: frequency || defaultData.frequency,
-    totalPrice: totalPrice || defaultData.totalPrice,
-    timestamp: new Date().toISOString(),
-  });
+  }, []);
 
   // 返回首頁
   const handleBackToHome = () => {
     navigate('/customer');
   };
 
+  const { days } = orderData || {};
+
+  const {
+    PlanName,
+    Liter,
+    PlanKG,
+    Months,
+    LinePayMethod,
+    TotalAmount,
+    UpdatedAt,
+  } = apiData || {};
+
   return (
     <PageWrapper>
       <SuccessContainer>
-        <SuccessIcon>✓</SuccessIcon>
-        <SuccessTitle>訂閱成功！</SuccessTitle>
-        <SuccessSubtitle>感謝您的訂閱，您的訂單已成功建立</SuccessSubtitle>
+        <SuccessImage src={successImage} alt="預定成功" />
+        <SuccessTitle>預定成功囉!</SuccessTitle>
 
         <OrderInfoContainer>
-          <OrderNumber>訂單編號：{orderNumber}</OrderNumber>
+          <OrderNumber>訂單編號： {orderNumber}</OrderNumber>
           <Divider />
 
           <OrderItem>
             <OrderItemLabel>方案名稱</OrderItemLabel>
             <OrderItemValue>
-              {planName || defaultData.planName} (
-              {planPeople || defaultData.planPeople})
+              {PlanName} {Liter}L / {PlanKG}kg
             </OrderItemValue>
           </OrderItem>
 
           <OrderItem>
             <OrderItemLabel>訂閱時長</OrderItemLabel>
-            <OrderItemValue>
-              {frequency || defaultData.frequency} 個月
-            </OrderItemValue>
+            <OrderItemValue>{Months} 個月</OrderItemValue>
           </OrderItem>
 
           <OrderItem>
             <OrderItemLabel>收運日</OrderItemLabel>
             <OrderItemValue>
-              {days
-                ? days
-                    .split(',')
-                    .map((day) => {
-                      const dayMap: { [key: string]: string } = {
-                        '1': '週一',
-                        '2': '週二',
-                        '3': '週三',
-                        '4': '週四',
-                        '5': '週五',
-                        '6': '週六',
-                        '7': '週日',
-                      };
-                      return dayMap[day];
-                    })
-                    .join('、')
-                : '未指定'}
+              {days ? (
+                formatNumbersToWeekdays(days.toString()).map(
+                  (day, index, array) => (
+                    <span key={day}>
+                      週{day}
+                      {index < array.length - 1 && '、'}
+                    </span>
+                  ),
+                )
+              ) : (
+                <span>無收運日</span>
+              )}
             </OrderItemValue>
           </OrderItem>
 
           <OrderItem>
             <OrderItemLabel>支付方式</OrderItemLabel>
-            <OrderItemValue>
-              {(paymentMethod || defaultData.paymentMethod) === 'linepay'
-                ? 'Line Pay'
-                : (paymentMethod || defaultData.paymentMethod) === 'creditcard'
-                  ? '信用卡'
-                  : '未指定'}
-            </OrderItemValue>
+            <OrderItemValue>{LinePayMethod}</OrderItemValue>
+          </OrderItem>
+
+          <OrderItem>
+            <OrderItemLabel>訂單建立日期</OrderItemLabel>
+            <OrderItemValue>{getFormattedDateTime(UpdatedAt)}</OrderItemValue>
           </OrderItem>
 
           <Divider />
 
           <OrderItem>
             <OrderItemLabel>總計金額</OrderItemLabel>
-            <OrderItemValue>
-              NT$ {totalPrice || defaultData.totalPrice}
-            </OrderItemValue>
+            <OrderItemValue>NT$ {TotalAmount}</OrderItemValue>
           </OrderItem>
         </OrderInfoContainer>
 
-        <QRCodeContainer>
-          <QRCode
-            value={qrCodeValue}
-            size={200}
-            level="H"
-            style={{ width: '100%', maxWidth: '130px', height: 'auto' }}
-          />
-        </QRCodeContainer>
         <QRcodeTextItems>
           <QRCodeTextItem>
             <TextIcon>

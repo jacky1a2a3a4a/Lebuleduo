@@ -2,9 +2,12 @@ import styled from 'styled-components';
 
 export const ErrorReportContainer = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  padding: var(--spacing-xl);
+  padding: var(--spacing-sm) 0;
+
+  font-size: var(--font-size-xs);
 `;
 
 export const ErrorTitle = styled.div`
@@ -13,5 +16,5 @@ export const ErrorTitle = styled.div`
 `;
 
 export const ErrorMessage = styled.div`
-  color: var(--color-text-secondary);
+  color: var(--color-error);
 `;

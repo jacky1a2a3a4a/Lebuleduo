@@ -43,12 +43,16 @@ const LineCallback = () => {
         console.log('當前完整 URL:', window.location.href);
 
         // 從 URL 參數中獲取 code 和 state
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        const state = urlParams.get('state');
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get('code');
+        const state = searchParams.get('state');
 
-        console.log('code', code);
-        console.log('state', state);
+        console.log('URL 參數:', {
+          search: window.location.search,
+          code,
+          state,
+          hash: window.location.hash,
+        });
 
         // 更新除錯資訊
         setDebugInfo({
@@ -63,7 +67,7 @@ const LineCallback = () => {
 
         // 驗證授權碼(code)
         if (!code) {
-          throw new Error('無法獲取授權碼');
+          throw new Error('授權碼為空，請重新登入');
         }
 
         // 驗證 state 參數
@@ -89,7 +93,7 @@ const LineCallback = () => {
           });
 
           const response = await axios.post(
-            '/api/auth/line/callback',
+            `/api/auth/line/callback`,
             {
               code,
               role: userRole,
@@ -97,9 +101,6 @@ const LineCallback = () => {
             {
               headers: {
                 'Content-Type': 'application/json',
-              },
-              validateStatus: function (status) {
-                return status >= 200 && status < 500; // 接受 400 狀態碼
               },
             },
           );

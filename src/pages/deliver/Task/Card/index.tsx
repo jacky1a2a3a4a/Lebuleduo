@@ -1,11 +1,17 @@
 import { useNavigate } from 'react-router-dom';
-import { HiDocumentText, HiMiniTruck, HiXCircle } from 'react-icons/hi2';
-import StatusTag from '../../../../components/deliver/StatusTagDeliver';
+import {
+  HiDocumentText,
+  HiMiniTruck,
+  HiXCircle,
+  HiQrCode,
+} from 'react-icons/hi2';
+import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 import { TaskStatus } from '../../../../types/deliver';
 import { formatTime } from '../../../../utils/formatTime';
+import axios from 'axios';
 
 // 添加 BASE_URL 常數
-const BASE_URL = 'http://lebuleduo.rocket-coding.com';
+const BASE_URL = 'https://lebuleduo.rocket-coding.com';
 
 import {
   TaskCardWrapper,
@@ -25,6 +31,7 @@ import {
 
 export type TaskCardProps = {
   taskId: string;
+  number: string;
   status: TaskStatus;
   time: string;
   address: string;
@@ -38,6 +45,7 @@ export type TaskCardProps = {
 //傳入參數，同時定義型別
 export const TaskCard = ({
   taskId,
+  number,
   status,
   time,
   address,
@@ -54,18 +62,43 @@ export const TaskCard = ({
     navigate(`/deliver/task/${taskId}`);
   };
 
+  // 更新任務狀態的 API 呼叫
+  const updateOrderStatus = async (newStatus: number) => {
+    try {
+      await axios.put(`api/driver/orders/status/${taskId}`, {
+        OrderStatus: newStatus,
+      });
+      return true;
+    } catch (error) {
+      console.error('更新訂單狀態失敗:', error);
+      return false;
+    }
+  };
+
   // 確認前往/取消前往 按鈕 狀態改變
-  const handleStatusChange = () => {
+  const handleStatusChange = async () => {
     let newStatus: TaskStatus;
+    let orderStatus: number;
+
     if (status === 'scheduled') {
       newStatus = 'ongoing';
+      orderStatus = 2; // 前往中
     } else if (status === 'ongoing') {
       newStatus = 'scheduled';
+      orderStatus = 1; // 已排定
     } else {
       return;
     }
 
-    onStatusChange?.(taskId, newStatus);
+    const success = await updateOrderStatus(orderStatus);
+    if (success) {
+      onStatusChange?.(taskId, newStatus);
+    }
+  };
+
+  // 處理掃描訂單按鈕點擊
+  const handleScanOrder = () => {
+    navigate('/deliver/scan-order');
   };
 
   // 卡片按鈕文字
@@ -77,8 +110,22 @@ export const TaskCard = ({
         return '已完成';
       case 'abnormal':
         return '已回報';
+      case 'arrived':
+        return '掃描訂單';
       default:
         return '確認前往';
+    }
+  };
+
+  // 獲取按鈕圖標
+  const getActionButtonIcon = () => {
+    switch (status) {
+      case 'ongoing':
+        return <HiXCircle />;
+      case 'arrived':
+        return <HiQrCode />;
+      default:
+        return <HiMiniTruck />;
     }
   };
 
@@ -92,12 +139,12 @@ export const TaskCard = ({
           <TaskDetailContainer>
             <TaskCardHeader>
               <TaskTitle>{formatTime(time)}</TaskTitle>
-              <StatusTag status={status} />
+              <StatusTagDeliver status={status} />
             </TaskCardHeader>
             <TaskUserContent>
               <MainContent>{address}</MainContent>
               <SubContent>固定放置點: {notes}</SubContent>
-              <TertiaryContent>訂單編號: {taskId}</TertiaryContent>
+              <TertiaryContent>任務編號: {number}</TertiaryContent>
             </TaskUserContent>
           </TaskDetailContainer>
         </TaskCardContent>
@@ -109,12 +156,14 @@ export const TaskCard = ({
           </TaskCardButton>
           <TaskCardButton
             $styledType={status === 'ongoing' ? 'secondary' : 'primary'}
-            onClick={handleStatusChange}
+            onClick={
+              status === 'arrived' ? handleScanOrder : handleStatusChange
+            }
             $disabled={
               status === 'completed' || status === 'abnormal' || isDisabled
             }
           >
-            {status === 'ongoing' ? <HiXCircle /> : <HiMiniTruck />}
+            {getActionButtonIcon()}
             {getActionButtonText()}
           </TaskCardButton>
         </TaskCardButtons>

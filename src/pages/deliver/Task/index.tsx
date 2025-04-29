@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { MdCalendarToday } from 'react-icons/md';
+
 import {
   TaskSectionStyled,
   DeliverContainer,
@@ -28,7 +28,11 @@ import {
 import TaskCard from './Card';
 import Loading from '../../../components/common/LoadingMessage';
 import ErrorReport from '../../../components/common/ErrorReport';
+
+import { MdCalendarToday } from 'react-icons/md';
 import { TaskStatus } from '../../../types/deliver';
+import { getFormattedDateDash } from '../../../utils/formatDate';
+import { getTodayDate } from '../../../utils/getDate';
 
 // API 回傳的資料結構
 type ApiResponse = {
@@ -140,10 +144,13 @@ function Task() {
 
       ////3. 發送請求
       const driverId = localStorage.getItem('UsersID'); // 從localStorage獲取使用者ID
-      const response = await fetch(`api/GET/driver/today/${driverId}`, {
-        method: 'GET',
-        signal: controller.signal,
-      });
+      const response = await fetch(
+        `api/GET/driver/day/${driverId}/${getFormattedDateDash(getTodayDate())}`,
+        {
+          method: 'GET',
+          signal: controller.signal,
+        },
+      );
 
       // 清除超時計時器，因為請求已完成
       clearTimeout(timeoutId);
@@ -368,7 +375,7 @@ function Task() {
         <DeliverCard>
           <DeliverGreeting>
             <TaskGreetingItem>{getGreeting()}</TaskGreetingItem>
-            <TaskId>編號: {driverData?.Number}</TaskId>
+            <TaskId>汪汪員編號: {driverData?.Number}</TaskId>
           </DeliverGreeting>
 
           {/* 進行中的任務 */}
@@ -377,6 +384,7 @@ function Task() {
               <OngoingTaskTitle>進行中的任務</OngoingTaskTitle>
               <TaskCard
                 taskId={ongoingTask[0].id}
+                number={ongoingTask[0].orderNumber}
                 status={ongoingTask[0].status}
                 time={ongoingTask[0].time}
                 address={ongoingTask[0].address}
@@ -461,6 +469,7 @@ function Task() {
             <TaskCard
               key={task.id}
               taskId={task.id}
+              number={task.orderNumber}
               status={task.status}
               time={task.time}
               address={task.address}

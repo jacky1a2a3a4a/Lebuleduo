@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import SubscribeProgressSteps from '../../../components/customer/SubscribeProgressSteps';
-import SubscribeBottom from '../../../components/customer/SubscribeBottom';
+
+import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
 import {
   PageWrapper,
   ScrollableContent,
-  SectionTitle,
-  SectionSubtitle,
   Section,
   SubscriptionTitle,
   SubscriptionInfo,
@@ -18,52 +16,22 @@ import {
   DateTitle,
   DateText,
   DeliverTitle,
-  PaymentMethod,
-  PaymentMethodItem,
-  PaymentText,
-  PaymentSubtext,
-  PaymentTextContainer,
   FixedPointImagesContainer,
   FixedPointImagesTitle,
   FixedPointImagesGrid,
   FixedPointImage,
-  RadioButton,
-} from './styled';
+} from './styles';
 
-interface SubscriptionData {
-  // 方案資訊
-  planId: number;
-  planName: string;
-  planPeople: string;
-  planKg: number;
-  liter: number;
-  planDescription: string;
-  price: number;
+import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
+import SectionTitle from '../../../components/customer/Subscribe/SectionTitle';
+import ButtonCard from '../../../components/customer/Subscribe/ButtonCard';
 
-  // 訂閱資訊
-  frequency: number;
-  days: string;
-  startDate: string;
-  totalPrice: number;
+import { SubscriptionData } from './types';
+import { getFormattedDateWithDay } from '../../../utils/formatDate';
+import { SubscribeSteps } from '../../../components/customer/Subscribe/SubscribeSteps';
+import { createOrder } from '../../../apis/customer/PostOrder'; //api 建立訂單
 
-  // 收運資訊
-  name: string;
-  phone: string;
-  address: string;
-  deliveryMethod: 'fixedpoint' | 'ereceipt';
-  notes: string;
-  fixedPointImages?: Array<{
-    id: string;
-    url: string;
-    file?: File; // 添加檔案屬性
-  }>;
-}
-
-const steps = [
-  { number: 1, text: '選擇方案' },
-  { number: 2, text: '填選收運資料' },
-  { number: 3, text: '結帳' },
-];
+const userId = localStorage.getItem('UsersID');
 
 // 將星期幾轉換為中文
 const convertDaysToChinese = (days: string) => {
@@ -84,7 +52,6 @@ const convertDaysToChinese = (days: string) => {
 };
 
 const SubscribeCheckout = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('linePay');
   const [subscriptionData, setSubscriptionData] =
@@ -93,21 +60,36 @@ const SubscribeCheckout = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(
-      'SubscribeCheckout - 接收到的數據:',
-      location.state?.subscriptionData,
-    );
-    if (location.state?.subscriptionData) {
-      setSubscriptionData(location.state.subscriptionData);
+    const storedData = sessionStorage.getItem('subscriptionData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      // 確保 planId 是數字
+      parsedData.planId = Number(parsedData.planId);
+      setSubscriptionData(parsedData);
+      // 從 subscriptionData 中讀取付款方式
+      if (parsedData.paymentMethod) {
+        setPaymentMethod(parsedData.paymentMethod);
+      }
+      console.log('目前儲存的訂單資料:', parsedData);
     } else {
       navigate('/customer/subscribe');
     }
-  }, [location.state, navigate]);
+  }, [navigate]);
 
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
+    // 更新 subscriptionData 中的付款方式
+    if (subscriptionData) {
+      const updatedData = {
+        ...subscriptionData,
+        paymentMethod: method,
+      };
+      setSubscriptionData(updatedData);
+      sessionStorage.setItem('subscriptionData', JSON.stringify(updatedData));
+    }
   };
 
+  // === 提交訂單 ===
   const handleCheckout = async () => {
     if (!subscriptionData) return;
 
@@ -115,95 +97,145 @@ const SubscribeCheckout = () => {
     setError(null);
 
     try {
-      const userId = localStorage.getItem('UsersID');
       if (!userId) {
         setError('請先登入');
         setIsLoading(false);
         return;
       }
 
-      // 建立 FormData 物件
-      const formData = new FormData();
-      formData.append('UsersID', userId);
-      formData.append('PlanID', subscriptionData.planId.toString());
-      formData.append('DiscountID', subscriptionData.frequency.toString());
-      formData.append('OrderName', subscriptionData.name);
-      formData.append('OrderPhone', subscriptionData.phone);
-      formData.append('Addresses', subscriptionData.address);
-      formData.append('Notes', subscriptionData.notes || '');
-      formData.append('WeekDay', subscriptionData.days);
-      formData.append('StartDate', subscriptionData.startDate);
-      formData.append('TotalAmount', subscriptionData.totalPrice.toString());
+      // api 建立訂單
+      const response = await createOrder(subscriptionData);
+      console.log('api提交成功:', response);
+      console.log('訂單id:', response.orders.OrdersID);
 
-      // 處理圖片檔案上傳
-      if (
-        subscriptionData.deliveryMethod === 'fixedpoint' &&
-        subscriptionData.fixedPointImages &&
-        subscriptionData.fixedPointImages.length > 0
-      ) {
-        // 如果有檔案屬性，直接使用檔案
-        for (let i = 0; i < subscriptionData.fixedPointImages.length; i++) {
-          const image = subscriptionData.fixedPointImages[i];
-          if (image.file) {
-            formData.append(`OrderImage`, image.file, `image_${i}.jpg`);
-          } else {
-            // 如果沒有檔案但有 URL，嘗試從 URL 獲取檔案
-            try {
-              // 處理 data URL
-              if (image.url.startsWith('data:')) {
-                const response = await fetch(image.url);
-                const blob = await response.blob();
-                formData.append(`OrderImage`, blob, `image_${i}.jpg`);
-              } else {
-                // 處理 blob URL
-                const response = await fetch(image.url);
-                const blob = await response.blob();
-                formData.append(`OrderImage`, blob, `image_${i}.jpg`);
-              }
-            } catch (error) {
-              console.error('無法從 URL 獲取圖片:', error);
-              setError('圖片處理失敗，請重新上傳');
-              setIsLoading(false);
+      const orderId = response.orders.OrdersID;
+
+      // 更新 subscriptionData 並存入 session storage
+      const updatedData = {
+        ...subscriptionData,
+        orderId: orderId,
+      };
+      setSubscriptionData(updatedData);
+      sessionStorage.setItem('subscriptionData', JSON.stringify(updatedData));
+
+      if (response) {
+        // 呼叫藍新金流 API
+        try {
+          // 先檢查藍新金流是否在維護中
+          try {
+            const maintenanceCheck = await axios.get(
+              'https://cwww.newebpay.com/maintain/index',
+              {
+                timeout: 5000, // 5秒超時
+              },
+            );
+            if (maintenanceCheck.status === 200) {
+              setError('藍新金流系統正在維護中，請稍後再試');
               return;
             }
+          } catch (maintenanceError) {
+            // 如果無法訪問維護頁面，表示系統正常運作
+            console.log('藍新金流系統正常運作');
           }
+
+          const paymentResponse = await axios.post(
+            'api/Post/bluenew/createPayment',
+            {
+              orderId: orderId,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            },
+          );
+          console.log('藍新金流 API 回應:', paymentResponse.data);
+
+          // 確保頁面已完全載入
+          if (document.readyState !== 'complete') {
+            await new Promise((resolve) => {
+              window.addEventListener('load', resolve);
+            });
+          }
+
+          // 建立表單並自動提交
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = paymentResponse.data.paymentData.PaymentUrl;
+
+          // 建立隱藏的輸入欄位
+          const merchantId = document.createElement('input');
+          merchantId.type = 'hidden';
+          merchantId.name = 'MerchantID';
+          merchantId.value = paymentResponse.data.paymentData.MerchantID;
+          form.appendChild(merchantId);
+
+          const tradeInfo = document.createElement('input');
+          tradeInfo.type = 'hidden';
+          tradeInfo.name = 'TradeInfo';
+          tradeInfo.value = paymentResponse.data.paymentData.TradeInfo;
+          form.appendChild(tradeInfo);
+
+          const tradeSha = document.createElement('input');
+          tradeSha.type = 'hidden';
+          tradeSha.name = 'TradeSha';
+          tradeSha.value = paymentResponse.data.paymentData.TradeSha;
+          form.appendChild(tradeSha);
+
+          const version = document.createElement('input');
+          version.type = 'hidden';
+          version.name = 'Version';
+          version.value = paymentResponse.data.paymentData.Version || '1.6';
+          form.appendChild(version);
+
+          // 確保 document.body 存在
+          if (!document.body) {
+            throw new Error('Document body not found');
+          }
+
+          // 將表單加入頁面並提交
+          document.body.appendChild(form);
+          form.submit();
+          return;
+        } catch (paymentError) {
+          console.error('藍新金流 API 呼叫失敗:', paymentError);
+          if (axios.isAxiosError(paymentError) && paymentError.response) {
+            console.error('錯誤詳情:', paymentError.response.data);
+            setError(
+              `付款處理失敗: ${paymentError.response.data.message || '請稍後再試'}`,
+            );
+          } else if (paymentError.code === 'ECONNABORTED') {
+            setError('藍新金流系統連線逾時，請稍後再試');
+          } else {
+            setError('付款處理失敗，請稍後再試');
+          }
+          return;
         }
-      }
-
-      // 發送請求到後端 API
-      const response = await axios.post('/api/POST/user/orders', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      if (response.data) {
-        navigate('/customer/subscribe-success', {
-          state: {
-            subscriptionData,
-            orderId: response.data.orderId,
-          },
-        });
       }
     } catch (err) {
       console.error('訂單提交失敗:', err);
-      setError('訂單提交失敗，請稍後再試');
+      if (axios.isAxiosError(err) && err.response) {
+        console.error('錯誤詳情:', err.response.data);
+        setError(`訂單提交失敗: ${err.response.data.message || '請稍後再試'}`);
+      } else {
+        setError('訂單提交失敗，請稍後再試');
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 如果沒有訂單資料，則不顯示頁面
   if (!subscriptionData) {
     return null;
   }
 
   return (
     <PageWrapper>
-      <SubscribeProgressSteps steps={steps} currentStep={3} />
+      <ProgressSteps steps={SubscribeSteps} currentStep={3} />
 
       <ScrollableContent>
-        <SectionTitle>訂單明細</SectionTitle>
-        <SectionSubtitle>請確認您的訂單資訊</SectionSubtitle>
+        <SectionTitle mainTitle="訂單明細" subTitle="請確認您的訂單資訊" />
 
         <Section>
           <SubscriptionTitle>
@@ -231,31 +263,19 @@ const SubscribeCheckout = () => {
             <SubscriptionDateInfoItem>
               <DateTitle>開始時間</DateTitle>
               <DateText>
-                {new Date(subscriptionData.startDate)
-                  .toLocaleDateString('zh-TW', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    weekday: 'short',
-                  })
-                  .replace(/\//g, '/')}
+                {getFormattedDateWithDay(subscriptionData.startDate)}
               </DateText>
             </SubscriptionDateInfoItem>
 
             <SubscriptionDateInfoItem>
               <DateTitle>結束時間</DateTitle>
               <DateText>
-                {new Date(
-                  new Date(subscriptionData.startDate).getTime() +
-                    subscriptionData.frequency * 30 * 24 * 60 * 60 * 1000,
-                )
-                  .toLocaleDateString('zh-TW', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    weekday: 'short',
-                  })
-                  .replace(/\//g, '/')}
+                {getFormattedDateWithDay(
+                  new Date(
+                    new Date(subscriptionData.startDate).getTime() +
+                      subscriptionData.frequency * 30 * 24 * 60 * 60 * 1000,
+                  ).toISOString(),
+                )}
               </DateText>
             </SubscriptionDateInfoItem>
           </SubscriptionDateInfo>
@@ -295,36 +315,22 @@ const SubscribeCheckout = () => {
           </SubscriptionInfo>
         </Section>
 
-        <SectionTitle>選擇付款方式</SectionTitle>
-        <SectionSubtitle> </SectionSubtitle>
+        <SectionTitle mainTitle="選擇付款方式" subTitle="" />
 
         <Section>
-          <PaymentMethod>
-            <PaymentMethodItem
-              selected={paymentMethod === 'linePay'}
-              onClick={() => handlePaymentMethodChange('linePay')}
-            >
-              <RadioButton selected={paymentMethod === 'linePay'} />
-              <PaymentTextContainer>
-                <PaymentText>LINE pay</PaymentText>
-                <PaymentSubtext>
-                  您可以選擇Line
-                  pay付款，請直接點選下方結帳按鍵，系統將直接導入付款連結
-                </PaymentSubtext>
-              </PaymentTextContainer>
-            </PaymentMethodItem>
+          <ButtonCard
+            title="LINE pay"
+            subtitle="選擇Linepay付款，系統將直接導入付款連結"
+            $active={paymentMethod === 'linePay'}
+            onClick={() => handlePaymentMethodChange('linePay')}
+          />
 
-            <PaymentMethodItem
-              selected={paymentMethod === 'creditCard'}
-              onClick={() => handlePaymentMethodChange('creditCard')}
-            >
-              <RadioButton selected={paymentMethod === 'creditCard'} />
-              <PaymentTextContainer>
-                <PaymentText>信用卡付款</PaymentText>
-                <PaymentSubtext>您可以選擇立即以信用卡完成付款</PaymentSubtext>
-              </PaymentTextContainer>
-            </PaymentMethodItem>
-          </PaymentMethod>
+          <ButtonCard
+            title="信用卡付款"
+            subtitle="選擇立即以信用卡完成付款"
+            $active={paymentMethod === 'creditCard'}
+            onClick={() => handlePaymentMethodChange('creditCard')}
+          />
         </Section>
       </ScrollableContent>
 

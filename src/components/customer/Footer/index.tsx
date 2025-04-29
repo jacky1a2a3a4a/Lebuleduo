@@ -13,7 +13,7 @@ const customerFooterNavItems: FooterNavItem[] = [
   {
     icon: MdAssignment,
     label: '我的訂單',
-    path: '/customer/my-order',
+    path: '/customer',
   },
   {
     icon: MdAddShoppingCart,

@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://4.240.61.223/:path*"
+      "destination": "https://lebuleduo.rocket-coding.com/:path*"
     }
   ],
   "headers": [

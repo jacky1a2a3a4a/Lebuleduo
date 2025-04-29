@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdError } from 'react-icons/md';
-import dogImage from '../../../assets/Lebuledou_lying.png';
-import dogTruckImage from '../../../assets/Lebuledou_truck.png';
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import { MdError, MdArrowCircleRight } from 'react-icons/md';
+import dogImage from '../../../assets/images/Lebuledou_lying.png';
+import dogTruckImage from '../../../assets/images/Lebuledou_truck.png';
 
 import {
   OrderStep,
@@ -18,8 +17,11 @@ import {
   UserCard,
   UserGreeting,
   UserCardItem,
+  UserCardItemColumn,
   UserCardTitle,
   UserCardButton,
+  UserCardDate,
+  UserCardTime,
   ImageContainer,
   DogImage,
   ProgressBarSection,
@@ -47,17 +49,24 @@ import {
   OrderCardItem,
   OrderCardSubtitle,
   OrderCardDetail,
-} from './styled';
+} from './styles';
 
-// 虛擬機URL(照片會用到)
-const BASE_URL = 'http://lebuleduo.rocket-coding.com';
+import LoadingMessage from '../../../components/common/LoadingMessage';
+import { getTodayDate } from '../../../utils/getDate';
+import { getFormattedDateWithDay } from '../../../utils/formatDate';
+import { getUsersID, getUserName } from '../../../utils/getUserLocalData';
+
+// 照片用URL
+const BASE_URL = import.meta.env.VITE_API_URL;
+const userID = getUsersID();
+const userName = getUserName();
+
+console.log('userID', userID);
+console.log('userName', userName);
 
 // 組件本體
 function MyOrder() {
   const navigate = useNavigate();
-  const userData = JSON.parse(localStorage.getItem('user_data') || '{}');
-  const userName = userData.displayName || '尊貴的會員';
-  const userId = localStorage.getItem('UsersID'); // 從localStorage獲取用戶ID
 
   // 根據時間返回問候語
   const getGreeting = () => {
@@ -73,7 +82,8 @@ function MyOrder() {
 
   // 使用者今日數據狀態
   const [todayData, setTodayData] = useState<ApiTodayOrder | null>(null);
-  const todayDataStatus = todayData?.status || '已抵達'; // 如果沒有數據，默認為'前往中'
+  const todayDataStatus = todayData?.status || '未排定'; // 如果沒有數據，默認為'未排定'
+  console.log('todayDataStatus', todayDataStatus);
 
   // 根據狀態設定 currentStep
   let currentStep = 0;
@@ -83,6 +93,8 @@ function MyOrder() {
     currentStep = 1;
   } else if (todayDataStatus === '已完成') {
     currentStep = 2;
+  } else if (todayDataStatus === '異常') {
+    currentStep = 2; // 異常狀態也設為第一步
   }
 
   // 收運進度條 步驟
@@ -140,9 +152,9 @@ function MyOrder() {
         setError(null);
 
         // API使用代理路徑
-        const userTodayAPI_Path = `/api/GET/user/dashboard/today/${userId}`;
-        const currentOrdersAPI_Path = `/api/GET/user/orders/${userId}`;
-        const completedOrdersAPI_Path = `/api/GET/user/orders/completed/${userId}`;
+        const userTodayAPI_Path = `/api/GET/user/dashboard/today/${userID}`;
+        const currentOrdersAPI_Path = `/api/GET/user/orders/${userID}`;
+        const completedOrdersAPI_Path = `/api/GET/user/orders/completed/${userID}`;
 
         // 分別調用API獲取數據
         // 使用者今日數據
@@ -204,7 +216,7 @@ function MyOrder() {
     };
 
     fetchOrders();
-  }, [userId]);
+  }, [userID, userName]);
 
   return (
     <MyOrderSectionStyled>
@@ -217,10 +229,18 @@ function MyOrder() {
 
           <UserCardItem>
             <UserCardTitle>今日任務</UserCardTitle>
-            <UserCardButton>查看詳情</UserCardButton>
+            <UserCardButton>
+              查看詳情
+              <MdArrowCircleRight />
+            </UserCardButton>
           </UserCardItem>
 
-          <UserCardItem></UserCardItem>
+          <UserCardItemColumn>
+            <UserCardDate>
+              {getFormattedDateWithDay(getTodayDate())}
+            </UserCardDate>
+            <UserCardTime>{todayData?.driverTime || '未排定'}</UserCardTime>
+          </UserCardItemColumn>
         </UserCard>
 
         {/* 狗圖 */}
@@ -290,7 +310,7 @@ function MyOrder() {
         {/* 訂單列表 */}
         <OrderListSection>
           {isLoading ? (
-            <LoadingMessage size="mini" />
+            <LoadingMessage size="mini" animationType="moving" />
           ) : error ? (
             <div
               style={{

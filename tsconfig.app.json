@@ -15,6 +15,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path Aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
     /* Linting 原始設定 */
     // "strict": true,
     // "noUnusedLocals": true,
@@ -31,5 +37,5 @@
     "noFallthroughCasesInSwitch": false, // 從 true 改為 false
     "noUncheckedSideEffectImports": false // 從 true 改為 false
   },
-  "include": ["src"]
+  "include": ["src", "src/layouts/AdminLayout/index.tsx"]
 }
