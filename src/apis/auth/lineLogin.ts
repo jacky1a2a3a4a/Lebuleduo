@@ -1,7 +1,7 @@
 import { getLineConfig, saveLineState } from '../../configs/lineConfig';
 
 export interface LineLoginParams {
-  role: 'customer' | 'driver';
+  role: 'customer' | 'deliver';
 }
 
 export const lineLogin = ({ role }: LineLoginParams) => {

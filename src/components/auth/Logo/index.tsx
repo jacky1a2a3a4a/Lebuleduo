@@ -3,7 +3,7 @@ import LogotypeCustomer from '../../../assets/logos/logotype-customer-white.png'
 import { Logo, WelcomeText, LogoType, TextSub } from './styles';
 
 interface LogoProps {
-  type?: 'customer' | 'driver';
+  type?: 'customer' | 'deliver';
 }
 
 const AuthLogo = ({ type = 'customer' }: LogoProps) => {

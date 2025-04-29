@@ -39,7 +39,7 @@ const LineLogin = () => {
 
   return (
     <Section>
-      <AuthLogo type="driver" />
+      <AuthLogo type="deliver" />
       <LineLoginButton
         onClick={handleLineLogin}
         isAnimating={isAnimating}
