@@ -26,15 +26,13 @@ const AdminLayout = () => {
   return (
     <Container>
       <Sidebar>
-        <SidebarHeader>
-          Lebu-leduo
-        </SidebarHeader>
+        <SidebarHeader>Lebu-leduo</SidebarHeader>
         <NavItems>
           <NavItem>
             <MdDescription size={13} />
             <span>訂單管理</span>
           </NavItem>
-          <NavItem active={isActive('')} onClick={() => navigate('/admin')}>
+          <NavItem $active={isActive('')} onClick={() => navigate('/admin')}>
             <MdAssignment size={13} />
             <span>任務發派</span>
           </NavItem>
@@ -52,7 +50,7 @@ const AdminLayout = () => {
           </NavItem>
         </NavItems>
       </Sidebar>
-      <MainContent assignmentPanelOpen={false}>
+      <MainContent $assignmentPanelOpen={false}>
         <Outlet />
       </MainContent>
     </Container>

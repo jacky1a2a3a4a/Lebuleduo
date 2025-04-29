@@ -38,11 +38,13 @@ export const OptionsContainer = styled.div`
   box-shadow: var(--shadow-sm);
 `;
 
-export const Option = styled.div`
+export const Option = styled.div<{ selected?: boolean }>`
   padding: var(--spacing-2xs) var(--spacing-sm);
   cursor: pointer;
   font-size: var(--font-size-3xs);
   color: var(--color-text-primary);
+  background-color: ${(props) =>
+    props.selected ? 'var(--color-neutral-200)' : 'transparent'};
 
   &:hover {
     background-color: var(--color-neutral-200);

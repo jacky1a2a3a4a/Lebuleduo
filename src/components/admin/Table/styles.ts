@@ -4,7 +4,8 @@ export const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: var(--spacing-md);
-  max-height: calc(100vh - 100px);
+  height: 100%;
+  overflow: hidden; /* 容器本身不滾動 */
 `;
 
 export const StyledTable = styled.table`
@@ -13,8 +14,12 @@ export const StyledTable = styled.table`
   border-spacing: 0;
   background: var(--color-white);
   border-radius: var(--border-radius-md);
-  overflow: hidden;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  table-layout: fixed;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 export const StyledThead = styled.thead`
@@ -22,8 +27,9 @@ export const StyledThead = styled.thead`
   position: sticky;
   top: 0;
   z-index: 1;
-  display: table;
   width: 100%;
+  display: table;
+  table-layout: fixed;
 
   tr {
     th {
@@ -31,7 +37,7 @@ export const StyledThead = styled.thead`
       font-size: var(--font-size-3xs);
       font-weight: 600;
       color: var(--color-neutral-700);
-      text-align: left;
+      text-align: center;
       border-bottom: 2px solid var(--color-neutral-200);
       white-space: nowrap;
 
@@ -94,12 +100,13 @@ export const StyledThead = styled.thead`
 `;
 
 export const StyledTbody = styled.tbody`
-  display: block;
-  max-height: calc(100vh - 300px);
+  max-height: calc(100vh - 260px);
   overflow-y: auto;
+  display: block;
   width: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--color-neutral-300) var(--color-neutral-100);
+  flex: 1;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -147,6 +154,7 @@ export const StyledTd = styled.td`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 
   &:first-child {
     padding-left: var(--spacing-lg);

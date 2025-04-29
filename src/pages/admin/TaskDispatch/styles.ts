@@ -13,7 +13,7 @@ export const MainContent = styled.div<{ $assignmentPanelOpen: boolean }>`
   display: flex;
   flex-direction: column;
   transition: all 0.3s;
-  margin-right: ${(props) => (props.$assignmentPanelOpen ? '350px' : '0')};
+  margin-right: ${(props) => (props.$assignmentPanelOpen ? '300px' : '0')};
   height: 100vh;
 `;
 
@@ -24,7 +24,6 @@ export const ContentWrapper = styled.div`
   overflow: auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 // === 內容區域 ===
@@ -39,9 +38,10 @@ export const Content = styled.div`
 // === 統計卡片區域 ===
 export const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--spacing-md);
   flex: 1;
+  margin: var(--spacing-sm) 0;
 `;
 
 // === 表格容器 最外層 ===
@@ -54,6 +54,7 @@ export const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
   min-height: 0;
 `;
 
@@ -130,18 +131,4 @@ export const TableHeader = styled.div`
       }
     }
   }
-`;
-
-export const Badge = styled.span<{ $variant?: 'default' | 'warning' }>`
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-3xs);
-  background-color: ${(props) =>
-    props.$variant === 'warning'
-      ? 'var(--color-yellow-100)'
-      : 'var(--color-neutral-200)'};
-  color: ${(props) =>
-    props.$variant === 'warning'
-      ? 'var(--color-yellow-700)'
-      : 'var(--color-text-primary)'};
 `;
