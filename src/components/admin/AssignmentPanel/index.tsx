@@ -1,3 +1,4 @@
+import { MdRemove, MdAdd } from 'react-icons/md';
 import {
   Panel,
   PanelHeader,
@@ -69,7 +70,7 @@ const AssignmentPanel = ({
                     }
                     disabled={deliverAssignments[deliver.UsersID] <= 0}
                   >
-                    -
+                    <MdRemove />
                   </QuantityButton>
                   <StyledInput
                     type="number"
@@ -97,7 +98,7 @@ const AssignmentPanel = ({
                       ) >= selectedTasks.length
                     }
                   >
-                    +
+                    <MdAdd />
                   </QuantityButton>
                 </QuantityControls>
               </DeliverControls>

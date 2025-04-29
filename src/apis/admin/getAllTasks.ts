@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { getTomorrowDate } from '../../utils/getDate';
+import { getFormattedDateDash } from '../../utils/formatDate';
 
 interface Order {
   OrderDetailID: number;
@@ -37,8 +39,11 @@ interface ApiResponse {
 
 export const getAllTasks = async (): Promise<ApiResponse> => {
   try {
+    const tomorrow = getTomorrowDate();
+    const formattedDate = getFormattedDateDash(tomorrow.toISOString());
+
     const response = await axios.get<ApiResponse>(
-      `/api/GET/Admin/OrderDetail/Pending`,
+      `/api/GET/Admin/OrderDetail/Pending?date=${formattedDate}`,
     );
     return response.data;
   } catch (error) {

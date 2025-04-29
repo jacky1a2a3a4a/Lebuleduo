@@ -13,7 +13,7 @@ export const MainContent = styled.div<{ $assignmentPanelOpen: boolean }>`
   display: flex;
   flex-direction: column;
   transition: all 0.3s;
-  margin-right: ${(props) => (props.$assignmentPanelOpen ? '350px' : '0')};
+  margin-right: ${(props) => (props.$assignmentPanelOpen ? '300px' : '0')};
   height: 100vh;
 `;
 
@@ -38,9 +38,10 @@ export const Content = styled.div`
 // === 統計卡片區域 ===
 export const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--spacing-md);
   flex: 1;
+  margin: var(--spacing-sm) 0;
 `;
 
 // === 表格容器 最外層 ===

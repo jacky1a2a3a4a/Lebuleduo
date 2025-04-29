@@ -3,7 +3,6 @@ import {
   StyledThead,
   StyledTbody,
   StyledTd,
-  ViewDetailsButton,
   TableContainer,
 } from './styles';
 
@@ -38,10 +37,9 @@ export const Table = ({
             <th>任務狀態</th>
             <th>方案類型</th>
             <th>收運地區</th>
-            <th>開始時間</th>
-            <th>結束時間</th>
+            <th>收運開始時間</th>
+            <th>收運結束時間</th>
             <th>負責汪汪員</th>
-            <th>訂單詳情</th>
           </tr>
         </StyledThead>
 
@@ -80,9 +78,6 @@ export const Table = ({
                   : '未完成'}
               </StyledTd>
               <StyledTd>{order.ResponsibleDriver}</StyledTd>
-              <StyledTd>
-                <ViewDetailsButton>查看詳情</ViewDetailsButton>
-              </StyledTd>
             </tr>
           ))}
         </StyledTbody>

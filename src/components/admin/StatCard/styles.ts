@@ -13,7 +13,7 @@ export const StatCardContainer = styled.div`
   height: 100%;
   max-height: 50px;
 
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm);
   border-radius: var(--border-radius-md);
   box-shadow: var(--card-shadow);
 `;
@@ -45,6 +45,9 @@ export const Text = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 export const Title = styled.div`
@@ -56,10 +59,13 @@ export const Title = styled.div`
 export const Numbers = styled.div`
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
 
 export const Value = styled.div`
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
 `;
 

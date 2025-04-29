@@ -5,7 +5,7 @@ export const Panel = styled.div`
   position: fixed;
   top: 0;
   right: 0;
-  width: 350px;
+  width: 300px;
   height: 100vh;
   z-index: 100;
   display: flex;
@@ -75,7 +75,7 @@ export const DeliverItem = styled.div`
 // 代收員卡片資訊
 export const DeliverInfo = styled.div`
   p {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
   }
 
@@ -181,7 +181,7 @@ export const DistributeButton = styled.button`
   color: var(--color-white);
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-round);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-2xs);
   cursor: pointer;
   transition: all 0.2s;
 
@@ -217,7 +217,7 @@ export const FooterButton = styled.button<{ $variant?: 'primary' | 'outline' }>`
     $variant === 'outline' ? '1px solid var(--color-text-tertiary)' : 'none'};
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-round);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-2xs);
   cursor: pointer;
   transition: all 0.2s;
   min-width: 80px;

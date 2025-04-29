@@ -17,14 +17,15 @@ import {
 import { Order, Amount, Filters, Driver } from './types';
 
 import Header from '../../../components/admin/Header';
-import FunctionHeader from '../../../components/admin/FunctionHeader';
 import Select from '../../../components/admin/Select';
 import StatCard from '../../../components/admin/StatCard';
 import Table from '../../../components/admin/Table';
 import AssignmentPanel from '../../../components/admin/AssignmentPanel';
 
-import { getAllTasks } from '../../../apis/admin/getAllTasks';
-import { assignTasks } from '../../../apis/admin/assignTasks';
+import { getAllTasks } from '../../../apis/admin/getAllTasks'; //api 獲取任務(明天)
+import { assignTasks } from '../../../apis/admin/assignTasks'; //api 分配任務
+import { getTodayDate } from '../../../utils/getDate';
+import { getFormattedDateWithDay } from '../../../utils/formatDate';
 
 export default function TaskDispatchSystem() {
   const [orders, setOrders] = useState<Order[]>([]); // 儲存api獲取的所有任務
@@ -36,11 +37,11 @@ export default function TaskDispatchSystem() {
     DriverIsOnline: 0,
   }); // 儲存api獲取的訂單數量資料
   const [delivers, setDelivers] = useState<Driver[]>([]); // 儲存api獲取的汪汪員資料
-  const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
-  const [assignmentPanelOpen, setAssignmentPanelOpen] = useState(false);
+  const [selectedTasks, setSelectedTasks] = useState<string[]>([]); // 儲存選取的任務
+  const [assignmentPanelOpen, setAssignmentPanelOpen] = useState(false); // 儲存分派面板是否開啟
   const [deliverAssignments, setDeliverAssignments] = useState<
     Record<number, number>
-  >({});
+  >({}); // 儲存汪汪員分配的任務數量
 
   // 新增過濾和分頁狀態
   const [filters, setFilters] = useState<Filters>({
@@ -148,7 +149,12 @@ export default function TaskDispatchSystem() {
           }),
       };
 
+      console.log('api 分配任務', assignments);
+
+
+      // api 分配任務
       const response = await assignTasks(assignments);
+      console.log('api 分配任務回傳', response);
 
       if (response.status) {
         // 重新獲取任務列表以更新狀態
@@ -222,10 +228,14 @@ export default function TaskDispatchSystem() {
         <Header />
 
         <ContentWrapper>
-          <FunctionHeader />
-
           {/* 狀態卡片 */}
           <StatsGrid>
+            <StatCard
+              title="今天日期"
+              value={getFormattedDateWithDay(getTodayDate())}
+              subtitle="請發派明日任務"
+              icon={<MdDescription size={24} />}
+            />
             <StatCard
               title="任務總數"
               value={amount.totalCount.toString()}
@@ -235,7 +245,7 @@ export default function TaskDispatchSystem() {
             <StatCard
               title="未分派任務"
               value={amount.UnScheduled.toString()}
-              subtitle="請於當日07:30前分派完畢"
+              subtitle="請於18:00前發派完畢"
               icon={<MdEditCalendar size={24} />}
             />
             <StatCard
