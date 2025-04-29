@@ -216,13 +216,13 @@ Clone 專案
 >  <img alt="lovable" src="https://img.shields.io/badge/lovable-FF69B4?style=for-the-badge&logo=lovable&logoColor=white" />
 >  <img alt="gpt" src="https://img.shields.io/badge/gpt-10A37F?style=for-the-badge&logo=openai&logoColor=white" />
 >  <img alt="claude" src="https://img.shields.io/badge/claude-FFA500?style=for-the-badge&logo=anthropic&logoColor=white" />
-
+>
 > > #### 設計工具
 > >
 >  <img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white" />
 >  <img alt="canva" src="https://img.shields.io/badge/canva-00C4CC?style=for-the-badge&logo=canva&logoColor=white" />
 >  <img alt="react-icons" src="https://img.shields.io/badge/react--icons-E91E63?style=for-the-badge&logo=react&logoColor=white" />
-
+>
 > > #### 團隊協作/任務管理
 > >
 >  <img src="https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white" />
@@ -235,37 +235,37 @@ Clone 專案
 >  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
 >  <img alt="React" src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
 >  <img alt="Vite" src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" />
-
+>
 > > #### 樣式管理
 > >
 >  <img alt="styled-components" src="https://img.shields.io/badge/styled--components-db7093?style=for-the-badge&logo=styled-components&logoColor=white" />
-
+>
 > > #### 版本控制
 > >
 >  <img alt="React Router" src="https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white" />
-
+>
 > > #### 地圖功能
 > >
 >  <img alt="Google Maps" src="https://img.shields.io/badge/Google%20Maps-4285F4?style=for-the-badge&logo=google-maps&logoColor=white" />
-
+>
 > > #### 掃描功能
 > >
 >  <img alt="React QR Scanner" src="https://img.shields.io/badge/React%20QR%20Scanner-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
-
+>
 > > #### 部署平台
 > >
 >  <img alt="Vercel" src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
-
+>
 > > #### 程式碼品質
 > >
 >  <img alt="ESLINT" src="https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white" />
 >  <img alt="PRETTIER" src="https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E" />
-
+>
 > > #### API 測試與溝通
 > >
 >  <img alt="postman" src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white" />
 >  <img src="https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white" />
-
+>
 > > #### AI 協作
 > >
 >  <img alt="claude" src="https://img.shields.io/badge/claude-FFA500?style=for-the-badge&logo=anthropic&logoColor=white" />
@@ -276,17 +276,17 @@ Clone 專案
 > >
 >  <img src="https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white" />
 >  <img src="https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white" />
-
+>
 > > #### 資料庫
 > >
 >  <img src="https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white" />
-
+>
 > > #### 雲端 & 伺服器
 > >
 >  <img src="https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white" />
-
+>
 ## Git Flow
-
+>
 > 以 GitHub Flow 為基礎，建立符合我們團隊規範的客製化 Git Flow
 
 ### Branch 命名規範
