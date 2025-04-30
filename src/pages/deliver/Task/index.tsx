@@ -118,6 +118,7 @@ function Task() {
   const [isLoading, setIsLoading] = useState(false); // 是否正在載入
   const [error, setError] = useState<string | null>(null); // 錯誤訊息
   const [driverData, setDriverData] = useState<DriverData | null>(null); // 汪汪員資料
+  console.log('汪汪員資料:', driverData);
   const [tasks, setTasks] = useState<TaskItem[]>([]); // 任務列表
 
   // 從 localStorage 讀取保存的分類，如果沒有則默認為 'waiting'
@@ -165,7 +166,7 @@ function Task() {
       console.log('API 任務資料:', data.result.Orders);
 
       ////5. 處理回應資料(將任務轉換為任務列表)
-      if (data.status && Array.isArray(data.result.Orders)) {
+      if (data.status) {
         // 儲存汪汪員資料
         setDriverData({
           DriverID: data.result.DriverID,
@@ -374,7 +375,7 @@ function Task() {
       <DeliverContainer ref={deliverContainerRef}>
         <DeliverCard>
           <DeliverGreeting>
-            <TaskGreetingItem>{getGreeting()}</TaskGreetingItem>
+            <TaskGreetingItem>{getGreeting()} {driverData?.DriverName}</TaskGreetingItem>
             <TaskId>汪汪員編號: {driverData?.Number}</TaskId>
           </DeliverGreeting>
 

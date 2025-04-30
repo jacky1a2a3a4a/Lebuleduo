@@ -67,11 +67,10 @@ function ScanOrder() {
         }
 
         const currentOrderID = executingOrderData.OrderDetailID;
-        const currentOrderCustomerNumber = executingOrderData.CustomerNumber;
         const currentOrderNumber = executingOrderData.OrderDetailsNumber;
         const currentOrderStatus = executingOrderData.Status;
 
-        // 驗證三個條件
+        // 只驗證兩個條件
         if (orderData.OrderDetailsNumber !== currentOrderNumber) {
           setScanError(
             `．掃描到的訂單編號 ${orderData.OrderDetailsNumber}\n．當前執行任務的訂單編號 ${currentOrderNumber}\n．兩者編號不相符，請重新確認。`,
@@ -81,11 +80,6 @@ function ScanOrder() {
 
         if (orderData.OrderDetailID !== currentOrderID) {
           setScanError('掃描的任務ID與當前執行中的任務不符，請重新確認。');
-          return;
-        }
-
-        if (orderData.CustomerNumber !== currentOrderCustomerNumber) {
-          setScanError('掃描的顧客編號與當前執行中的任務不符，請重新確認。');
           return;
         }
 

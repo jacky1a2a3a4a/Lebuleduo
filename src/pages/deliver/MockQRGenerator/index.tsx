@@ -2,20 +2,18 @@ import { useCallback, useState } from 'react';
 import QRCodeGenerator from '../../../components/common/QRCodeGenerator';
 
 function MockQRGenerator() {
-  const [orderDetailID, setOrderDetailID] = useState<string>(''); //ID(後台用)
-  const [customerNumber, setCustomerNumber] = useState<string>(''); //顧客編號(後台用)
+  const [orderDetailID, setOrderDetailID] = useState<string>(''); //訂單ID(後台用)
   const [orderDetailsNumber, setOrderDetailsNumber] = useState<string>(''); //訂單編號(前台可以看)
 
   // 生成訂單 QR Code 所需的數據
   const generateOrderQRData = useCallback(() => {
-    if (!orderDetailID || !customerNumber) return null;
+    if (!orderDetailsNumber || !orderDetailID) return null;
 
     return {
-      OrderDetailID: parseInt(orderDetailID), //任務ID
-      CustomerNumber: customerNumber, //顧客編號
+      OrderDetailID: orderDetailID, //訂單ID
       OrderDetailsNumber: orderDetailsNumber, //訂單編號
     };
-  }, [orderDetailID, customerNumber, orderDetailsNumber]);
+  }, [orderDetailsNumber, orderDetailID]);
 
   return (
     <div
@@ -30,21 +28,10 @@ function MockQRGenerator() {
       <h2 style={{ marginBottom: '20px' }}>QR Code 產成器</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <input
-          type="number"
-          placeholder="請輸入 OrderDetailID"
+          type="text"
+          placeholder="請輸入訂單ID"
           value={orderDetailID}
           onChange={(e) => setOrderDetailID(e.target.value)}
-          style={{
-            padding: '8px',
-            borderRadius: '4px',
-            border: '1px solid #ddd',
-          }}
-        />
-        <input
-          type="text"
-          placeholder="請輸入 CustomerNumber"
-          value={customerNumber}
-          onChange={(e) => setCustomerNumber(e.target.value)}
           style={{
             padding: '8px',
             borderRadius: '4px',
@@ -62,7 +49,7 @@ function MockQRGenerator() {
             border: '1px solid #ddd',
           }}
         />
-        {orderDetailID && customerNumber && (
+        {orderDetailsNumber && orderDetailID && (
           <div
             style={{
               display: 'flex',
