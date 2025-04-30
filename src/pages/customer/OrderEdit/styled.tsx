@@ -25,13 +25,11 @@ export const EmptyMessage = styled.div`
 
 // 成功訊息
 export const SuccessMessage = styled.div`
-  background-color: var(--color-success-light);
-  color: var(--color-success);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-  border-radius: var(--border-radius-sm);
+  color: var(--color-error);
+  margin: 0 auto;
+  margin-bottom: var(--spacing-sm);
   text-align: center;
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
 `;
 
@@ -234,7 +232,6 @@ export const OrderListContainer = styled.div`
 export const OrderList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-12);
   width: 100%;
   padding: 0 var(--spacing-xs);
 `;
@@ -475,11 +472,11 @@ export const SaveButton = styled.button`
   font-weight: var(--font-weight-medium);
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-top: var(--spacing-lg);
 
   &:disabled {
-    background-color: var(--color-gray-300);
+    background-color: var(--color-primary);
     color: var(--color-white);
+    opacity: 0.5;
     cursor: not-allowed;
   }
 
@@ -488,7 +485,8 @@ export const SaveButton = styled.button`
     color: var(--color-white);
 
     &:hover {
-      background-color: var(--color-primary-dark);
+      background-color: var(--color-primary-hover);
+      opacity: 0.8;
       transform: translateY(-1px);
     }
 

@@ -373,10 +373,6 @@ function OrderEdit() {
       />
 
       <ContentArea>
-        {showSuccessMessage && (
-          <SuccessMessage>修改成功！將在3秒後返回上一頁...</SuccessMessage>
-        )}
-
         {/* 方案卡片 */}
         <OrderCard>
           <CardHeader>
@@ -539,6 +535,11 @@ function OrderEdit() {
             </FormSection>
 
             <FormGroup>
+              {showSuccessMessage && (
+                <SuccessMessage>
+                  *修改成功！即將跳轉回到訂單詳情
+                </SuccessMessage>
+              )}
               <SaveButton onClick={handleSave} disabled={!isFormValid()}>
                 儲存修改
               </SaveButton>
