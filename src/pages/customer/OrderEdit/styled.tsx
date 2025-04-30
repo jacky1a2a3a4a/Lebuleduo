@@ -221,7 +221,7 @@ export const OrderListContainer = styled.div`
   background-color: var(--color-white);
   border: 1px solid var(--color-neutral-400);
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-md) var(--spacing-sm);
+  padding: var(--spacing-md);
   overflow-y: auto;
   height: 100%;
 
@@ -342,7 +342,7 @@ export const StyledTextarea = styled.textarea<{ $error?: boolean }>`
   border: 1px solid
     ${(props) =>
       props.$error ? 'var(--color-red-500)' : 'var(--color-neutral-400)'};
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius-lg);
   font-size: var(--font-size-sm);
   min-height: 100px;
   resize: vertical;
@@ -413,7 +413,8 @@ export const DeliveryOptionImageContainer = styled.div`
 
 // 收運選項圖片列表
 export const DeliveryOptionImages = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-sm);
   margin-bottom: var(--spacing-sm);
 `;
@@ -421,9 +422,10 @@ export const DeliveryOptionImages = styled.div`
 // 收運選項圖片
 export const DeliveryOptionImage = styled.div`
   position: relative;
-  width: 100px;
-  height: 100px;
-  border-radius: var(--border-radius-sm);
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: var(--border-radius-lg);
   overflow: hidden;
 `;
 
@@ -437,15 +439,15 @@ export const DeliveryOptionImagePhoto = styled.div`
 
 // 輸入框
 export const StyledInput = styled.input<{ $error?: boolean }>`
-  width: 100%;
-  padding: var(--spacing-sm);
+  background-color: var(--color-white);
+  color: var(--color-text-primary);
   border: 1px solid
     ${(props) =>
       props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-round);
+  width: 100%;
+  padding: var(--spacing-md);
   font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
-  background-color: var(--color-white);
   transition: border-color 0.2s ease;
 
   &:focus {
@@ -461,5 +463,37 @@ export const StyledInput = styled.input<{ $error?: boolean }>`
   &:disabled {
     background-color: var(--color-gray-100);
     cursor: not-allowed;
+  }
+`;
+
+// 儲存按鈕
+export const SaveButton = styled.button`
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-round);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: var(--spacing-lg);
+
+  &:disabled {
+    background-color: var(--color-gray-300);
+    color: var(--color-white);
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled) {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+
+    &:hover {
+      background-color: var(--color-primary-dark);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 `;

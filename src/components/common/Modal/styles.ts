@@ -34,13 +34,13 @@ export const CloseButton = styled.button`
   background: var(--color-background-primary);
   border: none;
   border-radius: var(--border-radius-round);
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-lg);
   z-index: 1001;
   box-shadow: var(--btn-shadow);
 

@@ -1,15 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import QRCodeGenerator from '../../common/QRCodeGenerator';
 import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
+import { MdArrowBackIos, MdArrowForwardIos } from 'react-icons/md';
 import {
   QRCodeContainer,
   QRCodeTitle,
-  OrderNumber,
   QRCodeList,
   QRCodeItem,
   TaskInfo,
   DownloadButton,
   QRCodePage,
+  PaginationContainer,
+  PageButton,
+  PageInfo,
 } from './styles';
 import { OrderResult, OrderDetail } from './types';
 import html2canvas from 'html2canvas';
@@ -23,14 +26,44 @@ const QRcodeData: React.FC<QRcodeDataProps> = ({ orderId, userId }) => {
   const [orderData, setOrderData] = useState<OrderResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const qrCodeRef = useRef<HTMLDivElement>(null);
+
+  const ITEMS_PER_PAGE = 6;
+
+  // 計算總頁數
+  const totalPages = orderData
+    ? Math.ceil(orderData.OrderDetails.length / ITEMS_PER_PAGE)
+    : 0;
+
+  // 獲取當前頁的QR碼
+  const getCurrentPageItems = () => {
+    if (!orderData) return [];
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return orderData.OrderDetails.slice(startIndex, endIndex);
+  };
+
+  // 頁面切換處理
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         const response = await getOrderDetails(userId, orderId);
         if (response.status) {
-          setOrderData(response.result[0]);
+          // 轉換 API 返回的數據以匹配 OrderResult 類型
+          const transformedData: OrderResult = {
+            ...response.result[0],
+            OrderDetails: response.result[0].OrderDetails.map((detail) => ({
+              ...detail,
+              OrderDetailsNumber: detail.OrderDetailsNumber || '',
+              UserNumber: detail.UserNumber || { Number: 'N/A' },
+            })),
+          };
+          setOrderData(transformedData);
           console.log('api 原始數據', response.result[0]);
         } else {
           setError(response.message || '獲取訂單詳情失敗');
@@ -122,34 +155,61 @@ const QRcodeData: React.FC<QRcodeDataProps> = ({ orderId, userId }) => {
   return (
     <QRCodePage>
       <QRCodeContainer ref={qrCodeRef}>
-        <QRCodeTitle>訂單 QR Code</QRCodeTitle>
-        <OrderNumber>訂單編號: {orderData.OrderNumber}</OrderNumber>
-        <DownloadButton onClick={handleDownload}>
-          下載所有 QR Code
-        </DownloadButton>
+        <QRCodeTitle>
+          <p className="title">訂單 QR Code</p>
+          <p className="order-number">訂單編號: {orderData.OrderNumber}</p>
+        </QRCodeTitle>
+
         <QRCodeList>
-          {orderData.OrderDetails.map((task: OrderDetail) => (
+          {getCurrentPageItems().map((task: OrderDetail) => (
             <QRCodeItem key={task.OrderDetailID}>
               <QRCodeGenerator
                 data={{
                   OrderDetailID: task.OrderDetailID,
-                  OrderDetailsNumber:
-                    task.OrderDetailsNumber || task.ServiceTime,
+                  OrderDetailsNumber: task.OrderDetailsNumber,
                   ServiceDate: task.ServiceDate,
-                  ServiceTime: task.DriverTime || '未排定',
                 }}
                 size={80}
                 showDownloadButton={false}
               />
               <TaskInfo>
-                任務編號: {task.OrderDetailsNumber}
+                任務編號:
                 <br />
-                服務日期: {task.ServiceDate}
+                {task.OrderDetailsNumber}
+                <br />
+                服務日期:
+                <br />
+                {task.ServiceDate}
                 <br />
               </TaskInfo>
             </QRCodeItem>
           ))}
         </QRCodeList>
+
+        {/* 下載按鈕 */}
+        <DownloadButton onClick={handleDownload}>
+          下載所有 QR Code
+        </DownloadButton>
+
+        {/* 分頁器 */}
+        <PaginationContainer>
+          <PageButton
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            style={{ paddingLeft: '2px' }}
+          >
+            <MdArrowBackIos />
+          </PageButton>
+          <PageInfo>
+            {currentPage} / {totalPages}
+          </PageInfo>
+          <PageButton
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <MdArrowForwardIos />
+          </PageButton>
+        </PaginationContainer>
       </QRCodeContainer>
     </QRCodePage>
   );

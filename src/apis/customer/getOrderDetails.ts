@@ -19,6 +19,10 @@ interface OrderDetailsResponse {
       Status: string;
       DriverTime?: string;
       KG?: string;
+      OrderDetailsNumber?: string;
+      UserNumber?: {
+        Number: string;
+      };
     }>;
   }>;
   message?: string;

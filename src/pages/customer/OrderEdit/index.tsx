@@ -31,13 +31,14 @@ import {
   SelectGroup,
   SelectIcon,
   SuccessMessage,
+  SaveButton,
 } from './styled';
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 import AddressAutocomplete from '../SubscribeData/AddressAutocomplete';
 import LoadingMessage from '../../../components/common/LoadingMessage';
 
 // 虛擬機URL
-const BASE_URL = 'https://lebuleduo.rocket-coding.com';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // 圖片類型
 interface Image {
@@ -539,7 +540,7 @@ function OrderEdit() {
                     {photoError && <ErrorMessage>{photoError}</ErrorMessage>}
 
                     <PhotoInstructions>
-                      *請務必上傳兩張固定點照片，每張不超過5MB
+                      *請務必上傳兩張固定點照片，每張不超過6MB
                     </PhotoInstructions>
                   </DeliveryOptionImageContainer>
                 </FormGroup>
@@ -561,17 +562,9 @@ function OrderEdit() {
             </FormSection>
 
             <FormGroup>
-              <StyledInput
-                type="button"
-                value="儲存修改"
-                onClick={handleSave}
-                disabled={!isFormValid()}
-                style={{
-                  backgroundColor: isFormValid() ? '#1890ff' : '#d9d9d9',
-                  color: 'white',
-                  cursor: isFormValid() ? 'pointer' : 'not-allowed',
-                }}
-              />
+              <SaveButton onClick={handleSave} disabled={!isFormValid()}>
+                儲存修改
+              </SaveButton>
             </FormGroup>
           </OrderListContainer>
         </OrderListSection>
