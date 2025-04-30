@@ -34,7 +34,7 @@ type OrderListCardProps = {
   ordersId: number;
   orderDetailId: number;
   usersId: number;
-  onDateModified?: () => void;
+  onDateModified?: (date?: string) => void;
 };
 
 // ===組件本體===
@@ -49,6 +49,7 @@ function OrderListCard({
 }: OrderListCardProps) {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentDate, setCurrentDate] = useState(date);
 
   // 獲取當前狀態
   const getCurrentStatus = (): OrderStatusType => {
@@ -151,15 +152,13 @@ function OrderListCard({
   };
 
   // 確認修改日期
-  const handleConfirmModify = async (newDate: globalThis.Date) => {
-    try {
-      // TODO: 實現修改日期的 API 調用
-      console.log('修改日期為：', newDate);
-      setIsModalOpen(false);
-      onDateModified?.();
-    } catch (error) {
-      console.error('修改日期失敗：', error);
+  const handleConfirmModify = (newDate: globalThis.Date) => {
+    const formattedDate = `${newDate.getFullYear()}/${newDate.getMonth() + 1}/${newDate.getDate()}`;
+    setCurrentDate(formattedDate);
+    if (onDateModified) {
+      onDateModified(formattedDate);
     }
+    setIsModalOpen(false);
   };
 
   const currentStatus = getCurrentStatus();
@@ -177,7 +176,7 @@ function OrderListCard({
               <MdCalendarToday />
             </IconStyledLarge>
             <Date>
-              <DateDisplay>{date}</DateDisplay>
+              <DateDisplay>{currentDate}</DateDisplay>
               <TimeRange>{time}</TimeRange>
             </Date>
           </CardItem>
