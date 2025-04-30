@@ -271,12 +271,15 @@ export const ProgressItem = styled.div<StyledProps>`
   // isActive 是否為當前狀態 900
   // isPassed 是否已通過 600
   // 已完成 400
-  color: ${({ $isActive, $isPassed }) =>
-    $isActive
-      ? 'var(--color-primary)'
-      : $isPassed
-        ? 'var(--color-gray-600)'
-        : 'var(--color-gray-400)'};
+  // isUnscheduled 未排定狀態
+  color: ${({ $isActive, $isPassed, $isUnscheduled }) =>
+    $isUnscheduled
+      ? 'var(--color-gray-400)'
+      : $isActive
+        ? 'var(--color-primary)'
+        : $isPassed
+          ? 'var(--color-gray-600)'
+          : 'var(--color-gray-400)'};
 
   font-weight: ${({ $isActive, $isPassed }) =>
     $isActive || $isPassed
