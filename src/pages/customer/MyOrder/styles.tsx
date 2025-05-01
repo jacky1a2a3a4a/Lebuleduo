@@ -30,7 +30,7 @@ export const ImageContainer = styled.div`
   align-items: center;
 
   position: absolute;
-  top: 78px; /* 調整固定垂直位置 */
+  top: 86px; /* 調整固定垂直位置 */
   left: calc(50% + 90px); /* 從中心點向右偏移固定距離 */
   transform: translateX(-50%); /* 修正偏移 */
   width: 120px;

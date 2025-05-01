@@ -8,16 +8,20 @@ export const lineLogin = ({ role }: LineLoginParams) => {
   console.log('=== 開始 LINE 登入流程 ===');
   console.log('選擇的角色:', role);
 
+  // 保存 state、角色和 UsersID 到 localStorage
+  saveLineState(role);
+  
   // 從 URL 中提取 UsersID
   const urlParams = new URLSearchParams(window.location.search);
   const usersId = urlParams.get('UsersID');
   console.log('從 URL 提取的 UsersID:', usersId);
 
-  // 保存 state、角色和 UsersID 到 localStorage
-  saveLineState(role);
+
+  // 保存 UsersID 到 localStorage
   if (usersId) {
     localStorage.setItem('UsersID', usersId);
   }
+
   console.log('已保存到 localStorage:', {
     line_login_role: localStorage.getItem('line_login_role'),
     line_login_state: localStorage.getItem('line_login_state'),

@@ -21,6 +21,7 @@ import Select from '../../../components/admin/Select';
 import StatCard from '../../../components/admin/StatCard';
 import Table from '../../../components/admin/Table';
 import AssignmentPanel from '../../../components/admin/AssignmentPanel';
+import Loading from '../../../components/admin/Loading';
 
 import { getAllTasks } from '../../../apis/admin/getAllTasks'; //api 獲取任務(明天)
 import { assignTasks } from '../../../apis/admin/assignTasks'; //api 分配任務
@@ -46,6 +47,7 @@ export default function TaskDispatchSystem() {
   const [deliverAssignments, setDeliverAssignments] = useState<
     Record<number, number>
   >({}); // 儲存汪汪員分配的任務數量
+  const [isLoading, setIsLoading] = useState(false); // 新增 loading 狀態
 
   // 新增過濾和分頁狀態
   const [filters, setFilters] = useState<Filters>({
@@ -62,15 +64,24 @@ export default function TaskDispatchSystem() {
     const fetchOrders = async () => {
       try {
         const data = await getAllTasks();
-        if (data.status) {
-          setOrders(data.result);
-          setAmount(data.Amount);
-          setDelivers(data.Drivers);
+        console.log('api 原始回傳資料', data);
 
-          console.log('api 原始回傳資料', data);
+        if (data.status) {
+          // 初始化空陣列和預設值
+          setOrders(data.result || []);
+          setAmount(
+            data.Amount || {
+              totalCount: 0,
+              UnScheduled: 0,
+              Scheduled: 0,
+              totalDrivers: 0,
+              DriverIsOnline: 0,
+            },
+          );
+          setDelivers(data.Drivers || []);
 
           // 初始化代收員分配數量
-          const initialAssignments = data.Drivers.reduce(
+          const initialAssignments = (data.Drivers || []).reduce(
             (acc, driver) => {
               acc[driver.UsersID] = 0;
               return acc;
@@ -81,6 +92,17 @@ export default function TaskDispatchSystem() {
         }
       } catch (error) {
         console.error('獲取訂單資料失敗:', error);
+        // 發生錯誤時初始化空值
+        setOrders([]);
+        setAmount({
+          totalCount: 0,
+          UnScheduled: 0,
+          Scheduled: 0,
+          totalDrivers: 0,
+          DriverIsOnline: 0,
+        });
+        setDelivers([]);
+        setDeliverAssignments({});
       }
     };
 
@@ -139,6 +161,7 @@ export default function TaskDispatchSystem() {
     if (unassignedTasksCount > 0) return;
 
     try {
+      setIsLoading(true); // 開始 loading
       // 將 deliverAssignments 轉換為 API 需要的格式
       let currentIndex = 0;
       const assignments = {
@@ -177,6 +200,8 @@ export default function TaskDispatchSystem() {
       setAssignmentPanelOpen(false);
     } catch (error) {
       console.error('分配任務失敗:', error);
+    } finally {
+      setIsLoading(false); // 結束 loading
     }
   };
 
@@ -231,6 +256,7 @@ export default function TaskDispatchSystem() {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <MainContent $assignmentPanelOpen={assignmentPanelOpen}>
         <Header />
 

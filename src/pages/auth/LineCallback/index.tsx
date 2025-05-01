@@ -121,10 +121,25 @@ const LineCallback = () => {
           // 處理後端回傳的資料
           const { token, profileData, roleName, UsersID } = response.data;
 
+          console.log('後端返回的資料:', {
+            token,
+            profileData,
+            roleName,
+            UsersID,
+          });
+
           // 將 token 和用戶資料儲存到 localStorage
           localStorage.setItem('auth_token', token);
           localStorage.setItem('user_role', roleName);
-          localStorage.setItem('UsersID', UsersID); //後端設計的使用者ID
+
+          // 只有在後端返回有效的 UsersID 時才更新
+          if (UsersID) {
+            console.log('更新 UsersID:', UsersID);
+            localStorage.setItem('UsersID', UsersID);
+          } else {
+            console.warn('後端未返回有效的 UsersID');
+          }
+
           localStorage.setItem(
             'user_data',
             JSON.stringify({
@@ -134,9 +149,16 @@ const LineCallback = () => {
             }),
           );
 
-          // 清除登入相關的 state 資訊
+          // 清除登入相關的 state 資訊，但保留 UsersID
           localStorage.removeItem('line_login_state');
           localStorage.removeItem('line_login_role');
+
+          console.log('登入成功後的 localStorage:', {
+            auth_token: localStorage.getItem('auth_token'),
+            user_role: localStorage.getItem('user_role'),
+            UsersID: localStorage.getItem('UsersID'),
+            user_data: localStorage.getItem('user_data'),
+          });
 
           // 標記為已處理，避免重複請求token，第二次會失敗
           hasProcessed.current = true;
