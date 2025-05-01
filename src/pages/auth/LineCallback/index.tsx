@@ -77,6 +77,7 @@ const LineCallback = () => {
 
         // 從 localStorage 獲取角色
         const userRole = getLoginRole();
+        const usersId = localStorage.getItem('UsersID');
 
         if (!userRole) {
           throw new Error('無法確定用戶角色');
@@ -84,12 +85,14 @@ const LineCallback = () => {
 
         // 打印要發送的 code 值
         console.log('要發送的 code 值:', code);
+        console.log('要發送的 UsersID:', usersId);
 
         try {
           // 將 code 發送給後端以換取 token
           console.log('發送請求的參數:', {
             code,
             role: userRole,
+            usersId,
           });
 
           const response = await axios.post(
@@ -97,6 +100,7 @@ const LineCallback = () => {
             {
               code,
               role: userRole,
+              usersId,
             },
             {
               headers: {
