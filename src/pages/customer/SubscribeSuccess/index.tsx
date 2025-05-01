@@ -8,6 +8,9 @@ import {
 } from 'react-icons/io';
 import axios from 'axios';
 import successImage from '../../../assets/images/Lebuledou_score.png';
+import QRCodeDownloader from '../../../components/common/QRCodeDownloader';
+import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
+import { OrderDetail } from '../../../components/customer/QRcodeData/types';
 import {
   PageWrapper,
   SuccessContainer,
@@ -23,7 +26,9 @@ import {
   QRCodeTextItem,
   TextIcon,
   QRCodeText,
+  Buttons,
   HomeButton,
+  CustomQRCodeDownloadButton,
 } from './styles';
 
 import {
@@ -49,11 +54,14 @@ interface ApiResponse {
   UpdatedAt: string;
 }
 
+const userId = localStorage.getItem('UsersID');
+
 const SubscribeSuccess = () => {
   const navigate = useNavigate();
   const [orderNumber, setOrderNumber] = useState(''); //訂單編號
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [apiData, setApiData] = useState<ApiResponse | null>(null);
+  const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
 
   // 從session storage獲取數據並呼叫API
   useEffect(() => {
@@ -63,7 +71,7 @@ const SubscribeSuccess = () => {
       setOrderData(parsedData);
       console.log('session storage 訂單資料:', parsedData);
 
-      // 呼叫 API
+      // 呼叫 明細 API
       if (parsedData.orderId) {
         axios
           .get(`api/Get/Orders/${parsedData.orderId}`)
@@ -72,10 +80,25 @@ const SubscribeSuccess = () => {
               setApiData(response.data.result);
               setOrderNumber(response.data.result.OrderNumber);
             }
-            console.log('API 回傳資料:', response.data.result);
+            console.log('明細 API 回傳資料:', response.data.result);
           })
           .catch((error) => {
-            console.error('API 呼叫失敗:', error);
+            console.error('明細 API 呼叫失敗:', error);
+          });
+
+        // 呼叫 訂單詳情 API
+        getOrderDetails(userId, parsedData.orderId)
+          .then((response) => {
+            if (response.status && response.result.length > 0) {
+              setOrderDetails(response.result[0].OrderDetails);
+            }
+            console.log(
+              '訂單詳情 API 回傳資料:',
+              response.result[0].OrderDetails,
+            );
+          })
+          .catch((error) => {
+            console.error('訂單詳情 API 呼叫失敗:', error);
           });
       }
     }
@@ -95,7 +118,7 @@ const SubscribeSuccess = () => {
     Months,
     LinePayMethod,
     TotalAmount,
-    UpdatedAt,
+    CreatedAt,
   } = apiData || {};
 
   return (
@@ -145,7 +168,7 @@ const SubscribeSuccess = () => {
 
           <OrderItem>
             <OrderItemLabel>訂單建立日期</OrderItemLabel>
-            <OrderItemValue>{getFormattedDateTime(UpdatedAt)}</OrderItemValue>
+            <OrderItemValue>{getFormattedDateTime(CreatedAt)}</OrderItemValue>
           </OrderItem>
 
           <Divider />
@@ -155,6 +178,17 @@ const SubscribeSuccess = () => {
             <OrderItemValue>NT$ {TotalAmount}</OrderItemValue>
           </OrderItem>
         </OrderInfoContainer>
+
+        <Buttons>
+          <HomeButton onClick={handleBackToHome}>返回我的訂單</HomeButton>
+          <CustomQRCodeDownloadButton as="div">
+            <QRCodeDownloader
+              orderNumber={orderNumber}
+              orderDetails={orderDetails}
+              buttonText="下載所有 QR Code"
+            />
+          </CustomQRCodeDownloadButton>
+        </Buttons>
 
         <QRcodeTextItems>
           <QRCodeTextItem>
@@ -189,12 +223,10 @@ const SubscribeSuccess = () => {
               <IoIosCloudDownload />
             </TextIcon>
             <QRCodeText>
-              若欲立即使用QR碼，請至首頁點選您的方案，下載QR碼，至7-11超商ibon列印貼紙。
+              若欲立即使用QR碼，請點擊【下載所有QR Code】，或至首頁點選您的方案下載檔案，然後至7-11超商ibon列印貼紙。
             </QRCodeText>
           </QRCodeTextItem>
         </QRcodeTextItems>
-
-        <HomeButton onClick={handleBackToHome}>返回首頁</HomeButton>
       </SuccessContainer>
     </PageWrapper>
   );

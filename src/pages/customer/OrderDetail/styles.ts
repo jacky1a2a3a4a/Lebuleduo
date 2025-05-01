@@ -111,9 +111,8 @@ export const CardHeaderEditButtons = styled.div`
 
 // 編輯按鈕
 export const Button = styled.button`
-  background: none;
-  border: none;
   cursor: pointer;
+  font-size: var(--font-size-xl);
 `;
 
 // 訂單照片區域

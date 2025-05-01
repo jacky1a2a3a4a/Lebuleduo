@@ -116,6 +116,7 @@ export default function TaskDispatchSystem() {
     );
 
     setDeliverAssignments(newAssignments);
+    console.log('平均分配任務', newAssignments);
   };
 
   // 取消分配
@@ -139,14 +140,16 @@ export default function TaskDispatchSystem() {
 
     try {
       // 將 deliverAssignments 轉換為 API 需要的格式
+      let currentIndex = 0;
       const assignments = {
         ServiceDate: getFormattedDateDash(getTomorrowDate().toISOString()),
         Assign: Object.entries(deliverAssignments)
           .filter(([, taskCount]) => taskCount > 0)
           .map(([driverId, count]) => {
             const driverTasks = selectedTasks
-              .slice(0, count)
+              .slice(currentIndex, currentIndex + count)
               .map((taskId) => parseInt(taskId));
+            currentIndex += count;
             return {
               driverID: parseInt(driverId),
               tasks: driverTasks,
@@ -290,6 +293,7 @@ export default function TaskDispatchSystem() {
                         { value: '', label: '方案類型: 所有' },
                         { value: '小資方案', label: '小資方案' },
                         { value: '標準方案', label: '標準方案' },
+                        { value: '大量方案', label: '大量方案' },
                       ]}
                     />
                     <Select
@@ -297,10 +301,14 @@ export default function TaskDispatchSystem() {
                       onChange={(value) => handleFilterChange('region', value)}
                       options={[
                         { value: '', label: '收運地區: 所有' },
-                        { value: '路竹區', label: '路竹區' },
-                        { value: '楠梓區', label: '楠梓區' },
-                        { value: '仁武區', label: '仁武區' },
-                        { value: '三民區', label: '三民區' },
+                        ...Array.from(
+                          new Set(orders.map((order) => order.Region)),
+                        )
+                          .filter((region) => region) // 過濾掉空值
+                          .map((region) => ({
+                            value: region,
+                            label: region,
+                          })),
                       ]}
                       placeholder="收運地區"
                     />

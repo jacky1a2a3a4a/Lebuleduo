@@ -353,7 +353,7 @@ const Subscribe = () => {
 
         {/* QR code 取得方式 */}
         <SectionTitle
-          mainTitle="QR code 取得方式"
+          mainTitle="QR Code 取得方式"
           subTitle="請選擇您希望QR Code 專屬貼紙取得的方式"
         >
           <IconButton onClick={() => setIsQRInfoModalOpen(true)}>

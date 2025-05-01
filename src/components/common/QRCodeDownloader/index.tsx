@@ -2,18 +2,19 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import html2canvas from 'html2canvas';
 import { OrderDetail } from '../../customer/QRcodeData/types';
-import { DownloadButton } from './styles';
 import logo from '../../../assets/icons/Lebuledou_icon.png';
 import { QRCodeCanvas } from 'qrcode.react';
 
 interface QRCodeDownloaderProps {
   orderNumber: string;
   orderDetails: OrderDetail[];
+  buttonText?: string;
 }
 
 const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
   orderNumber,
   orderDetails,
+  buttonText = '下載所有 QR Code',
 }) => {
   const handleDownload = async () => {
     if (!orderDetails.length) return;
@@ -154,9 +155,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
     }
   };
 
-  return (
-    <DownloadButton onClick={handleDownload}>下載所有 QR Code</DownloadButton>
-  );
+  return <button onClick={handleDownload}>{buttonText}</button>;
 };
 
 export default QRCodeDownloader;

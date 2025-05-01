@@ -25,8 +25,8 @@ export interface OrderDetail {
   Status: string;
   DriverTime?: string;
   KG?: string;
-  OrderDetailsNumber: string;
-  UserNumber: {
+  OrderDetailsNumber?: string;
+  UserNumber?: {
     Number: string;
   };
   DriverPhoto?: string[];

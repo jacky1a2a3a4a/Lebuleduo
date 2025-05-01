@@ -314,9 +314,9 @@ const SubscribeData = () => {
             </DeliveryOption>
 
             <FormGroup>
-              <InputLabel>地點備註</InputLabel>
+              <InputLabel>放置處說明</InputLabel>
               <StyledTextarea
-                placeholder="請備註放置固定點或面交收運的詳細位置"
+                placeholder="請說明放置固定點或面交收運的詳細位置"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 onBlur={() => validateNotes(notes)}
