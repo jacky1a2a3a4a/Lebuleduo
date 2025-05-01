@@ -7,6 +7,7 @@ import {
   PageWrapper,
   ScrollableContent,
   Section,
+  Spacer,
   SubscriptionTitle,
   SubscriptionInfo,
   SubscriptionInfoItem,
@@ -324,6 +325,8 @@ const SubscribeCheckout = () => {
             $active={paymentMethod === 'linePay'}
             onClick={() => handlePaymentMethodChange('linePay')}
           />
+
+          <Spacer />
 
           <ButtonCard
             title="信用卡付款"

@@ -107,6 +107,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
             taskInfo.style.paddingLeft = '5px';
             taskInfo.style.marginBottom = '5px';
             taskInfo.innerHTML = `
+            垃不垃多 專業垃圾代收服務<br/>
             任務編號:<br/>${task.OrderDetailsNumber}<br/>
             服務日期: ${task.ServiceDate}<br/>
           `;
@@ -126,7 +127,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
         pageNumber.style.textAlign = 'center';
         pageNumber.style.fontSize = '8px';
         pageNumber.style.color = '#666666';
-        pageNumber.style.marginTop = '5px';
+        pageNumber.style.marginTop = '1px';
         pageNumber.innerHTML = ` ${pageIndex + 1} / ${totalPages} `;
         printPage.appendChild(pageNumber);
 

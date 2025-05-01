@@ -22,6 +22,11 @@ export const ScrollableContent = styled.div`
   }
 `;
 
+//間隔
+export const Spacer = styled.div`
+  height: var(--spacing-sm);
+`;
+
 //Section標題
 export const SectionTitle = styled.h2`
   color: var(--color-text-primary);
@@ -49,7 +54,6 @@ export const Section = styled.div`
 
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
 
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
@@ -72,7 +76,7 @@ export const SubscriptionInfo = styled.div`
   flex-direction: column;
   gap: var(--spacing-xs);
 
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 `;
 
 export const SubscriptionInfoItem = styled.div`
@@ -116,7 +120,7 @@ export const SubscriptionDateInfoItem = styled.div`
 //訂閱日期資訊 標題
 export const DateTitle = styled.div`
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 `;
 
 //訂閱日期資訊 日期

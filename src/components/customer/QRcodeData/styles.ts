@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { DownloadButton } from '../../common/QRCodeDownloader/styles';
 
 export const QRCodePage = styled.div`
   background-color: var(--color-white);
@@ -85,21 +86,8 @@ export const TaskInfo = styled.p`
   font-size: var(--font-size-3xs);
 `;
 
-export const DownloadButton = styled.button`
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border-radius: var(--border-radius-round);
-  max-width: 150px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  margin: var(--spacing-xs) auto;
-
-  cursor: pointer;
-  font-size: var(--font-size-xs);
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: var(--color-primary-hover);
-  }
+export const CustomQRCodeDownloadButton = styled(DownloadButton)`
+  margin-top: var(--spacing-2xs);
 `;
 
 export const PaginationContainer = styled.div`

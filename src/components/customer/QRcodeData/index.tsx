@@ -13,6 +13,7 @@ import {
   PaginationContainer,
   PageButton,
   PageInfo,
+  CustomQRCodeDownloadButton,
 } from './styles';
 import { OrderResult, OrderDetail } from './types';
 
@@ -88,7 +89,6 @@ const QRcodeData: React.FC<QRcodeDataProps> = ({ orderId, userId }) => {
           <p className="title">訂單 QR Code</p>
           <p className="order-number">訂單編號: {orderData.OrderNumber}</p>
         </QRCodeTitle>
-
         <QRCodeList>
           {getCurrentPageItems().map((task: OrderDetail) => (
             <QRCodeItem key={task.OrderDetailID}>
@@ -114,10 +114,13 @@ const QRcodeData: React.FC<QRcodeDataProps> = ({ orderId, userId }) => {
           ))}
         </QRCodeList>
 
-        <QRCodeDownloader
-          orderNumber={orderData.OrderNumber}
-          orderDetails={orderData.OrderDetails}
-        />
+        <CustomQRCodeDownloadButton as="div">
+          <QRCodeDownloader
+            orderNumber={orderData.OrderNumber}
+            orderDetails={orderData.OrderDetails}
+            buttonText="下載所有 QR Code"
+          />
+        </CustomQRCodeDownloadButton>
 
         <PaginationContainer>
           <PageButton
