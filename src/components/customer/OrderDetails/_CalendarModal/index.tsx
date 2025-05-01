@@ -10,6 +10,7 @@ import {
   ModalTitle,
   ModalContent,
   DateInfo,
+  DateInfoTitle,
   DateLabel,
   DateValue,
   NoticeText,
@@ -221,18 +222,14 @@ function ModifyDateModal({
               </CalendarContainer>
 
               <DateInfo>
+                <DateInfoTitle>變更內容</DateInfoTitle>
                 <DateInfoContent>
                   <DateInfoItem>
-                    <DateLabel $scheduled>其他預定</DateLabel>
-                  </DateInfoItem>
-                  <DateInfoItem>
-                    <DateLabel $tertiary>原訂日期</DateLabel>
+                    <DateLabel>原訂日期：</DateLabel>
                     <DateValue>{orderDetail.OriginalDate}</DateValue>
                   </DateInfoItem>
                   <DateInfoItem>
-                    <DateLabel $bold $primary>
-                      修改日期
-                    </DateLabel>
+                    <DateLabel $bold>修改日期：</DateLabel>
                     <DateValue $bold>
                       {selectedDate
                         ? formatDate(selectedDate)

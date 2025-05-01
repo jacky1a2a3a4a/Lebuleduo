@@ -314,8 +314,8 @@ const Subscribe = () => {
           <ButtonCard
             title="3 個月"
             subtitle="(共收運12週)"
-            $active={selectedFrequency === 3}
-            onClick={() => handleFrequencyChange('3')}
+            $active={selectedFrequency === 2}
+            onClick={() => handleFrequencyChange('2')}
           >
             <DiscountTag>9 折優惠</DiscountTag>
           </ButtonCard>
@@ -323,8 +323,8 @@ const Subscribe = () => {
           <ButtonCard
             title="6 個月"
             subtitle="(共收運24週)"
-            $active={selectedFrequency === 6}
-            onClick={() => handleFrequencyChange('6')}
+            $active={selectedFrequency === 3}
+            onClick={() => handleFrequencyChange('3')}
           >
             <DiscountTag>85 折優惠</DiscountTag>
           </ButtonCard>

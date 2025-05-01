@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdError, MdArrowCircleRight } from 'react-icons/md';
 import dogImage from '../../../assets/images/Lebuledou_lying.png';
 import dogTruckImage from '../../../assets/images/Lebuledou_truck.png';
+import ErrorReport from '../../../components/common/ErrorReport';
 
 import {
   OrderStep,
@@ -87,7 +88,9 @@ function MyOrder() {
 
   // 根據狀態設定 currentStep
   let currentStep = 0;
-  if (todayDataStatus === '前往中') {
+  if (todayDataStatus === '未排定') {
+    currentStep = 0;
+  } else if (todayDataStatus === '前往中') {
     currentStep = 0;
   } else if (todayDataStatus === '已抵達') {
     currentStep = 1;
@@ -281,6 +284,7 @@ function MyOrder() {
                 key={index}
                 $isActive={index === currentStep}
                 $isPassed={index < currentStep}
+                $isUnscheduled={todayDataStatus === '未排定'}
               >
                 {step.label}
               </ProgressItem>
@@ -312,15 +316,12 @@ function MyOrder() {
           {isLoading ? (
             <LoadingMessage size="mini" animationType="moving" />
           ) : error ? (
-            <div
-              style={{
-                textAlign: 'center',
-                padding: '2rem',
-                color: 'var(--color-red-500)',
-              }}
-            >
-              {error}
-            </div>
+            <ErrorReport
+              title="目前沒有訂單喔～請先預訂方案"
+              error=""
+              showImage={true}
+              titleColor="var(--color-primary)"
+            />
           ) : (
             <OrderList>
               {activeTab === 'current' ? (
@@ -401,36 +402,22 @@ function MyOrder() {
                     無當前訂單
                   </div>
                 )
-              ) : // 顯示已結束方案
-              completedOrders.length > 0 ? (
+              ) : completedOrders.length > 0 ? (
                 completedOrders.map((completedOrder) => {
-                  // 使用解構賦值提取需要的屬性
                   const {
                     OrdersID,
                     PlanName,
-                    Liter,
                     PlanKG,
+                    Liter,
                     Photos,
                     StartDate,
                     EndDate,
                   } = completedOrder;
 
-                  // 格式化日期 - 從ISO格式轉換為YYYY/MM/DD格式
-                  const formatDate = (dateString: string) => {
-                    const date = new Date(dateString);
-                    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-                  };
-
-                  const formattedStartDate = formatDate(StartDate);
-                  const formattedEndDate = formatDate(EndDate);
-                  // 使用結束日期作為最後收運日期
-                  const lastPickupDate = formattedEndDate;
-
                   return (
                     <OrderCard
                       key={OrdersID}
                       onClick={() => handleOrderDetailCompletedClick(OrdersID)}
-                      $isCompleted={true}
                     >
                       <OrderCardLayout>
                         <OrderPhotoContainer>
@@ -452,28 +439,13 @@ function MyOrder() {
                           </OrderCardTitle>
                           <OrderCardItems>
                             <OrderCardItem>
-                              <OrderCardSubtitle>最後收運</OrderCardSubtitle>
-                              <OrderCardDetail>
-                                {lastPickupDate}
-                              </OrderCardDetail>
+                              <OrderCardSubtitle>開始時間</OrderCardSubtitle>
+                              <OrderCardDetail>{StartDate}</OrderCardDetail>
                             </OrderCardItem>
 
                             <OrderCardItem>
-                              <OrderCardSubtitle $light>
-                                開始時間
-                              </OrderCardSubtitle>
-                              <OrderCardDetail $light>
-                                {formattedStartDate}
-                              </OrderCardDetail>
-                            </OrderCardItem>
-
-                            <OrderCardItem>
-                              <OrderCardSubtitle $light>
-                                結束時間
-                              </OrderCardSubtitle>
-                              <OrderCardDetail $light>
-                                {formattedEndDate}
-                              </OrderCardDetail>
+                              <OrderCardSubtitle>結束時間</OrderCardSubtitle>
+                              <OrderCardDetail>{EndDate}</OrderCardDetail>
                             </OrderCardItem>
                           </OrderCardItems>
                         </OrderCardData>
@@ -482,9 +454,12 @@ function MyOrder() {
                   );
                 })
               ) : (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
-                  無已完成訂單
-                </div>
+                <ErrorReport
+                  title="目前沒有訂單喔～請先預訂方案"
+                  error=""
+                  showImage={true}
+                  titleColor="var(--color-primary)"
+                />
               )}
             </OrderList>
           )}

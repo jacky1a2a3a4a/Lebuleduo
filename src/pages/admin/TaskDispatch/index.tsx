@@ -25,7 +25,11 @@ import AssignmentPanel from '../../../components/admin/AssignmentPanel';
 import { getAllTasks } from '../../../apis/admin/getAllTasks'; //api 獲取任務(明天)
 import { assignTasks } from '../../../apis/admin/assignTasks'; //api 分配任務
 import { getTodayDate } from '../../../utils/getDate';
-import { getFormattedDateWithDay } from '../../../utils/formatDate';
+import {
+  getFormattedDateWithDay,
+  getFormattedDateDash,
+} from '../../../utils/formatDate';
+import { getTomorrowDate } from '../../../utils/getDate';
 
 export default function TaskDispatchSystem() {
   const [orders, setOrders] = useState<Order[]>([]); // 儲存api獲取的所有任務
@@ -136,6 +140,7 @@ export default function TaskDispatchSystem() {
     try {
       // 將 deliverAssignments 轉換為 API 需要的格式
       const assignments = {
+        ServiceDate: getFormattedDateDash(getTomorrowDate().toISOString()),
         Assign: Object.entries(deliverAssignments)
           .filter(([, taskCount]) => taskCount > 0)
           .map(([driverId, count]) => {
@@ -150,7 +155,6 @@ export default function TaskDispatchSystem() {
       };
 
       console.log('api 分配任務', assignments);
-
 
       // api 分配任務
       const response = await assignTasks(assignments);
@@ -239,13 +243,13 @@ export default function TaskDispatchSystem() {
             <StatCard
               title="任務總數"
               value={amount.totalCount.toString()}
-              subtitle="所有任務"
+              subtitle="任務列表為明日任務"
               icon={<MdDescription size={24} />}
             />
             <StatCard
               title="未分派任務"
               value={amount.UnScheduled.toString()}
-              subtitle="請於18:00前發派完畢"
+              subtitle="請於今日18:00前發派完畢"
               icon={<MdEditCalendar size={24} />}
             />
             <StatCard

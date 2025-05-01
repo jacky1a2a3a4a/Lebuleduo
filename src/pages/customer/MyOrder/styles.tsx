@@ -29,7 +29,7 @@ export const ImageContainer = styled.div`
   justify-content: center;
   align-items: center;
 
-  position: fixed; /* 改為 fixed 定位 */
+  position: absolute;
   top: 78px; /* 調整固定垂直位置 */
   left: calc(50% + 90px); /* 從中心點向右偏移固定距離 */
   transform: translateX(-50%); /* 修正偏移 */
@@ -271,12 +271,15 @@ export const ProgressItem = styled.div<StyledProps>`
   // isActive 是否為當前狀態 900
   // isPassed 是否已通過 600
   // 已完成 400
-  color: ${({ $isActive, $isPassed }) =>
-    $isActive
-      ? 'var(--color-primary)'
-      : $isPassed
-        ? 'var(--color-gray-600)'
-        : 'var(--color-gray-400)'};
+  // isUnscheduled 未排定狀態
+  color: ${({ $isActive, $isPassed, $isUnscheduled }) =>
+    $isUnscheduled
+      ? 'var(--color-gray-400)'
+      : $isActive
+        ? 'var(--color-primary)'
+        : $isPassed
+          ? 'var(--color-gray-600)'
+          : 'var(--color-gray-400)'};
 
   font-weight: ${({ $isActive, $isPassed }) =>
     $isActive || $isPassed
