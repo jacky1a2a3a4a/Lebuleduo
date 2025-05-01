@@ -1,7 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import html2canvas from 'html2canvas';
-import styled from 'styled-components';
 import { OrderDetail } from '../../customer/QRcodeData/types';
 import { DownloadButton } from './styles';
 import logo from '../../../assets/icons/Lebuledou_icon.png';
