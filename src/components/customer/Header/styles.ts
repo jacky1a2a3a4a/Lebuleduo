@@ -10,10 +10,9 @@ export const SubscribeButton = styled(ActionButton)`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-2);
 
   width: 100%;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-md);
   height: 30px;
 
   transition: all 0.2s ease-in-out;
