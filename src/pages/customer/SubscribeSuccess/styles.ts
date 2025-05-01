@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { DownloadButton } from '../../../components/common/QRCodeDownloader/styles';
 
 // 最外層容器
 export const PageWrapper = styled.div`
@@ -110,7 +111,7 @@ export const QRcodeTextItems = styled.div`
   flex-direction: column;
   gap: var(--spacing-xs);
   padding: var(--spacing-sm) var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
 `;
 
 // QR碼提示文字項目
@@ -133,19 +134,53 @@ export const QRCodeText = styled.p`
   text-align: left;
 `;
 
+// 按鈕容器
+export const Buttons = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+  width: 100%;
+`;
+
 // 返回按鈕
 export const HomeButton = styled.button`
-  background-color: var(--color-primary);
-  color: var(--color-white);
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
   border-radius: var(--border-radius-round);
-  padding: var(--spacing-md) var(--spacing-lg);
-  font-size: var(--font-size-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-12) var(--spacing-lg);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
     background-color: var(--color-gray-700);
   }
+`;
+
+// 自定義 QR Code 下載按鈕
+export const CustomQRCodeDownloadButton = styled(DownloadButton)`
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-radius: var(--border-radius-round);
+  padding: var(--spacing-12) var(--spacing-lg);
+  width: 100%;
+  max-width: 100%;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: all 0.3s ease;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

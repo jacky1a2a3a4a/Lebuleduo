@@ -33,7 +33,7 @@ const HeaderContainer = styled.header`
   background-color: var(--color-primary);
   padding: var(--spacing-12) var(--spacing-md);
   display: grid;
-  grid-template-columns: auto 1.75fr 1fr;
+  grid-template-columns: auto 1.75fr 1.25fr;
   align-items: center;
   justify-content: space-between;
 
