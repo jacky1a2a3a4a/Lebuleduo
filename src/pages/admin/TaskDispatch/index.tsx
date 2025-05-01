@@ -301,10 +301,14 @@ export default function TaskDispatchSystem() {
                       onChange={(value) => handleFilterChange('region', value)}
                       options={[
                         { value: '', label: '收運地區: 所有' },
-                        { value: '路竹區', label: '路竹區' },
-                        { value: '楠梓區', label: '楠梓區' },
-                        { value: '仁武區', label: '仁武區' },
-                        { value: '三民區', label: '三民區' },
+                        ...Array.from(
+                          new Set(orders.map((order) => order.Region)),
+                        )
+                          .filter((region) => region) // 過濾掉空值
+                          .map((region) => ({
+                            value: region,
+                            label: region,
+                          })),
                       ]}
                       placeholder="收運地區"
                     />
