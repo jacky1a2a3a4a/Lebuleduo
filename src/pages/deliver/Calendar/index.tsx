@@ -25,6 +25,8 @@ const CalendarComponent = () => {
     new Date(2025, 3, 11), // 4月11日
     new Date(2025, 3, 20), // 4月20日
     new Date(2025, 3, 30), // 4月30日
+    new Date(2025, 4, 10), // 5月2日
+    new Date(2025, 4, 13), // 5月1日
   ];
 
   const handleDateChange = (date: Date) => {

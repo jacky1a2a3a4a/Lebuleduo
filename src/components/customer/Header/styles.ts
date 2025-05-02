@@ -12,12 +12,12 @@ export const SubscribeButton = styled(ActionButton)`
   justify-content: center;
 
   width: 100%;
-  padding: var(--spacing-md);
+  padding: var(--spacing-20);
   height: 30px;
 
   transition: all 0.2s ease-in-out;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-bold);
   line-height: 1;
 
   &:hover {

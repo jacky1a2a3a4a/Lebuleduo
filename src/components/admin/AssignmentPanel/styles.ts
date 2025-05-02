@@ -219,18 +219,28 @@ export const FooterButton = styled.button<{ $variant?: 'primary' | 'outline' }>`
   border-radius: var(--border-radius-round);
   font-size: var(--font-size-2xs);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 80px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background-color: ${({ $variant }) =>
       $variant === 'outline'
         ? 'var(--color-neutral-300)'
         : 'var(--color-primary-hover)'};
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 `;
