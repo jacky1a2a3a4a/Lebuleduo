@@ -21,7 +21,7 @@ import Select from '../../../components/admin/Select';
 import StatCard from '../../../components/admin/StatCard';
 import Table from '../../../components/admin/Table';
 import AssignmentPanel from '../../../components/admin/AssignmentPanel';
-import Loading from '../../../components/admin/Loading';
+import CommonLoading from '../../../components/common/CommonLoading';
 
 import { getAllTasks } from '../../../apis/admin/getAllTasks'; //api 獲取任務(明天)
 import { assignTasks } from '../../../apis/admin/assignTasks'; //api 分配任務
@@ -256,7 +256,7 @@ export default function TaskDispatchSystem() {
 
   return (
     <Container>
-      {isLoading && <Loading />}
+      {isLoading && <CommonLoading />}
       <MainContent $assignmentPanelOpen={assignmentPanelOpen}>
         <Header />
 

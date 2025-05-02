@@ -144,7 +144,7 @@ export const PlanSelector = styled.div`
 
 // 已選定方案 頭部
 export const PlanSelectorHeader = styled.div<StyledProps>`
-  background-color: var(--color-gray-100);
+  background-color: var(--color-white);
   border: 2px solid var(--color-secondary);
   border-radius: ${(props) =>
     props.$open
@@ -156,10 +156,6 @@ export const PlanSelectorHeader = styled.div<StyledProps>`
   align-items: center;
   padding: var(--spacing-md);
   cursor: pointer;
-
-  &:hover {
-    background-color: var(--color-gray-200);
-  }
 `;
 
 // 方案信息

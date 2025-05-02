@@ -317,7 +317,7 @@ function MyOrder() {
             <LoadingMessage size="mini" animationType="moving" />
           ) : error ? (
             <ErrorReport
-              title="目前沒有訂單喔～請先預訂方案"
+              title="目前沒有方案"
               error=""
               showImage={true}
               titleColor="var(--color-primary)"
@@ -455,10 +455,8 @@ function MyOrder() {
                 })
               ) : (
                 <ErrorReport
-                  title="目前沒有方案"
-                  error=""
-                  showImage={true}
-                  titleColor="var(--color-primary)"
+                  title="錯誤"
+                  error={error}
                 />
               )}
             </OrderList>

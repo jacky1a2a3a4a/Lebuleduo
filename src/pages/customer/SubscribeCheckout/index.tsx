@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
+import CommonLoading from '../../../components/common/CommonLoading';
 import {
   PageWrapper,
   ScrollableContent,
@@ -52,6 +53,16 @@ const convertDaysToChinese = (days: string) => {
     .join('，');
 };
 
+// 轉換訂閱頻率
+const convertFrequency = (frequency: number) => {
+  const frequencyMap: { [key: number]: number } = {
+    1: 1,
+    2: 3,
+    3: 6,
+  };
+  return frequencyMap[frequency] || frequency;
+};
+
 const SubscribeCheckout = () => {
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('linePay');
@@ -59,6 +70,7 @@ const SubscribeCheckout = () => {
     useState<SubscriptionData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPaymentLoading, setShowPaymentLoading] = useState(false);
 
   useEffect(() => {
     const storedData = sessionStorage.getItem('subscriptionData');
@@ -159,6 +171,9 @@ const SubscribeCheckout = () => {
             });
           }
 
+          // 顯示付款載入中
+          setShowPaymentLoading(true);
+
           // 建立表單並自動提交
           const form = document.createElement('form');
           form.method = 'POST';
@@ -233,6 +248,7 @@ const SubscribeCheckout = () => {
 
   return (
     <PageWrapper>
+      {showPaymentLoading && <CommonLoading text="正在跳轉至付款頁面..." />}
       <ProgressSteps steps={SubscribeSteps} currentStep={3} />
 
       <ScrollableContent>
@@ -244,14 +260,14 @@ const SubscribeCheckout = () => {
           </SubscriptionTitle>
           <SubscriptionInfo>
             <SubscriptionInfoItem>
-              ．每次收運: 一般垃圾 + 回收 + 廚餘 = {subscriptionData.planKg}kg /
+              ．每次收運: 一般垃圾 + 回收 + 廚餘 = {subscriptionData.kg}kg /
               {subscriptionData.liter}L
             </SubscriptionInfoItem>
             <SubscriptionInfoItem>
               ．{subscriptionData.planDescription}
             </SubscriptionInfoItem>
             <SubscriptionInfoItem>
-              ．預定期程：{subscriptionData.frequency}個月
+              ．預定期程：{convertFrequency(subscriptionData.frequency)}個月
             </SubscriptionInfoItem>
             <SubscriptionInfoItem>
               ．每周收運日: {convertDaysToChinese(subscriptionData.days)}
