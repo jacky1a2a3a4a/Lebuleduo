@@ -165,18 +165,86 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
         // 在手機上使用不同的下載方式
         if (isMobile) {
           // 在手機上使用新視窗開啟圖片
-          const newWindow = window.open();
+          const newWindow = window.open('', '_blank');
           if (newWindow) {
-            newWindow.document.write(
-              `<img src="${dataUrl}" style="max-width:100%;" />`,
-            );
+            newWindow.document.write(`
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>QR Code 圖片</title>
+                  <style>
+                    body {
+                      margin: 0;
+                      padding: 0;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      min-height: 100vh;
+                      background-color: #f5f5f5;
+                    }
+                    img {
+                      max-width: 100%;
+                      height: auto;
+                      display: block;
+                    }
+                    .download-hint {
+                      position: fixed;
+                      bottom: 20px;
+                      left: 0;
+                      right: 0;
+                      text-align: center;
+                      color: #666;
+                      font-size: 14px;
+                      padding: 10px;
+                      background-color: rgba(255, 255, 255, 0.9);
+                    }
+                  </style>
+                </head>
+                <body>
+                  <img src="${dataUrl}" alt="QR Code" />
+                  <div class="download-hint">請長按圖片並選擇「儲存圖片」</div>
+                </body>
+              </html>
+            `);
+            newWindow.document.close();
           } else {
-            // 如果無法開啟新視窗，則提示用戶長按圖片保存
+            // 如果無法開啟新視窗，則在當前頁面顯示圖片
             const img = document.createElement('img');
             img.src = dataUrl;
             img.style.maxWidth = '100%';
-            document.body.appendChild(img);
-            alert('請長按圖片並選擇「儲存圖片」');
+            img.style.display = 'block';
+            img.style.margin = '0 auto';
+
+            const hint = document.createElement('div');
+            hint.textContent = '請長按圖片並選擇「儲存圖片」';
+            hint.style.textAlign = 'center';
+            hint.style.color = '#666';
+            hint.style.marginTop = '10px';
+
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.right = '0';
+            container.style.bottom = '0';
+            container.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.justifyContent = 'center';
+            container.style.alignItems = 'center';
+            container.style.zIndex = '9999';
+
+            container.appendChild(img);
+            container.appendChild(hint);
+            document.body.appendChild(container);
+
+            // 點擊背景關閉圖片
+            container.addEventListener('click', (e) => {
+              if (e.target === container) {
+                document.body.removeChild(container);
+              }
+            });
           }
         } else {
           // 在桌面版使用傳統的下載方式
