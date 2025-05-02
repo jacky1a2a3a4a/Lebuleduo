@@ -91,7 +91,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
             root.render(
               <QRCodeCanvas
                 value={JSON.stringify({
-                  OrderDetailID: task.OrderDetailID,
+                  OrderDetailID: Number(task.OrderDetailID),
                   OrderDetailsNumber: task.OrderDetailsNumber,
                 })}
                 size={100}
@@ -232,7 +232,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                     root.render(
                       <QRCodeCanvas
                         value={JSON.stringify({
-                          OrderDetailID: task.OrderDetailID,
+                          OrderDetailID: Number(task.OrderDetailID),
                           OrderDetailsNumber: task.OrderDetailsNumber,
                         })}
                         size={100}
@@ -564,7 +564,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                     root.render(
                       <QRCodeCanvas
                         value={JSON.stringify({
-                          OrderDetailID: task.OrderDetailID,
+                          OrderDetailID: Number(task.OrderDetailID),
                           OrderDetailsNumber: task.OrderDetailsNumber,
                         })}
                         size={100}

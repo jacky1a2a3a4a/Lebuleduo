@@ -2,7 +2,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import {
-  MdArrowBackIosNew,
   MdLocationOn,
   MdAdd,
   MdDelete,
@@ -12,12 +11,7 @@ import {
 } from 'react-icons/md';
 import {
   FullHeightContainer,
-  HeaderContainer,
   Title,
-  IconStyled,
-  NavTitle,
-  NavTitleText,
-  NavSubtitle,
   DetailCard,
   CardSection,
   DetailRow,
@@ -55,6 +49,7 @@ import {
 } from './styles';
 import { TaskItem, ReportForm } from './types';
 
+import TaskNavHeader from '../../../components/deliver/TaskNavHeader';
 import ReportModal from './ReportModal'; // 異常回報組件
 import Camera from '../../../components/common/Camera/Camera';
 import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver'; // 狀態標籤組件
@@ -180,17 +175,6 @@ function OrderDetails() {
     };
     checkCameraSupport();
   }, []);
-
-  // 返回上一頁
-  const handleBack = () => {
-    // 檢查是否有上一頁的歷史記錄
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      // 如果沒有歷史記錄，則導航到首頁
-      navigate('/deliver');
-    }
-  };
 
   // === 實際重量變更 ===
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -442,207 +426,207 @@ function OrderDetails() {
   }
 
   return (
-    <FullHeightContainer>
+    <>
       {/* NavHeader  */}
-      <HeaderContainer>
-        <NavTitle onClick={handleBack}>
-          <IconStyled>
-            <MdArrowBackIosNew />
-          </IconStyled>
-          <NavTitleText>填寫收運狀況</NavTitleText>
-        </NavTitle>
-        <NavSubtitle>任務編號: {task.number}</NavSubtitle>
-      </HeaderContainer>
-
-      {/* 時間卡片 */}
-      <DetailCard>
-        <DetailRow>
-          <DetailTime>{formatTime(task.time)}</DetailTime>
-          <StatusTagDeliver status={task.status} />
-        </DetailRow>
-      </DetailCard>
-
-      {/* 客戶資訊 */}
-      <Title>客戶資訊</Title>
-      <DetailCard>
-        <DetailRow>
-          <DetailLabel>聯絡人</DetailLabel>
-          <DetailValue>{task.customerName}</DetailValue>
-        </DetailRow>
-
-        <DetailRow>
-          <DetailLabel>電話</DetailLabel>
-          <DetailValue>{task.phone}</DetailValue>
-        </DetailRow>
-        <DetailRow>
-          <DetailLabel>放置固定點</DetailLabel>
-          <DetailValue>{task.notes}</DetailValue>
-        </DetailRow>
-
-        {/* 放置點圖片 */}
-        <DetailImgContainer>
-          {task.dropPointPhotos?.map((photo, index) => (
-            <DetailImg key={index}>
-              <img src={photo} alt={`放置點照片 ${index + 1}`} />
-            </DetailImg>
-          ))}
-        </DetailImgContainer>
-      </DetailCard>
-
-      <Title>地圖導航</Title>
-
-      <DetailCard>
-        <DetailFlex>
-          <DetailSign>
-            <MdLocationOn />
-          </DetailSign>
-
-          <DetailValue>
-            <DetailAddress>{task.address}</DetailAddress>
-          </DetailValue>
-        </DetailFlex>
-
-        <MapContainer>
-          <GoogleMapComponent
-            address={task.address}
-            onMapLoad={() => console.log('地圖已成功載入')}
-          />
-        </MapContainer>
-      </DetailCard>
-
-      <Title>垃圾收運量</Title>
-
-      <DetailCard>
-        <PlanTitle>{task.plan}</PlanTitle>
-        <PlanContent>
-          一般垃圾+回收+廚餘 = {task.liter}L / {task.weight}kg
-        </PlanContent>
-
-        <Divider />
-
-        <CardSection>
-          <PageTitle>實際重量 (kg)</PageTitle>
-          <WeightInput
-            type="number"
-            value={actualWeight || ''}
-            onChange={handleWeightChange}
-            placeholder="請輸入實際重量"
-          />
-          {!validations.weight && (
-            <ValidationMessage>請輸入實際重量</ValidationMessage>
-          )}
-        </CardSection>
-
-        <CardSection>
-          <PageTitle>照片記錄</PageTitle>
-          <PageSubtitle>請上傳2張收運照片，務必拍攝掛秤數字</PageSubtitle>
-          <PhotoUploadContainer>
-            {[0, 1].map((index) => (
-              <PhotoUploadBox
-                key={index}
-                onClick={() => handleOpenCamera(index)}
-              >
-                {driverPhotos[index] ? (
-                  <div style={{ position: 'relative' }}>
-                    <PreviewImage
-                      src={driverPhotos[index]}
-                      alt={`照片 ${index + 1}`}
-                    />
-                    <DeleteButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeletePhoto(index);
-                      }}
-                    >
-                      <MdDelete />
-                    </DeleteButton>
-                  </div>
-                ) : (
-                  <>
-                    <PlusIcon>
-                      <MdAdd />
-                    </PlusIcon>
-                    <UploadText>
-                      {isWebCameraSupported === null
-                        ? '載入中...'
-                        : isWebCameraSupported
-                          ? '點擊拍照'
-                          : '開啟相機'}
-                    </UploadText>
-                  </>
-                )}
-              </PhotoUploadBox>
-            ))}
-          </PhotoUploadContainer>
-          {!validations.photos && (
-            <ValidationMessage>請上傳2張收運照片</ValidationMessage>
-          )}
-        </CardSection>
-
-        {/* 回報異常按鈕或異常回報區塊 */}
-        {!reportForm.isSubmitted ? (
-          <ReportButton onClick={handleOpenReportModal}>
-            <MdReportProblem />
-            發現異常？點我回報
-          </ReportButton>
-        ) : (
-          <>
-            <ReportBlockTitle>
-              <MdReportProblem />
-              異常回報
-            </ReportBlockTitle>
-
-            <ReportBlock onClick={handleOpenReportModal}>
-              <ReportContent>
-                <ReportBlockContent>
-                  {getIssueText(reportForm.lastSubmitted?.issue || '')}
-                </ReportBlockContent>
-                <EditIcon>
-                  <MdEdit />
-                </EditIcon>
-              </ReportContent>
-              {reportForm.lastSubmitted?.otherIssue && (
-                <ReportBlockDescription>
-                  {reportForm.lastSubmitted.otherIssue}
-                </ReportBlockDescription>
-              )}
-            </ReportBlock>
-          </>
-        )}
-      </DetailCard>
-
-      <CompleteButton $disabled={!validationsAreValid} onClick={handleComplete}>
-        <CompleteIcon>
-          <MdOutlineTaskAlt />
-        </CompleteIcon>
-        完成收運
-      </CompleteButton>
-
-      {showSuccess && <SuccessMessage onFinish={handleSuccessFinish} />}
-
-      {showCamera && isWebCameraSupported && (
-        <Camera
-          onPhotoTaken={handleTakePhoto}
-          onClose={() => setShowCamera(false)}
-        />
-      )}
-
-      {/* 異常回報視窗 */}
-      <ReportModal
-        isOpen={showReportModal}
-        onClose={() => setShowReportModal(false)}
-        onSubmit={handleReportSubmit}
-        selectedIssue={reportForm.issue}
-        otherIssue={reportForm.otherIssue}
-        onSelectedIssueChange={(issue) =>
-          setReportForm((prev) => ({ ...prev, issue }))
-        }
-        onOtherIssueChange={(otherIssue) =>
-          setReportForm((prev) => ({ ...prev, otherIssue }))
-        }
-        setReportForm={setReportForm}
+      <TaskNavHeader
+        title="填寫收運狀況"
+        orderNumber={task.number}
+        backPath="/deliver/scan-order"
       />
-    </FullHeightContainer>
+      <FullHeightContainer>
+        {/* 時間卡片 */}
+        <DetailCard>
+          <DetailRow>
+            <DetailTime>{formatTime(task.time)}</DetailTime>
+            <StatusTagDeliver status={task.status} />
+          </DetailRow>
+        </DetailCard>
+
+        {/* 客戶資訊 */}
+        <Title>客戶資訊</Title>
+        <DetailCard>
+          <DetailRow>
+            <DetailLabel>聯絡人</DetailLabel>
+            <DetailValue>{task.customerName}</DetailValue>
+          </DetailRow>
+
+          <DetailRow>
+            <DetailLabel>電話</DetailLabel>
+            <DetailValue>{task.phone}</DetailValue>
+          </DetailRow>
+          <DetailRow>
+            <DetailLabel>放置固定點</DetailLabel>
+            <DetailValue>{task.notes}</DetailValue>
+          </DetailRow>
+
+          {/* 放置點圖片 */}
+          <DetailImgContainer>
+            {task.dropPointPhotos?.map((photo, index) => (
+              <DetailImg key={index}>
+                <img src={photo} alt={`放置點照片 ${index + 1}`} />
+              </DetailImg>
+            ))}
+          </DetailImgContainer>
+        </DetailCard>
+
+        <Title>地圖導航</Title>
+
+        <DetailCard>
+          <DetailFlex>
+            <DetailSign>
+              <MdLocationOn />
+            </DetailSign>
+
+            <DetailValue>
+              <DetailAddress>{task.address}</DetailAddress>
+            </DetailValue>
+          </DetailFlex>
+
+          <MapContainer>
+            <GoogleMapComponent
+              address={task.address}
+              onMapLoad={() => console.log('地圖已成功載入')}
+            />
+          </MapContainer>
+        </DetailCard>
+
+        <Title>垃圾收運量</Title>
+
+        <DetailCard>
+          <PlanTitle>{task.plan}</PlanTitle>
+          <PlanContent>
+            一般垃圾+回收+廚餘 = {task.liter}L / {task.weight}kg
+          </PlanContent>
+
+          <Divider />
+
+          <CardSection>
+            <PageTitle>實際重量 (kg)</PageTitle>
+            <WeightInput
+              type="number"
+              value={actualWeight || ''}
+              onChange={handleWeightChange}
+              placeholder="請輸入實際重量"
+            />
+            {!validations.weight && (
+              <ValidationMessage>請輸入實際重量</ValidationMessage>
+            )}
+          </CardSection>
+
+          <CardSection>
+            <PageTitle>照片記錄</PageTitle>
+            <PageSubtitle>請上傳2張收運照片，務必拍攝掛秤數字</PageSubtitle>
+            <PhotoUploadContainer>
+              {[0, 1].map((index) => (
+                <PhotoUploadBox
+                  key={index}
+                  onClick={() => handleOpenCamera(index)}
+                >
+                  {driverPhotos[index] ? (
+                    <div style={{ position: 'relative' }}>
+                      <PreviewImage
+                        src={driverPhotos[index]}
+                        alt={`照片 ${index + 1}`}
+                      />
+                      <DeleteButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeletePhoto(index);
+                        }}
+                      >
+                        <MdDelete />
+                      </DeleteButton>
+                    </div>
+                  ) : (
+                    <>
+                      <PlusIcon>
+                        <MdAdd />
+                      </PlusIcon>
+                      <UploadText>
+                        {isWebCameraSupported === null
+                          ? '載入中...'
+                          : isWebCameraSupported
+                            ? '點擊拍照'
+                            : '開啟相機'}
+                      </UploadText>
+                    </>
+                  )}
+                </PhotoUploadBox>
+              ))}
+            </PhotoUploadContainer>
+            {!validations.photos && (
+              <ValidationMessage>請上傳2張收運照片</ValidationMessage>
+            )}
+          </CardSection>
+
+          {/* 回報異常按鈕或異常回報區塊 */}
+          {!reportForm.isSubmitted ? (
+            <ReportButton onClick={handleOpenReportModal}>
+              <MdReportProblem />
+              發現異常？點我回報
+            </ReportButton>
+          ) : (
+            <>
+              <ReportBlockTitle>
+                <MdReportProblem />
+                異常回報
+              </ReportBlockTitle>
+
+              <ReportBlock onClick={handleOpenReportModal}>
+                <ReportContent>
+                  <ReportBlockContent>
+                    {getIssueText(reportForm.lastSubmitted?.issue || '')}
+                  </ReportBlockContent>
+                  <EditIcon>
+                    <MdEdit />
+                  </EditIcon>
+                </ReportContent>
+                {reportForm.lastSubmitted?.otherIssue && (
+                  <ReportBlockDescription>
+                    {reportForm.lastSubmitted.otherIssue}
+                  </ReportBlockDescription>
+                )}
+              </ReportBlock>
+            </>
+          )}
+        </DetailCard>
+
+        <CompleteButton
+          $disabled={!validationsAreValid}
+          onClick={handleComplete}
+        >
+          <CompleteIcon>
+            <MdOutlineTaskAlt />
+          </CompleteIcon>
+          完成收運
+        </CompleteButton>
+
+        {showSuccess && <SuccessMessage onFinish={handleSuccessFinish} />}
+
+        {showCamera && isWebCameraSupported && (
+          <Camera
+            onPhotoTaken={handleTakePhoto}
+            onClose={() => setShowCamera(false)}
+          />
+        )}
+
+        {/* 異常回報視窗 */}
+        <ReportModal
+          isOpen={showReportModal}
+          onClose={() => setShowReportModal(false)}
+          onSubmit={handleReportSubmit}
+          selectedIssue={reportForm.issue}
+          otherIssue={reportForm.otherIssue}
+          onSelectedIssueChange={(issue) =>
+            setReportForm((prev) => ({ ...prev, issue }))
+          }
+          onOtherIssueChange={(otherIssue) =>
+            setReportForm((prev) => ({ ...prev, otherIssue }))
+          }
+          setReportForm={setReportForm}
+        />
+      </FullHeightContainer>
+    </>
   );
 }
 

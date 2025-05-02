@@ -1,6 +1,15 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import Webcam from 'react-webcam'; //react相機套件
 import jsQR from 'jsqr'; //QR碼解碼套件
+import {
+  ScannerContainer,
+  ScannerPlaceholder,
+  ScannerWebcam,
+  ScannerCanvas,
+  ShutterTop,
+  ShutterBottom,
+  ScannerFrame,
+} from './styles';
 
 // QRScanner 元件屬性
 interface QRScannerProps {
@@ -13,6 +22,9 @@ const QRScanner = ({ onScanResult, onError }: QRScannerProps) => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hasPermission, setHasPermission] = useState<boolean>(false);
+  const [showCamera, setShowCamera] = useState<boolean>(false);
+  const [isShutterOpen, setIsShutterOpen] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   // 檢查相機權限
   const checkCameraPermission = useCallback(async () => {
@@ -82,14 +94,17 @@ const QRScanner = ({ onScanResult, onError }: QRScannerProps) => {
         const parsedData = JSON.parse(code.data);
 
         // 檢查必要的欄位是否存在
-        if (!parsedData.OrderDetailID || !parsedData.CustomerNumber) {
+        if (!parsedData.OrderDetailID || !parsedData.OrderDetailsNumber) {
           console.error('QR Code 缺少必要欄位');
           onError?.('QR Code 格式不正確，缺少必要欄位');
           return;
         }
 
         // 如果成功解析且包含必要欄位，則傳遞結果
-        onScanResult(code.data);
+        setIsSuccess(true);
+        setTimeout(() => {
+          onScanResult(code.data);
+        }, 1000);
       } catch (error) {
         console.error('QR Code 解析失敗:', error);
         onError?.('無法解析 QR Code 內容');
@@ -102,6 +117,15 @@ const QRScanner = ({ onScanResult, onError }: QRScannerProps) => {
     const initCamera = async () => {
       const permissionGranted = await checkCameraPermission();
       setHasPermission(permissionGranted);
+
+      if (permissionGranted) {
+        // 先打開快門
+        setIsShutterOpen(true);
+        // 快門打開後再顯示相機
+        setTimeout(() => {
+          setShowCamera(true);
+        }, 500);
+      }
     };
 
     initCamera();
@@ -121,44 +145,25 @@ const QRScanner = ({ onScanResult, onError }: QRScannerProps) => {
   }, [scanQRCode, hasPermission]);
 
   return (
-    <div>
-      {hasPermission ? (
-        <Webcam
-          ref={webcamRef}
-          audio={false}
-          videoConstraints={{
-            facingMode: 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-          }}
-          style={{
-            width: '100%',
-            maxWidth: '500px',
-            aspectRatio: '1/1',
-            margin: '0 auto',
-            objectFit: 'cover',
-            borderRadius: 'var(--border-radius-lg)',
-          }}
-        />
-      ) : (
-        <div
-          style={{
-            width: '100%',
-            maxWidth: '500px',
-            aspectRatio: '1/1',
-            margin: '0 auto',
-            backgroundColor: '#f0f0f0',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 'var(--border-radius-lg)',
-          }}
-        >
-          <p>等待相機權限...</p>
-        </div>
+    <ScannerContainer>
+      <ScannerWebcam
+        ref={webcamRef}
+        audio={false}
+        videoConstraints={{
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        }}
+      />
+      {!showCamera && (
+        <ScannerPlaceholder>
+          <ShutterTop isOpen={isShutterOpen} />
+          <ShutterBottom isOpen={isShutterOpen} />
+        </ScannerPlaceholder>
       )}
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
-    </div>
+      <ScannerFrame isSuccess={isSuccess} />
+      <ScannerCanvas ref={canvasRef} />
+    </ScannerContainer>
   );
 };
 

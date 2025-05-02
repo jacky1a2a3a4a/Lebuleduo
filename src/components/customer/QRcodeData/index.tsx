@@ -94,7 +94,7 @@ const QRcodeData: React.FC<QRcodeDataProps> = ({ orderId, userId }) => {
             <QRCodeItem key={task.OrderDetailID}>
               <QRCodeGenerator
                 data={{
-                  OrderDetailID: task.OrderDetailID,
+                  OrderDetailID: Number(task.OrderDetailID),
                   OrderDetailsNumber: task.OrderDetailsNumber,
                 }}
                 size={80}

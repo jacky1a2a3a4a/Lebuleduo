@@ -1,10 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 
-import QRScanner from '../../../components/deliver/QRScanner';
-import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
-import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
-
 import { MdQrCodeScanner } from 'react-icons/md';
 import {
   ScanOrderSectionStyled,
@@ -14,7 +10,12 @@ import {
 } from './styles';
 import { ApiData, OrderInfo } from './types';
 
-const userId = localStorage.getItem('UsersID');
+import QRScanner from '../../../components/deliver/QRScanner';
+import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
+import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
+import { getUsersID } from '../../../utils/getUserLocalData';
+
+const userId = getUsersID();
 
 function ScanOrder() {
   const navigate = useNavigate();
@@ -58,6 +59,12 @@ function ScanOrder() {
         const orderData = JSON.parse(result) as OrderInfo;
         console.log('掃描到的訂單資料:', orderData);
         setScanError(null);
+
+        // 驗證 QR Code 資料格式
+        if (!orderData.OrderDetailID || !orderData.OrderDetailsNumber) {
+          setScanError('QR Code 格式不正確，缺少必要欄位');
+          return;
+        }
 
         if (!executingOrderData) {
           setScanError(

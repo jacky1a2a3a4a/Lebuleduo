@@ -21,6 +21,7 @@ export const LoadingContainer = styled.div<SizeProps>`
     $size === 'normal'
       ? `
     position: fixed;
+    z-index: 9999;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
