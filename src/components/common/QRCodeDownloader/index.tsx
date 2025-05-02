@@ -145,7 +145,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
         const canvas = await html2canvas(printPage, {
-          scale: isMobile ? 1 : 2, // 在手機上使用較低的解析度
+          scale: isMobile ? 3 : 4, // 提高圖片解析度
           useCORS: true,
           backgroundColor: 'white',
           logging: true,
@@ -182,6 +182,26 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                       align-items: center;
                       min-height: 100vh;
                       background-color: #f5f5f5;
+                      overflow: hidden;
+                    }
+                    .carousel {
+                      width: 100%;
+                      height: 100vh;
+                      position: relative;
+                      overflow: hidden;
+                    }
+                    .carousel-container {
+                      display: flex;
+                      transition: transform 0.3s ease;
+                      height: 100%;
+                    }
+                    .carousel-item {
+                      flex: 0 0 100%;
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: center;
+                      align-items: center;
+                      padding: 20px;
                     }
                     img {
                       max-width: 100%;
@@ -199,29 +219,75 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                       padding: 10px;
                       background-color: rgba(255, 255, 255, 0.9);
                     }
+                    .page-indicator {
+                      position: fixed;
+                      top: 20px;
+                      left: 0;
+                      right: 0;
+                      text-align: center;
+                      color: #666;
+                      font-size: 14px;
+                      padding: 10px;
+                      background-color: rgba(255, 255, 255, 0.9);
+                    }
                   </style>
                 </head>
                 <body>
-                  <img src="${dataUrl}" alt="QR Code" />
-                  <div class="download-hint">請長按圖片並選擇「儲存圖片」</div>
+                  <div class="carousel">
+                    <div class="carousel-container" id="carouselContainer">
+                      ${Array.from(
+                        { length: totalPages },
+                        (_, i) => `
+                        <div class="carousel-item">
+                          <img src="${dataUrl}" alt="QR Code ${i + 1}" />
+                          <div class="page-indicator">第 ${i + 1} 頁 / 共 ${totalPages} 頁</div>
+                        </div>
+                      `,
+                      ).join('')}
+                    </div>
+                    <div class="download-hint">請長按圖片並選擇「儲存圖片」</div>
+                  </div>
+                  <script>
+                    const container = document.getElementById('carouselContainer');
+                    let startX = 0;
+                    let currentTranslate = 0;
+                    let prevTranslate = 0;
+                    let currentIndex = 0;
+                    const totalItems = ${totalPages};
+                    
+                    container.addEventListener('touchstart', (e) => {
+                      startX = e.touches[0].clientX;
+                    });
+                    
+                    container.addEventListener('touchmove', (e) => {
+                      const currentX = e.touches[0].clientX;
+                      const diff = currentX - startX;
+                      currentTranslate = prevTranslate + diff;
+                      container.style.transform = \`translateX(\${currentTranslate}px)\`;
+                    });
+                    
+                    container.addEventListener('touchend', (e) => {
+                      const diff = e.changedTouches[0].clientX - startX;
+                      const threshold = window.innerWidth * 0.3;
+                      
+                      if (Math.abs(diff) > threshold) {
+                        if (diff > 0 && currentIndex > 0) {
+                          currentIndex--;
+                        } else if (diff < 0 && currentIndex < totalItems - 1) {
+                          currentIndex++;
+                        }
+                      }
+                      
+                      prevTranslate = -currentIndex * window.innerWidth;
+                      container.style.transform = \`translateX(\${prevTranslate}px)\`;
+                    });
+                  </script>
                 </body>
               </html>
             `);
             newWindow.document.close();
           } else {
             // 如果無法開啟新視窗，則在當前頁面顯示圖片
-            const img = document.createElement('img');
-            img.src = dataUrl;
-            img.style.maxWidth = '100%';
-            img.style.display = 'block';
-            img.style.margin = '0 auto';
-
-            const hint = document.createElement('div');
-            hint.textContent = '請長按圖片並選擇「儲存圖片」';
-            hint.style.textAlign = 'center';
-            hint.style.color = '#666';
-            hint.style.marginTop = '10px';
-
             const container = document.createElement('div');
             container.style.position = 'fixed';
             container.style.top = '0';
@@ -234,10 +300,88 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
             container.style.justifyContent = 'center';
             container.style.alignItems = 'center';
             container.style.zIndex = '9999';
+            container.style.overflow = 'hidden';
 
-            container.appendChild(img);
+            const carouselContainer = document.createElement('div');
+            carouselContainer.style.display = 'flex';
+            carouselContainer.style.transition = 'transform 0.3s ease';
+            carouselContainer.style.width = '100%';
+            carouselContainer.style.height = '100%';
+
+            let startX = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+            let currentIndex = 0;
+
+            // 創建所有頁面的圖片
+            for (let i = 0; i < totalPages; i++) {
+              const pageContainer = document.createElement('div');
+              pageContainer.style.flex = '0 0 100%';
+              pageContainer.style.display = 'flex';
+              pageContainer.style.flexDirection = 'column';
+              pageContainer.style.justifyContent = 'center';
+              pageContainer.style.alignItems = 'center';
+              pageContainer.style.padding = '20px';
+
+              const img = document.createElement('img');
+              img.src = dataUrl;
+              img.style.maxWidth = '100%';
+              img.style.display = 'block';
+              img.style.margin = '0 auto';
+
+              const pageIndicator = document.createElement('div');
+              pageIndicator.textContent = `第 ${i + 1} 頁 / 共 ${totalPages} 頁`;
+              pageIndicator.style.color = '#fff';
+              pageIndicator.style.marginTop = '10px';
+              pageIndicator.style.textAlign = 'center';
+
+              pageContainer.appendChild(img);
+              pageContainer.appendChild(pageIndicator);
+              carouselContainer.appendChild(pageContainer);
+            }
+
+            const hint = document.createElement('div');
+            hint.textContent = '請長按圖片並選擇「儲存圖片」';
+            hint.style.position = 'fixed';
+            hint.style.bottom = '20px';
+            hint.style.left = '0';
+            hint.style.right = '0';
+            hint.style.textAlign = 'center';
+            hint.style.color = '#fff';
+            hint.style.padding = '10px';
+            hint.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+
+            container.appendChild(carouselContainer);
             container.appendChild(hint);
             document.body.appendChild(container);
+
+            // 添加觸控事件處理
+            container.addEventListener('touchstart', (e) => {
+              startX = e.touches[0].clientX;
+            });
+
+            container.addEventListener('touchmove', (e) => {
+              const currentX = e.touches[0].clientX;
+              const diff = currentX - startX;
+              currentTranslate = prevTranslate + diff;
+              carouselContainer.style.transform = `translateX(${currentTranslate}px)`;
+            });
+
+            container.addEventListener('touchend', (e) => {
+              const diff = e.changedTouches[0].clientX - startX;
+              const threshold = window.innerWidth * 0.3;
+
+              if (Math.abs(diff) > threshold) {
+                if (diff > 0 && currentIndex > 0) {
+                  currentIndex--;
+                } else if (diff < 0 && currentIndex < totalPages - 1) {
+                  currentIndex++;
+                }
+              }
+
+              prevTranslate = -currentIndex * window.innerWidth;
+              carouselContainer.style.transform = `translateX(${prevTranslate}px)`;
+            });
 
             // 點擊背景關閉圖片
             container.addEventListener('click', (e) => {
