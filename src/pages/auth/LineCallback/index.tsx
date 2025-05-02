@@ -77,6 +77,8 @@ const LineCallback = () => {
 
         // 從 localStorage 獲取角色
         const userRole = getLoginRole();
+        // 清除舊的 UsersID，避免角色切換時使用錯誤的 ID
+        localStorage.removeItem('UsersID');
         const usersId = localStorage.getItem('UsersID');
 
         if (!userRole) {
