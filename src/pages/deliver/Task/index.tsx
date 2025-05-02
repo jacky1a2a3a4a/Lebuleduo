@@ -27,7 +27,8 @@ import {
 } from './styled';
 import TaskCard from './Card';
 import ErrorReport from '../../../components/common/ErrorReport';
-import AnimationLoading from '../../../components/common/AnimationLoading';
+// import AnimationLoading from '../../../components/common/AnimationLoading';
+import CommonLoading from '../../../components/common/CommonLoading';
 
 import { MdCalendarToday } from 'react-icons/md';
 import { TaskStatus } from '../../../types/deliver';
@@ -372,7 +373,7 @@ function Task() {
 
   return (
     <TaskSectionStyled $topPosition={topPosition}>
-      {isLoading && <AnimationLoading />}
+      {isLoading && <CommonLoading />}
 
       {/* 外送員卡片 */}
       <DeliverContainer ref={deliverContainerRef}>

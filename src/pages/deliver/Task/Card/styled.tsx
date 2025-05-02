@@ -156,7 +156,7 @@ export const TaskCardButton = styled.button<{
   border: none;
   border-radius: var(--border-radius-round);
   font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
 
   display: flex;

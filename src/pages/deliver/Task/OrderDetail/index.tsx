@@ -37,7 +37,7 @@ import { formatTime } from '../../../../utils/formatTime';
 import { GoogleMapComponent } from '../../../../components/common/GoogleMap';
 import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 import AnimationLoading from '../../../../components/common/AnimationLoading';
-import OrderNavHeader from '../../../../components/customer/OrderNavHeader';
+import TaskNavHeader from '../../../../components/deliver/TaskNavHeader';
 import ErrorReport from '../../../../components/common/ErrorReport';
 
 // 定義任務類型
@@ -174,9 +174,10 @@ function OrderDetails() {
   }
 
   return (
-    <FullHeightContainer>
-      <OrderNavHeader title="任務詳情" orderNumber={task.number} />
-
+    <>
+      <TaskNavHeader title="任務詳情" orderNumber={task.number} />
+      <FullHeightContainer>
+        {/* 時間卡片 */}
       {/* 時間卡片 */}
       <DetailCard>
         <DetailRow>
@@ -285,7 +286,8 @@ function OrderDetails() {
           </>
         )}
       </DetailCard>
-    </FullHeightContainer>
+      </FullHeightContainer>
+    </>
   );
 }
 
