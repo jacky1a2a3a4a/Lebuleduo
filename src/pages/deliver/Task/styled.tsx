@@ -312,6 +312,9 @@ export const TaskCardsContainer = styled.div`
   height: calc(100% - 60px);
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   -webkit-overflow-scrolling: touch;
   padding-bottom: var(--spacing-2xl); //底部預留空間以免卡片被遮住
 
