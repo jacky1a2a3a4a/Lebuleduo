@@ -24,6 +24,13 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
       const qrCodesPerPage = 6;
       const totalPages = Math.ceil(qrCodes.length / qrCodesPerPage);
 
+      // 預先載入 logo 圖片
+      const logoImage = new Image();
+      logoImage.src = logo;
+      await new Promise((resolve) => {
+        logoImage.onload = resolve;
+      });
+
       for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
         const startIndex = pageIndex * qrCodesPerPage;
         const endIndex = Math.min(startIndex + qrCodesPerPage, qrCodes.length);
@@ -134,25 +141,56 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
         document.body.appendChild(printPage);
         await Promise.all(renderPromises);
 
+        // 檢查是否為手機設備
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
         const canvas = await html2canvas(printPage, {
-          scale: 2,
+          scale: isMobile ? 1 : 2, // 在手機上使用較低的解析度
           useCORS: true,
           backgroundColor: 'white',
           logging: true,
           allowTaint: true,
+          onclone: (clonedDoc) => {
+            // 確保克隆的文檔中的圖片也被正確載入
+            const images = clonedDoc.getElementsByTagName('img');
+            for (let i = 0; i < images.length; i++) {
+              images[i].src = logo;
+            }
+          },
         });
         document.body.removeChild(printPage);
 
         const dataUrl = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = `垃不垃多專用QRcode_訂單編號${orderNumber}_page_${pageIndex + 1}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+
+        // 在手機上使用不同的下載方式
+        if (isMobile) {
+          // 在手機上使用新視窗開啟圖片
+          const newWindow = window.open();
+          if (newWindow) {
+            newWindow.document.write(
+              `<img src="${dataUrl}" style="max-width:100%;" />`,
+            );
+          } else {
+            // 如果無法開啟新視窗，則提示用戶長按圖片保存
+            const img = document.createElement('img');
+            img.src = dataUrl;
+            img.style.maxWidth = '100%';
+            document.body.appendChild(img);
+            alert('請長按圖片並選擇「儲存圖片」');
+          }
+        } else {
+          // 在桌面版使用傳統的下載方式
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = `垃不垃多專用QRcode_訂單編號${orderNumber}_page_${pageIndex + 1}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
       }
     } catch (error) {
       console.error('下載失敗:', error);
+      alert('下載失敗，請稍後再試或聯絡客服人員');
     }
   };
 

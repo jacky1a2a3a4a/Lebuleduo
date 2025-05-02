@@ -243,7 +243,7 @@ function ModifyDateModal({
               </DateInfo>
 
               <NoticeText>
-                ※ 溫興提醒：
+                ※ 溫馨提醒：
                 <br />• 可選擇的日期範圍為 今天 到 方案結束日
                 <br />• 已排定的日期無法選擇
                 <br />• 修改後無法再更改
