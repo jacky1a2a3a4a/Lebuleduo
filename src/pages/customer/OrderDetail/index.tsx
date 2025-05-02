@@ -27,12 +27,11 @@ import {
 import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
 
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 import Modal from '../../../components/common/Modal';
 import QRcodeData from '../../../components/customer/QRcodeData';
 import Tab from '../../../components/customer/OrderDetails/Tab';
 import TabContent from '../../../components/customer/OrderDetails/TabContent';
-import AnimationLoading from '../../../components/common/AnimationLoading';
 
 const BASE_API_URL = import.meta.env.VITE_API_URL;
 const userId = localStorage.getItem('UsersID');

@@ -25,7 +25,6 @@ import {
 } from './styles';
 import { Plan } from './types';
 
-import LoadingMessage from '../../../components/common/LoadingMessage';
 import AnimationLoading from '../../../components/common/AnimationLoading';
 import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
 import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
@@ -62,7 +61,9 @@ const Subscribe = () => {
   const [showDaysError, setShowDaysError] = useState(false); // 預定收集日:是否顯示收集日錯誤提示
 
   const [qrCodeMethod, setQrCodeMethod] = useState<'print' | 'ship'>('print'); // QR code 取得方式
-  const [selectedDate, setSelectedDate] = useState<Date>(getTomorrowDate());
+  const [selectedDate, setSelectedDate] = useState<Date>(
+    new Date(getTomorrowDate()),
+  );
 
   const [originalPrice, setOriginalPrice] = useState(0); // 折扣前總價格
   const [discount, setDiscount] = useState(0); // 折扣金額
@@ -110,7 +111,7 @@ const Subscribe = () => {
 
   // 監聽 QR code 取得方式的變化
   useEffect(() => {
-    const tomorrow = getTomorrowDate();
+    const tomorrow = new Date(getTomorrowDate());
     if (qrCodeMethod === 'ship') {
       // 如果是郵寄貼紙，設置為三天後的日期
       const threeDaysLater = new Date(tomorrow);
