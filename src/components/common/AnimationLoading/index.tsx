@@ -7,7 +7,7 @@ import {
   LoadingText,
 } from './styles';
 
-interface LoadingMessageProps {
+interface AnimationLoadingProps {
   size?: 'normal' | 'mini';
   animationType?: 'moving' | 'bounce';
 }
@@ -23,10 +23,10 @@ const ANIMATION_CONFIG = {
   },
 } as const;
 
-const LoadingMessage = ({
+const AnimationLoading = ({
   size = 'normal',
   animationType = 'bounce',
-}: LoadingMessageProps) => {
+}: AnimationLoadingProps) => {
   const { image, alt } = ANIMATION_CONFIG[animationType];
 
   return (
@@ -44,4 +44,4 @@ const LoadingMessage = ({
   );
 };
 
-export default LoadingMessage;
+export default AnimationLoading;

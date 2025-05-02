@@ -26,8 +26,8 @@ import {
   TaskCardsContainer,
 } from './styled';
 import TaskCard from './Card';
-import Loading from '../../../components/common/LoadingMessage';
 import ErrorReport from '../../../components/common/ErrorReport';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 
 import { MdCalendarToday } from 'react-icons/md';
 import { TaskStatus } from '../../../types/deliver';
@@ -372,14 +372,15 @@ function Task() {
 
   return (
     <TaskSectionStyled $topPosition={topPosition}>
-      {isLoading && <Loading />}
+      {isLoading && <AnimationLoading />}
 
       {/* 外送員卡片 */}
       <DeliverContainer ref={deliverContainerRef}>
         <DeliverCard>
           <DeliverGreeting>
             <TaskGreetingItem>
-              {getGreeting()} {driverData?.DriverName}
+              {getGreeting()}
+              <span> {driverData?.DriverName}</span>
             </TaskGreetingItem>
             <TaskId>汪汪員編號: {driverData?.Number}</TaskId>
           </DeliverGreeting>
@@ -473,9 +474,9 @@ function Task() {
           {error && <ErrorReport title="錯誤" error={error} />}
           {getFilteredTasks().length === 0 ? (
             <ErrorReport
-              title="目前沒有任務"
+              title="目前沒有任務，是個輕鬆的工作天"
               titleColor="var(--color-primary)"
-              error=''
+              error=""
               showImage={true}
             />
           ) : (

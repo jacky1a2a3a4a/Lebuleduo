@@ -8,7 +8,10 @@ import {
 
 import StatusTag from '../StatusTag';
 import { TableProps } from './types';
-import { getFormattedDateTime } from '../../../utils/formatDate';
+import {
+  getFormattedDateTime,
+  getFormattedDateWithDay,
+} from '../../../utils/formatDate';
 
 export const Table = ({
   orders,
@@ -34,6 +37,7 @@ export const Table = ({
             </th>
             <th>任務ID</th>
             <th>客戶名稱</th>
+            <th>服務日期</th>
             <th>任務狀態</th>
             <th>方案類型</th>
             <th>收運地區</th>
@@ -62,6 +66,11 @@ export const Table = ({
               </StyledTd>
               <StyledTd>{order.OrderDetailID}</StyledTd>
               <StyledTd>{order.OrderName}</StyledTd>
+              <StyledTd>
+                {order.ServiceDate
+                  ? getFormattedDateWithDay(order.ServiceDate)
+                  : '未設定'}
+              </StyledTd>
               <StyledTd>
                 <StatusTag status={order.OrderStatus} />
               </StyledTd>

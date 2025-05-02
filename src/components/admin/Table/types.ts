@@ -1,13 +1,4 @@
-export interface Order {
-  OrderDetailID: number;
-  OrderName: string;
-  OrderStatus: number;
-  PlanName: string;
-  Region: string;
-  DriverTimeStart: string | null;
-  DriverTimeEnd: string | null;
-  ResponsibleDriver: string;
-}
+import { Order } from '../../../pages/admin/TaskDispatch/types';
 
 export interface TableProps {
   orders: Order[];

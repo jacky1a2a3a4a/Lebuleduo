@@ -4,7 +4,7 @@ interface CommonLoadingProps {
   text?: string;
 }
 
-const CommonLoading = ({ text = '載入中，請稍候...' }: CommonLoadingProps) => {
+const CommonLoading = ({ text = '載入中，請稍候' }: CommonLoadingProps) => {
   return (
     <LoadingContainer>
       <Spinner />

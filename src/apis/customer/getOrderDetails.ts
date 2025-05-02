@@ -36,8 +36,8 @@ export const getOrderDetails = async (userId: string, orderId: string) => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || '獲取訂單詳情失敗');
+      throw new Error(error.response?.data?.message || '獲取方案詳情失敗');
     }
-    throw new Error('獲取訂單詳情時發生未知錯誤');
+    throw new Error('獲取方案詳情時發生未知錯誤');
   }
 };

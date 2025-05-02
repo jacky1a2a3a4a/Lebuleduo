@@ -9,7 +9,7 @@ import OrderTaskStatusCard from '../../../../components/customer/OrderTaskStatus
 import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTaskStatusRecord/Title'; //收運紀錄標題
 import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container'; //收運紀錄容器
 import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail'; //收運紀錄詳情
-import Loading from '../../../../components/common/LoadingMessage'; //加載中
+import AnimationLoading from '../../../../components/common/AnimationLoading'; //加載中
 
 import { Notification, NotificationText } from './styles';
 
@@ -110,7 +110,7 @@ function UnScheduledTask() {
 
   // 加載中
   if (loading) {
-    return <Loading />;
+    return <AnimationLoading />;
   }
 
   // 錯誤

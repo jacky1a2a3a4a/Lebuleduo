@@ -28,7 +28,7 @@ import {
 } from './styles';
 
 import { getPlans } from '../../../apis/customer/getPlan'; //api 取得方案
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 import ErrorReport from '../../../components/common/ErrorReport';
 
 const Plan = () => {
@@ -117,7 +117,7 @@ const Plan = () => {
 
         {/* 方案卡片列表 */}
         <PlanCardListContainer>
-          {isLoading && <LoadingMessage size="mini" animationType="moving" />}
+          {isLoading && <AnimationLoading size="mini" animationType="moving" />}
 
           {error && <ErrorReport error={error} />}
 

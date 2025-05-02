@@ -295,7 +295,7 @@ export const DeliverySelect = styled.select<{ $error?: boolean }>`
     ${(props) =>
       props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-round);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   color: var(--color-text-primary);
   background-color: var(--color-background);
   cursor: pointer;
@@ -380,8 +380,8 @@ export const DeleteImageButton = styled.button`
 
 // 上傳圖片按鈕
 export const DeliveryOptionImageUpload = styled.div`
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  aspect-ratio: 3/4;
   border: 1px dashed var(--color-neutral-400);
   border-radius: var(--border-radius-sm);
   display: flex;

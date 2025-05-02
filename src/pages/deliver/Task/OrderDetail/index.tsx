@@ -47,6 +47,7 @@ import { formatTime } from '../../../../utils/formatTime';
 import LoadingMessage from '../../../../components/common/LoadingMessage';
 import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 import { GoogleMapComponent } from '../../../../components/common/GoogleMap';
+import AnimationLoading from '../../../../components/common/AnimationLoading';
 
 // 定義任務類型
 type TaskItem = {
@@ -174,7 +175,7 @@ function OrderDetails() {
 
   // 載入狀態
   if (loading) {
-    return <LoadingMessage />;
+    return <AnimationLoading />;
   }
 
   // 錯誤狀態
@@ -300,7 +301,7 @@ function OrderDetails() {
             <ReportBlock>
               <ReportContent>
                 <ReportBlockContent>
-                  {getIssueText(Number(task.commonIssues))} 
+                  {getIssueText(Number(task.commonIssues))}
                 </ReportBlockContent>
                 <ReportBlockDescription>
                   {task.issueDescription}

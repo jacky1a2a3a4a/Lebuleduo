@@ -26,6 +26,7 @@ import {
 import { Plan } from './types';
 
 import LoadingMessage from '../../../components/common/LoadingMessage';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
 import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
 import ButtonCard from '../../../components/customer/Subscribe/ButtonCard';
@@ -158,7 +159,7 @@ const Subscribe = () => {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage size="normal" animationType="bounce" />;
+    return <AnimationLoading size="normal" animationType="bounce" />;
   }
 
   // 處理方案切換

@@ -32,6 +32,7 @@ import Modal from '../../../components/common/Modal';
 import QRcodeData from '../../../components/customer/QRcodeData';
 import Tab from '../../../components/customer/OrderDetails/Tab';
 import TabContent from '../../../components/customer/OrderDetails/TabContent';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 
 const BASE_API_URL = import.meta.env.VITE_API_URL;
 const userId = localStorage.getItem('UsersID');
@@ -62,7 +63,7 @@ function OrderDetail() {
       console.log('API 回傳數據：', data);
 
       if (data.status) {
-        console.log('訂單詳情數據：', data.result[0]);
+        console.log('方案詳情數據：', data.result[0]);
         console.log('OrderDetail 數據：', data.result[0].OrderDetails);
         setOrderData(data.result[0]);
       } else {
@@ -86,7 +87,7 @@ function OrderDetail() {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage />;
+    return <AnimationLoading />;
   }
 
   // 錯誤
@@ -126,7 +127,7 @@ function OrderDetail() {
   return (
     <OrderDetailContainer>
       {/* navbar */}
-      <OrderNavHeader title="訂單詳情" orderNumber={orderData.OrderNumber} />
+      <OrderNavHeader title="方案詳情" orderNumber={orderData.OrderNumber} />
 
       <ContentArea>
         {/* 方案卡片 */}

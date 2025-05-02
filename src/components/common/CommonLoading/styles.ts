@@ -34,6 +34,30 @@ export const Spinner = styled.div`
 
 export const LoadingText = styled.div`
   margin-top: var(--spacing-md);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   color: var(--color-text-tertiary);
+
+  &::after {
+    content: '';
+    margin-left: 4px;
+    animation: loadingDots 1.5s infinite;
+  }
+
+  @keyframes loadingDots {
+    0% {
+      content: '';
+    }
+    25% {
+      content: '.';
+    }
+    50% {
+      content: '..';
+    }
+    75% {
+      content: '...';
+    }
+    100% {
+      content: '';
+    }
+  }
 `;

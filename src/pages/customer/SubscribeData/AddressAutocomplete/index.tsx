@@ -318,7 +318,7 @@ const StyledInputWithIcon = styled.input<{ $error?: boolean }>`
     ${(props) =>
       props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-round);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
 
   &::placeholder {
     color: var(--color-gray-400);
