@@ -10,7 +10,7 @@ import OrderTaskStatusRecordTitle from '../../../../components/customer/OrderTas
 import OrderTaskStatusRecordContainer from '../../../../components/customer/OrderTaskStatusRecord/Container/index.tsx'; //收運紀錄容器
 import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail/index.tsx'; //收運紀錄詳情
 import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
-import Loading from '../../../../components/common/LoadingMessage/index.tsx'; //加載中
+import AnimationLoading from '../../../../components/common/AnimationLoading'; //加載中
 import { getFormattedDateTime } from '../../../../utils/formatDate'; // 時間格式化工具
 
 // 訂單詳情
@@ -107,7 +107,7 @@ function FinishedTask() {
 
   // 加載中
   if (loading) {
-    return <Loading />;
+    return <AnimationLoading />;
   }
 
   // 錯誤

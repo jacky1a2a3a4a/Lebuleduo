@@ -1,20 +1,11 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  MdArrowBackIosNew,
-  MdLocationOn,
-  MdReportProblem,
-} from 'react-icons/md';
+import { MdLocationOn, MdReportProblem } from 'react-icons/md';
 
 import {
   FullHeightContainer,
-  HeaderContainer,
   Title,
-  NavTitle,
-  IconStyled,
-  NavTitleText,
-  NavSubtitle,
   DetailCard,
   CardSection,
   DetailRow,
@@ -30,7 +21,6 @@ import {
   MapContainer,
   PlanTitle,
   PageTitle,
-  PageSubtitle,
   PlanContent,
   PageContent,
   PhotoContainer,
@@ -44,9 +34,11 @@ import {
 
 import { TaskStatus } from '../../../../types/deliver';
 import { formatTime } from '../../../../utils/formatTime';
-import LoadingMessage from '../../../../components/common/LoadingMessage';
-import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 import { GoogleMapComponent } from '../../../../components/common/GoogleMap';
+import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
+import AnimationLoading from '../../../../components/common/AnimationLoading';
+import OrderNavHeader from '../../../../components/customer/OrderNavHeader';
+import ErrorReport from '../../../../components/common/ErrorReport';
 
 // 定義任務類型
 type TaskItem = {
@@ -72,7 +64,6 @@ const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用
 const today = new Date().toISOString().split('T')[0]; // 獲取今天的日期
 
 function OrderDetails() {
-  const navigate = useNavigate();
   const { taskId } = useParams();
   const [task, setTask] = useState<TaskItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -168,39 +159,23 @@ function OrderDetails() {
     }
   };
 
-  const handleBack = () => {
-    navigate(-1);
-  };
-
   // 載入狀態
   if (loading) {
-    return <LoadingMessage />;
+    return <AnimationLoading />;
   }
 
   // 錯誤狀態
   if (error) {
     return (
       <FullHeightContainer>
-        <HeaderContainer>
-          <PageTitle>錯誤</PageTitle>
-          <PageSubtitle>{error}</PageSubtitle>
-        </HeaderContainer>
+        <ErrorReport error={error} />
       </FullHeightContainer>
     );
   }
 
   return (
     <FullHeightContainer>
-      {/* NavHeader  */}
-      <HeaderContainer>
-        <NavTitle onClick={handleBack}>
-          <IconStyled>
-            <MdArrowBackIosNew />
-          </IconStyled>
-          <NavTitleText>任務詳情</NavTitleText>
-        </NavTitle>
-        <NavSubtitle>任務編號: {task.number}</NavSubtitle>
-      </HeaderContainer>
+      <OrderNavHeader title="任務詳情" orderNumber={task.number} />
 
       {/* 時間卡片 */}
       <DetailCard>
@@ -300,7 +275,7 @@ function OrderDetails() {
             <ReportBlock>
               <ReportContent>
                 <ReportBlockContent>
-                  {getIssueText(Number(task.commonIssues))} 
+                  {getIssueText(Number(task.commonIssues))}
                 </ReportBlockContent>
                 <ReportBlockDescription>
                   {task.issueDescription}

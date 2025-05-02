@@ -31,7 +31,8 @@ import {
   TabContent,
 } from './styled';
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import AnimationLoading from '../../../components/common/AnimationLoading';
+// import Modal from '../../../components/common/Modal';
 // 虛擬機URL
 const BASE_URL = 'https://lebuleduo.rocket-coding.com';
 
@@ -99,7 +100,7 @@ function OrderDetail() {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage />;
+    return <AnimationLoading />;
   }
 
   // 錯誤

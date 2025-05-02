@@ -77,6 +77,8 @@ const LineCallback = () => {
 
         // 從 localStorage 獲取角色
         const userRole = getLoginRole();
+        // 清除舊的 UsersID，避免角色切換時使用錯誤的 ID
+        localStorage.removeItem('UsersID');
         const usersId = localStorage.getItem('UsersID');
 
         if (!userRole) {
@@ -197,13 +199,26 @@ const LineCallback = () => {
         } else {
           setError('登入過程中發生錯誤');
         }
-
-        // 3 秒後返回登入頁面
-        setTimeout(() => {
-          navigate('/auth/line-login', { replace: true });
-        }, 3000);
-      } finally {
         setLoading(false);
+
+        // 獲取用戶角色
+        const userRole = localStorage.getItem('line_login_role');
+
+        // 立即清除相關的 localStorage 資料
+        localStorage.removeItem('line_login_state');
+        localStorage.removeItem('line_login_role');
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_role');
+        localStorage.removeItem('user_data');
+
+        // 3 秒後根據角色返回對應的登入頁面
+        setTimeout(() => {
+          if (userRole === 'deliver') {
+            navigate('/auth/line-login-deliver', { replace: true });
+          } else {
+            navigate('/auth/line-login-customer', { replace: true });
+          }
+        }, 3000);
       }
     };
 

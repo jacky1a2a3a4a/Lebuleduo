@@ -36,7 +36,8 @@ import {
 
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 import AddressAutocomplete from '../SubscribeData/AddressAutocomplete';
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import CommonLoading from '../../../components/common/CommonLoading';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 
 // 虛擬機URL
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -145,7 +146,7 @@ function OrderEdit() {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage />;
+    return <AnimationLoading />;
   }
 
   // 無法載入訂單資料
@@ -536,9 +537,7 @@ function OrderEdit() {
 
             <FormGroup>
               {showSuccessMessage && (
-                <SuccessMessage>
-                  *修改成功！即將跳轉回到訂單詳情
-                </SuccessMessage>
+                <CommonLoading text="修改成功，即將回到訂單詳情" />
               )}
               <SaveButton onClick={handleSave} disabled={!isFormValid()}>
                 儲存修改

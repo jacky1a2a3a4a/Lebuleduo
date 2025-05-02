@@ -28,7 +28,7 @@ import {
 } from './styles';
 
 import { getPlans } from '../../../apis/customer/getPlan'; //api 取得方案
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 import ErrorReport from '../../../components/common/ErrorReport';
 
 const Plan = () => {
@@ -36,7 +36,7 @@ const Plan = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchPlans = async () => {
       try {
@@ -57,24 +57,10 @@ const Plan = () => {
   // 處理點擊"立即預定"按鈕的函數
   //儲存planId到state，方便訂閱畫面使用，能夠顯示同樣的方案
   const handleSubscribe = (plan) => {
-    const {
-      PlanID,
-      PlanName,
-      Liter,
-      Price,
-      PlanKG,
-      PlanDescription,
-      PlanPeople,
-    } = plan;
+    const { PlanName } = plan;
     navigate('/customer/subscribe', {
       state: {
-        planId: PlanID,
         planName: PlanName,
-        liter: Liter,
-        price: Price,
-        planKg: PlanKG,
-        planDescription: PlanDescription,
-        planPeople: PlanPeople,
       },
     });
   };
@@ -131,7 +117,7 @@ const Plan = () => {
 
         {/* 方案卡片列表 */}
         <PlanCardListContainer>
-          {isLoading && <LoadingMessage size="mini" animationType="moving" />}
+          {isLoading && <AnimationLoading size="mini" animationType="moving" />}
 
           {error && <ErrorReport error={error} />}
 

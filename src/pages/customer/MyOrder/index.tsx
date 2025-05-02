@@ -4,6 +4,7 @@ import { MdError, MdArrowCircleRight } from 'react-icons/md';
 import dogImage from '../../../assets/images/Lebuledou_lying.png';
 import dogTruckImage from '../../../assets/images/Lebuledou_truck.png';
 import ErrorReport from '../../../components/common/ErrorReport';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 
 import {
   OrderStep,
@@ -52,7 +53,6 @@ import {
   OrderCardDetail,
 } from './styles';
 
-import LoadingMessage from '../../../components/common/LoadingMessage';
 import { getTodayDate } from '../../../utils/getDate';
 import { getFormattedDateWithDay } from '../../../utils/formatDate';
 import { getUsersID, getUserName } from '../../../utils/getUserLocalData';
@@ -314,10 +314,10 @@ function MyOrder() {
         {/* 訂單列表 */}
         <OrderListSection>
           {isLoading ? (
-            <LoadingMessage size="mini" animationType="moving" />
+            <AnimationLoading size="mini" animationType="moving" />
           ) : error ? (
             <ErrorReport
-              title="目前沒有訂單喔～請先預訂方案"
+              title="目前沒有方案"
               error=""
               showImage={true}
               titleColor="var(--color-primary)"
@@ -454,12 +454,7 @@ function MyOrder() {
                   );
                 })
               ) : (
-                <ErrorReport
-                  title="目前沒有方案"
-                  error=""
-                  showImage={true}
-                  titleColor="var(--color-primary)"
-                />
+                <ErrorReport title="錯誤" error={error} />
               )}
             </OrderList>
           )}

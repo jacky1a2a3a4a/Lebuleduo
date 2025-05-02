@@ -21,16 +21,16 @@ import Select from '../../../components/admin/Select';
 import StatCard from '../../../components/admin/StatCard';
 import Table from '../../../components/admin/Table';
 import AssignmentPanel from '../../../components/admin/AssignmentPanel';
-import Loading from '../../../components/admin/Loading';
+import CommonLoading from '../../../components/common/CommonLoading';
 
 import { getAllTasks } from '../../../apis/admin/getAllTasks'; //api 獲取任務(明天)
 import { assignTasks } from '../../../apis/admin/assignTasks'; //api 分配任務
 import { getTodayDate } from '../../../utils/getDate';
+import { getTomorrowDate } from '../../../utils/getDate';
 import {
   getFormattedDateWithDay,
   getFormattedDateDash,
 } from '../../../utils/formatDate';
-import { getTomorrowDate } from '../../../utils/getDate';
 
 export default function TaskDispatchSystem() {
   const [orders, setOrders] = useState<Order[]>([]); // 儲存api獲取的所有任務
@@ -165,7 +165,7 @@ export default function TaskDispatchSystem() {
       // 將 deliverAssignments 轉換為 API 需要的格式
       let currentIndex = 0;
       const assignments = {
-        ServiceDate: getFormattedDateDash(getTomorrowDate().toISOString()),
+        ServiceDate: getFormattedDateDash(getTomorrowDate()),
         Assign: Object.entries(deliverAssignments)
           .filter(([, taskCount]) => taskCount > 0)
           .map(([driverId, count]) => {
@@ -180,7 +180,6 @@ export default function TaskDispatchSystem() {
           }),
       };
 
-      console.log('api 分配任務', assignments);
 
       // api 分配任務
       const response = await assignTasks(assignments);
@@ -256,7 +255,7 @@ export default function TaskDispatchSystem() {
 
   return (
     <Container>
-      {isLoading && <Loading />}
+      {isLoading && <CommonLoading />}
       <MainContent $assignmentPanelOpen={assignmentPanelOpen}>
         <Header />
 

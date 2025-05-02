@@ -25,7 +25,7 @@ import {
 } from './styles';
 import { Plan } from './types';
 
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
 import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
 import ButtonCard from '../../../components/customer/Subscribe/ButtonCard';
@@ -46,15 +46,7 @@ const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
 const Subscribe = () => {
   const navigate = useNavigate(); // 獲取導航功能
   const location = useLocation(); // 獲取當前位置對象
-  const {
-    planId,
-    planName,
-    liter,
-    price,
-    planKg,
-    planPeople,
-    planDescription,
-  } = location.state || {}; // 獲取從Plan頁面傳遞的所有參數
+  const { planName } = location.state || {}; // 只獲取從Plan頁面傳遞的planName
 
   //// 狀態管理
   const [isLoading, setIsLoading] = useState(true); // 是否正在加載
@@ -69,7 +61,9 @@ const Subscribe = () => {
   const [showDaysError, setShowDaysError] = useState(false); // 預定收集日:是否顯示收集日錯誤提示
 
   const [qrCodeMethod, setQrCodeMethod] = useState<'print' | 'ship'>('print'); // QR code 取得方式
-  const [selectedDate, setSelectedDate] = useState<Date>(getTomorrowDate());
+  const [selectedDate, setSelectedDate] = useState<Date>(
+    new Date(getTomorrowDate()),
+  );
 
   const [originalPrice, setOriginalPrice] = useState(0); // 折扣前總價格
   const [discount, setDiscount] = useState(0); // 折扣金額
@@ -90,18 +84,17 @@ const Subscribe = () => {
         // 設置所有可用方案列表
         setAvailablePlans(apiPlans);
 
-        // 如果從Plan頁面傳入了方案信息，則創建一個方案對象
-        if (planId) {
-          const selectedPlan: Plan = {
-            PlanID: planId,
-            PlanName: planName,
-            Liter: liter,
-            kg: planKg,
-            Price: price,
-            PlanPeople: planPeople,
-            PlanDescription: planDescription,
-          };
-          setPlan(selectedPlan);
+        // 如果從Plan頁面傳入了方案名稱，則找到對應的方案
+        if (planName) {
+          const selectedPlan = apiPlans.find(
+            (plan) => plan.PlanName === planName,
+          );
+          if (selectedPlan) {
+            setPlan(selectedPlan);
+          } else if (apiPlans.length > 0) {
+            // 如果找不到對應方案，默認選中第一個方案
+            setPlan(apiPlans[0]);
+          }
         } else if (apiPlans.length > 0) {
           // 否則默認選中第一個方案
           setPlan(apiPlans[0]);
@@ -114,11 +107,11 @@ const Subscribe = () => {
     };
 
     fetchPlans();
-  }, [planId, planName, liter, price, planKg, planPeople, planDescription]);
+  }, [planName]);
 
   // 監聽 QR code 取得方式的變化
   useEffect(() => {
-    const tomorrow = getTomorrowDate();
+    const tomorrow = new Date(getTomorrowDate());
     if (qrCodeMethod === 'ship') {
       // 如果是郵寄貼紙，設置為三天後的日期
       const threeDaysLater = new Date(tomorrow);
@@ -133,16 +126,16 @@ const Subscribe = () => {
   // 總價格計算函式 只重新計算有改變的參數
   const updateTotalPrice = useCallback(
     (price: number, frequency: string) => {
-      const freq = parseInt(frequency);
+      const freq = parseInt(frequency); //後段設定1:原價 2:95折 3:85折
       const daysPerWeek = selectedDays.length;
       const rawPrice = price * freq * daysPerWeek;
       let discountRate = 1; //折扣率(無)
       let discountAmount = 0; //折扣價差(無)
 
       // 套用折扣：3個月95折，5個月9折
-      if (freq === 3) {
+      if (freq === 2) {
         discountRate = 0.9;
-      } else if (freq === 6) {
+      } else if (freq === 3) {
         discountRate = 0.85;
       }
 
@@ -167,7 +160,7 @@ const Subscribe = () => {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage size="normal" animationType="bounce" />;
+    return <AnimationLoading size="normal" animationType="bounce" />;
   }
 
   // 處理方案切換
@@ -228,7 +221,7 @@ const Subscribe = () => {
       planId: plan?.PlanID,
       planName: plan?.PlanName,
       liter: plan?.Liter,
-      planKg: plan?.kg,
+      kg: plan?.PlanKG,
       price: plan?.Price,
       planPeople: plan?.PlanPeople,
       planDescription: plan?.PlanDescription,
@@ -239,10 +232,19 @@ const Subscribe = () => {
       totalPrice,
     };
 
+    console.log('準備儲存的資料:', subscriptionData);
+
     // 儲存到 Session Storage
     sessionStorage.setItem(
       'subscriptionData',
       JSON.stringify(subscriptionData),
+    );
+
+    // 檢查是否成功儲存
+    const storedData = sessionStorage.getItem('subscriptionData');
+    console.log(
+      '已儲存的資料:',
+      storedData ? JSON.parse(storedData) : '無資料',
     );
 
     // 導航到下一頁
@@ -291,7 +293,7 @@ const Subscribe = () => {
                       {availablePlan.PlanName} ({availablePlan.PlanPeople})
                     </PlanOptionMainTitle>
                     <PlanOptionSubtitle>
-                      {availablePlan.Liter}L / {availablePlan.kg}kg
+                      {availablePlan.Liter}L / {availablePlan.PlanKG}kg
                     </PlanOptionSubtitle>
                   </PlanOptionTitle>
                 </PlanOption>
@@ -353,7 +355,7 @@ const Subscribe = () => {
 
         {/* QR code 取得方式 */}
         <SectionTitle
-          mainTitle="QR Code 取得方式"
+          mainTitle="QR Code 貼紙取得方式"
           subTitle="請選擇您希望QR Code 專屬貼紙取得的方式"
         >
           <IconButton onClick={() => setIsQRInfoModalOpen(true)}>
@@ -370,7 +372,7 @@ const Subscribe = () => {
           />
 
           <ButtonCard
-            title="郵寄貼紙"
+            title="郵寄"
             subtitle="(3 天後可用）"
             $active={qrCodeMethod === 'ship'}
             onClick={() => handleQrCodeMethodChange('ship')}

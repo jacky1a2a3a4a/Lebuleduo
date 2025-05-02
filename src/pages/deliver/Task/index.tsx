@@ -26,8 +26,8 @@ import {
   TaskCardsContainer,
 } from './styled';
 import TaskCard from './Card';
-import Loading from '../../../components/common/LoadingMessage';
 import ErrorReport from '../../../components/common/ErrorReport';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 
 import { MdCalendarToday } from 'react-icons/md';
 import { TaskStatus } from '../../../types/deliver';
@@ -174,8 +174,11 @@ function Task() {
           DriverName: data.result.DriverName,
         });
 
+        // 檢查 Orders 是否存在，如果不存在則設為空陣列
+        const orders = data.result.Orders || [];
+
         // 將回應資料轉換為任務列表
-        const newTasks = data.result.Orders.map((apiTask: ApiTask) => {
+        const newTasks = orders.map((apiTask: ApiTask) => {
           // 將 API 的中文狀態轉換成英文
           let status: TaskStatus = 'unscheduled';
           switch (apiTask.Status) {
@@ -369,13 +372,16 @@ function Task() {
 
   return (
     <TaskSectionStyled $topPosition={topPosition}>
-      {isLoading && <Loading />}
+      {isLoading && <AnimationLoading />}
 
       {/* 外送員卡片 */}
       <DeliverContainer ref={deliverContainerRef}>
         <DeliverCard>
           <DeliverGreeting>
-            <TaskGreetingItem>{getGreeting()} {driverData?.DriverName}</TaskGreetingItem>
+            <TaskGreetingItem>
+              {getGreeting()}
+              <span> {driverData?.DriverName}</span>
+            </TaskGreetingItem>
             <TaskId>汪汪員編號: {driverData?.Number}</TaskId>
           </DeliverGreeting>
 
@@ -462,26 +468,35 @@ function Task() {
         </TaskCategoryWrapper>
 
         {/* 錯誤訊息 */}
-        {error && <ErrorReport title="錯誤" error={error} />}
 
         {/* 任務卡片 */}
         <TaskCardsContainer>
-          {getFilteredTasks().map((task) => (
-            <TaskCard
-              key={task.id}
-              taskId={task.id}
-              number={task.orderNumber}
-              status={task.status}
-              time={task.time}
-              address={task.address}
-              notes={task.notes}
-              onStatusChange={handleTaskStatusChange}
-              photos={task.photos}
-              isDisabled={
-                ongoingTask && ongoingTask[0] && task.status === 'scheduled'
-              }
+          {error && <ErrorReport title="錯誤" error={error} />}
+          {getFilteredTasks().length === 0 ? (
+            <ErrorReport
+              title="目前沒有任務，是個輕鬆的工作天"
+              titleColor="var(--color-primary)"
+              error=""
+              showImage={true}
             />
-          ))}
+          ) : (
+            getFilteredTasks().map((task) => (
+              <TaskCard
+                key={task.id}
+                taskId={task.id}
+                number={task.orderNumber}
+                status={task.status}
+                time={task.time}
+                address={task.address}
+                notes={task.notes}
+                onStatusChange={handleTaskStatusChange}
+                photos={task.photos}
+                isDisabled={
+                  ongoingTask && ongoingTask[0] && task.status === 'scheduled'
+                }
+              />
+            ))
+          )}
         </TaskCardsContainer>
       </TaskCardsSection>
     </TaskSectionStyled>

@@ -58,7 +58,7 @@ import { TaskItem, ReportForm } from './types';
 import ReportModal from './ReportModal'; // 異常回報組件
 import Camera from '../../../components/common/Camera/Camera';
 import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver'; // 狀態標籤組件
-import LoadingMessage from '../../../components/common/LoadingMessage'; // 載入中組件
+import AnimationLoading from '../../../components/common/AnimationLoading'; // 載入中組件
 import ErrorReport from '../../../components/common/ErrorReport'; //錯誤回報組件
 import SuccessMessage from '../../../components/deliver/SuccessMessage'; // 完成收運組件
 import { GoogleMapComponent } from '../../../components/common/GoogleMap';
@@ -433,7 +433,7 @@ function OrderDetails() {
 
   // 載入狀態
   if (loading) {
-    return <LoadingMessage />;
+    return <AnimationLoading />;
   }
 
   // 錯誤狀態
