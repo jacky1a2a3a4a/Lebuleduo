@@ -349,7 +349,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                       right: 0;
                       text-align: center;
                       color: #666;
-                      font-size: 14px;
+                      font-size: 12px;
                       padding: 10px;
                       background-color: rgba(255, 255, 255, 0.9);
                     }
@@ -409,6 +409,11 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                     let prevTranslate = 0;
                     let currentIndex = 0;
                     const totalItems = ${totalPages};
+                    
+                    // 關閉所有圖片
+                    document.querySelector('.close-button').addEventListener('click', () => {
+                      window.close();
+                    });
                     
                     container.addEventListener('touchstart', (e) => {
                       startX = e.touches[0].clientX;
@@ -474,7 +479,13 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
             closeButton.style.zIndex = '1000';
             closeButton.textContent = '×';
             closeButton.addEventListener('click', () => {
-              document.body.removeChild(container);
+              // 移除所有圖片容器
+              const containers = document.querySelectorAll(
+                '[style*="position: fixed"][style*="z-index: 9999"]',
+              );
+              containers.forEach((container) => {
+                document.body.removeChild(container);
+              });
             });
 
             const carouselContainer = document.createElement('div');
@@ -658,6 +669,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
             hint.style.textAlign = 'center';
             hint.style.color = '#fff';
             hint.style.padding = '10px';
+            hint.style.fontSize = '12px';
             hint.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
 
             container.appendChild(carouselContainer);
