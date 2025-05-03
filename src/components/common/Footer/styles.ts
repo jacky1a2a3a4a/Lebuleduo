@@ -34,6 +34,7 @@ export const ListItem = styled.li`
 // 頁尾導航連結
 export const FooterNavLink = styled(NavLink)<{
   $active?: boolean;
+  $disabled?: boolean;
 }>`
   color: var(--color-gray-400);
   display: flex;
@@ -43,6 +44,8 @@ export const FooterNavLink = styled(NavLink)<{
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   transition: color 0.1s ease;
+  pointer-events: ${(props) => (props.$disabled ? 'none' : 'auto')};
+  opacity: ${(props) => (props.$disabled ? '0.5' : '1')};
 
   &:hover {
     color: var(--color-gray-600);

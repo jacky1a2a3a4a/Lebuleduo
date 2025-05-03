@@ -9,7 +9,7 @@ export const FullHeightContainer = styled.div`
   width: 100%;
   max-width: var(--mobile-min-width);
   min-height: 100vh;
-  padding: var(--spacing-md);
+  padding: 0 var(--spacing-md) var(--spacing-md);
   margin: 0 auto;
 
   &::-webkit-scrollbar {

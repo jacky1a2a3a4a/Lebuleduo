@@ -6,7 +6,7 @@ import {
   HiQrCode,
 } from 'react-icons/hi2';
 import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
-import { TaskStatus } from '../../../../types/deliver';
+import { TaskStatus } from '../../../../types/deliver/TaskStatus';
 import { formatTime } from '../../../../utils/formatTime';
 import axios from 'axios';
 

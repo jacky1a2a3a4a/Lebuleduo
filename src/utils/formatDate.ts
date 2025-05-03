@@ -41,14 +41,17 @@ export const getFormattedDate = (dateString: string): string => {
 
 /**
  * 格式化日期
- * @param dateString ISO 格式的日期時間字串
+ * @param dateString ISO 格式的日期時間字串或 Date 物件
  * @returns 格式化後的日期字串 (e.g. "2025-04-24")
  */
-export const getFormattedDateDash = (dateString: string): string => {
-  const date = new Date(dateString);
+export const getFormattedDateDash = (dateString: string | Date): string => {
+  const date =
+    typeof dateString === 'string' ? new Date(dateString) : dateString;
 
   if (isNaN(date.getTime())) {
-    return dateString;
+    return typeof dateString === 'string'
+      ? dateString
+      : dateString.toISOString();
   }
 
   const year = date.getFullYear();

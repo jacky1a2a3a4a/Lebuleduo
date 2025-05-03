@@ -32,7 +32,7 @@ import {
   ReportBlockDescription,
 } from './styled';
 
-import { TaskStatus } from '../../../../types/deliver';
+import { TaskStatus } from '../../../../types/deliver/TaskStatus';
 import { formatTime } from '../../../../utils/formatTime';
 import { GoogleMapComponent } from '../../../../components/common/GoogleMap';
 import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
@@ -178,114 +178,114 @@ function OrderDetails() {
       <TaskNavHeader title="任務詳情" orderNumber={task.number} />
       <FullHeightContainer>
         {/* 時間卡片 */}
-      {/* 時間卡片 */}
-      <DetailCard>
-        <DetailRow>
-          <DetailTime>{formatTime(task.time)}</DetailTime>
-          <StatusTagDeliver status={task.status} />
-        </DetailRow>
-      </DetailCard>
+        {/* 時間卡片 */}
+        <DetailCard>
+          <DetailRow>
+            <DetailTime>{formatTime(task.time)}</DetailTime>
+            <StatusTagDeliver status={task.status} />
+          </DetailRow>
+        </DetailCard>
 
-      {/* 客戶資訊 */}
-      <Title>客戶資訊</Title>
-      <DetailCard>
-        <DetailRow>
-          <DetailLabel>聯絡人</DetailLabel>
-          <DetailValue>{task.customerName}</DetailValue>
-        </DetailRow>
+        {/* 客戶資訊 */}
+        <Title>客戶資訊</Title>
+        <DetailCard>
+          <DetailRow>
+            <DetailLabel>聯絡人</DetailLabel>
+            <DetailValue>{task.customerName}</DetailValue>
+          </DetailRow>
 
-        <DetailRow>
-          <DetailLabel>電話</DetailLabel>
-          <DetailValue>{task.phone}</DetailValue>
-        </DetailRow>
-        <DetailRow>
-          <DetailLabel>放置固定點</DetailLabel>
-          <DetailValue>{task.notes}</DetailValue>
-        </DetailRow>
+          <DetailRow>
+            <DetailLabel>電話</DetailLabel>
+            <DetailValue>{task.phone}</DetailValue>
+          </DetailRow>
+          <DetailRow>
+            <DetailLabel>放置固定點</DetailLabel>
+            <DetailValue>{task.notes}</DetailValue>
+          </DetailRow>
 
-        {/* 放置點圖片 */}
-        <DetailImgContainer>
-          {task.dropPointPhotos?.slice(0, 2).map((photo, index) => (
-            <DetailImg key={index}>
-              <img src={photo} alt={`放置點照片 ${index + 1}`} />
-            </DetailImg>
-          ))}
-        </DetailImgContainer>
-      </DetailCard>
+          {/* 放置點圖片 */}
+          <DetailImgContainer>
+            {task.dropPointPhotos?.slice(0, 2).map((photo, index) => (
+              <DetailImg key={index}>
+                <img src={photo} alt={`放置點照片 ${index + 1}`} />
+              </DetailImg>
+            ))}
+          </DetailImgContainer>
+        </DetailCard>
 
-      <Title>地圖導航</Title>
+        <Title>地圖導航</Title>
 
-      <DetailCard>
-        <DetailFlex>
-          <DetailSign>
-            <MdLocationOn />
-          </DetailSign>
+        <DetailCard>
+          <DetailFlex>
+            <DetailSign>
+              <MdLocationOn />
+            </DetailSign>
 
-          <DetailValue>
-            <DetailAddress>{task.address}</DetailAddress>
-          </DetailValue>
-        </DetailFlex>
+            <DetailValue>
+              <DetailAddress>{task.address}</DetailAddress>
+            </DetailValue>
+          </DetailFlex>
 
-        <MapContainer>
-          <GoogleMapComponent
-            address={task.address}
-            onMapLoad={() => console.log('地圖已成功載入')}
-          />
-        </MapContainer>
-      </DetailCard>
+          <MapContainer>
+            <GoogleMapComponent
+              address={task.address}
+              onMapLoad={() => console.log('地圖已成功載入')}
+            />
+          </MapContainer>
+        </DetailCard>
 
-      <Title>垃圾收運量</Title>
+        <Title>垃圾收運量</Title>
 
-      <DetailCard>
-        <PlanTitle>{task.plan}</PlanTitle>
-        <PlanContent>
-          一般垃圾+回收+廚餘 = {task.liter}L / {task.weight}kg
-        </PlanContent>
+        <DetailCard>
+          <PlanTitle>{task.plan}</PlanTitle>
+          <PlanContent>
+            一般垃圾+回收+廚餘 = {task.liter}L / {task.weight}kg
+          </PlanContent>
 
-        <Divider />
+          <Divider />
 
-        <CardSection>
-          <PageTitle>實際重量</PageTitle>
-          <PageContent>
-            {['scheduled', 'ongoing', 'arrived'].includes(task.status)
-              ? '待填寫'
-              : `${task.realWeight} kg`}
-          </PageContent>
-        </CardSection>
+          <CardSection>
+            <PageTitle>實際重量</PageTitle>
+            <PageContent>
+              {['scheduled', 'ongoing', 'arrived'].includes(task.status)
+                ? '待填寫'
+                : `${task.realWeight} kg`}
+            </PageContent>
+          </CardSection>
 
-        <CardSection>
-          <PageTitle>照片記錄</PageTitle>
-          <PhotoContainer>
-            {['scheduled', 'ongoing', 'arrived'].includes(task.status)
-              ? '待上傳'
-              : task.driverPhotos?.map((photo, index) => (
-                  <PhotoBox key={index}>
-                    <img src={photo} alt={`汪汪員拍攝照片 ${index + 1}`} />
-                  </PhotoBox>
-                ))}
-          </PhotoContainer>
-        </CardSection>
+          <CardSection>
+            <PageTitle>照片記錄</PageTitle>
+            <PhotoContainer>
+              {['scheduled', 'ongoing', 'arrived'].includes(task.status)
+                ? '待上傳'
+                : task.driverPhotos?.map((photo, index) => (
+                    <PhotoBox key={index}>
+                      <img src={photo} alt={`汪汪員拍攝照片 ${index + 1}`} />
+                    </PhotoBox>
+                  ))}
+            </PhotoContainer>
+          </CardSection>
 
-        {task.status === 'abnormal' && (
-          <>
-            <ReportBlockTitle>
-              <MdReportProblem />
-              異常回報
-            </ReportBlockTitle>
+          {task.status === 'abnormal' && (
+            <>
+              <ReportBlockTitle>
+                <MdReportProblem />
+                異常回報
+              </ReportBlockTitle>
 
-            <ReportBlock>
-              <ReportContent>
-                <ReportBlockContent>
-                  {getIssueText(Number(task.commonIssues))}
-                </ReportBlockContent>
-                <ReportBlockDescription>
-                  {task.issueDescription}
-                </ReportBlockDescription>
-              </ReportContent>
-            </ReportBlock>
-          </>
-        )}
-      </DetailCard>
+              <ReportBlock>
+                <ReportContent>
+                  <ReportBlockContent>
+                    {getIssueText(Number(task.commonIssues))}
+                  </ReportBlockContent>
+                  <ReportBlockDescription>
+                    {task.issueDescription}
+                  </ReportBlockDescription>
+                </ReportContent>
+              </ReportBlock>
+            </>
+          )}
+        </DetailCard>
       </FullHeightContainer>
     </>
   );

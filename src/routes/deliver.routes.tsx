@@ -8,7 +8,7 @@ import OrderDetailDeliver from '../pages/deliver/Task/OrderDetail'; //方案詳�
 import ScanOrder from '../pages/deliver/ScanOrder'; //掃描訂單
 import ProcessOrder from '../pages/deliver/ProcessOrder'; //處理訂單
 import Calendar from '../pages/deliver/Calendar'; //行事曆
-import MockQRGenerator from '../pages/deliver/MockQRGenerator'; //回報後台
+import ContactUs from '../pages/deliver/ContactUs'; //回報後台(目前是qrcode臨時產成器)
 
 export const deliverRoutes: RouteConfig[] = [
   {
@@ -22,7 +22,7 @@ export const deliverRoutes: RouteConfig[] = [
       { path: '', element: <Task /> },
       { path: 'scan-order', element: <ScanOrder /> },
       { path: 'calendar', element: <Calendar /> },
-      { path: 'report', element: <MockQRGenerator /> },
+      { path: 'report', element: <ContactUs /> },
     ],
   },
   {

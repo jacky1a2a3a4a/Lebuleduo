@@ -9,7 +9,7 @@ export const FullHeightContainer = styled.div`
   width: 100%;
   max-width: var(--mobile-min-width);
   min-height: 100vh;
-  padding: var(--spacing-md);
+  padding: 0 var(--spacing-md);
   margin: 0 auto;
 
   &::-webkit-scrollbar {
@@ -170,7 +170,7 @@ export const DetailImg = styled.div`
   background-color: var(--color-gray-200);
   border-radius: var(--border-radius-lg);
   width: 80px;
-  height: 100px;
+  aspect-ratio: 3/4;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -180,6 +180,7 @@ export const DetailImg = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: var(--border-radius);
   }
 `;
 
@@ -417,7 +418,6 @@ export const ReportBlockTitle = styled.div`
   padding-right: var(--spacing-xl);
 `;
 
-
 // 異常回報區塊 內容
 export const ReportBlockContent = styled.div`
   color: var(--color-error);
@@ -431,4 +431,3 @@ export const ReportBlockDescription = styled.div`
   font-size: var(--font-size-xs);
   margin-top: var(--spacing-xs);
 `;
-

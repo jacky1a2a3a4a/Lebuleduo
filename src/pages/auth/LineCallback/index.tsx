@@ -78,7 +78,7 @@ const LineCallback = () => {
         // 從 localStorage 獲取角色
         const userRole = getLoginRole();
         // 清除舊的 UsersID，避免角色切換時使用錯誤的 ID
-        localStorage.removeItem('UsersID');
+        // localStorage.removeItem('UsersID');
         const usersId = localStorage.getItem('UsersID');
 
         if (!userRole) {
@@ -121,13 +121,14 @@ const LineCallback = () => {
           }
 
           // 處理後端回傳的資料
-          const { token, profileData, roleName, UsersID } = response.data;
+          const { token, profileData, roleName, usersId } = response.data;
 
+          console.log('後端返回的原始資料:', response.data);
           console.log('後端返回的資料:', {
             token,
             profileData,
             roleName,
-            UsersID,
+            usersId,
           });
 
           // 將 token 和用戶資料儲存到 localStorage
@@ -135,9 +136,9 @@ const LineCallback = () => {
           localStorage.setItem('user_role', roleName);
 
           // 只有在後端返回有效的 UsersID 時才更新
-          if (UsersID) {
-            console.log('更新 UsersID:', UsersID);
-            localStorage.setItem('UsersID', UsersID);
+          if (usersId) {
+            console.log('更新 UsersID:', usersId);
+            localStorage.setItem('UsersID', usersId);
           } else {
             console.warn('後端未返回有效的 UsersID');
           }

@@ -24,11 +24,13 @@ const customerFooterNavItems: FooterNavItem[] = [
     icon: MdFace,
     label: '會員資訊',
     path: '/customer/account',
+    disabled: true,
   },
   {
     icon: MdOutlineSupportAgent,
     label: '聯絡我們',
     path: '/customer/contact-us',
+    disabled: true,
   },
 ];
 

@@ -1,6 +1,6 @@
 // 登入頁面 切版
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
-import Loginlogo from '../../../assets/images/Lebuledou_truck_login_border.png';
+import LoginLogo from '../../../assets/images/Lebuledou_truck_login_border.png';
 import LogotypeCustomer from '../../../assets/logos/logotype-customer-white.png';
 import LogotypeDeliver from '../../../assets/logos/logotype-deliver-white.png';
 import { useState } from 'react';
@@ -115,7 +115,7 @@ const LineLogin = () => {
 
   return (
     <LoginSectionStyled>
-      <Logo src={Loginlogo} />
+      <Logo src={LoginLogo} />
       <WelcomeText>
         <LogoType
           src={selectedRole === 'deliver' ? LogotypeDeliver : LogotypeCustomer}

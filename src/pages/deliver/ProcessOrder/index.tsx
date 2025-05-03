@@ -57,7 +57,7 @@ import AnimationLoading from '../../../components/common/AnimationLoading'; // �
 import ErrorReport from '../../../components/common/ErrorReport'; //錯誤回報組件
 import SuccessMessage from '../../../components/deliver/SuccessMessage'; // 完成收運組件
 import { GoogleMapComponent } from '../../../components/common/GoogleMap';
-import { TaskStatus } from '../../../types/deliver';
+import { TaskStatus } from '../../../types/deliver/TaskStatus';
 import { formatTime } from '../../../utils/formatTime';
 import { getTodayOrderDetails } from '../../../apis/deliver/getTodayOrderDetails'; // api獲取當天特定任務詳情
 import { getIssueText } from '../../../utils/getIssueText';
