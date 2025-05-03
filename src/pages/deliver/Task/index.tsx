@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { MdCalendarToday } from 'react-icons/md';
 
-
 import {
   TaskSectionStyled,
   DeliverContainer,
