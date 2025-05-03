@@ -18,6 +18,7 @@ const BellIcon = styled(HiBell)`
   height: 1.5rem;
   color: var(--color-tertiary);
   cursor: pointer;
+  pointer-events: none;
 
   &:hover {
     color: var(--color-tertiary-hover);
