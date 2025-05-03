@@ -1,9 +1,10 @@
 /**
  * 從 localStorage 獲取 UsersID
- * @returns {string | null} 返回 UsersID 或 null（如果不存在）
+ * @returns {number | null} 返回 UsersID 或 null（如果不存在）
  */
-export const getUsersID = (): string | null => {
-  return localStorage.getItem('UsersID');
+export const getUsersID = (): number | null => {
+  const usersID = localStorage.getItem('UsersID');
+  return usersID ? Number(usersID) : null;
 };
 
 /**

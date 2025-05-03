@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { getSpecificDayOrders } from '../../../apis/deliver/getSpecificDayOrders';
+import { getUsersID } from '../../../utils/getUserLocalData';
+import { getFormattedDateDash } from '../../../utils/formatDate';
 import {
   FullHeightContainer,
   FixedContainer,
@@ -16,9 +19,16 @@ import {
   TaskListContainer,
 } from './styled';
 
+interface Task {
+  orderId: string;
+  // 可以根據 API 回傳的實際資料結構添加更多欄位
+}
+
 const CalendarComponent = () => {
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const usersId = getUsersID();
 
   // 休假日期的假資料
   const holidays = [
@@ -29,8 +39,20 @@ const CalendarComponent = () => {
     new Date(2025, 4, 13), // 5月1日
   ];
 
-  const handleDateChange = (date: Date) => {
+  const handleDateChange = async (date: Date) => {
     setSelectedDate(date);
+    try {
+      if (!usersId) {
+        throw new Error('未找到用戶 ID，請重新登入');
+      }
+      const dateString = getFormattedDateDash(date);
+      const orders = await getSpecificDayOrders(usersId, dateString);
+      setTasks(orders);
+      console.log('api 獲取的任務', orders);
+    } catch (error) {
+      console.error('獲取任務失敗:', error);
+      setTasks([]);
+    }
   };
 
   // 檢查日期是否為休假日
@@ -68,9 +90,14 @@ const CalendarComponent = () => {
               formatDay={formatDay}
               showNavigation={true}
               tileClassName={({ date }) => (isHoliday(date) ? 'holiday' : '')}
-              tileContent={({ date }) =>
-                isHoliday(date) ? <div>休假</div> : null
-              }
+              tileContent={({ date }) => {
+                const isToday = date.toDateString() === today.toDateString();
+                return isToday ? (
+                  <div>今日</div>
+                ) : isHoliday(date) ? (
+                  <div>休假</div>
+                ) : null;
+              }}
             />
           </CalendarContainer>
 
@@ -94,7 +121,20 @@ const CalendarComponent = () => {
       </FixedContainer>
 
       {/* 任務列表 */}
-      <TaskListContainer>aaaaa</TaskListContainer>
+      <TaskListContainer>
+        {tasks.length > 0 ? (
+          tasks.map((task, index) => (
+            <TaskRow key={index}>
+              <TaskTitle>任務 {index + 1}:</TaskTitle>
+              <TaskStatus>
+                <p>{task.orderId}</p>
+              </TaskStatus>
+            </TaskRow>
+          ))
+        ) : (
+          <div>當日無任務</div>
+        )}
+      </TaskListContainer>
     </FullHeightContainer>
   );
 };

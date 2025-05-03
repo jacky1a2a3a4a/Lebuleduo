@@ -20,14 +20,14 @@ export const FixedContainer = styled.div`
   width: 100%;
   max-width: var(--mobile-min-width);
 
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
 `;
 
 // === 外送員卡片 ===
 export const DeliverContainer = styled.div`
   background-color: var(--color-background-secondary);
   border: var(--border-width) solid var(--color-gray-300);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-xl);
 
   display: flex;
   flex-direction: column;
@@ -49,13 +49,13 @@ export const DeliverDataItems = styled.div`
 
 export const DeliverName = styled.div`
   color: var(--color-text-primary);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
 `;
 
 export const DeliverId = styled.div`
   color: var(--color-gray-500);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-2xs);
 `;
 
 // 圖示容器
@@ -71,7 +71,6 @@ export const IconStyled = styled.div`
 export const CalendarContainer = styled.div`
   width: 100%;
   height: 100%;
-  margin-top: var(--spacing-sm);
   padding: var(--spacing-xs);
   border-radius: var(--border-radius-lg);
 
@@ -86,7 +85,7 @@ export const CalendarContainer = styled.div`
 
   /* 年月標題樣式 */
   .react-calendar__navigation__label {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
   }
@@ -95,8 +94,7 @@ export const CalendarContainer = styled.div`
   .react-calendar__navigation button {
     background: none;
     border: none;
-    font-size: var(--font-size-md);
-    padding: var(--spacing-sm);
+    font-size: var(--font-size-sm);
   }
 
   .react-calendar__navigation button:enabled:hover,
@@ -108,13 +106,13 @@ export const CalendarContainer = styled.div`
   .react-calendar__month-view__weekdays {
     text-align: center;
     text-transform: uppercase;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-2xs);
     font-weight: var(--font-weight-medium);
     color: var(--color-gray-500);
   }
 
   .react-calendar__month-view__weekdays__weekday {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-xs);
   }
 
   .react-calendar__month-view__weekdays__weekday abbr {
@@ -123,15 +121,15 @@ export const CalendarContainer = styled.div`
 
   /* 調整日期格子的樣式 */
   .react-calendar__tile {
-    padding: var(--spacing-sm);
-    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs);
+    font-size: var(--font-size-2xs);
     text-align: center;
     aspect-ratio: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-2xs);
   }
 
   /* 確保日期只顯示數字 */
@@ -149,11 +147,22 @@ export const CalendarContainer = styled.div`
   .react-calendar__tile--active {
     background-color: var(--color-tertiary);
     color: var(--color-white);
-    border-radius: var(--border-radius-round);
+    border-radius: var(--border-radius-xl);
+    transition:
+      background-color 0.2s ease,
+      border-radius 0.2s ease;
   }
 
+  /* 修改 focus 狀態，保持圓形 */
   .react-calendar__tile--active:enabled:focus {
     background-color: var(--color-tertiary-hover);
+    border-radius: var(--border-radius-xl); /* 確保保持圓形 */
+  }
+
+  /* 移除選中狀態時的方形過渡 - 確保任何時候都保持圓形 */
+  .react-calendar__tile--active:not(:enabled:focus) {
+    background-color: var(--color-tertiary);
+    border-radius: var(--border-radius-xl);
   }
 
   /* 今天日期 */
@@ -168,6 +177,32 @@ export const CalendarContainer = styled.div`
   .react-calendar__tile.holiday {
     color: var(--color-white);
     background-color: var(--color-secondary);
+    border-radius: var(--border-radius-lg);
+  }
+
+  /* 確保所有互動狀態下都保持圓角 */
+  .react-calendar__tile--active,
+  .react-calendar__tile--active:enabled:hover,
+  .react-calendar__tile--active:enabled:focus,
+  .react-calendar__tile--active:disabled:hover,
+  .react-calendar__tile--active:focus-visible,
+  .react-calendar__tile--active:focus-within,
+  .react-calendar__tile--active:active {
+    border-radius: var(--border-radius-xl) !important;
+    transition: background-color 0.2s ease;
+  }
+
+  /* 防止任何可能的閃爍 */
+  .react-calendar__tile {
+    outline: none !important;
+    transition:
+      background-color 0.2s ease,
+      border-radius 0s;
+  }
+
+  /* 防止瀏覽器默認聚焦樣式 */
+  .react-calendar__tile:focus {
+    outline: none !important;
   }
 `;
 
@@ -179,7 +214,7 @@ export const TaskItems = styled.div`
   justify-content: center;
 
   width: 100%;
-  margin-top: var(--spacing-md);
+  margin-top: var(--spacing-sm);
 `;
 
 // 任務行
@@ -189,7 +224,7 @@ export const TaskRow = styled.div`
   align-items: center;
   width: 100%;
 
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
 
   margin-bottom: var(--spacing-xs);
 
@@ -213,12 +248,18 @@ export const TaskStatus = styled.div`
 // === 任務列表 大容器 ===
 export const TaskListContainer = styled.div`
   background-color: var(--color-background-secondary);
-  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
 
   position: fixed;
-  z-index: 10;
-  top: 550px;
+  top: 515px;
   width: 100%;
   max-width: var(--mobile-min-width);
   height: 100%;
+
+  padding: var(--spacing-md);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 `;
