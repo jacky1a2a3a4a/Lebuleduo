@@ -3,6 +3,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { getSpecificDayOrders } from '../../../apis/deliver/getSpecificDayOrders';
 import { getUsersID } from '../../../utils/getUserLocalData';
+import { getFormattedDateDash } from '../../../utils/formatDate';
 import {
   FullHeightContainer,
   FixedContainer,
@@ -44,7 +45,8 @@ const CalendarComponent = () => {
       if (!usersId) {
         throw new Error('未找到用戶 ID，請重新登入');
       }
-      const orders = await getSpecificDayOrders(usersId, date);
+      const dateString = getFormattedDateDash(date);
+      const orders = await getSpecificDayOrders(usersId, dateString);
       setTasks(orders);
       console.log('api 獲取的任務', orders);
     } catch (error) {

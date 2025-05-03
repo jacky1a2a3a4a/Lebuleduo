@@ -10,7 +10,7 @@ import { getFormattedDateDash } from '../../utils/formatDate';
 export const getSpecificDayOrders = async (userId: number, date: string) => {
   try {
     const response = await axios.get(
-      `api/GET/driver/day/${userId}/${date}`,
+      `api/GET/driver/day/${userId}/${getFormattedDateDash(date)}`,
     );
     return response.data.result?.Orders || [];
   } catch (error) {
