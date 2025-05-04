@@ -36,7 +36,8 @@ export const FooterNavLink = styled(NavLink)<{
   $active?: boolean;
   $disabled?: boolean;
 }>`
-  color: var(--color-gray-400);
+  color: ${(props) =>
+    props.$disabled ? 'var(--color-gray-400)' : 'var(--color-gray-400)'};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,14 +46,15 @@ export const FooterNavLink = styled(NavLink)<{
   font-weight: var(--font-weight-medium);
   transition: color 0.1s ease;
   pointer-events: ${(props) => (props.$disabled ? 'none' : 'auto')};
-  opacity: ${(props) => (props.$disabled ? '0.5' : '1')};
 
   &:hover {
-    color: var(--color-gray-600);
+    color: ${(props) =>
+      props.$disabled ? 'var(--color-gray-400)' : 'var(--color-gray-600)'};
   }
 
   &.active {
-    color: var(--color-primary);
+    color: ${(props) =>
+      props.$disabled ? 'var(--color-gray-400)' : 'var(--color-primary)'};
   }
 `;
 

@@ -59,14 +59,18 @@ import SuccessMessage from '../../../components/deliver/SuccessMessage'; // 完�
 import { GoogleMapComponent } from '../../../components/common/GoogleMap';
 import { TaskStatus } from '../../../types/deliver/TaskStatus';
 import { formatTime } from '../../../utils/formatTime';
-import { getTodayOrderDetails } from '../../../apis/deliver/getTodayOrderDetails'; // api獲取當天特定任務詳情
+// import { getTodayOrderDetails } from '../../../apis/deliver/getTodayOrderDetails'; // api獲取當天特定任務詳情
+import { getSpecificDayOrderDetails } from '../../../apis/deliver/getSpecificDayOrderDetails'; // api獲取當天特定任務詳情
 import { getIssueText } from '../../../utils/getIssueText';
+import { getFormattedDateDash } from '../../../utils/formatDate';
+import { getTomorrowDate } from '../../../utils/getDate';
 
 const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用者 ID
 
 function OrderDetails() {
   const navigate = useNavigate();
   const { taskId } = useParams(); // 從 URL 獲取任務 ID
+  const tomorrow = getFormattedDateDash(getTomorrowDate());
 
   const [task, setTask] = useState<TaskItem | null>(null); // 任務資料
   const [loading, setLoading] = useState(true); // 載入狀態
@@ -100,11 +104,16 @@ function OrderDetails() {
     const fetchTaskDetails = async () => {
       try {
         setLoading(true);
-        const response = await getTodayOrderDetails(userId || '', taskId || ''); //api 獲取當天特定任務詳情
-        console.log('原始任務資訊:', response.result.Orders[0]);
+        const response = await getSpecificDayOrderDetails(
+          Number(userId),
+          tomorrow,
+          Number(taskId),
+        ); //api 獲取明天特定任務詳情
+        console.log('api 原始資訊:', response);
 
-        if (response.status && response.result.Orders.length > 0) {
-          const apiTask = response.result.Orders[0];
+        if (response.Orders.length > 0) {
+          const apiTask = response.Orders[0];
+          console.log('api 特定任務資訊:', apiTask);
           const TaskDetail: TaskItem = {
             id: apiTask.OrderDetailID, //ID
             number: apiTask.OrderDetailsNumber, //訂單編號

@@ -39,6 +39,8 @@ import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
 import AnimationLoading from '../../../../components/common/AnimationLoading';
 import TaskNavHeader from '../../../../components/deliver/TaskNavHeader';
 import ErrorReport from '../../../../components/common/ErrorReport';
+import { getTodayDate, getTomorrowDate } from '../../../../utils/getDate';
+import { getFormattedDateDash } from '../../../../utils/formatDate';
 
 // 定義任務類型
 type TaskItem = {
@@ -61,13 +63,15 @@ type TaskItem = {
 };
 
 const userId = localStorage.getItem('UsersID'); // 從 localStorage 獲取使用者 ID
-const today = new Date().toISOString().split('T')[0]; // 獲取今天的日期
+// const today = getTodayDate();
+// const today = getFormattedDateDash(getTodayDate());
+const tomorrow = getFormattedDateDash(getTomorrowDate());
 
 function OrderDetails() {
-  const { taskId } = useParams();
-  const [task, setTask] = useState<TaskItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [task, setTask] = useState<TaskItem | null>(null);
+  const { taskId } = useParams();
 
   // 從 API 讀取任務資訊
   useEffect(() => {
@@ -75,7 +79,7 @@ function OrderDetails() {
       try {
         setLoading(true);
         const response = await axios.get(
-          `api/GET/driver/day/${userId}/${today}/${taskId}`,
+          `api/GET/driver/day/${userId}/${tomorrow}/${taskId}`,
         );
         console.log('API 原始任務資料:', response.data.result.Orders[0]);
 

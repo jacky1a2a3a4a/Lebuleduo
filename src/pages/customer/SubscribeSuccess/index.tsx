@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -6,11 +7,6 @@ import {
   IoIosCloudDownload,
   IoIosRocket,
 } from 'react-icons/io';
-import axios from 'axios';
-import successImage from '../../../assets/images/Lebuledou_score.png';
-import QRCodeDownloader from '../../../components/common/QRCodeDownloader';
-import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
-import { OrderDetail } from '../../../components/customer/QRcodeData/types';
 import {
   PageWrapper,
   SuccessContainer,
@@ -31,10 +27,15 @@ import {
   CustomQRCodeDownloadButton,
 } from './styles';
 
+import successImage from '../../../assets/images/Lebuledou_score.png';
+import QRCodeDownloader from '../../../components/common/QRCodeDownloader';
+import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
+import { OrderDetail } from '../../../components/customer/QRcodeData/types';
 import {
   getFormattedDateTime,
   formatNumbersToWeekdays,
 } from '../../../utils/formatDate';
+import { formatPaymentMethod } from '../../../utils/formatPaymentMethod';
 
 interface OrderData {
   orderId: string;
@@ -163,7 +164,9 @@ const SubscribeSuccess = () => {
 
           <OrderItem>
             <OrderItemLabel>支付方式</OrderItemLabel>
-            <OrderItemValue>{LinePayMethod}</OrderItemValue>
+            <OrderItemValue>
+              {formatPaymentMethod(LinePayMethod)}
+            </OrderItemValue>
           </OrderItem>
 
           <OrderItem>
@@ -223,7 +226,8 @@ const SubscribeSuccess = () => {
               <IoIosCloudDownload />
             </TextIcon>
             <QRCodeText>
-              若欲立即使用QR碼，請點擊【下載所有QR Code】，或至首頁點選您的方案下載檔案，然後至7-11超商ibon列印貼紙。
+              若欲立即使用QR碼，請點擊【下載所有QR
+              Code】，或至首頁點選您的方案下載檔案，然後至7-11超商ibon列印貼紙。
             </QRCodeText>
           </QRCodeTextItem>
         </QRcodeTextItems>

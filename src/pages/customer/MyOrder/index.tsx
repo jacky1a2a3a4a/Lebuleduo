@@ -5,6 +5,7 @@ import dogImage from '../../../assets/images/Lebuledou_lying.png';
 import dogTruckImage from '../../../assets/images/Lebuledou_truck.png';
 import ErrorReport from '../../../components/common/ErrorReport';
 import AnimationLoading from '../../../components/common/AnimationLoading';
+import { getCustomerGreeting } from '../../../utils/getGreeting';
 
 import {
   OrderStep,
@@ -53,8 +54,6 @@ import {
   OrderCardDetail,
 } from './styles';
 
-import { getTodayDate } from '../../../utils/getDate';
-import { getFormattedDateWithDay } from '../../../utils/formatDate';
 import { getUsersID, getUserName } from '../../../utils/getUserLocalData';
 
 // 照片用URL
@@ -69,19 +68,7 @@ console.log('userName', userName);
 function MyOrder() {
   const navigate = useNavigate();
 
-  // 根據時間返回問候語
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) {
-      return '早安';
-    } else if (hour >= 12 && hour < 18) {
-      return '午安';
-    } else {
-      return '晚安';
-    }
-  };
-
-  // 使用者今日數據狀態
+  // 使用者今日數據狀態(以請後端暫時改成明天20250503)
   const [todayData, setTodayData] = useState<ApiTodayOrder | null>(null);
   const todayDataStatus = todayData?.status || '未排定'; // 如果沒有數據，默認為'未排定'
   console.log('todayDataStatus', todayDataStatus);
@@ -227,22 +214,20 @@ function MyOrder() {
         {/* 使用者資訊 */}
         <UserCard>
           <UserGreeting>
-            {getGreeting()}，{userName}
+            {getCustomerGreeting()}，{userName}
           </UserGreeting>
 
           <UserCardItem>
             <UserCardTitle>今日任務</UserCardTitle>
-            <UserCardButton>
+            {/* <UserCardButton>
               查看詳情
               <MdArrowCircleRight />
-            </UserCardButton>
+            </UserCardButton> */}
           </UserCardItem>
 
           <UserCardItemColumn>
-            <UserCardDate>
-              {getFormattedDateWithDay(getTodayDate())}
-            </UserCardDate>
-            <UserCardTime>{todayData?.driverTime || '未排定'}</UserCardTime>
+            <UserCardDate>{todayData?.date || '-'}</UserCardDate>
+            <UserCardTime>{todayData?.driverTime || '-'}</UserCardTime>
           </UserCardItemColumn>
         </UserCard>
 

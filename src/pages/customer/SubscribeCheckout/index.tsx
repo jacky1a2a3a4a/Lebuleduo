@@ -248,7 +248,7 @@ const SubscribeCheckout = () => {
 
   return (
     <PageWrapper>
-      {showPaymentLoading && <CommonLoading text="正在跳轉至付款頁面..." />}
+      {showPaymentLoading && <CommonLoading text="正在跳轉至付款頁面" />}
       <ProgressSteps steps={SubscribeSteps} currentStep={3} />
 
       <ScrollableContent>

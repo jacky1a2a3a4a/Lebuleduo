@@ -36,7 +36,7 @@ import CommonLoading from '../../../components/common/CommonLoading';
 import CategoryTags from '../../../components/deliver/Tags';
 
 import { getUsersID } from '../../../utils/getUserLocalData';
-import { getGreeting } from '../../../utils/getGreeting';
+import { getDeliverGreeting } from '../../../utils/getGreeting';
 import { getTodayDate, getTomorrowDate } from '../../../utils/getDate';
 import { getFormattedDateWithDay } from '../../../utils/formatDate';
 import { getSpecificDayOrders } from '../../../apis/deliver/getSpecificDayOrders';
@@ -78,12 +78,16 @@ function Task() {
 
       ////3. 發送請求
       const driverId = getUsersID(); // 從 getUserLocalData 獲取使用者ID並轉換為字串
-      // const orders = await getTodayOrders(driverId);
-      const orders = await getSpecificDayOrders(driverId, tomorrowDate);
+      const result = await getSpecificDayOrders(driverId, tomorrowDate);
+
+      if (!result || !result.Orders) {
+        setTasks([]);
+        return;
+      }
 
       ////5. 處理回應資料(將任務轉換為任務列表)
       // 將回應資料轉換為任務列表
-      const newTasks = orders.map((apiTask: ApiTask) => {
+      const newTasks = result.Orders.map((apiTask: ApiTask) => {
         // 將 API 的中文狀態轉換成英文
         let status: TaskStatus = 'unscheduled';
         switch (apiTask.Status) {
@@ -252,7 +256,11 @@ function Task() {
       <DeliverContainer ref={deliverContainerRef}>
         <DeliverCard>
           <DeliverGreeting>
-            <TaskGreetingItem>{getGreeting()}</TaskGreetingItem>
+            <TaskGreetingItem>
+              {getDeliverGreeting()}
+
+              <p></p>
+            </TaskGreetingItem>
             <TaskId>汪汪員編號: {getUsersID()}</TaskId>
           </DeliverGreeting>
 

@@ -7,13 +7,17 @@
 import axios from 'axios';
 import { getFormattedDateDash } from '../../utils/formatDate';
 
-export const getSpecificDayOrders = async (userId: number, date: string) => {
+export const getSpecificDayOrderDetails = async (
+  userId: number,
+  date: string,
+  taskId: number,
+) => {
   try {
     const response = await axios.get(
-      `api/GET/driver/day/${userId}/${getFormattedDateDash(date)}`,
+      `api/GET/driver/day/${userId}/${getFormattedDateDash(date)}/${taskId}`,
     );
     console.log(
-      'api 查看 汪汪員 特定日期 所有任務 原始資料',
+      'api 查看 汪汪員 特定日期 特定任務 原始資料',
       response.data.result,
     );
     return response.data.result;
