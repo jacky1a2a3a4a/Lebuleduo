@@ -80,6 +80,8 @@ export const DeliverGreeting = styled.div`
 export const TaskGreetingItem = styled.div`
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
 
   p {
     font-weight: var(--font-weight-bold);

@@ -55,6 +55,7 @@ function Task() {
   const [isLoading, setIsLoading] = useState(false); // 是否正在載入
   const [error, setError] = useState<string | null>(null); // 錯誤訊息
   const [driverInfo, setDriverInfo] = useState<DriverData | null>(null); // 汪汪員資訊
+  console.log('汪汪員資訊:', driverInfo);
   const [tasks, setTasks] = useState<TaskItem[]>([]); // 任務列表 // 取得當前日期
 
   const currentDate = getFormattedDateWithDay(getTodayDate()).toString();
@@ -80,23 +81,25 @@ function Task() {
 
       ////3. 發送請求
       const driverId = getUsersID(); // 從 getUserLocalData 獲取使用者ID並轉換為字串
-      const result = await getSpecificDayOrders(driverId, tomorrowDate);
+      const apiResult = await getSpecificDayOrders(driverId, tomorrowDate);
+      console.log('API 回應資料:', apiResult);
 
-      if (!result || !result.Orders) {
-        setTasks([]);
-        return;
-      }
-
-      // 更新司機資訊
+      // 更新汪汪員資訊
       setDriverInfo({
-        DriverID: result.DriverID,
-        Number: result.Number,
-        DriverName: result.DriverName,
+        DriverID: apiResult.DriverID,
+        Number: apiResult.Number,
+        DriverName: apiResult.DriverName,
       });
+      console.log('汪汪員資訊:', driverInfo);
+
+       if (!apiResult || !apiResult.Orders) {
+         setTasks([]);
+         return;
+       }
 
       ////5. 處理回應資料(將任務轉換為任務列表)
       // 將回應資料轉換為任務列表
-      const newTasks = result.Orders.map((apiTask: ApiTask) => {
+      const newTasks = apiResult.Orders.map((apiTask: ApiTask) => {
         // 將 API 的中文狀態轉換成英文
         let status: TaskStatus = 'unscheduled';
         switch (apiTask.Status) {

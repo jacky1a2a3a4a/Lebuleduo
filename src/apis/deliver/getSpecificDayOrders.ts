@@ -16,6 +16,8 @@ export const getSpecificDayOrders = async (userId: number, date: string) => {
       'api 查看 汪汪員 特定日期 所有任務 原始資料',
       response.data.result,
     );
+
+    console.log(response.data.result.DriverName);
     return response.data.result;
   } catch (error) {
     console.error('獲取特定日期訂單失敗:', error);
