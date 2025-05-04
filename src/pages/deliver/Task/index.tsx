@@ -27,6 +27,7 @@ import {
   ApiTask,
   TaskItem,
   CategoryType,
+  DriverData,
 } from '../../../types/deliver/OrderDetail';
 import { TaskStatus } from '../../../types/deliver/TaskStatus';
 
@@ -53,6 +54,7 @@ function Task() {
   // API 資料的狀態
   const [isLoading, setIsLoading] = useState(false); // 是否正在載入
   const [error, setError] = useState<string | null>(null); // 錯誤訊息
+  const [driverInfo, setDriverInfo] = useState<DriverData | null>(null); // 汪汪員資訊
   const [tasks, setTasks] = useState<TaskItem[]>([]); // 任務列表 // 取得當前日期
 
   const currentDate = getFormattedDateWithDay(getTodayDate()).toString();
@@ -84,6 +86,13 @@ function Task() {
         setTasks([]);
         return;
       }
+
+      // 更新司機資訊
+      setDriverInfo({
+        DriverID: result.DriverID,
+        Number: result.Number,
+        DriverName: result.DriverName,
+      });
 
       ////5. 處理回應資料(將任務轉換為任務列表)
       // 將回應資料轉換為任務列表
@@ -259,9 +268,9 @@ function Task() {
             <TaskGreetingItem>
               {getDeliverGreeting()}
 
-              <p></p>
+              <p>{driverInfo?.DriverName}</p>
             </TaskGreetingItem>
-            <TaskId>汪汪員編號: {getUsersID()}</TaskId>
+            <TaskId>汪汪員編號: {driverInfo?.Number}</TaskId>
           </DeliverGreeting>
 
           {/* 進行中的任務 */}
