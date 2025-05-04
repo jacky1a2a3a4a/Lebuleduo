@@ -81,8 +81,9 @@ export const TaskGreetingItem = styled.div`
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
 
-  span {
+  p {
     font-weight: var(--font-weight-bold);
+    margin-left: var(--spacing-xs);
   }
 `;
 
