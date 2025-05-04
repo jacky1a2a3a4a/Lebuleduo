@@ -1,8 +1,8 @@
 /**
- * 根據當前時間返回對應的問候語
- * @returns {string} 問候語
+ * 根據當前時間返回汪汪員的問候語
+ * @returns {string} 汪汪員的問候語
  */
-export const getGreeting = (): string => {
+export const getDeliverGreeting = (): string => {
   const currentHour = new Date().getHours();
   const currentMinute = new Date().getMinutes();
   const currentTime = currentHour * 100 + currentMinute;
@@ -15,5 +15,20 @@ export const getGreeting = (): string => {
     return '奮鬥吧，汪汪員';
   } else {
     return '燃燒吧，汪汪員';
+  }
+};
+
+/**
+ * 根據當前時間返回顧客的問候語（早安、午安、晚安）
+ * @returns {string} 顧客的問候語
+ */
+export const getCustomerGreeting = (): string => {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) {
+    return '早安';
+  } else if (hour >= 12 && hour < 18) {
+    return '午安';
+  } else {
+    return '晚安';
   }
 };

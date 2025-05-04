@@ -23,7 +23,7 @@ export const ScannerPlaceholder = styled.div`
   overflow: hidden;
 `;
 
-export const ShutterTop = styled.div<{ isOpen: boolean }>`
+export const ShutterTop = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -31,12 +31,12 @@ export const ShutterTop = styled.div<{ isOpen: boolean }>`
   height: 50%;
   background-color: black;
   transform-origin: top;
-  transform: ${(props) => (props.isOpen ? 'scaleY(0)' : 'scaleY(1)')};
+  transform: ${(props) => (props.$isOpen ? 'scaleY(0)' : 'scaleY(1)')};
   transition: transform 0.5s ease-in-out;
   z-index: 2;
 `;
 
-export const ShutterBottom = styled.div<{ isOpen: boolean }>`
+export const ShutterBottom = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   bottom: 0;
   left: 0;
@@ -44,7 +44,7 @@ export const ShutterBottom = styled.div<{ isOpen: boolean }>`
   height: 50%;
   background-color: black;
   transform-origin: bottom;
-  transform: ${(props) => (props.isOpen ? 'scaleY(0)' : 'scaleY(1)')};
+  transform: ${(props) => (props.$isOpen ? 'scaleY(0)' : 'scaleY(1)')};
   transition: transform 0.5s ease-in-out;
   z-index: 2;
 `;
@@ -114,7 +114,7 @@ export const ScannerCanvas = styled.canvas`
   display: none;
 `;
 
-export const ScannerFrame = styled.div<{ isSuccess: boolean }>`
+export const ScannerFrame = styled.div<{ $isSuccess: boolean }>`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -126,7 +126,7 @@ export const ScannerFrame = styled.div<{ isSuccess: boolean }>`
   box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.3);
   z-index: 1;
   animation: ${(props) =>
-    props.isSuccess ? 'success 0.5s ease-in-out' : 'none'};
+    props.$isSuccess ? 'success 0.5s ease-in-out' : 'none'};
 
   &::before {
     content: '';
@@ -138,7 +138,7 @@ export const ScannerFrame = styled.div<{ isSuccess: boolean }>`
     border: 3px solid transparent;
     border-radius: 20px;
     animation: ${(props) =>
-      props.isSuccess ? 'focus 1s ease-in-out' : 'none'};
+      props.$isSuccess ? 'focus 1s ease-in-out' : 'none'};
   }
 
   @keyframes success {

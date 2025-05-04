@@ -1,3 +1,4 @@
+//Demo測試 所以獲取任務跟掃描任務 都使用明日任務
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 
@@ -11,9 +12,14 @@ import {
 import { ApiData, OrderInfo } from './types';
 
 import QRScanner from '../../../components/deliver/QRScanner';
-import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
+// import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
+import { getSpecificDayOrders } from '../../../apis/deliver/getSpecificDayOrders'; // 獲取特定日期 任務api
 import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
 import { getUsersID } from '../../../utils/getUserLocalData';
+import { getTomorrowDate } from '../../../utils/getDate';
+import { getFormattedDateDash } from '../../../utils/formatDate';
+
+const tomorrow = getFormattedDateDash(getTomorrowDate());
 
 const userId = getUsersID();
 
@@ -32,10 +38,10 @@ function ScanOrder() {
       }
 
       try {
-        const orders = await getTodayOrders(userId); //api獲取今日任務
-        console.log('API 原始資料:', orders);
+        const ordersData = await getSpecificDayOrders(userId, tomorrow); //api獲取明日任務(demo用)
+        console.log('API 原始資料:', ordersData);
 
-        const executingOrder = orders.find(
+        const executingOrder = ordersData.Orders.find(
           (order: ApiData) =>
             order.Status === '前往中' || order.Status === '已抵達',
         );

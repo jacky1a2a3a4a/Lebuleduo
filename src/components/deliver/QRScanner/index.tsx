@@ -157,11 +157,11 @@ const QRScanner = ({ onScanResult, onError }: QRScannerProps) => {
       />
       {!showCamera && (
         <ScannerPlaceholder>
-          <ShutterTop isOpen={isShutterOpen} />
-          <ShutterBottom isOpen={isShutterOpen} />
+          <ShutterTop $isOpen={isShutterOpen} />
+          <ShutterBottom $isOpen={isShutterOpen} />
         </ScannerPlaceholder>
       )}
-      <ScannerFrame isSuccess={isSuccess} />
+      <ScannerFrame $isSuccess={isSuccess} />
       <ScannerCanvas ref={canvasRef} />
     </ScannerContainer>
   );
