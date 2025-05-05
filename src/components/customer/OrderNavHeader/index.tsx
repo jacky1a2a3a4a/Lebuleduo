@@ -21,7 +21,7 @@ const OrderNavHeader = ({ title, orderNumber }: OrderNavHeaderProps) => {
 
         <PageTitle>{title}</PageTitle>
       </BackButton>
-      {orderNumber && <OrderID>訂單編號: {orderNumber}</OrderID>}
+      {orderNumber && <OrderID>方案編號: {orderNumber}</OrderID>}
     </NavHeader>
   );
 };
