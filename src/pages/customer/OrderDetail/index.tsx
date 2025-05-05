@@ -96,7 +96,7 @@ function OrderDetail() {
 
   // 沒有找到訂單數據
   if (!orderData) {
-    return <EmptyMessage>沒有找到訂單數據</EmptyMessage>;
+    return <EmptyMessage>沒有找到方案數據</EmptyMessage>;
   }
 
   // 分離不同狀態的訂單

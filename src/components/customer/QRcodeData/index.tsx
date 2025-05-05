@@ -86,8 +86,8 @@ const QRcodeData: React.FC<QRcodeDataProps> = ({ orderId, userId }) => {
     <QRCodePage>
       <QRCodeContainer ref={qrCodeRef}>
         <QRCodeTitle>
-          <p className="title">訂單 QR Code</p>
-          <p className="order-number">訂單編號: {orderData.OrderNumber}</p>
+          <p className="title">方案 QR Code</p>
+          <p className="order-number">方案編號: {orderData.OrderNumber}</p>
         </QRCodeTitle>
         <QRCodeList>
           {getCurrentPageItems().map((task: OrderDetail) => (

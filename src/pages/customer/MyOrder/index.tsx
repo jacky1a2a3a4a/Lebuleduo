@@ -439,7 +439,12 @@ function MyOrder() {
                   );
                 })
               ) : (
-                <ErrorReport title="錯誤" error={error} />
+                <ErrorReport
+                  title="目前沒有結束方案"
+                  error=""
+                  showImage={true}
+                  titleColor="var(--color-primary)"
+                /> //暫時做法 待修改
               )}
             </OrderList>
           )}
