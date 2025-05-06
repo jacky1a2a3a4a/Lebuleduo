@@ -62,7 +62,7 @@ function OrderDetail() {
       console.log('API 回傳數據：', data);
 
       if (data.status) {
-        console.log('方案詳情數據：', data.result[0]);
+        console.log('訂單詳情數據：', data.result[0]);
         console.log('OrderDetail 數據：', data.result[0].OrderDetails);
         setOrderData(data.result[0]);
       } else {
@@ -96,7 +96,7 @@ function OrderDetail() {
 
   // 沒有找到訂單數據
   if (!orderData) {
-    return <EmptyMessage>沒有找到方案數據</EmptyMessage>;
+    return <EmptyMessage>沒有找到訂單數據</EmptyMessage>;
   }
 
   // 分離不同狀態的訂單
@@ -126,10 +126,10 @@ function OrderDetail() {
   return (
     <OrderDetailContainer>
       {/* navbar */}
-      <OrderNavHeader title="方案詳情" orderNumber={orderData.OrderNumber} />
+      <OrderNavHeader title="訂單詳情" orderNumber={orderData.OrderNumber} />
 
       <ContentArea>
-        {/* 方案卡片 */}
+        {/* 訂單卡片 */}
         <OrderCard>
           <CardHeader>
             <OrderTitle>
@@ -179,7 +179,7 @@ function OrderDetail() {
 
           <DetailList>
             <DetailItem>
-              <DetailLabel>方案期間</DetailLabel>
+              <DetailLabel>訂單期間</DetailLabel>
               <DetailValue>
                 {orderData.StartDate} - {orderData.EndDate}
               </DetailValue>

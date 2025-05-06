@@ -374,7 +374,7 @@ function OrderEdit() {
       />
 
       <ContentArea>
-        {/* 方案卡片 */}
+        {/* 訂單卡片 */}
         <OrderCard>
           <CardHeader>
             <OrderTitle>
@@ -384,7 +384,7 @@ function OrderEdit() {
 
           <DetailList>
             <DetailItem>
-              <DetailLabel>方案期間</DetailLabel>
+              <DetailLabel>訂單期間</DetailLabel>
               <DetailValue>
                 {orderData.StartDate} - {orderData.EndDate}
               </DetailValue>

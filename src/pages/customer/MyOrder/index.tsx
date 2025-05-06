@@ -288,13 +288,13 @@ function MyOrder() {
             $isActive={activeTab === 'current'}
             onClick={() => handleTabClick('current')}
           >
-            當前方案
+            當前訂單
           </TabItem>
           <TabItem
             $isActive={activeTab === 'completed'}
             onClick={() => handleTabClick('completed')}
           >
-            已結束方案
+            已結束訂單
           </TabItem>
         </TabContainer>
 
@@ -304,7 +304,7 @@ function MyOrder() {
             <AnimationLoading size="mini" animationType="moving" />
           ) : error ? (
             <ErrorReport
-              title="目前沒有方案"
+              title="目前沒有訂單"
               error=""
               showImage={true}
               titleColor="var(--color-primary)"
@@ -442,7 +442,7 @@ function MyOrder() {
                 })
               ) : (
                 <ErrorReport
-                  title="目前沒有方案"
+                  title="目前沒有訂單"
                   error=""
                   showImage={true}
                   titleColor="var(--color-primary)"
