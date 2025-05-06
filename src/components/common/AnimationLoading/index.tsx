@@ -10,6 +10,7 @@ import {
 interface AnimationLoadingProps {
   size?: 'normal' | 'mini';
   animationType?: 'moving' | 'bounce';
+  loadingText?: string;
 }
 
 const ANIMATION_CONFIG = {
@@ -26,6 +27,7 @@ const ANIMATION_CONFIG = {
 const AnimationLoading = ({
   size = 'normal',
   animationType = 'bounce',
+  loadingText = '汪汪努力載入中',
 }: AnimationLoadingProps) => {
   const { image, alt } = ANIMATION_CONFIG[animationType];
 
@@ -39,7 +41,7 @@ const AnimationLoading = ({
           $animationType={animationType}
         />
       </TruckContainer>
-      <LoadingText $size={size}>汪汪努力載入中 </LoadingText>
+      <LoadingText $size={size}>{loadingText}</LoadingText>
     </LoadingContainer>
   );
 };

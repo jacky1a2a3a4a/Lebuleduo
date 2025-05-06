@@ -30,7 +30,7 @@ export const ImageContainer = styled.div`
   align-items: center;
 
   position: absolute;
-  top: 86px; /* 調整固定垂直位置 */
+  top: 83px; /* 調整固定垂直位置 */
   left: calc(50% + 90px); /* 從中心點向右偏移固定距離 */
   transform: translateX(-50%); /* 修正偏移 */
   width: 120px;
@@ -125,7 +125,7 @@ export const UserCardDate = styled.div`
 // 使用者卡片 收運時間
 export const UserCardTime = styled.div`
   color: var(--color-white);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.05em;
 `;
