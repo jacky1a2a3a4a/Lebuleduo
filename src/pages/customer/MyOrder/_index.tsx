@@ -173,26 +173,24 @@ function MyOrder() {
         console.log('當前方案數據:', currentData.result);
 
         // 已結束方案數據
-        // const completedResponse = await fetch(completedOrdersAPI_Path);
-        // if (!completedResponse.ok) {
-        //   throw new Error(`已完成訂單API請求失敗：${completedResponse.status}`);
-        // }
-        // const completedData = await completedResponse.json();
-        // if (!completedData || !completedData.result) {
-        //   setCompletedOrders([]);
-        // } else if (Array.isArray(completedData.result)) {
-        //   setCompletedOrders(completedData.result);
-        // }
-        // console.log('已完成方案數據:', completedData.result);
-        setCompletedOrders([]); // 暫時使用空數組
+        const completedResponse = await fetch(completedOrdersAPI_Path);
+        if (!completedResponse.ok) {
+          throw new Error(`已完成訂單API請求失敗：${completedResponse.status}`);
+        }
+        const completedData = await completedResponse.json();
+        if (!completedData || !completedData.result) {
+          setCompletedOrders([]);
+        } else if (Array.isArray(completedData.result)) {
+          setCompletedOrders(completedData.result);
+        }
+        console.log('已完成方案數據:', completedData.result);
 
         // 檢查是否有任何訂單數據
         const hasCurrentOrders =
           Array.isArray(currentData?.result) && currentData.result.length > 0;
-        // const hasCompletedOrders =
-        //   Array.isArray(completedData?.result) &&
-        //   completedData.result.length > 0;
-        const hasCompletedOrders = false; // 暫時設為 false
+        const hasCompletedOrders =
+          Array.isArray(completedData?.result) &&
+          completedData.result.length > 0;
 
         if (!hasCurrentOrders && !hasCompletedOrders) {
           setError('目前沒有訂單數據');
@@ -229,7 +227,7 @@ function MyOrder() {
 
           <UserCardItemColumn>
             <UserCardDate>{todayData?.date || '-'}</UserCardDate>
-            <UserCardTime>{todayData?.driverTime || '今天無任務'}</UserCardTime>
+            <UserCardTime>{todayData?.driverTime || '-'}</UserCardTime>
           </UserCardItemColumn>
         </UserCard>
 
@@ -442,11 +440,11 @@ function MyOrder() {
                 })
               ) : (
                 <ErrorReport
-                  title="目前沒有方案"
+                  title="目前沒有結束方案"
                   error=""
                   showImage={true}
                   titleColor="var(--color-primary)"
-                />
+                /> //暫時做法 待修改
               )}
             </OrderList>
           )}

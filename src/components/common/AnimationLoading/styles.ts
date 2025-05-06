@@ -16,7 +16,6 @@ export const LoadingContainer = styled.div<SizeProps>`
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: var(--spacing-lg);
   ${({ $size }) =>
     $size === 'normal'
       ? `
@@ -25,9 +24,11 @@ export const LoadingContainer = styled.div<SizeProps>`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding: var(--spacing-lg);
   `
       : `
     position: relative;
+    min-height: 120px;
   `}
 `;
 

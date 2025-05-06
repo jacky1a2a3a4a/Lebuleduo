@@ -5,12 +5,14 @@ import { validateLineState, getLoginRole } from '../../../configs/lineConfig';
 import axios from 'axios';
 import {
   CallbackContainer,
-  LoadingSpinner,
+  // LoadingSpinner,
   Message,
   ErrorMessage,
-  DebugSection,
-  DebugInfo,
+  // DebugSection,
+  // DebugInfo,
 } from './styles';
+
+import AnimationLoading from '@/components/common/AnimationLoading';
 
 const LineCallback = () => {
   const [loading, setLoading] = useState(true); // 頁面載入狀態
@@ -233,8 +235,9 @@ const LineCallback = () => {
     <CallbackContainer>
       {loading && (
         <>
-          <LoadingSpinner />
-          <Message>正在處理 LINE 登入，請稍候...</Message>
+          {/* <LoadingSpinner /> */}
+          <AnimationLoading size="mini" loadingText="正在處理 LINE 登入，請稍候 " />
+          {/* <Message>正在處理 LINE 登入，請稍候...</Message> */}
         </>
       )}
 
@@ -253,7 +256,8 @@ const LineCallback = () => {
         </>
       )}
 
-      <DebugSection>
+      {/* 除錯資訊 */}
+      {/* <DebugSection>
         <h3>除錯資訊</h3>
         <DebugInfo>
           <div>
@@ -271,7 +275,7 @@ const LineCallback = () => {
             <pre>{JSON.stringify(debugInfo.localStorage, null, 2)}</pre>
           </div>
         </DebugInfo>
-      </DebugSection>
+      </DebugSection> */}
     </CallbackContainer>
   );
 };
