@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MdCalendarMonth } from 'react-icons/md';
-import { DatePickerContainer, DateDisplay, IconStyled } from './styles';
+import { DatePickerContainer, DateDisplay, IconStyled } from './styled';
 
 import Calendar from './Calendar';
 

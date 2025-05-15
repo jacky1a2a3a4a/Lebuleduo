@@ -16,7 +16,7 @@ import {
   DistributeButton,
   FooterButton,
   PanelText,
-} from './styles';
+} from './styled';
 import { AssignmentPanelProps } from './types';
 
 const AssignmentPanel = ({

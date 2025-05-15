@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { LoginSectionStyled } from './styles';
+import { LoginSectionStyled } from './styled';
 
 interface SectionProps {
   children: ReactNode;

@@ -13,7 +13,7 @@ import {
   NavItems,
   NavItem,
   MainContent,
-} from './styles';
+} from './styled';
 
 const AdminLayout = () => {
   const location = useLocation();

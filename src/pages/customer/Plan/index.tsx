@@ -25,7 +25,7 @@ import {
   PlanButtons,
   PlanButton,
   IconStyled,
-} from './styles';
+} from './styled';
 
 import { getPlans } from '../../../apis/customer/getPlan'; //api 取得方案
 import AnimationLoading from '../../../components/common/AnimationLoading';

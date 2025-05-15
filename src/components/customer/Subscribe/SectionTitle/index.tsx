@@ -1,4 +1,4 @@
-import { Section, SectionMainTitle, SectionSubtitle } from './styles';
+import { Section, SectionMainTitle, SectionSubtitle } from './styled';
 import { ReactNode } from 'react';
 
 interface SectionTitleProps {

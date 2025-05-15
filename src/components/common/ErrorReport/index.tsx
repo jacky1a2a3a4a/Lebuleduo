@@ -3,7 +3,7 @@ import {
   ErrorTitle,
   ErrorMessage,
   ErrorImage,
-} from './styles';
+} from './styled';
 import errorImage from '../../../assets/images/img-Lebuledou-problem.png';
 
 interface ErrorReportProps {

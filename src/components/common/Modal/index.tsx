@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalOverlay, ModalContent, CloseButton } from './styles';
+import { ModalOverlay, ModalContent, CloseButton } from './styled';
 
 interface ModalProps {
   isOpen: boolean;

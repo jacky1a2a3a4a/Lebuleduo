@@ -1,4 +1,4 @@
-import { LoadingContainer, Spinner, LoadingText } from './styles';
+import { LoadingContainer, Spinner, LoadingText } from './styled';
 
 interface CommonLoadingProps {
   text?: string;

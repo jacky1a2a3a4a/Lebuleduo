@@ -22,7 +22,7 @@ import {
   DetailLabel,
   DetailValue,
   OrderListSection,
-} from './styles';
+} from './styled';
 
 import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
 

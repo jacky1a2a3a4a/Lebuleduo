@@ -1,4 +1,4 @@
-import { TabContainer, Tab } from './styles';
+import { TabContainer, Tab } from './styled';
 
 interface TabProps {
   activeTab: string;

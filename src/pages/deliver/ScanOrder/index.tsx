@@ -8,7 +8,7 @@ import {
   ScannerContainer,
   StatusMessage,
   ScanText,
-} from './styles';
+} from './styled';
 import { ApiData, OrderInfo } from './types';
 
 import QRScanner from '../../../components/deliver/QRScanner';

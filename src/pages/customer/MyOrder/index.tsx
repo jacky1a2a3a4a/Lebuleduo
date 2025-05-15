@@ -52,7 +52,7 @@ import {
   OrderCardItem,
   OrderCardSubtitle,
   OrderCardDetail,
-} from './styles';
+} from './styled';
 
 import { getUsersID, getUserName } from '../../../utils/getUserLocalData';
 

@@ -22,7 +22,7 @@ import {
   FixedPointImagesTitle,
   FixedPointImagesGrid,
   FixedPointImage,
-} from './styles';
+} from './styled';
 
 import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
 import SectionTitle from '../../../components/customer/Subscribe/SectionTitle';

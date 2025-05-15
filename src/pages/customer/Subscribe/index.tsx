@@ -22,7 +22,7 @@ import {
   WeekdayButton,
   ErrorMessage,
   IconButton,
-} from './styles';
+} from './styled';
 import { Plan } from './types';
 
 import AnimationLoading from '../../../components/common/AnimationLoading';

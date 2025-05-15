@@ -5,7 +5,7 @@ import {
   SelectButton,
   OptionsContainer,
   Option,
-} from './styles';
+} from './styled';
 
 interface SelectProps {
   options: { value: string; label: string }[];

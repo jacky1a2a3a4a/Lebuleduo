@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logos/logo-customer-white.png';
 import CommonHeader from '../../common/Header';
-import { SubscribeButton, StyledPlusIcon } from './styles';
+import { SubscribeButton, StyledPlusIcon } from './styled';
 
 function CustomerHeader() {
   const navigate = useNavigate();

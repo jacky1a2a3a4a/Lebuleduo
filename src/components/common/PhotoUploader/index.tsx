@@ -9,7 +9,7 @@ import {
   UploadText,
   DeleteButton,
   ValidationMessage,
-} from './styles';
+} from './styled';
 
 interface PhotoUploaderProps {
   photos: string[];

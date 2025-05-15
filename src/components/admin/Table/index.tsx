@@ -4,7 +4,7 @@ import {
   StyledTbody,
   StyledTd,
   TableContainer,
-} from './styles';
+} from './styled';
 
 import StatusTag from '../StatusTag';
 import { TableProps } from './types';

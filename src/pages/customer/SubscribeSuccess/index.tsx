@@ -25,7 +25,7 @@ import {
   Buttons,
   HomeButton,
   CustomQRCodeDownloadButton,
-} from './styles';
+} from './styled';
 
 import successImage from '../../../assets/images/img-Lebuledou-score.png';
 import QRCodeDownloader from '../../../components/common/QRCodeDownloader';

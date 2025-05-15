@@ -11,7 +11,7 @@ import OrderTaskStatusRecordContainer from '../../../../components/customer/Orde
 import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTaskStatusRecord/Detail'; //收運紀錄詳情
 import AnimationLoading from '../../../../components/common/AnimationLoading'; //加載中
 
-import { Notification, NotificationText } from './styles';
+import { Notification, NotificationText } from './styled';
 
 // 訂單詳情
 interface OrderDetail {

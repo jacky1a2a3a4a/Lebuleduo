@@ -7,7 +7,7 @@ import {
   MethodTitle,
   Description,
   Note,
-} from './styles';
+} from './styled';
 
 const QRCodeInfo = () => {
   return (

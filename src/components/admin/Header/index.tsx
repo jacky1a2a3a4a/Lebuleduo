@@ -1,5 +1,5 @@
 import { MdSearch } from 'react-icons/md';
-import { Header as StyledHeader, SearchInput, UserInfo } from './styles';
+import { Header as StyledHeader, SearchInput, UserInfo } from './styled';
 
 export default function Header() {
   return (

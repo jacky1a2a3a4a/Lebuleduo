@@ -14,7 +14,7 @@ import {
   PageButton,
   PageInfo,
   CustomQRCodeDownloadButton,
-} from './styles';
+} from './styled';
 import { OrderResult, OrderDetail } from './types';
 
 interface QRcodeDataProps {

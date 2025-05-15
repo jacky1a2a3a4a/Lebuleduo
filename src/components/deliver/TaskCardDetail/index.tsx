@@ -29,7 +29,7 @@ import {
   ReportBlock,
   ReportContent,
   ReportBlockDescription,
-} from './styles';
+} from './styled';
 
 import { TaskStatus } from '../../../types/deliver/TaskStatus';
 import { formatTime } from '../../../utils/formatTime';

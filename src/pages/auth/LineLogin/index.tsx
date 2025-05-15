@@ -21,7 +21,7 @@ import {
   IconStyled,
   BackButton,
   LineButtonTest,
-} from './styles';
+} from './styled';
 
 import mockAuthService from '../../../services/mockAuthService'; // 模擬登入認證
 const mockLogin = false; //模擬登入狀態

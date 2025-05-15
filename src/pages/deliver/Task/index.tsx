@@ -22,7 +22,7 @@ import {
   OngoingTaskTitle,
   TaskCardsSection,
   TaskCardsContainer,
-} from './styles';
+} from './styled';
 import {
   ApiTask,
   TaskItem,

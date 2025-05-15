@@ -38,7 +38,7 @@ import {
   CompleteButton,
   CompleteIcon,
   ValidationMessage,
-} from './styles';
+} from './styled';
 import { TaskItem, ReportForm } from './types';
 
 import TaskNavHeader from '../../../components/deliver/TaskNavHeader';

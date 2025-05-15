@@ -5,7 +5,7 @@ import {
   TruckContainer,
   MovingTruck,
   LoadingText,
-} from './styles';
+} from './styled';
 
 interface AnimationLoadingProps {
   size?: 'normal' | 'mini';

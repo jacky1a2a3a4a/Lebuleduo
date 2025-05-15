@@ -8,7 +8,7 @@ import {
   DeleteImageButton,
   DeliveryOptionImageUpload,
   PhotoInstructions,
-} from './styles';
+} from './styled';
 import ErrorReport from '../../../common/ErrorReport';
 
 interface FixedPointImage {
