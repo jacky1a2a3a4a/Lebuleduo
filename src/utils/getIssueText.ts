@@ -1,3 +1,4 @@
+//後端回傳的issue狀態
 export const getIssueText = (issue: string): string => {
   switch (issue) {
     case '1':
@@ -11,6 +12,6 @@ export const getIssueText = (issue: string): string => {
     case '5':
       return '面交未見用戶，已聯絡無回應';
     default:
-      return issue;
+      return '未知的問題';
   }
 };

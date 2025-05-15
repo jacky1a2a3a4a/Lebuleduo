@@ -127,10 +127,16 @@ export const ReportSubmitButton = styled.button`
   padding: var(--spacing-sm) var(--spacing-md);
   font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
     background-color: var(--color-primary-hover);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--color-primary);
   }
 `;
 

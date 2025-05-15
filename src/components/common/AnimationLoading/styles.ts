@@ -8,6 +8,10 @@ interface AnimationProps {
   $animationType: 'moving' | 'bounce';
 }
 
+interface LoadingTextProps extends SizeProps {
+  $showEllipsis: boolean;
+}
+
 // === 最外層大容器 ===
 export const LoadingContainer = styled.div<SizeProps>`
   display: flex;
@@ -147,7 +151,7 @@ export const MovingTruck = styled.img<SizeProps & AnimationProps>`
 `;
 
 // === 載入文字 ===
-export const LoadingText = styled.p<SizeProps>`
+export const LoadingText = styled.p<LoadingTextProps>`
   color: ${({ $size }) =>
     $size === 'normal'
       ? 'var(--color-text-tertiary)'
@@ -156,7 +160,8 @@ export const LoadingText = styled.p<SizeProps>`
 
   &::after {
     content: '';
-    animation: loadingDots 1.5s infinite;
+    animation: ${({ $showEllipsis }) =>
+      $showEllipsis ? 'loadingDots 1.5s infinite' : 'none'};
   }
 
   @keyframes loadingDots {

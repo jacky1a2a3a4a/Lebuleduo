@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TaskStatus } from '../../../../types/deliver/TaskStatus';
+import { TaskStatus } from '../../../types/deliver/TaskStatus';
 
 // 任務卡片外層容器
 export const TaskCardWrapper = styled.div<{ $status: TaskStatus }>`

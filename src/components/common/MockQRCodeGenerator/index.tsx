@@ -18,6 +18,7 @@ function MockQRCodeGenerator({ onDownload }: MockQRCodeGeneratorProps) {
   const [orderDetailsNumber, setOrderDetailsNumber] = useState<string>(''); //任務編號(前台可以看)
 
   // 生成任務 QR Code 所需的數據
+  // 要查為什麼使用useCallback
   const generateOrderQRData = useCallback(() => {
     if (!orderDetailsNumber || !orderDetailID) return null;
 

@@ -1,6 +1,8 @@
 // src/services/authService.ts
 //專注於用戶認證和資料管理
 
+//可以使用export
+
 import axios from 'axios';
 
 

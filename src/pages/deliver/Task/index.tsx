@@ -31,7 +31,7 @@ import {
 } from '../../../types/deliver/OrderDetail';
 import { TaskStatus } from '../../../types/deliver/TaskStatus';
 
-import TaskCard from './Card';
+import TaskCard from '../../../components/deliver/TaskCard';
 import ErrorReport from '../../../components/common/ErrorReport';
 import CommonLoading from '../../../components/common/CommonLoading';
 import CategoryTags from '../../../components/deliver/Tags';
@@ -55,7 +55,6 @@ function Task() {
   const [isLoading, setIsLoading] = useState(false); // 是否正在載入
   const [error, setError] = useState<string | null>(null); // 錯誤訊息
   const [driverInfo, setDriverInfo] = useState<DriverData | null>(null); // 汪汪員資訊
-  console.log('汪汪員資訊:', driverInfo);
   const [tasks, setTasks] = useState<TaskItem[]>([]); // 任務列表 // 取得當前日期
 
   const currentDate = getFormattedDateWithDay(getTodayDate()).toString();
@@ -74,17 +73,20 @@ function Task() {
 
   // API 呼叫函數 (fetch)
   const fetchTasks = async () => {
+    // 防止嚴格模式中的重複調用
+    if (isLoading) return;
+
     try {
-      //// 1. 請求前置作業
+      // 1. 請求前置作業
       setIsLoading(true); //告訴UI顯示「載入中」的狀態
       setError(null); //清除先前的錯誤訊息
 
-      ////3. 發送請求
+      //2. 發送請求
       const driverId = getUsersID(); // 從 getUserLocalData 獲取使用者ID並轉換為字串
       const apiResult = await getSpecificDayOrders(driverId, tomorrowDate);
       console.log('API 回應資料:', apiResult);
 
-      // 更新汪汪員資訊
+      // 3. 更新汪汪員資訊
       setDriverInfo({
         DriverID: apiResult.DriverID,
         Number: apiResult.Number,
@@ -92,12 +94,12 @@ function Task() {
       });
       console.log('汪汪員資訊:', driverInfo);
 
-       if (!apiResult || !apiResult.Orders) {
-         setTasks([]);
-         return;
-       }
+      if (!apiResult || !apiResult.Orders) {
+        setTasks([]);
+        return;
+      }
 
-      ////5. 處理回應資料(將任務轉換為任務列表)
+      //4. 處理回應資料(將任務轉換為任務列表)
       // 將回應資料轉換為任務列表
       const newTasks = apiResult.Orders.map((apiTask: ApiTask) => {
         // 將 API 的中文狀態轉換成英文
@@ -222,6 +224,7 @@ function Task() {
 
   console.log('待前往任務:', scheduledTasks);
   console.log('異常任務:', abnormalTasks);
+  console.log('進行中任務:', ongoingTask);
 
   const getFilteredTasks = () => {
     // 先取得對應類別的任務陣列

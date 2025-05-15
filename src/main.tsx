@@ -1,4 +1,3 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 
@@ -11,11 +10,7 @@ if (!rootElement) {
   // 創建根節點並渲染應用
   try {
     const root = createRoot(rootElement);
-    root.render(
-      <StrictMode>
-        <App />
-      </StrictMode>,
-    );
+    root.render(<App />);
     console.log('應用成功渲染');
   } catch (error) {
     console.error('渲染應用時發生錯誤:', error);

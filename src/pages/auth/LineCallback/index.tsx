@@ -236,7 +236,7 @@ const LineCallback = () => {
       {loading && (
         <>
           {/* <LoadingSpinner /> */}
-          <AnimationLoading size="normal" loadingText=" " />
+          <AnimationLoading size="normal" loadingText=" " showEllipsis={false} />
           {/* <Message>正在處理 LINE 登入，請稍候...</Message> */}
         </>
       )}

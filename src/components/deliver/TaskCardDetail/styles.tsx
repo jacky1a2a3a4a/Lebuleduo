@@ -17,17 +17,6 @@ export const FullHeightContainer = styled.div`
   }
 `;
 
-// === 導航 大容器 ===
-export const HeaderContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  max-width: var(--mobile-min-width);
-
-  margin: var(--spacing-sm) 0 var(--spacing-lg);
-`;
-
 // === 通用大標題文字 ===
 export const Title = styled.div`
   color: var(--color-text-primary);
@@ -40,47 +29,6 @@ export const Title = styled.div`
   font-weight: var(--font-weight-bold);
 
   margin-bottom: var(--spacing-xs);
-`;
-
-// 導航 文字容器
-export const NavTitle = styled.div`
-  color: var(--color-text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: 1.2;
-`;
-
-//  導航 圖示
-export const IconStyled = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-
-  height: 24px;
-  width: 24px;
-  position: relative;
-  top: 1px;
-  margin-right: var(--spacing-xs);
-`;
-
-// 導航 標題文字
-export const NavTitleText = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-`;
-
-// 導航 副標題
-export const NavSubtitle = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-normal);
 `;
 
 // === 通用容器卡片 ===
@@ -219,108 +167,12 @@ export const PageTitle = styled.div`
   font-weight: var(--font-weight-medium);
 `;
 
-// 卡片內副標題
-export const PageSubtitle = styled.div`
-  color: var(--color-neutral-400);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  margin-top: var(--spacing-xs);
-`;
-
+// 卡片內內容
 export const PageContent = styled.div`
   color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   margin-top: var(--spacing-xs);
-`;
-
-// 錯誤訊息
-export const ErrorMessage = styled.div`
-  background-color: var(--color-gray-100);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-// 重量輸入框
-export const WeightInput = styled.input`
-  background-color: var(--color-background-primary);
-  color: var(--color-primary);
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm)
-    var(--spacing-md);
-  margin-top: var(--spacing-sm);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-sm);
-  transition: border-color 0.2s ease;
-  line-height: normal;
-
-  &:focus {
-    outline: none;
-    border-color: var(--color-primary);
-  }
-
-  &::placeholder {
-    color: var(--color-neutral-400);
-    font-size: var(--font-size-sm);
-    vertical-align: middle;
-  }
-`;
-
-// 按鈕容器
-export const DetailButtons = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--spacing-md);
-  width: 100%;
-  margin-top: auto;
-`;
-
-// 按鈕
-export const Button = styled.button<{
-  disabled?: boolean;
-  $isCancel?: boolean;
-}>`
-  padding: 0.75rem 1rem;
-  border-radius: var(--border-radius-round);
-  font-weight: var(--font-weight-medium);
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  border: none;
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-
-  &:first-child {
-    background-color: var(--color-gray-200);
-    color: var(--color-neutral-600);
-    flex: 1;
-
-    &:hover {
-      background-color: ${(props) =>
-        props.disabled ? 'var(--color-gray-200)' : 'var(--color-gray-300)'};
-    }
-  }
-
-  &:last-child {
-    background-color: ${(props) =>
-      props.$isCancel ? 'var(--color-gray-200)' : 'var(--color-neutral-600)'};
-    color: ${(props) =>
-      props.$isCancel ? 'var(--color-neutral-600)' : 'var(--color-gray-0)'};
-    flex: 2;
-
-    &:hover {
-      background-color: ${(props) =>
-        props.disabled
-          ? props.$isCancel
-            ? 'var(--color-gray-300)'
-            : 'var(--color-gray-700)'
-          : props.$isCancel
-            ? 'var(--color-gray-400)'
-            : 'var(--color-gray-800)'};
-    }
-  }
 `;
 
 // ===拍照上傳 大容器===
@@ -351,32 +203,6 @@ export const PhotoBox = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-`;
-
-export const ReportButton = styled.button`
-  background: none;
-  border: none;
-  color: var(--color-text-disabled);
-  font-size: 14px;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 8px 0;
-  margin-top: 8px;
-  width: 100%;
-  text-align: left;
-  transition: opacity 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  svg {
-    color: var(--color-error);
-    font-size: 18px;
-  }
-
-  &:hover {
-    opacity: 0.8;
   }
 `;
 

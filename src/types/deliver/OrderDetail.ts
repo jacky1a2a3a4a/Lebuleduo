@@ -2,7 +2,7 @@ import { TaskStatus } from './TaskStatus';
 
 // API /GET/driver/day/:DriverID/:Date 回傳的資料結構
 export type ApiResponse = {
-  statusCode: number;
+  statusCode: number; //優化 可以跟後端溝通有哪些種類的statusCode
   status: boolean;
   message: string;
   result: {
@@ -66,7 +66,7 @@ export type TaskItem = {
   liter?: number;
 };
 
-// 分類標籤
+// 分類標籤 阿劍推薦名稱TagCategory
 // scheduled 已排定(待前往)
 // completed 已完成
 // abnormal 異常
