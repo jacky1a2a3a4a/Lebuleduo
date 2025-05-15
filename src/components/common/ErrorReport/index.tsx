@@ -4,7 +4,7 @@ import {
   ErrorMessage,
   ErrorImage,
 } from './styles';
-import errorImage from '../../../assets/images/Lebuledou_problem.png';
+import errorImage from '../../../assets/images/img-Lebuledou-problem.png';
 
 interface ErrorReportProps {
   title?: string;

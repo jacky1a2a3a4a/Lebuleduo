@@ -1,5 +1,5 @@
 import { MdAddShoppingCart, MdOutlineTaskAlt } from 'react-icons/md';
-import Lebuledou_trashcan from '../../../assets/images/Lebuledou_trashcan.png';
+import Lebuledou_trashcan from '../../../assets/images/img-Lebuledou-trashcan.png';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {

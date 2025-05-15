@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MdError, MdArrowCircleRight } from 'react-icons/md';
-import dogImage from '../../../assets/images/Lebuledou_lying.png';
-import dogTruckImage from '../../../assets/images/Lebuledou_truck.png';
+import dogImage from '../../../assets/images/img-Lebuledou-lying.png';
+import dogTruckImage from '../../../assets/images/img-Lebuledou-truck.png';
 import ErrorReport from '../../../components/common/ErrorReport';
 import AnimationLoading from '../../../components/common/AnimationLoading';
 import { getCustomerGreeting } from '../../../utils/getGreeting';

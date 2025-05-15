@@ -1,8 +1,8 @@
 // 登入頁面 切版
 import { FaLine, FaArrowLeft } from 'react-icons/fa';
-import LoginLogo from '../../../assets/images/Lebuledou_truck_login_border.png';
-import LogotypeCustomer from '../../../assets/logos/logotype-customer-white.png';
-import LogotypeDeliver from '../../../assets/logos/logotype-deliver-white.png';
+import LoginLogo from '../../../assets/images/img-Lebuledou-truck-login-border.png';
+import LogotypeCustomer from '../../../assets/logos/logo-customer-white.png';
+import LogotypeDeliver from '../../../assets/logos/logo-deliver-white.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLineConfig, saveLineState } from '../../../configs/lineConfig';

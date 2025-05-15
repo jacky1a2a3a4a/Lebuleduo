@@ -27,7 +27,7 @@ import {
   CustomQRCodeDownloadButton,
 } from './styles';
 
-import successImage from '../../../assets/images/Lebuledou_score.png';
+import successImage from '../../../assets/images/img-Lebuledou-score.png';
 import QRCodeDownloader from '../../../components/common/QRCodeDownloader';
 import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
 import { OrderDetail } from '../../../components/customer/QRcodeData/types';

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import logo from '../../../assets/logos/logotype-customer-white.png';
+import logo from '../../../assets/logos/logo-customer-white.png';
 import CommonHeader from '../../common/Header';
 import { SubscribeButton, StyledPlusIcon } from './styles';
 

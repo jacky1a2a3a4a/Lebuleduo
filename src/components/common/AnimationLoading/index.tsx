@@ -1,5 +1,5 @@
-import truckImage from '../../../assets/images/Lebuledou_truck.png';
-import trashCanImage from '../../../assets/images/Lebuledou_trashcan_anime.png';
+import truckImage from '../../../assets/images/img-Lebuledou-truck.png';
+import trashCanImage from '../../../assets/images/img-Lebuledou-trashcan-anime.png';
 import {
   LoadingContainer,
   TruckContainer,
