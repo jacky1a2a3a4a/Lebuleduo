@@ -29,7 +29,7 @@ const TaskNavHeader = ({
         <HiChevronLeft />
         <PageTitle>{title}</PageTitle>
       </BackButton>
-      {orderNumber && <OrderID>訂單編號: {orderNumber}</OrderID>}
+      {orderNumber && <OrderID>任務編號: {orderNumber}</OrderID>}
     </NavHeader>
   );
 };

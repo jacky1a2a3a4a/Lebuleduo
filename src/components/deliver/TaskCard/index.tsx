@@ -5,14 +5,6 @@ import {
   HiXCircle,
   HiQrCode,
 } from 'react-icons/hi2';
-import StatusTagDeliver from '../../../../components/deliver/StatusTagDeliver';
-import { TaskStatus } from '../../../../types/deliver/TaskStatus';
-import { formatTime } from '../../../../utils/formatTime';
-import axios from 'axios';
-
-// 添加 BASE_URL 常數
-const BASE_URL = 'https://lebuleduo.rocket-coding.com';
-
 import {
   TaskCardWrapper,
   TaskCardItem,
@@ -27,21 +19,17 @@ import {
   TertiaryContent,
   TaskCardButtons,
   TaskCardButton,
-} from './styled';
+} from './styles';
 
-export type TaskCardProps = {
-  taskId: string;
-  number: string;
-  status: TaskStatus;
-  time: string;
-  address: string;
-  notes: string;
-  onStatusChange?: (taskId: string, newStatus: TaskStatus) => void;
-  photos?: string[];
-  isDisabled?: boolean;
-};
+import StatusTagDeliver from '../StatusTagDeliver';
+import { TaskStatus } from '../../../types/deliver/TaskStatus';
+import { TaskCardProps } from '../../../types/deliver/TaskCard';
+import { formatTime } from '../../../utils/formatTime';
+import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus';
 
-//函式本體
+// 圖片網址前綴
+const BASE_URL = import.meta.env.VITE_API_URL;
+
 //傳入參數，同時定義型別
 export const TaskCard = ({
   taskId,
@@ -63,19 +51,6 @@ export const TaskCard = ({
   };
 
   // 更新任務狀態的 API 呼叫
-  const updateOrderStatus = async (newStatus: number) => {
-    try {
-      await axios.put(`api/driver/orders/status/${taskId}`, {
-        OrderStatus: newStatus,
-      });
-      return true;
-    } catch (error) {
-      console.error('更新訂單狀態失敗:', error);
-      return false;
-    }
-  };
-
-  // 確認前往/取消前往 按鈕 狀態改變
   const handleStatusChange = async () => {
     let newStatus: TaskStatus;
     let orderStatus: number;
@@ -90,9 +65,11 @@ export const TaskCard = ({
       return;
     }
 
-    const success = await updateOrderStatus(orderStatus);
-    if (success) {
+    try {
+      await updateOrderStatus(Number(taskId), orderStatus);
       onStatusChange?.(taskId, newStatus);
+    } catch (error) {
+      console.error('更新訂單狀態失敗:', error);
     }
   };
 

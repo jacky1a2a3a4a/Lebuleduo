@@ -13,3 +13,5 @@ export const formatPaymentMethod = (paymentMethod: string): string => {
       return paymentMethod;
   }
 };
+
+/*default不該把payment丟回去*/

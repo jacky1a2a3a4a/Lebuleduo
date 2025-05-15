@@ -30,14 +30,13 @@ interface OrderDetailsResponse {
 
 export const getOrderDetails = async (userId: string, orderId: string) => {
   try {
-    const response = await axios.get<OrderDetailsResponse>(
-      `/api/GET/user/orders/${userId}/${orderId}`,
-    );
+    const path = `/api/GET/user/orders/${userId}/${orderId}`;
+    const response = await axios.get<OrderDetailsResponse>(path);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || '獲取方案詳情失敗');
-    }
+    // if (axios.isAxiosError(error)) {
+    //   throw new Error(error.response?.data?.message || '獲取方案詳情失敗');
+    // }
     throw new Error('獲取方案詳情時發生未知錯誤');
   }
 };

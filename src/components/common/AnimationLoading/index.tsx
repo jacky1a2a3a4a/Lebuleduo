@@ -11,6 +11,7 @@ interface AnimationLoadingProps {
   size?: 'normal' | 'mini';
   animationType?: 'moving' | 'bounce';
   loadingText?: string;
+  showEllipsis?: boolean;
 }
 
 const ANIMATION_CONFIG = {
@@ -28,6 +29,7 @@ const AnimationLoading = ({
   size = 'normal',
   animationType = 'bounce',
   loadingText = '汪汪努力載入中',
+  showEllipsis = true,
 }: AnimationLoadingProps) => {
   const { image, alt } = ANIMATION_CONFIG[animationType];
 
@@ -41,7 +43,9 @@ const AnimationLoading = ({
           $animationType={animationType}
         />
       </TruckContainer>
-      <LoadingText $size={size}>{loadingText}</LoadingText>
+      <LoadingText $size={size} $showEllipsis={showEllipsis}>
+        {loadingText}
+      </LoadingText>
     </LoadingContainer>
   );
 };

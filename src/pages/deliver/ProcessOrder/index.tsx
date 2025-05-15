@@ -3,8 +3,6 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import {
   MdLocationOn,
-  MdAdd,
-  MdDelete,
   MdReportProblem,
   MdEdit,
   MdOutlineTaskAlt,
@@ -30,12 +28,6 @@ import {
   PageTitle,
   PageSubtitle,
   WeightInput,
-  PhotoUploadContainer,
-  PhotoUploadBox,
-  PreviewImage,
-  PlusIcon,
-  UploadText,
-  DeleteButton,
   ReportButton,
   ReportBlock,
   ReportBlockTitle,
@@ -50,17 +42,19 @@ import {
 import { TaskItem, ReportForm } from './types';
 
 import TaskNavHeader from '../../../components/deliver/TaskNavHeader';
-import ReportModal from './ReportModal'; // 異常回報組件
-import Camera from '../../../components/common/Camera/Camera';
+import TaskReportModal from '../../../components/deliver/TaskReportModal'; // 異常回報組件
 import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver'; // 狀態標籤組件
 import AnimationLoading from '../../../components/common/AnimationLoading'; // 載入中組件
 import ErrorReport from '../../../components/common/ErrorReport'; //錯誤回報組件
 import SuccessMessage from '../../../components/deliver/SuccessMessage'; // 完成收運組件
+import PhotoUploader from '../../../components/common/PhotoUploader';
+
+// import { getTodayOrderDetails } from '../../../apis/deliver/getTodayOrderDetails'; // api獲取當天特定任務詳情
+import { getSpecificDayOrderDetails } from '../../../apis/deliver/getSpecificDayOrderDetails'; // api獲取當天特定任務詳情
+
 import { GoogleMapComponent } from '../../../components/common/GoogleMap';
 import { TaskStatus } from '../../../types/deliver/TaskStatus';
 import { formatTime } from '../../../utils/formatTime';
-// import { getTodayOrderDetails } from '../../../apis/deliver/getTodayOrderDetails'; // api獲取當天特定任務詳情
-import { getSpecificDayOrderDetails } from '../../../apis/deliver/getSpecificDayOrderDetails'; // api獲取當天特定任務詳情
 import { getIssueText } from '../../../utils/getIssueText';
 import { getFormattedDateDash } from '../../../utils/formatDate';
 import { getTomorrowDate } from '../../../utils/getDate';
@@ -75,14 +69,6 @@ function OrderDetails() {
   const [task, setTask] = useState<TaskItem | null>(null); // 任務資料
   const [loading, setLoading] = useState(true); // 載入狀態
   const [error, setError] = useState<string | null>(null); // 錯誤訊息
-
-  const [showCamera, setShowCamera] = useState(false); // 相機
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number | null>(
-    null,
-  ); // 當前照片索引
-  const [isWebCameraSupported, setIsWebCameraSupported] = useState<
-    boolean | null
-  >(null); // 是否支援網頁相機
 
   const [actualWeight, setActualWeight] = useState<number | undefined>(
     undefined,
@@ -107,7 +93,7 @@ function OrderDetails() {
         const response = await getSpecificDayOrderDetails(
           Number(userId),
           tomorrow,
-          Number(taskId),
+          Number(taskId), // 使用 taskId 而不是 orderId
         ); //api 獲取明天特定任務詳情
         console.log('api 原始資訊:', response);
 
@@ -149,7 +135,7 @@ function OrderDetails() {
     if (taskId) {
       fetchTaskDetails();
     }
-  }, [taskId]);
+  }, [taskId, tomorrow]);
 
   // 將 API 接收到的狀態(中文) 轉成英文(狀態組件吃英文)
   const mapApiStatusToTaskStatus = (apiStatus: string): TaskStatus => {
@@ -168,22 +154,6 @@ function OrderDetails() {
         return 'scheduled';
     }
   };
-
-  // 檢查是否支援網頁相機
-  useEffect(() => {
-    const checkCameraSupport = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        stream.getTracks().forEach((track) => track.stop());
-        setIsWebCameraSupported(true);
-      } catch {
-        setIsWebCameraSupported(false);
-      }
-    };
-    checkCameraSupport();
-  }, []);
 
   // === 實際重量變更 ===
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -217,71 +187,6 @@ function OrderDetails() {
       }));
     }
   };
-
-  // === 開啟相機(決定使用網頁還是手機相機) ===
-  const handleOpenCamera = useCallback(
-    (index: number) => {
-      if (isWebCameraSupported === null) return;
-
-      // 如果該位置已經有照片，則不允許再次拍照
-      if (driverPhotos[index]) return;
-
-      if (isWebCameraSupported) {
-        // 使用網頁相機
-        setCurrentPhotoIndex(index);
-        setShowCamera(true);
-      } else {
-        // 使用手機內建相機
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.capture = 'environment';
-
-        input.onchange = (e) => {
-          const file = (e.target as HTMLInputElement).files?.[0];
-          if (file) {
-            // 檢查檔案大小（5MB = 5 * 1024 * 1024 bytes）
-            if (file.size > 5 * 1024 * 1024) {
-              alert('照片大小不能超過 5MB');
-              return;
-            }
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              const newPhotos = [...driverPhotos];
-              newPhotos[index] = event.target?.result as string;
-              setDriverPhotos(newPhotos);
-            };
-            reader.readAsDataURL(file);
-          }
-        };
-
-        input.click();
-      }
-    },
-    [isWebCameraSupported, driverPhotos],
-  );
-
-  // === 拍照 ===
-  const handleTakePhoto = useCallback(
-    (photoData: string) => {
-      if (currentPhotoIndex !== null) {
-        const newPhotos = [...driverPhotos];
-        newPhotos[currentPhotoIndex] = photoData;
-        setDriverPhotos(newPhotos);
-      }
-    },
-    [currentPhotoIndex, driverPhotos],
-  );
-
-  // === 刪除照片 ===
-  const handleDeletePhoto = useCallback(
-    (index: number) => {
-      const newPhotos = [...driverPhotos];
-      newPhotos[index] = '';
-      setDriverPhotos(newPhotos);
-    },
-    [driverPhotos],
-  );
 
   // === 提交異常回報 ===
   const handleReportSubmit = async (issue: string, otherIssue: string) => {
@@ -525,47 +430,13 @@ function OrderDetails() {
           <CardSection>
             <PageTitle>照片記錄</PageTitle>
             <PageSubtitle>請上傳2張收運照片，務必拍攝掛秤數字</PageSubtitle>
-            <PhotoUploadContainer>
-              {[0, 1].map((index) => (
-                <PhotoUploadBox
-                  key={index}
-                  onClick={() => handleOpenCamera(index)}
-                >
-                  {driverPhotos[index] ? (
-                    <div style={{ position: 'relative' }}>
-                      <PreviewImage
-                        src={driverPhotos[index]}
-                        alt={`照片 ${index + 1}`}
-                      />
-                      <DeleteButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeletePhoto(index);
-                        }}
-                      >
-                        <MdDelete />
-                      </DeleteButton>
-                    </div>
-                  ) : (
-                    <>
-                      <PlusIcon>
-                        <MdAdd />
-                      </PlusIcon>
-                      <UploadText>
-                        {isWebCameraSupported === null
-                          ? '載入中...'
-                          : isWebCameraSupported
-                            ? '點擊拍照'
-                            : '開啟相機'}
-                      </UploadText>
-                    </>
-                  )}
-                </PhotoUploadBox>
-              ))}
-            </PhotoUploadContainer>
-            {!validations.photos && (
-              <ValidationMessage>請上傳2張收運照片</ValidationMessage>
-            )}
+            <PhotoUploader
+              photos={driverPhotos}
+              onChange={setDriverPhotos}
+              maxPhotos={2}
+              validationMessage="請上傳2張收運照片"
+              showValidation={!validations.photos}
+            />
           </CardSection>
 
           {/* 回報異常按鈕或異常回報區塊 */}
@@ -612,15 +483,8 @@ function OrderDetails() {
 
         {showSuccess && <SuccessMessage onFinish={handleSuccessFinish} />}
 
-        {showCamera && isWebCameraSupported && (
-          <Camera
-            onPhotoTaken={handleTakePhoto}
-            onClose={() => setShowCamera(false)}
-          />
-        )}
-
         {/* 異常回報視窗 */}
-        <ReportModal
+        <TaskReportModal
           isOpen={showReportModal}
           onClose={() => setShowReportModal(false)}
           onSubmit={handleReportSubmit}
