@@ -1,8 +1,8 @@
-import LoginTruck from '../../../assets/images/Lebuledou_truck_login_border.png';
-import LogotypeCustomer from '../../../assets/logos/logotype-customer-white.png';
-import LogotypeDeliver from '../../../assets/logos/logotype-deliver-white.png';
+import LoginTruck from '../../../assets/images/img-Lebuledou-truck-login-border.png';
+import LogotypeCustomer from '../../../assets/logos/logo-customer-white.png';
+import LogotypeDeliver from '../../../assets/logos/logo-deliver-white.png';
 
-import { Logo, WelcomeText, LogoType, TextSub } from './styles';
+import { Logo, WelcomeText, LogoType, TextSub } from './styled';
 
 interface LogoProps {
   type?: 'customer' | 'deliver';

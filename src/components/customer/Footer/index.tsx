@@ -12,7 +12,7 @@ import Footer, { FooterNavItem } from '../../common/Footer';
 const customerFooterNavItems: FooterNavItem[] = [
   {
     icon: MdAssignment,
-    label: '我的訂單',
+    label: '我的方案',
     path: '/customer',
   },
   {

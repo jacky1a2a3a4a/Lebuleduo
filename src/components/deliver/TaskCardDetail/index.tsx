@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { MdLocationOn, MdReportProblem } from 'react-icons/md';
 
 import {
@@ -29,7 +28,7 @@ import {
   ReportBlock,
   ReportContent,
   ReportBlockDescription,
-} from './styles';
+} from './styled';
 
 import { TaskStatus } from '../../../types/deliver/TaskStatus';
 import { formatTime } from '../../../utils/formatTime';
@@ -38,7 +37,7 @@ import StatusTagDeliver from '../../../components/deliver/StatusTagDeliver';
 import AnimationLoading from '../../../components/common/AnimationLoading';
 import ErrorReport from '../../../components/common/ErrorReport';
 import { getTomorrowDate } from '../../../utils/getDate';
-import { getFormattedDateDash } from '../../../utils/formatDate';
+import { getSpecificDayOrderDetails } from '../../../apis/deliver/getSpecificDayOrderDetails';
 
 // 定義任務類型
 type TaskItem = {
@@ -69,20 +68,22 @@ const TaskCardDetail = ({ taskId, userId }: TaskCardDetailProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [task, setTask] = useState<TaskItem | null>(null);
-  const tomorrow = getFormattedDateDash(getTomorrowDate());
+  const tomorrow = getTomorrowDate();
 
   // 從 API 讀取任務資訊
   useEffect(() => {
     const fetchTaskDetails = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `api/GET/driver/day/${userId}/${tomorrow}/${taskId}`,
+        const response = await getSpecificDayOrderDetails(
+          Number(userId),
+          tomorrow,
+          Number(taskId),
         );
-        console.log('API 原始任務資料:', response.data.result.Orders[0]);
+        console.log('API 原始任務資料:', response?.Orders[0]);
 
-        if (response.data.status && response.data.result.Orders.length > 0) {
-          const apiTask = response.data.result.Orders[0];
+        if (response && response.Orders.length > 0) {
+          const apiTask = response.Orders[0];
           const TaskDetail: TaskItem = {
             id: apiTask.OrderDetailID, //ID
             number: apiTask.OrderDetailsNumber, //訂單編號

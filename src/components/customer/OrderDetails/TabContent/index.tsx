@@ -4,7 +4,7 @@ import {
   OrderListTitle,
   OrderListCal,
   TabContent,
-} from './styles';
+} from './styled';
 
 import OrderListCard from '../Card';
 

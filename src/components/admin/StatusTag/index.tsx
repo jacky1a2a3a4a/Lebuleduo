@@ -1,5 +1,5 @@
 // 後台任務分派專用
-import { StatusTagContainer, StatusTagText } from './styles';
+import { StatusTagContainer, StatusTagText } from './styled';
 
 // ===狀態類型表===
 // 0 = 未排定 //UnScheduled

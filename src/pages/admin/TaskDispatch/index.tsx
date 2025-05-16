@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect } from 'react';
 import {
   MdDescription,
@@ -13,7 +12,7 @@ import {
   TableContainer,
   TableHeader,
   ContentWrapper,
-} from './styles';
+} from './styled';
 import { Order, Amount, Filters, Driver } from './types';
 
 import Header from '../../../components/admin/Header';

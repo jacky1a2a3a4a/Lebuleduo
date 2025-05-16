@@ -1,4 +1,4 @@
-import { FullHeightContainer } from './styles';
+import { FullHeightContainer } from './styled';
 
 import MockQRCodeGenerator from '../../../components/common/MockQRCodeGenerator'; //qrcode臨時產成器
 

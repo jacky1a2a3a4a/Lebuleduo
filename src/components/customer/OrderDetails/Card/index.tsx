@@ -14,7 +14,7 @@ import {
   IconStyled,
   IconStyledLarge,
   ErrorText,
-} from './styles';
+} from './styled';
 import CalendarModal from '../CalendarModal';
 
 // 訂單卡片狀態類型

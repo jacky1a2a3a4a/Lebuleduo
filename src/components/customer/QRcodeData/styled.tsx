@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { DownloadButton } from '../../common/QRCodeDownloader/styles';
+import { DownloadButton } from '../../common/QRCodeDownloader/styled';
 
 export const QRCodePage = styled.div`
   background-color: var(--color-white);

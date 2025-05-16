@@ -10,7 +10,7 @@ import {
   ErrorMessage,
   // DebugSection,
   // DebugInfo,
-} from './styles';
+} from './styled';
 
 import AnimationLoading from '@/components/common/AnimationLoading';
 

@@ -17,7 +17,7 @@ import {
   DeliveryOptionText,
   DeliveryOptionTitle,
   DeliveryOptionDescription,
-} from './styles';
+} from './styled';
 import { SubscriptionData, FixedPointImage } from './types';
 
 import AnimationLoading from '../../../components/common/AnimationLoading';

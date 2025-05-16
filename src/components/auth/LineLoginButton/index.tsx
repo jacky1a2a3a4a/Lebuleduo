@@ -1,5 +1,5 @@
 import { FaLine } from 'react-icons/fa';
-import { IconStyled, LineButton, ButtonContainer, RoleText } from './styles';
+import { IconStyled, LineButton, ButtonContainer, RoleText } from './styled';
 
 interface LineLoginButtonProps {
   onClick: () => void;

@@ -8,7 +8,7 @@ import {
   CameraVideo,
   CameraControls,
   CameraButton,
-} from './styles';
+} from './styled';
 import { MdClose, MdCamera } from 'react-icons/md';
 
 interface CameraProps {

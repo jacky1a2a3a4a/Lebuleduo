@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import html2canvas from 'html2canvas';
 import { OrderDetail } from '../../customer/QRcodeData/types';
-import logo from '../../../assets/icons/Lebuledou_icon.png';
+import logo from '../../../assets/icons/icon-Lebuledou.png';
 import { QRCodeCanvas } from 'qrcode.react';
 
 interface QRCodeDownloaderProps {

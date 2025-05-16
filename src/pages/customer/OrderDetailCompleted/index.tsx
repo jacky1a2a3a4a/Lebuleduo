@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
-import { HiExclamationCircle, HiPencil, HiMiniQrCode } from 'react-icons/hi2';
+import { HiExclamationCircle } from 'react-icons/hi2';
 import OrderListCard from './OrderListCard';
 import {
   ErrorMessage,
@@ -10,8 +10,6 @@ import {
   OrderCard,
   CardHeader,
   OrderTitle,
-  CardHeaderEditButtons,
-  EditButton,
   OrderPhotoArea,
   PhotoContainer,
   SinglePhotoContainer,
@@ -26,9 +24,6 @@ import {
   OrderListTitle,
   OrderListCal,
   OrderList,
-  TabContainer,
-  Tab,
-  TabContent,
 } from './styled';
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 import AnimationLoading from '../../../components/common/AnimationLoading';
@@ -46,7 +41,6 @@ function OrderDetail() {
   const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('全部');
 
   // 獲取訂單數據的函數
   const fetchOrderData = useCallback(async () => {
@@ -168,18 +162,11 @@ function OrderDetail() {
 
   // 渲染訂單列表
   const renderOrderList = (orders) => {
-    // 如果是未排定任務或全部標籤下的未排定任務，則按照時間順序排序
-    const sortedOrders =
-      activeTab === '未排定' ||
-      (activeTab === '全部' &&
-        orders.some((order) => order.Status === '未排定'))
-        ? [...orders].sort((a, b) => {
-            // 將日期字串轉換為 Date 對象進行比較
-            const dateA = new Date(a.ServiceDate.replace(/\//g, '-'));
-            const dateB = new Date(b.ServiceDate.replace(/\//g, '-'));
-            return dateA.getTime() - dateB.getTime();
-          })
-        : orders;
+    const sortedOrders = [...orders].sort((a, b) => {
+      const dateA = new Date(a.ServiceDate.replace(/\//g, '-'));
+      const dateB = new Date(b.ServiceDate.replace(/\//g, '-'));
+      return dateA.getTime() - dateB.getTime();
+    });
 
     return (
       <OrderList>
@@ -197,122 +184,16 @@ function OrderDetail() {
     );
   };
 
-  // 依照標籤，渲染對應任務區塊
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case '全部':
-        return (
-          <>
-            {abnormalOrders.length > 0 && (
-              <>
-                <OrderListHeader>
-                  <OrderListTitle>異常任務</OrderListTitle>
-                </OrderListHeader>
-                {renderOrderList(abnormalOrders)}
-              </>
-            )}
-            {scheduledOrders.length > 0 && (
-              <>
-                <OrderListHeader>
-                  <OrderListTitle>已排定任務</OrderListTitle>
-                </OrderListHeader>
-                {renderOrderList(scheduledOrders)}
-              </>
-            )}
-            {unscheduledOrders.length > 0 && (
-              <>
-                <OrderListHeader>
-                  <OrderListTitle>未排定任務</OrderListTitle>
-                  <OrderListCal>
-                    剩餘次數: {unscheduledOrders.length}/{totalOrders}
-                  </OrderListCal>
-                </OrderListHeader>
-
-                {renderOrderList(unscheduledOrders)}
-              </>
-            )}
-            {completedOrders.length > 0 && (
-              <>
-                <OrderListHeader>
-                  <OrderListTitle>已結束任務</OrderListTitle>
-                </OrderListHeader>
-                {renderOrderList(completedOrders)}
-              </>
-            )}
-          </>
-        );
-      case '已排定':
-        return (
-          <>
-            <OrderListHeader>
-              <OrderListTitle>已排定任務</OrderListTitle>
-            </OrderListHeader>
-            {renderOrderList(scheduledOrders)}
-          </>
-        );
-      case '未排定':
-        return (
-          <>
-            <OrderListHeader>
-              <OrderListTitle>未排定任務</OrderListTitle>
-              <OrderListCal>
-                剩餘次數: {unscheduledOrders.length}/{totalOrders}
-              </OrderListCal>
-            </OrderListHeader>
-            {renderOrderList(unscheduledOrders)}
-          </>
-        );
-      case '已結束':
-        return (
-          <>
-            <OrderListHeader>
-              <OrderListTitle>已結束任務</OrderListTitle>
-            </OrderListHeader>
-            {renderOrderList(completedOrders)}
-          </>
-        );
-      case '異常':
-        return (
-          <>
-            <OrderListHeader>
-              <OrderListTitle>異常任務</OrderListTitle>
-            </OrderListHeader>
-            {renderOrderList(abnormalOrders)}
-          </>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <OrderDetailContainer>
-      {/* navbar */}
-      <OrderNavHeader title="訂單詳情" orderNumber={orderData.OrderNumber} />
+      <OrderNavHeader title="方案詳情" orderNumber={orderData.OrderNumber} />
 
       <ContentArea>
-        {/* 方案卡片 */}
         <OrderCard>
           <CardHeader>
             <OrderTitle>
               {orderData.PlanName} {orderData.Liter}L/{orderData.PlanKG}kg
             </OrderTitle>
-            <CardHeaderEditButtons>
-              <EditButton>
-                <HiMiniQrCode />
-              </EditButton>
-              <EditButton
-                onClick={() =>
-                  navigate(`/customer/order/${orderId}/edit`, {
-                    state: {
-                      orderData,
-                    },
-                  })
-                }
-              >
-                <HiPencil />
-              </EditButton>
-            </CardHeaderEditButtons>
           </CardHeader>
 
           <OrderPhotoArea>
@@ -356,44 +237,42 @@ function OrderDetail() {
           </DetailList>
         </OrderCard>
 
-        {/* 收運任務 */}
         <OrderListSection>
-          {/* 收運任務 標籤 */}
-          <TabContainer>
-            <Tab
-              $active={activeTab === '全部'}
-              onClick={() => setActiveTab('全部')}
-            >
-              全部 ({totalOrders})
-            </Tab>
-            <Tab
-              $active={activeTab === '已排定'}
-              onClick={() => setActiveTab('已排定')}
-            >
-              已排定 ({scheduledOrders.length})
-            </Tab>
-            <Tab
-              $active={activeTab === '未排定'}
-              onClick={() => setActiveTab('未排定')}
-            >
-              未排定 ({unscheduledOrders.length})
-            </Tab>
-            <Tab
-              $active={activeTab === '已結束'}
-              onClick={() => setActiveTab('已結束')}
-            >
-              已結束 ({completedOrders.length})
-            </Tab>
-            <Tab
-              $active={activeTab === '異常'}
-              onClick={() => setActiveTab('異常')}
-            >
-              異常 ({abnormalOrders.length})
-            </Tab>
-          </TabContainer>
-
-          {/* 任務內容 */}
-          <TabContent>{renderTabContent()}</TabContent>
+          {abnormalOrders.length > 0 && (
+            <>
+              <OrderListHeader>
+                <OrderListTitle>異常任務</OrderListTitle>
+              </OrderListHeader>
+              {renderOrderList(abnormalOrders)}
+            </>
+          )}
+          {scheduledOrders.length > 0 && (
+            <>
+              <OrderListHeader>
+                <OrderListTitle>已排定任務</OrderListTitle>
+              </OrderListHeader>
+              {renderOrderList(scheduledOrders)}
+            </>
+          )}
+          {unscheduledOrders.length > 0 && (
+            <>
+              <OrderListHeader>
+                <OrderListTitle>未排定任務</OrderListTitle>
+                <OrderListCal>
+                  剩餘次數: {unscheduledOrders.length}/{totalOrders}
+                </OrderListCal>
+              </OrderListHeader>
+              {renderOrderList(unscheduledOrders)}
+            </>
+          )}
+          {completedOrders.length > 0 && (
+            <>
+              <OrderListHeader>
+                <OrderListTitle>已結束任務</OrderListTitle>
+              </OrderListHeader>
+              {renderOrderList(completedOrders)}
+            </>
+          )}
         </OrderListSection>
       </ContentArea>
     </OrderDetailContainer>

@@ -8,7 +8,7 @@ import {
   Value,
   Subtitle,
   Text,
-} from './styles';
+} from './styled';
 
 interface StatCardProps {
   title: string;

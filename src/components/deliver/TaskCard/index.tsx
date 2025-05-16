@@ -19,7 +19,7 @@ import {
   TertiaryContent,
   TaskCardButtons,
   TaskCardButton,
-} from './styles';
+} from './styled';
 
 import StatusTagDeliver from '../StatusTagDeliver';
 import { TaskStatus } from '../../../types/deliver/TaskStatus';

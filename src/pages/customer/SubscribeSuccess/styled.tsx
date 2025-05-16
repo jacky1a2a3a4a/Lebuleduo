@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { DownloadButton } from '../../../components/common/QRCodeDownloader/styles';
+import { DownloadButton } from '../../../components/common/QRCodeDownloader/styled';
 
 // 最外層容器
 export const PageWrapper = styled.div`

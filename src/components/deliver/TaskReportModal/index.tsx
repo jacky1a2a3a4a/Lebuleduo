@@ -9,7 +9,7 @@ import {
   ReportButtonGroup,
   ReportSubmitButton,
   ReportCancelButton,
-} from './styles';
+} from './styled';
 
 interface TaskReportModalProps {
   isOpen: boolean;

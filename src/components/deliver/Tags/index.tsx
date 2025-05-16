@@ -3,7 +3,7 @@ import {
   TaskCategoryWrapper,
   TaskCategoryContainer,
   CategoryTab,
-} from './styles';
+} from './styled';
 
 interface CategoryTagsProps {
   topPosition?: number;

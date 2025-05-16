@@ -7,7 +7,7 @@ import {
   FooterNavLink,
   IconContainer,
   IconText,
-} from './styles';
+} from './styled';
 
 export type FooterNavItem = {
   icon: IconType;

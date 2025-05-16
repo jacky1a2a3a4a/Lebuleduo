@@ -5,7 +5,7 @@ import {
   InputGroup,
   Input,
   QRContainer,
-} from './styles';
+} from './styled';
 
 import QRCodeGenerator from '../QRCodeGenerator';
 

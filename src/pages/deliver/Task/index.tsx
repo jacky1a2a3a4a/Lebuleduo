@@ -22,7 +22,7 @@ import {
   OngoingTaskTitle,
   TaskCardsSection,
   TaskCardsContainer,
-} from './styles';
+} from './styled';
 import {
   ApiTask,
   TaskItem,
@@ -51,7 +51,6 @@ function Task() {
   const deliverContainerRef = useRef<HTMLDivElement>(null);
   const [topPosition, setTopPosition] = useState(TOP_OFFSET);
 
-  // API 資料的狀態
   const [isLoading, setIsLoading] = useState(false); // 是否正在載入
   const [error, setError] = useState<string | null>(null); // 錯誤訊息
   const [driverInfo, setDriverInfo] = useState<DriverData | null>(null); // 汪汪員資訊

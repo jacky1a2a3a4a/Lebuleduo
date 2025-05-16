@@ -9,7 +9,7 @@ import {
   ShutterTop,
   ShutterBottom,
   ScannerFrame,
-} from './styles';
+} from './styled';
 
 // QRScanner 元件屬性
 interface QRScannerProps {
