@@ -126,7 +126,7 @@ function OrderDetail() {
   return (
     <OrderDetailContainer>
       {/* navbar */}
-      <OrderNavHeader title="訂單詳情" orderNumber={orderData.OrderNumber} />
+      <OrderNavHeader title="方案詳情" orderNumber={orderData.OrderNumber} />
 
       <ContentArea>
         {/* 訂單卡片 */}
