@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import GlobalStyles from '../styles/GlobalStyles';
+import GlobalStyles from '../styles/GlobalStyles.ts';
 
 import DeliverHeader from '../components/deliver/Header';
 import DeliverFooter from '../components/deliver/Footer';

@@ -14,14 +14,14 @@ export const PageWrapper = styled.div`
   height: 100vh;
   max-width: 480px;
   margin: 0 auto;
-  background-color: var(--color-gray-0);
+  background-color: ${({ theme }) => theme.colors.gray[0]};
 `;
 
 // 可滾動的內容區域
 export const ScrollableContent = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
 
   &::-webkit-scrollbar {
     display: none;
@@ -30,14 +30,14 @@ export const ScrollableContent = styled.div`
 
 // 錯誤訊息
 export const ErrorMessage = styled.div`
-  color: var(--color-red-500);
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-sm);
+  color: ${({ theme }) => theme.colors.red[500]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 區段標題 模板
 export const SectionTitle = styled.div`
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -45,29 +45,29 @@ export const SectionTitle = styled.div`
 
 // 區段主標題 模板
 export const SectionMainTitle = styled.h2`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  margin-bottom: ${({ theme }) => theme.spacing['2xs']};
 `;
 
 // 區段副標題 模板
 export const SectionSubtitle = styled.p`
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-gray-400);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  color: ${({ theme }) => theme.colors.gray[400]};
 `;
 
 // 表單區段
 export const FormSection = styled.div`
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  padding: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 // 表單組
 export const FormGroup = styled.div`
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 
   &:last-child {
     margin-bottom: 0;
@@ -77,30 +77,30 @@ export const FormGroup = styled.div`
 // 輸入標籤
 export const InputLabel = styled.label`
   display: block;
-  font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-sm);
-  color: var(--color-gray-600);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  color: ${({ theme }) => theme.colors.gray[600]};
 `;
 
 // 樣式化輸入框
 export const StyledInput = styled.input<StyledProps>`
   width: 100%;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid
-    ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-md);
+    ${({ $error, theme }) =>
+      $error ? theme.colors.red[500] : theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
 
   &::placeholder {
-    color: var(--color-gray-400);
-    font-size: var(--font-size-sm);
+    color: ${({ theme }) => theme.colors.gray[400]};
+    font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   }
 
   &:focus {
     outline: 1px solid
-      ${(props) =>
-        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
+      ${({ $error, theme }) =>
+        $error ? theme.colors.red[500] : theme.colors.gray[400]};
     outline-offset: 0px;
   }
 `;
@@ -108,24 +108,24 @@ export const StyledInput = styled.input<StyledProps>`
 // 樣式化文本區域
 export const StyledTextarea = styled.textarea<StyledProps>`
   width: 100%;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid
-    ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
+    ${({ $error, theme }) =>
+      $error ? theme.colors.red[500] : theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
   min-height: 100px;
   resize: none;
 
   &::placeholder {
-    color: var(--color-gray-400);
-    font-size: var(--font-size-sm);
+    color: ${({ theme }) => theme.colors.gray[400]};
+    font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   }
 
   &:focus {
     outline: 1px solid
-      ${(props) =>
-        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
+      ${({ $error, theme }) =>
+        $error ? theme.colors.red[500] : theme.colors.gray[400]};
     outline-offset: 0px;
   }
 `;
@@ -134,19 +134,19 @@ export const StyledTextarea = styled.textarea<StyledProps>`
 export const DeliveryOptions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 // 收貨方式選項
 export const DeliveryOption = styled.div<StyledProps>`
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid
-    ${(props) =>
-      props.$active ? 'var(--color-gray-400)' : 'var(--color-gray-300)'};
-  border-radius: var(--border-radius-md);
+    ${({ $active, theme }) =>
+      $active ? theme.colors.gray[400] : theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
 `;
 
@@ -156,8 +156,8 @@ export const RadioButton = styled.div<StyledProps>`
   height: 20px;
   border-radius: 50%;
   border: 2px solid
-    ${(props) =>
-      props.$active ? 'var(--color-gray-600)' : 'var(--color-gray-300)'};
+    ${({ $active, theme }) =>
+      $active ? theme.colors.gray[600] : theme.colors.gray[300]};
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -168,8 +168,8 @@ export const RadioButton = styled.div<StyledProps>`
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: var(--color-gray-600);
-    display: ${(props) => (props.$active ? 'block' : 'none')};
+    background-color: ${({ theme }) => theme.colors.gray[600]};
+    display: ${({ $active }) => ($active ? 'block' : 'none')};
   }
 `;
 
@@ -182,19 +182,19 @@ export const DeliveryOptionContent = styled.div`
 
 // 收貨方式文本容器
 export const DeliveryOptionText = styled.div`
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 收貨方式標題
 export const DeliveryOptionTitle = styled.div`
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-xs);
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  margin-bottom: ${({ theme }) => theme.spacing['2xs']};
 `;
 
 // 收貨方式描述
 export const DeliveryOptionDescription = styled.div`
-  font-size: var(--font-size-xs);
-  color: var(--color-gray-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[500]};
   line-height: 1.4;
 `;
 
@@ -209,7 +209,7 @@ export const DeliveryOptionImageContainer = styled.div`
 export const DeliveryOptionImages = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 // 照片項目容器
@@ -217,7 +217,7 @@ export const DeliveryOptionImage = styled.div`
   position: relative;
   width: 100px;
   height: 125px;
-  border-radius: var(--border-radius-xl);
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
 `;
 

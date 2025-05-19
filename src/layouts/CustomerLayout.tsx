@@ -1,7 +1,7 @@
 //CustomerLayout 顧客頁面佈局
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import GlobalStyles from '../styles/GlobalStyles';
+import GlobalStyles from '../styles/GlobalStyles.ts';
 
 import CustomerHeader from '../components/customer/Header';
 import CustomerFooter from '../components/customer/Footer';

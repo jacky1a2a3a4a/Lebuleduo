@@ -4,34 +4,34 @@ import styled from 'styled-components';
 export const ErrorMessage = styled.div`
   text-align: center;
   padding: 2rem;
-  font-size: var(--font-size-md);
-  color: red;
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  color: ${({ theme }) => theme.colors.red[500]};
 `;
 
 // 空訊息
 export const EmptyMessage = styled.div`
   text-align: center;
   padding: 2rem;
-  font-size: var(--font-size-md);
-  color: var(--color-gray-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  color: ${({ theme }) => theme.colors.gray[500]};
 `;
 
 // 頁面容器
 export const OrderDetailContainer = styled.div`
-  background-color: var(--color-primary);
+  background-color: ${({ theme }) => theme.colors.primary.main};
   display: flex;
   flex-direction: column;
   position: relative;
   margin: 0 auto;
-  width: var(--mobile-min-width);
+  width: ${({ theme }) => theme.breakpoints.mobile};
   height: 100vh;
   overflow: hidden;
 `;
 
 // 導航欄
 export const NavHeader = styled.div`
-  color: var(--color-white);
-  padding: var(--spacing-md);
+  color: ${({ theme }) => theme.colors.white};
+  padding: ${({ theme }) => theme.spacing.md};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,12 +44,12 @@ export const BackButton = styled.button`
   cursor: pointer;
   display: flex;
   align-items: center;
-  font-size: var(--font-size-xl);
-  padding: var(--spacing-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
+  padding: ${({ theme }) => theme.spacing['2xs']};
   border-radius: 50%;
 
   &:hover {
-    background-color: var(--color-gray-100);
+    background-color: ${({ theme }) => theme.colors.gray[100]};
   }
 
   &:active {
@@ -59,13 +59,13 @@ export const BackButton = styled.button`
 
 // 頁面標題
 export const PageTitle = styled.h1`
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 export const OrderID = styled.h2`
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
 `;
 
 // ===內容區域 最外層容器
@@ -79,12 +79,12 @@ export const ContentArea = styled.div`
 
 // 訂單卡片
 export const OrderCard = styled.div`
-  background-color: var(--color-gray-0);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--card-shadow);
-  padding: var(--spacing-md);
-  margin: 0 var(--spacing-md) var(--spacing-md);
+  background-color: ${({ theme }) => theme.colors.gray[0]};
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: ${({ theme }) => theme.shadows.card};
+  padding: ${({ theme }) => theme.spacing.md};
+  margin: 0 ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.md};
 `;
 
 // 訂單卡片頭部
@@ -92,32 +92,32 @@ export const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 // 訂單標題
 export const OrderTitle = styled.h2`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 訂單卡片頭部編輯按鈕
 export const CardHeaderEditButtons = styled.div`
-  color: var(--color-primary);
+  color: ${({ theme }) => theme.colors.primary.main};
   display: flex;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 編輯按鈕
 export const Button = styled.button`
   cursor: pointer;
-  font-size: var(--font-size-xl);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
 `;
 
 // 訂單照片區域
 export const OrderPhotoArea = styled.div`
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 照片容器
@@ -125,14 +125,14 @@ export const PhotoContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
   width: 100%;
 `;
 
 // 單張照片容器
 export const SinglePhotoContainer = styled.div`
-  background-color: var(--color-gray-200);
-  border-radius: var(--border-radius-lg);
+  background-color: ${({ theme }) => theme.colors.gray[200]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 25%;
   overflow: hidden;
   aspect-ratio: 3/4;
@@ -147,14 +147,14 @@ export const Photo = styled.img`
 
 // 無照片時的佔位元素
 export const NoPhotoPlaceholder = styled.div`
-  background-color: var(--color-neutral-300);
-  color: var(--color-gray-400);
+  background-color: ${({ theme }) => theme.colors.neutral[300]};
+  color: ${({ theme }) => theme.colors.gray[400]};
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
-  font-size: var(--font-size-xl);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
 `;
 
 // 訂單詳情列表
@@ -167,28 +167,28 @@ export const DetailList = styled.div`
 export const DetailItem = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: ${({ theme }) => theme.spacing['2xs']};
 `;
 
 // 收運 詳情標籤
 export const DetailLabel = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-xs);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  margin-bottom: ${({ theme }) => theme.spacing['2xs']};
 `;
 
 // 收運 詳情值
 export const DetailValue = styled.div`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // === 收運列表區塊 最外層大容器 ===
 export const OrderListSection = styled.div`
-  background-color: var(--color-background-secondary);
-  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-  padding: var(--spacing-12);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.lg} ${({ theme }) => theme.borderRadius.lg} 0 0;
+  padding: ${({ theme }) => theme.spacing[12]};
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -202,7 +202,7 @@ export const TabContent = styled.div`
   overflow-y: auto;
   flex: 1;
   height: 100%;
-  padding-bottom: var(--spacing-md);
+  padding-bottom: ${({ theme }) => theme.spacing.md};
 
   &::-webkit-scrollbar {
     display: none;
@@ -213,9 +213,9 @@ export const TabContent = styled.div`
 export const OrderList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-12);
+  gap: ${({ theme }) => theme.spacing[12]};
   width: 100%;
-  padding: 0 var(--spacing-xs);
+  padding: 0 ${({ theme }) => theme.spacing['2xs']};
 `;
 
 // 收運列表標題區塊
@@ -223,20 +223,20 @@ export const OrderListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: var(--spacing-sm);
-  padding: var(--spacing-sm) 0;
+  margin: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.sm} 0;
 `;
 
 // 收運列表標題
 export const OrderListTitle = styled.h2`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 // 收運次數
 export const OrderListCal = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;

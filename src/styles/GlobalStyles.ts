@@ -1,7 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
 
-//推薦使用theme provider
-
 const GlobalStyles = createGlobalStyle`
 :root {
   /* Indigo */
