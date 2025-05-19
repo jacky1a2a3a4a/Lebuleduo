@@ -7,12 +7,13 @@ import {
   FooterNavLink,
   IconContainer,
   IconText,
-} from './styles';
+} from './styled';
 
 export type FooterNavItem = {
   icon: IconType;
   label: string;
   path: string;
+  disabled?: boolean;
 };
 
 interface FooterProps {
@@ -28,9 +29,10 @@ function CommonFooter({ navItems }: FooterProps) {
         {navItems.map((item, index) => (
           <ListItem key={index}>
             <FooterNavLink
-              to={item.path}
+              to={item.disabled ? '#' : item.path}
               end={item.path === '/customer' || item.path === '/deliver'}
               $active={location.pathname.startsWith(item.path)}
+              $disabled={item.disabled}
             >
               <IconContainer>{<item.icon />}</IconContainer>
               <IconText>{item.label}</IconText>

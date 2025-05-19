@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { IoLocationSharp } from 'react-icons/io5';
 import { IoIosArrowDown } from 'react-icons/io';
@@ -107,56 +107,56 @@ const AddressAutocomplete = ({
   }, [isLoaded, loadError]);
 
   // 使用Google Maps Places API搜索地址
-  const searchAddresses = (query: string) => {
-    if (!isLoaded || loadError || !autocompleteServiceRef.current) {
-      return;
-    }
+  const searchAddresses = useCallback(
+    (query: string) => {
+      if (!isLoaded || loadError || !autocompleteServiceRef.current) {
+        return;
+      }
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    // 設置搜索參數，限制在台灣地區
-    const searchOptions: google.maps.places.AutocompletionRequest = {
-      input: query,
-      componentRestrictions: { country: 'tw' }, // 限制在台灣
-      types: ['address'], // 只搜索地址
-    };
+      // 設置搜索參數，限制在台灣地區
+      const searchOptions: google.maps.places.AutocompletionRequest = {
+        input: query,
+        componentRestrictions: { country: 'tw' }, // 限制在台灣
+        types: ['address'], // 只搜索地址
+      };
 
-    // 調用Google Places Autocomplete API
-    autocompleteServiceRef.current.getPlacePredictions(
-      searchOptions,
-      (predictions, status) => {
-        if (
-          status === google.maps.places.PlacesServiceStatus.OK &&
-          predictions
-        ) {
-          const formattedSuggestions = predictions.map((prediction) => ({
-            description: prediction.description,
-            placeId: prediction.place_id,
-          }));
-          setSuggestions(formattedSuggestions);
-        } else {
-          setSuggestions([]);
-        }
-        setIsLoading(false);
-      },
-    );
-  };
+      // 調用Google Places Autocomplete API
+      autocompleteServiceRef.current.getPlacePredictions(
+        searchOptions,
+        (predictions, status) => {
+          if (
+            status === google.maps.places.PlacesServiceStatus.OK &&
+            predictions
+          ) {
+            const formattedSuggestions = predictions.map((prediction) => ({
+              description: prediction.description,
+              placeId: prediction.place_id,
+            }));
+            setSuggestions(formattedSuggestions);
+          } else {
+            setSuggestions([]);
+          }
+          setIsLoading(false);
+        },
+      );
+    },
+    [isLoaded, loadError],
+  );
 
   // 當輸入值改變時觸發搜尋
   useEffect(() => {
-    if (value.trim().length > 0) {
-      // 使用debounce減少API調用次數
+    if (value.trim().length > 0 && isOpen) {
       const debounce = setTimeout(() => {
         searchAddresses(value);
       }, 500);
 
-      setIsOpen(true);
       return () => clearTimeout(debounce);
     } else {
       setSuggestions([]);
-      setIsOpen(false);
     }
-  }, [value]);
+  }, [value, isOpen, searchAddresses]);
 
   // 點擊外部時關閉下拉選單
   useEffect(() => {
@@ -318,7 +318,7 @@ const StyledInputWithIcon = styled.input<{ $error?: boolean }>`
     ${(props) =>
       props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
   border-radius: var(--border-radius-round);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
 
   &::placeholder {
     color: var(--color-gray-400);

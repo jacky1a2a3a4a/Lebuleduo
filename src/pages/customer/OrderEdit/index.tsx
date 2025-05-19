@@ -31,22 +31,16 @@ import {
   SelectGroup,
   SelectIcon,
   SuccessMessage,
+  SaveButton,
 } from './styled';
+
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 import AddressAutocomplete from '../SubscribeData/AddressAutocomplete';
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import CommonLoading from '../../../components/common/CommonLoading';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 
 // 虛擬機URL
-const BASE_URL = 'https://lebuleduo.rocket-coding.com';
-
-// 圖片類型
-interface Image {
-  id: string;
-  url: string;
-  file: File | null;
-  isOriginal: boolean;
-  originalPath?: string;
-}
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // 訂單資料類型
 interface OrderData {
@@ -63,8 +57,18 @@ interface OrderData {
   OrderName: string;
   OrderPhone: string;
   Addresses: string;
-  OrderImageUrl: string[];
+  OrderImages: {
+    PhotoID: number;
+    OrderImageUrl: string;
+  }[];
   Notes: string;
+}
+
+// 圖片類型
+interface Image {
+  PhotoID?: number;
+  OrderImageUrl: string;
+  file?: File | null;
 }
 
 // ===組件本體===
@@ -72,10 +76,8 @@ function OrderEdit() {
   const { orderId } = useParams<{ orderId: string }>();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [deletedOriginalImages, setDeletedOriginalImages] = useState<string[]>(
-    [],
-  );
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [deletedPhotoIds, setDeletedPhotoIds] = useState<number[]>([]);
   const navigate = useNavigate();
 
   // 參考元素用於滾動
@@ -131,16 +133,12 @@ function OrderEdit() {
       setNotes(orderData.Notes);
 
       // 初始化圖片列表
-      if (orderData.OrderImageUrl && orderData.OrderImageUrl.length > 0) {
-        const initialImages = orderData.OrderImageUrl.map(
-          (photoUrl, index) => ({
-            id: `original-${index}`,
-            url: `${BASE_URL}${photoUrl}`,
-            file: null,
-            isOriginal: true,
-            originalPath: photoUrl,
-          }),
-        );
+      if (orderData.OrderImages && orderData.OrderImages.length > 0) {
+        const initialImages = orderData.OrderImages.map((image) => ({
+          PhotoID: image.PhotoID,
+          OrderImageUrl: `${BASE_URL}${image.OrderImageUrl}`,
+          file: null,
+        }));
         setImages(initialImages);
       }
     }
@@ -148,7 +146,7 @@ function OrderEdit() {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage />;
+    return <AnimationLoading />;
   }
 
   // 無法載入訂單資料
@@ -174,8 +172,8 @@ function OrderEdit() {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setPhotoError('*圖片大小不得超過5MB');
+    if (file.size > 6 * 1024 * 1024) {
+      setPhotoError('*圖片大小不得超過6MB');
       return;
     }
 
@@ -188,10 +186,8 @@ function OrderEdit() {
 
     // 創建新的圖片物件
     const newImage: Image = {
-      id: `new-${Date.now()}`,
-      url: URL.createObjectURL(file),
+      OrderImageUrl: URL.createObjectURL(file),
       file,
-      isOriginal: false,
     };
 
     setImages((prev) => [...prev, newImage]);
@@ -199,21 +195,19 @@ function OrderEdit() {
   };
 
   // 處理照片刪除
-  const handleDeletePhoto = (id: string) => {
+  const handleDeletePhoto = (PhotoID: number) => {
     setImages((prev) => {
-      const imageToDelete = prev.find((img) => img.id === id);
+      const imageToDelete = prev.find((img) => img.PhotoID === PhotoID);
       if (!imageToDelete) return prev;
 
-      // 如果是原始照片，添加到已刪除列表
-      if (imageToDelete.isOriginal && imageToDelete.originalPath) {
-        setDeletedOriginalImages((prev) => [
-          ...prev,
-          imageToDelete.originalPath!,
-        ]);
+      // 如果照片有 PhotoID，表示是從後端獲取的，需要記錄到刪除列表
+      if (PhotoID) {
+        setDeletedPhotoIds((prev) => [...prev, PhotoID]);
       }
 
-      return prev.filter((img) => img.id !== id);
+      return prev.filter((img) => img.PhotoID !== PhotoID);
     });
+    console.log('刪除的照片ID', PhotoID);
   };
 
   // 開啟文件選擇器
@@ -333,35 +327,18 @@ function OrderEdit() {
 
       // 處理圖片上傳
       if (deliveryMethod === 'fixedpoint') {
-        // 將所有圖片都當作新圖片上傳
-        const allImages = images.filter((img) => img.file);
-        console.log(
-          '所有要上傳的照片:',
-          allImages.map((img) => ({
-            id: img.id,
-            fileName: img.file?.name,
-            size: img.file?.size,
-            isOriginal: img.isOriginal,
-          })),
-        );
-
-        allImages.forEach((image) => {
+        // 上傳新圖片
+        const newImages = images.filter((img) => img.file);
+        newImages.forEach((image) => {
           if (image.file) {
             formData.append('OrderImageUrl', image.file);
           }
         });
 
-        // 添加已刪除的圖片路徑
-        console.log('已刪除的照片路徑:', deletedOriginalImages);
-        deletedOriginalImages.forEach((path) => {
-          formData.append('DeletedImageUrls', path);
+        // 添加要刪除的圖片 ID
+        deletedPhotoIds.forEach((photoId) => {
+          formData.append('DeletePhotos', photoId.toString());
         });
-
-        // 顯示最終的 FormData 內容
-        console.log('FormData 內容:');
-        for (const [key, value] of formData.entries()) {
-          console.log(`${key}:`, value);
-        }
       }
 
       // 發送 PUT 請求
@@ -397,11 +374,7 @@ function OrderEdit() {
       />
 
       <ContentArea>
-        {showSuccessMessage && (
-          <SuccessMessage>修改成功！將在3秒後返回上一頁...</SuccessMessage>
-        )}
-
-        {/* 方案卡片 */}
+        {/* 訂單卡片 */}
         <OrderCard>
           <CardHeader>
             <OrderTitle>
@@ -411,7 +384,7 @@ function OrderEdit() {
 
           <DetailList>
             <DetailItem>
-              <DetailLabel>方案期間</DetailLabel>
+              <DetailLabel>訂單期間</DetailLabel>
               <DetailValue>
                 {orderData.StartDate} - {orderData.EndDate}
               </DetailValue>
@@ -501,14 +474,16 @@ function OrderEdit() {
                   <DeliveryOptionImageContainer>
                     <DeliveryOptionImages>
                       {images.map((image) => (
-                        <DeliveryOptionImage key={image.id}>
+                        <DeliveryOptionImage key={image.PhotoID}>
                           <DeliveryOptionImagePhoto
-                            style={{ backgroundImage: `url(${image.url})` }}
+                            style={{
+                              backgroundImage: `url(${image.OrderImageUrl})`,
+                            }}
                           />
                           <DeleteImageButton
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleDeletePhoto(image.id);
+                              handleDeletePhoto(image.PhotoID || 0);
                             }}
                           >
                             <IoMdClose />
@@ -539,7 +514,7 @@ function OrderEdit() {
                     {photoError && <ErrorMessage>{photoError}</ErrorMessage>}
 
                     <PhotoInstructions>
-                      *請務必上傳兩張固定點照片，每張不超過5MB
+                      *請務必上傳兩張固定點照片，每張不超過6MB
                     </PhotoInstructions>
                   </DeliveryOptionImageContainer>
                 </FormGroup>
@@ -561,17 +536,12 @@ function OrderEdit() {
             </FormSection>
 
             <FormGroup>
-              <StyledInput
-                type="button"
-                value="儲存修改"
-                onClick={handleSave}
-                disabled={!isFormValid()}
-                style={{
-                  backgroundColor: isFormValid() ? '#1890ff' : '#d9d9d9',
-                  color: 'white',
-                  cursor: isFormValid() ? 'pointer' : 'not-allowed',
-                }}
-              />
+              {showSuccessMessage && (
+                <CommonLoading text="修改成功，即將回到訂單詳情" />
+              )}
+              <SaveButton onClick={handleSave} disabled={!isFormValid()}>
+                儲存修改
+              </SaveButton>
             </FormGroup>
           </OrderListContainer>
         </OrderListSection>

@@ -16,7 +16,7 @@ import {
   DistributeButton,
   FooterButton,
   PanelText,
-} from './styles';
+} from './styled';
 import { AssignmentPanelProps } from './types';
 
 const AssignmentPanel = ({
@@ -54,7 +54,7 @@ const AssignmentPanel = ({
               <DeliverInfo>
                 <p>{deliver.LineName}</p>
                 <span>
-                  目前任務數:{' '}
+                  目前已有的任務數:{' '}
                   <span className="task-count">{deliver.TodayTaskCount}</span>
                 </span>
               </DeliverInfo>

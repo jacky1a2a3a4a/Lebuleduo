@@ -4,7 +4,7 @@ export interface SubscriptionData {
   planId: number;
   planName: string;
   planPeople: string;
-  planKg: number;
+  kg: number;
   liter: number;
   planDescription: string;
   price: number;

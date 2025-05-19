@@ -17,10 +17,10 @@ import {
   DeliveryOptionText,
   DeliveryOptionTitle,
   DeliveryOptionDescription,
-} from './styles';
+} from './styled';
 import { SubscriptionData, FixedPointImage } from './types';
 
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
 import AddressAutocomplete from './AddressAutocomplete';
 import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
@@ -76,7 +76,7 @@ const SubscribeData = () => {
 
   // 如果沒有資料，顯示載入中
   if (isLoading) {
-    return <LoadingMessage size="normal" animationType="bounce" />;
+    return <AnimationLoading size="normal" animationType="bounce" />;
   }
 
   // 如果沒有訂閱資料，返回上一頁
@@ -91,7 +91,7 @@ const SubscribeData = () => {
     planName,
     liter,
     price,
-    planKg,
+    kg,
     planPeople,
     planDescription,
     frequency,
@@ -195,7 +195,7 @@ const SubscribeData = () => {
       planName,
       liter,
       price,
-      planKg,
+      kg,
       planPeople,
       planDescription,
       frequency,
@@ -314,9 +314,9 @@ const SubscribeData = () => {
             </DeliveryOption>
 
             <FormGroup>
-              <InputLabel>地點備註</InputLabel>
+              <InputLabel>放置處說明</InputLabel>
               <StyledTextarea
-                placeholder="請備註放置固定點或面交收運的詳細位置"
+                placeholder="請說明放置固定點或面交收運的詳細位置"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 onBlur={() => validateNotes(notes)}

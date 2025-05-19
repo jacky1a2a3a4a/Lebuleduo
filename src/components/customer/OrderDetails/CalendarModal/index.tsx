@@ -10,7 +10,6 @@ import {
   ModalTitle,
   ModalContent,
   DateInfo,
-  DateInfoTitle,
   DateLabel,
   DateValue,
   NoticeText,
@@ -222,14 +221,18 @@ function ModifyDateModal({
               </CalendarContainer>
 
               <DateInfo>
-                <DateInfoTitle>變更內容</DateInfoTitle>
                 <DateInfoContent>
                   <DateInfoItem>
-                    <DateLabel>原訂日期：</DateLabel>
+                    <DateLabel $scheduled>其他預定</DateLabel>
+                  </DateInfoItem>
+                  <DateInfoItem>
+                    <DateLabel $tertiary>原訂日期</DateLabel>
                     <DateValue>{orderDetail.OriginalDate}</DateValue>
                   </DateInfoItem>
                   <DateInfoItem>
-                    <DateLabel $bold>修改日期：</DateLabel>
+                    <DateLabel $bold $primary>
+                      修改日期
+                    </DateLabel>
                     <DateValue $bold>
                       {selectedDate
                         ? formatDate(selectedDate)
@@ -240,7 +243,7 @@ function ModifyDateModal({
               </DateInfo>
 
               <NoticeText>
-                ※ 溫興提醒：
+                ※ 溫馨提醒：
                 <br />• 可選擇的日期範圍為 今天 到 方案結束日
                 <br />• 已排定的日期無法選擇
                 <br />• 修改後無法再更改

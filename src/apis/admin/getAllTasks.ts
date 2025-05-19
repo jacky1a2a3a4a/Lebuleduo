@@ -11,6 +11,7 @@ interface Order {
   DriverTimeStart: string | null;
   DriverTimeEnd: string | null;
   ResponsibleDriver: string;
+  ServiceDate: string;
 }
 
 interface Amount {
@@ -40,7 +41,7 @@ interface ApiResponse {
 export const getAllTasks = async (): Promise<ApiResponse> => {
   try {
     const tomorrow = getTomorrowDate();
-    const formattedDate = getFormattedDateDash(tomorrow.toISOString());
+    const formattedDate = getFormattedDateDash(tomorrow);
 
     const response = await axios.get<ApiResponse>(
       `/api/GET/Admin/OrderDetail/Pending?date=${formattedDate}`,

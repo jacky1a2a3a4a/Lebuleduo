@@ -12,7 +12,7 @@ import Footer, { FooterNavItem } from '../../common/Footer';
 const customerFooterNavItems: FooterNavItem[] = [
   {
     icon: MdAssignment,
-    label: '我的訂單',
+    label: '我的方案',
     path: '/customer',
   },
   {
@@ -24,11 +24,13 @@ const customerFooterNavItems: FooterNavItem[] = [
     icon: MdFace,
     label: '會員資訊',
     path: '/customer/account',
+    disabled: true,
   },
   {
     icon: MdOutlineSupportAgent,
     label: '聯絡我們',
     path: '/customer/contact-us',
+    disabled: true,
   },
 ];
 

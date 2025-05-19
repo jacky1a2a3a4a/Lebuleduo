@@ -7,6 +7,7 @@ export interface StyledProps {
   $progress?: number; // 進度百分比
   $position?: number; // 位置數值
   $primary?: boolean; // 是否為主色調
+  $isUnscheduled?: boolean; // 是否為未排定狀態
 }
 
 // 收運步驟類型

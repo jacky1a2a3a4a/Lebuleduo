@@ -12,7 +12,7 @@ import OrderTaskStatusRecordDetail from '../../../../components/customer/OrderTa
 import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTaskStatusRecord/Status/index.tsx'; //收運紀錄狀態
 import OrderTaskStatusRecordPhotos from '../../../../components/customer/OrderTaskStatusRecord/Photos/index.tsx'; //收運紀錄照片
 import AdditionalFee from '../../../../components/customer/OrderTaskStatusRecord/AdditionalFee'; //補繳金額
-import Loading from '../../../../components/common/LoadingMessage'; //加載中
+import AnimationLoading from '../../../../components/common/AnimationLoading'; //加載中
 
 // 訂單詳情
 interface OrderDetail {
@@ -108,7 +108,7 @@ function FinishedTask() {
 
   // 加載中
   if (loading) {
-    return <Loading />;
+    return <AnimationLoading />;
   }
 
   // 錯誤

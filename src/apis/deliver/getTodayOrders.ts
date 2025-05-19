@@ -8,7 +8,7 @@ import axios from 'axios';
 import { getTodayDate } from '../../utils/getDate';
 import { getFormattedDateDash } from '../../utils/formatDate';
 
-export const getTodayOrders = async (userId: string) => {
+export const getTodayOrders = async (userId: number) => {
   try {
     const response = await axios.get(
       `api/GET/driver/day/${userId}/${getFormattedDateDash(getTodayDate())}`,

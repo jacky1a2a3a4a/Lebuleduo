@@ -48,7 +48,7 @@ export const DeliverContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
 
-  padding: var(--spacing-md);
+  padding: 0 var(--spacing-md) var(--spacing-md);
 `;
 
 // === 外送員卡片 容器===
@@ -63,7 +63,7 @@ export const DeliverCard = styled.div`
   justify-content: center;
   align-items: center;
 
-  padding: var(--spacing-20) var(--spacing-md);
+  padding: var(--spacing-md);
 `;
 
 // 外送員卡片 問候語容器
@@ -78,14 +78,21 @@ export const DeliverGreeting = styled.div`
 
 // 外送員卡片 問候語
 export const TaskGreetingItem = styled.div`
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
+  display: flex;
+  align-items: center;
+
+  p {
+    font-weight: var(--font-weight-bold);
+    margin-left: var(--spacing-xs);
+  }
 `;
 
 // 外送員卡片 外送員編號
 export const TaskId = styled.div`
   color: var(--color-text-tertiary);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-3xs);
 `;
 
 // 外送員卡片 本日收運進度
@@ -312,6 +319,9 @@ export const TaskCardsContainer = styled.div`
   height: calc(100% - 60px);
   overflow-y: auto;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   -webkit-overflow-scrolling: touch;
   padding-bottom: var(--spacing-2xl); //底部預留空間以免卡片被遮住
 

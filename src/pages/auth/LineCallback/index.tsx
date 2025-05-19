@@ -5,12 +5,14 @@ import { validateLineState, getLoginRole } from '../../../configs/lineConfig';
 import axios from 'axios';
 import {
   CallbackContainer,
-  LoadingSpinner,
+  // LoadingSpinner,
   Message,
   ErrorMessage,
-  DebugSection,
-  DebugInfo,
-} from './styles';
+  // DebugSection,
+  // DebugInfo,
+} from './styled';
+
+import AnimationLoading from '@/components/common/AnimationLoading';
 
 const LineCallback = () => {
   const [loading, setLoading] = useState(true); // 頁面載入狀態
@@ -75,8 +77,9 @@ const LineCallback = () => {
           throw new Error('無效的 state 參數，可能存在安全風險');
         }
 
-        // 從 localStorage 獲取角色
+        // 從 localStorage 獲取角色和用戶ID
         const userRole = getLoginRole();
+        const usersId = localStorage.getItem('UsersID');
 
         if (!userRole) {
           throw new Error('無法確定用戶角色');
@@ -84,12 +87,14 @@ const LineCallback = () => {
 
         // 打印要發送的 code 值
         console.log('要發送的 code 值:', code);
+        console.log('要發送的 UsersID:', usersId);
 
         try {
           // 將 code 發送給後端以換取 token
           console.log('發送請求的參數:', {
             code,
             role: userRole,
+            usersId,
           });
 
           const response = await axios.post(
@@ -97,6 +102,7 @@ const LineCallback = () => {
             {
               code,
               role: userRole,
+              usersId,
             },
             {
               headers: {
@@ -115,12 +121,33 @@ const LineCallback = () => {
           }
 
           // 處理後端回傳的資料
-          const { token, profileData, roleName, UsersID } = response.data;
+          const {
+            token,
+            profileData,
+            roleName,
+            usersId: newUsersId,
+          } = response.data;
+
+          console.log('後端返回的原始資料:', response.data);
+          console.log('後端返回的資料:', {
+            token,
+            profileData,
+            roleName,
+            usersId: newUsersId,
+          });
 
           // 將 token 和用戶資料儲存到 localStorage
           localStorage.setItem('auth_token', token);
           localStorage.setItem('user_role', roleName);
-          localStorage.setItem('UsersID', UsersID); //後端設計的使用者ID
+
+          // 只有在後端返回有效的 UsersID 時才更新
+          if (newUsersId) {
+            console.log('更新 UsersID:', newUsersId);
+            localStorage.setItem('UsersID', newUsersId);
+          } else {
+            console.warn('後端未返回有效的 UsersID');
+          }
+
           localStorage.setItem(
             'user_data',
             JSON.stringify({
@@ -130,9 +157,16 @@ const LineCallback = () => {
             }),
           );
 
-          // 清除登入相關的 state 資訊
+          // 清除登入相關的 state 資訊，但保留 UsersID
           localStorage.removeItem('line_login_state');
           localStorage.removeItem('line_login_role');
+
+          console.log('登入成功後的 localStorage:', {
+            auth_token: localStorage.getItem('auth_token'),
+            user_role: localStorage.getItem('user_role'),
+            UsersID: localStorage.getItem('UsersID'),
+            user_data: localStorage.getItem('user_data'),
+          });
 
           // 標記為已處理，避免重複請求token，第二次會失敗
           hasProcessed.current = true;
@@ -171,13 +205,26 @@ const LineCallback = () => {
         } else {
           setError('登入過程中發生錯誤');
         }
-
-        // 3 秒後返回登入頁面
-        setTimeout(() => {
-          navigate('/auth/line-login', { replace: true });
-        }, 3000);
-      } finally {
         setLoading(false);
+
+        // 獲取用戶角色
+        const userRole = localStorage.getItem('line_login_role');
+
+        // 立即清除相關的 localStorage 資料
+        localStorage.removeItem('line_login_state');
+        localStorage.removeItem('line_login_role');
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_role');
+        localStorage.removeItem('user_data');
+
+        // 3 秒後根據角色返回對應的登入頁面
+        setTimeout(() => {
+          if (userRole === 'deliver') {
+            navigate('/auth/line-login-deliver', { replace: true });
+          } else {
+            navigate('/auth/line-login-customer', { replace: true });
+          }
+        }, 3000);
       }
     };
 
@@ -188,8 +235,9 @@ const LineCallback = () => {
     <CallbackContainer>
       {loading && (
         <>
-          <LoadingSpinner />
-          <Message>正在處理 LINE 登入，請稍候...</Message>
+          {/* <LoadingSpinner /> */}
+          <AnimationLoading size="normal" loadingText=" " showEllipsis={false} />
+          {/* <Message>正在處理 LINE 登入，請稍候...</Message> */}
         </>
       )}
 
@@ -208,7 +256,8 @@ const LineCallback = () => {
         </>
       )}
 
-      <DebugSection>
+      {/* 除錯資訊 */}
+      {/* <DebugSection>
         <h3>除錯資訊</h3>
         <DebugInfo>
           <div>
@@ -226,7 +275,7 @@ const LineCallback = () => {
             <pre>{JSON.stringify(debugInfo.localStorage, null, 2)}</pre>
           </div>
         </DebugInfo>
-      </DebugSection>
+      </DebugSection> */}
     </CallbackContainer>
   );
 };

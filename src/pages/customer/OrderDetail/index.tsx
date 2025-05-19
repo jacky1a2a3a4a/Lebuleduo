@@ -22,12 +22,12 @@ import {
   DetailLabel,
   DetailValue,
   OrderListSection,
-} from './styles';
+} from './styled';
 
 import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
 
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
-import LoadingMessage from '../../../components/common/LoadingMessage';
+import AnimationLoading from '../../../components/common/AnimationLoading';
 import Modal from '../../../components/common/Modal';
 import QRcodeData from '../../../components/customer/QRcodeData';
 import Tab from '../../../components/customer/OrderDetails/Tab';
@@ -86,7 +86,7 @@ function OrderDetail() {
 
   // 載入中
   if (isLoading) {
-    return <LoadingMessage />;
+    return <AnimationLoading />;
   }
 
   // 錯誤
@@ -126,10 +126,10 @@ function OrderDetail() {
   return (
     <OrderDetailContainer>
       {/* navbar */}
-      <OrderNavHeader title="訂單詳情" orderNumber={orderData.OrderNumber} />
+      <OrderNavHeader title="方案詳情" orderNumber={orderData.OrderNumber} />
 
       <ContentArea>
-        {/* 方案卡片 */}
+        {/* 訂單卡片 */}
         <OrderCard>
           <CardHeader>
             <OrderTitle>
@@ -179,7 +179,7 @@ function OrderDetail() {
 
           <DetailList>
             <DetailItem>
-              <DetailLabel>方案期間</DetailLabel>
+              <DetailLabel>訂單期間</DetailLabel>
               <DetailValue>
                 {orderData.StartDate} - {orderData.EndDate}
               </DetailValue>

@@ -38,6 +38,7 @@ const DELIVER_CONFIG: LineConfig = {
   SCOPE: 'profile openid email',
 };
 
+// config 通常都是靜態資料 function的部分可以拆分到utils
 // 根據角色獲取配置
 export const getLineConfig = (role: 'customer' | 'deliver'): LineConfig => {
   return role === 'customer' ? CUSTOMER_CONFIG : DELIVER_CONFIG;

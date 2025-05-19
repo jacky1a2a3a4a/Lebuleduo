@@ -5,7 +5,7 @@ import {
   ButtonCardTitle,
   ButtonCardSubtitle,
   ButtonCardRadio,
-} from './styles';
+} from './styled';
 
 interface ButtonCardProps extends StyledProps {
   title: string;

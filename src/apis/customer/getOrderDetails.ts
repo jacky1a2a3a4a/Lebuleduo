@@ -19,6 +19,10 @@ interface OrderDetailsResponse {
       Status: string;
       DriverTime?: string;
       KG?: string;
+      OrderDetailsNumber?: string;
+      UserNumber?: {
+        Number: string;
+      };
     }>;
   }>;
   message?: string;
@@ -26,14 +30,13 @@ interface OrderDetailsResponse {
 
 export const getOrderDetails = async (userId: string, orderId: string) => {
   try {
-    const response = await axios.get<OrderDetailsResponse>(
-      `/api/GET/user/orders/${userId}/${orderId}`,
-    );
+    const path = `/api/GET/user/orders/${userId}/${orderId}`;
+    const response = await axios.get<OrderDetailsResponse>(path);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || '獲取訂單詳情失敗');
-    }
-    throw new Error('獲取訂單詳情時發生未知錯誤');
+    // if (axios.isAxiosError(error)) {
+    //   throw new Error(error.response?.data?.message || '獲取方案詳情失敗');
+    // }
+    throw new Error('獲取方案詳情時發生未知錯誤');
   }
 };

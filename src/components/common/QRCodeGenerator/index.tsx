@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
-import { canvasStyles, QRCodeContainer, QRCodeDownloadButton } from './styles';
-import logo from '../../../assets/icons/Lebuledou_icon.png';
+import { QRCodeCanvas } from 'qrcode.react';
+import {  QRCodeContainer, QRCodeDownloadButton } from './styled';
+import logo from '../../../assets/icons/icon-Lebuledou.png';
 
 interface QRCodeGeneratorProps {
   data: string | object;
@@ -58,20 +58,12 @@ const QRCodeGenerator = ({
 
   return (
     <QRCodeContainer className={className} data-print-mode={isPrintMode}>
-      <QRCodeSVG
-        value={JSON.stringify(data)}
-        size={isPrintMode ? 200 : size}
-        level={level}
-        includeMargin={includeMargin}
-        imageSettings={imageSettings}
-      />
       <QRCodeCanvas
         id="qr-canvas"
         value={JSON.stringify(data)}
         size={isPrintMode ? 200 : size}
         level={level}
         includeMargin={includeMargin}
-        style={canvasStyles}
         imageSettings={imageSettings}
       />
       {showDownloadButton && !isPrintMode && (

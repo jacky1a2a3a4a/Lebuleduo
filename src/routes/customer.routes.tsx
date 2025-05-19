@@ -6,8 +6,8 @@ import CustomerLayout from '../layouts/CustomerLayout'; //顧客頁面佈局
 //顧客頁面組件
 import MyOrder from '../pages/customer/MyOrder'; //首頁
 import Plan from '../pages/customer/Plan'; //訂閱方案
-import OrderDetail from '../pages/customer/OrderDetail'; //訂單詳情
-import OrderDetailCompleted from '../pages/customer/OrderDetailCompleted'; //已完成訂單詳情
+import OrderDetail from '../pages/customer/OrderDetail'; //方案詳情
+import OrderDetailCompleted from '../pages/customer/OrderDetailCompleted'; //已完成方案詳情
 import OrderEdit from '../pages/customer/OrderEdit'; //訂單編輯
 import Subscribe from '../pages/customer/Subscribe'; //訂閱
 import SubscribeData from '../pages/customer/SubscribeData'; //訂閱資料
@@ -21,7 +21,7 @@ import FinishedTask from '../pages/customer/OrderTaskStatus/FinishedTask'; //已
 import CompletedAbnormalTask from '../pages/customer/OrderTaskStatus/CompletedAbnormalTask'; //已完成異常訂單
 import CompletedFinishedTask from '../pages/customer/OrderTaskStatus/CompletedFinishedTask'; //已完成訂單
 
-import LoadingMessage from '../components/common/LoadingMessage'; //載入中
+import AnimationLoading from '../components/common/AnimationLoading'; //載入中
 
 //臨時頁面
 import ContactUs from '../pages/customer/ContactUs'; //聯絡我們
@@ -38,12 +38,12 @@ export const customerRoutes: RouteConfig[] = [
       { path: '', element: <MyOrder /> },
       { path: 'my-order', element: <MyOrder /> },
       { path: 'Plan', element: <Plan /> },
-      { path: 'account', element: <LoadingMessage /> },
+      { path: 'account', element: <AnimationLoading /> },
       { path: 'contact-us', element: <ContactUs /> },
     ],
   },
   {
-    path: '/customer/order-detail/current/:orderId', //訂單詳情
+    path: '/customer/order-detail/current/:orderId', //方案詳情
     element: (
       <ProtectedRoute role="customer">
         <OrderDetail />
@@ -51,7 +51,7 @@ export const customerRoutes: RouteConfig[] = [
     ),
   },
   {
-    path: '/customer/order-detail/completed/:orderId', //已完成訂單詳情
+    path: '/customer/order-detail/completed/:orderId', //已完成方案詳情
     element: (
       <ProtectedRoute role="customer">
         <OrderDetailCompleted />

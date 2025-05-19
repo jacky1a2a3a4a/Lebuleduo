@@ -19,7 +19,7 @@ export const updateOrderStatus = async (orderId: number, status: number) => {
       OrderStatus: status,
     };
     const response = await axios.put(
-      `api/driver/orders/status/${orderId}`,
+      `/api/driver/orders/status/${orderId}`,
       updateData,
     );
     return response.data;

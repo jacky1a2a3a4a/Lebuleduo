@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { HiBell } from 'react-icons/hi2';
 
 import CommonHeader from '../../common/Header';
-import logo from '../../../assets/logos/logotype-deliver-white.png';
+import logo from '../../../assets/logos/logo-deliver-white.png';
 
 // 鈴鐺容器，控制位置
 const BellContainer = styled.div`
@@ -18,6 +18,7 @@ const BellIcon = styled(HiBell)`
   height: 1.5rem;
   color: var(--color-tertiary);
   cursor: pointer;
+  pointer-events: none;
 
   &:hover {
     color: var(--color-tertiary-hover);

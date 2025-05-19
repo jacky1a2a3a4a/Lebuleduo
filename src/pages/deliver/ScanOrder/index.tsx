@@ -1,9 +1,6 @@
+//Demo測試 所以獲取任務跟掃描任務 都使用明日任務
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
-
-import QRScanner from '../../../components/deliver/QRScanner';
-import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
-import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
 
 import { MdQrCodeScanner } from 'react-icons/md';
 import {
@@ -11,10 +8,20 @@ import {
   ScannerContainer,
   StatusMessage,
   ScanText,
-} from './styles';
+} from './styled';
 import { ApiData, OrderInfo } from './types';
 
-const userId = localStorage.getItem('UsersID');
+import QRScanner from '../../../components/deliver/QRScanner';
+// import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
+import { getSpecificDayOrders } from '../../../apis/deliver/getSpecificDayOrders'; // 獲取特定日期 任務api
+import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
+import { getUsersID } from '../../../utils/getUserLocalData';
+import { getTomorrowDate } from '../../../utils/getDate';
+import { getFormattedDateDash } from '../../../utils/formatDate';
+
+const tomorrow = getFormattedDateDash(getTomorrowDate());
+
+const userId = getUsersID();
 
 function ScanOrder() {
   const navigate = useNavigate();
@@ -31,10 +38,10 @@ function ScanOrder() {
       }
 
       try {
-        const orders = await getTodayOrders(userId); //api獲取今日任務
-        console.log('API 原始資料:', orders);
+        const ordersData = await getSpecificDayOrders(userId, tomorrow); //api獲取明日任務(demo用)
+        console.log('API 原始資料:', ordersData);
 
-        const executingOrder = orders.find(
+        const executingOrder = ordersData.Orders.find(
           (order: ApiData) =>
             order.Status === '前往中' || order.Status === '已抵達',
         );
@@ -59,6 +66,12 @@ function ScanOrder() {
         console.log('掃描到的訂單資料:', orderData);
         setScanError(null);
 
+        // 驗證 QR Code 資料格式
+        if (!orderData.OrderDetailID || !orderData.OrderDetailsNumber) {
+          setScanError('QR Code 格式不正確，缺少必要欄位');
+          return;
+        }
+
         if (!executingOrderData) {
           setScanError(
             `目前沒有進行中的任務\n1. 請點選"今日任務"\n2. 選擇一筆要執行的任務\n3. 點選"確認前往"按鈕`,
@@ -67,11 +80,10 @@ function ScanOrder() {
         }
 
         const currentOrderID = executingOrderData.OrderDetailID;
-        const currentOrderCustomerNumber = executingOrderData.CustomerNumber;
         const currentOrderNumber = executingOrderData.OrderDetailsNumber;
         const currentOrderStatus = executingOrderData.Status;
 
-        // 驗證三個條件
+        // 只驗證兩個條件
         if (orderData.OrderDetailsNumber !== currentOrderNumber) {
           setScanError(
             `．掃描到的訂單編號 ${orderData.OrderDetailsNumber}\n．當前執行任務的訂單編號 ${currentOrderNumber}\n．兩者編號不相符，請重新確認。`,
@@ -81,11 +93,6 @@ function ScanOrder() {
 
         if (orderData.OrderDetailID !== currentOrderID) {
           setScanError('掃描的任務ID與當前執行中的任務不符，請重新確認。');
-          return;
-        }
-
-        if (orderData.CustomerNumber !== currentOrderCustomerNumber) {
-          setScanError('掃描的顧客編號與當前執行中的任務不符，請重新確認。');
           return;
         }
 

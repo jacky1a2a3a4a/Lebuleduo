@@ -31,6 +31,7 @@ export interface Order {
   DriverTimeStart: string | null;
   DriverTimeEnd: string | null;
   ResponsibleDriver: string;
+  ServiceDate: string;
 }
 
 export interface Filters {
