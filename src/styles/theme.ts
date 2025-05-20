@@ -26,6 +26,11 @@ export const theme = {
       700: '#15803d',
     },
 
+      blue: {
+      main: '#445DB3',
+      light: '#E8EBF7',
+    },
+
     red: {
       100: '#fee2e2',
       500: '#dc2626',
@@ -46,6 +51,7 @@ export const theme = {
     primary: {
       main: '#445DB3',
       hover: '#334D99',
+      light: '#E8EBF7',
     },
 
     secondary: {
@@ -74,7 +80,25 @@ export const theme = {
       600: '#757575',
     },
     
-    error: '#D99292',
+    error: {
+      main: '#D99292',
+      background: '#FFF4F4',
+    },
+
+    success: {
+      main: '#06c755',
+      background: '#F0FFF4',
+    },
+
+    warning: {
+      main: '#F7DD97',
+      background: '#FFFBEB',
+    },
+
+    border: {
+      light: '#E5E7EB',
+      main: '#D1D5DB',
+    },
   },
 
    // 陰影
@@ -103,6 +127,7 @@ export const theme = {
     fontWeights: {
       normal: 400,
       medium: 500,
+      semibold: 600,
       bold: 700,
       extraBold: 900,
     },
