@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const DetailList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 詳細列表項目
@@ -15,36 +15,35 @@ export const DetailItem = styled.div`
 
 // 標籤
 export const Label = styled.span`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-sm);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 `;
 
 // 值
 export const Value = styled.span<{ $isOverweight?: boolean }>`
-  color: ${(props) =>
-    props.$isOverweight ? 'var(--color-error)' : 'var(--color-text-primary)'};
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: ${({ $isOverweight, theme }) =>
+    $isOverweight ? theme.colors.error : theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // ===超重警告 容器===
 export const OverweightWarning = styled.div`
-  color: var(--color-error);
-
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-sm);
+  color: ${({ theme }) => theme.colors.error};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--spacing-xs);
+  gap: ${({ theme }) => theme.spacing.xs};
 `;
 
 // ===超重警告 標題===
 export const WarningTitle = styled.span`
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 
   display: flex;
   align-items: center;
@@ -52,17 +51,16 @@ export const WarningTitle = styled.span`
 
 // 超重警告 標題 圖示
 export const IconStyled = styled.div`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  margin-right: var(--spacing-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  margin-right: ${({ theme }) => theme.spacing.xs};
 
   display: flex;
   align-items: center;
 `;
 
 // 超重警告 描述
-// 超重警告 描述
 export const WarningDescription = styled.span`
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
 `;

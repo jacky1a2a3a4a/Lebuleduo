@@ -9,8 +9,8 @@ export const FixedStepsContainer = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: var(--color-primary);
-  padding: var(--spacing-lg) 0 var(--spacing-md) 0;
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  padding: ${({ theme }) => theme.spacing.lg} 0 ${({ theme }) => theme.spacing.md} 0;
 `;
 
 // 步驟包裝器
@@ -41,9 +41,9 @@ export const StepConnector = styled.div`
 
 // 步驟連接線
 export const StepLine = styled.div<StyledProps>`
-  background-color: ${(props) =>
-    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
-  border-radius: var(--border-radius-round);
+  background-color: ${({ $active, theme }) =>
+    $active ? theme.colors.white : theme.colors.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   height: 2px;
   width: 70px;
 `;
@@ -62,27 +62,27 @@ export const StepItem = styled.div<StyledProps>`
 
 // 步驟號碼
 export const StepNumber = styled.div<StyledProps>`
-  background-color: ${(props) =>
-    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
-  color: ${(props) =>
-    props.$active ? 'var(--color-primary)' : 'var(--color-white)'};
-  border-radius: var(--border-radius-round);
+  background-color: ${({ $active, theme }) =>
+    $active ? theme.colors.white : theme.colors.secondary};
+  color: ${({ $active, theme }) =>
+    $active ? theme.colors.primary.main : theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   width: 24px;
   height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   z-index: 3;
   position: relative;
-  font-size: var(--font-size-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 `;
 
 // 步驟文字
 export const StepText = styled.div<StyledProps>`
-  color: ${(props) =>
-    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-normal);
+  color: ${({ $active, theme }) =>
+    $active ? theme.colors.white : theme.colors.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
   text-align: center;
 `;
