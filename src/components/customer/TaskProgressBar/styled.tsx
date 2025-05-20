@@ -11,33 +11,33 @@ type StyledProps = {
 // 進度條 最外層區塊
 export const ProgressBarSection = styled.div`
   width: 100%;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 進度條 白底圓角容器
 export const BackgroundContainer = styled.div`
-  background-color: var(--color-background-secondary);
-  border: 3px solid var(--color-secondary);
-  border-radius: var(--border-radius-round);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  padding: var(--spacing-lg) var(--spacing-2xl) var(--spacing-sm);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  border: 3px solid ${({ theme }) => theme.colors.secondary.main};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+  padding: ${({ theme }) => `${theme.spacing.lg} ${theme.spacing['2xl']} ${theme.spacing.sm}`};
 `;
 
 // 進度條 容器
 export const ProgressBarContainer = styled.div`
-  background-color: var(--color-neutral-300);
-  border-radius: var(--border-radius-round);
+  background-color: ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
 
   position: relative;
   width: 100%;
   height: 5px;
 
-  padding: 0 var(--spacing-sm);
+  padding: 0 ${({ theme }) => theme.spacing.sm};
 `;
 
 // 進度條 填充
 export const ProgressBarFill = styled.div<StyledProps>`
-  background-color: var(--color-primary);
+  background-color: ${({ theme }) => theme.colors.primary.main};
   width: ${({ $progress }) => ($progress ? `${$progress}%` : '0%')};
 
   height: 100%;
@@ -84,10 +84,10 @@ export const ProgressDot = styled.div<StyledProps>`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: ${({ $isActive, $isPassed }) =>
-    $isActive || $isPassed ? 'none' : '2px solid var(--color-secondary)'};
-  background-color: ${({ $isActive, $isPassed }) =>
-    $isActive || $isPassed ? 'var(--color-primary)' : 'var(--color-white)'};
+  border: ${({ $isActive, $isPassed, theme }) =>
+    $isActive || $isPassed ? 'none' : `2px solid ${theme.colors.secondary.main}`};
+  background-color: ${({ $isActive, $isPassed, theme }) =>
+    $isActive || $isPassed ? theme.colors.primary.main : theme.colors.white};
   z-index: 2;
 `;
 
@@ -95,7 +95,7 @@ export const ProgressDot = styled.div<StyledProps>`
 export const ProgressStatus = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: var(--spacing-xs);
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;
 
 // 進度狀態 文字
@@ -104,25 +104,25 @@ export const ProgressItem = styled.div<StyledProps>`
   // isPassed 是否已通過 600
   // 已完成 400
   // isUnscheduled 未排定狀態
-  color: ${({ $isActive, $isPassed, $isUnscheduled }) =>
+  color: ${({ $isActive, $isPassed, $isUnscheduled, theme }) =>
     $isUnscheduled
-      ? 'var(--color-gray-400)'
+      ? theme.colors.gray[400]
       : $isActive
-        ? 'var(--color-primary)'
+        ? theme.colors.primary.main
         : $isPassed
-          ? 'var(--color-gray-600)'
-          : 'var(--color-gray-400)'};
+          ? theme.colors.gray[600]
+          : theme.colors.gray[400]};
 
-  font-weight: ${({ $isActive, $isPassed }) =>
+  font-weight: ${({ $isActive, $isPassed, theme }) =>
     $isActive || $isPassed
-      ? 'var(--font-weight-bold)'
-      : 'var(--font-weight-normal)'};
+      ? theme.typography.fontWeights.bold
+      : theme.typography.fontWeights.normal};
 
   z-index: 1;
   position: relative;
 
   text-align: center;
-  padding-top: var(--spacing-sm);
+  padding-top: ${({ theme }) => theme.spacing.sm};
 
-  font-size: var(--font-size-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
 `; 

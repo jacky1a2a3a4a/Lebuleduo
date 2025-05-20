@@ -3,10 +3,10 @@ import { DownloadButton } from '../../../components/common/QRCodeDownloader/styl
 
 // 最外層容器
 export const PageWrapper = styled.div`
-  background-color: var(--color-background-secondary);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
   display: flex;
   height: 100vh;
-  max-width: var(--max-mobile-width);
+  max-width: ${({ theme }) => theme.breakpoints.mobile};
   margin: 0 auto;
 `;
 
@@ -17,50 +17,50 @@ export const SuccessContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-lg);
+  padding: ${({ theme }) => theme.spacing.lg};
 `;
 
 // 成功圖片
 export const SuccessImage = styled.img`
   width: 120px;
   height: auto;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 成功標題
 export const SuccessTitle = styled.h1`
-  color: var(--color-primary);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
+  color: ${({ theme }) => theme.colors.primary.main};
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   text-align: center;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 成功副標題
 export const SuccessSubtitle = styled.p`
-  font-size: var(--font-size-md);
-  color: var(--color-gray-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  color: ${({ theme }) => theme.colors.gray[500]};
   text-align: center;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 訂單信息容器
 export const OrderInfoContainer = styled.div`
-  background-color: var(--color-gray-0);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--color-gray-200);
-  box-shadow: var(--card-shadow);
+  background-color: ${({ theme }) => theme.colors.gray[0]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  border: 1px solid ${({ theme }) => theme.colors.gray[200]};
+  box-shadow: ${({ theme }) => theme.shadows.card};
   width: 100%;
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-lg);
+  padding: ${({ theme }) => theme.spacing.lg};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 // 訂單號碼
 export const OrderNumber = styled.div`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-md);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   text-align: center;
 `;
 
@@ -68,7 +68,7 @@ export const OrderNumber = styled.div`
 export const OrderItem = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 
   &:last-child {
     margin-bottom: 0;
@@ -77,23 +77,23 @@ export const OrderItem = styled.div`
 
 // 訂單項目標籤
 export const OrderItemLabel = styled.span`
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-400);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.gray[400]};
 `;
 
 // 訂單項目值
 export const OrderItemValue = styled.span`
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-600);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.gray[600]};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 分隔線
 export const Divider = styled.div`
   height: 1px;
   width: 100%;
-  background-color: var(--color-gray-200);
-  margin: var(--spacing-md) 0;
+  background-color: ${({ theme }) => theme.colors.gray[200]};
+  margin: ${({ theme }) => theme.spacing.md} 0;
 `;
 
 // QR碼容器
@@ -101,36 +101,36 @@ export const QRCodeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 // QR碼提示文字容器
 export const QRcodeTextItems = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  margin-top: var(--spacing-lg);
+  gap: ${({ theme }) => theme.spacing['2xs']};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.lg};
 `;
 
 // QR碼提示文字項目
 export const QRCodeTextItem = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 // 提示文字圖標
 export const TextIcon = styled.div`
-  color: var(--color-gray-600);
-  font-size: var(--font-size-md);
+  color: ${({ theme }) => theme.colors.gray[600]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
 `;
 
 // QR碼提示文字
 export const QRCodeText = styled.p`
-  font-size: var(--font-size-xs);
-  color: var(--color-gray-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[500]};
   text-align: left;
 `;
 
@@ -138,22 +138,22 @@ export const QRCodeText = styled.p`
 export const Buttons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
   width: 100%;
 `;
 
 // 返回按鈕
 export const HomeButton = styled.button`
-  background-color: var(--color-white);
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  border-radius: var(--border-radius-round);
+  background-color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.primary.main};
+  border: 1px solid ${({ theme }) => theme.colors.primary.main};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-12) var(--spacing-lg);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  padding: ${({ theme }) => theme.spacing[12]} ${({ theme }) => theme.spacing.lg};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -162,20 +162,20 @@ export const HomeButton = styled.button`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: var(--color-gray-700);
+    background-color: ${({ theme }) => theme.colors.gray[700]};
   }
 `;
 
 // 自定義 QR Code 下載按鈕
 export const CustomQRCodeDownloadButton = styled(DownloadButton)`
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-12) var(--spacing-lg);
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  padding: ${({ theme }) => theme.spacing[12]} ${({ theme }) => theme.spacing.lg};
   width: 100%;
   max-width: 100%;
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   white-space: nowrap;
   text-overflow: ellipsis;
   transition: all 0.3s ease;

@@ -3,31 +3,31 @@ import styled from 'styled-components';
 export const StatusTagContainer = styled.div<{ $status: string }>`
   display: inline-flex;
   align-items: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-round);
-  background-color: ${({ $status }) => {
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  background-color: ${({ $status, theme }) => {
     switch ($status) {
       case '異常':
-        return 'var(--color-error)';
-        case '已排定':
-        return 'var(--color-tertiary)';
+        return theme.colors.error;
+      case '已排定':
+        return theme.colors.tertiary.main;
       case '前往中':
-        return '#1976D2';
+        return theme.colors.blue[700];
       case '已抵達':
-        return '#9DDACE';
+        return theme.colors.green[200];
       case '未排定':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case '已完成':
-        return 'var(--color-neutral-200)';
+        return theme.colors.neutral[200];
     }
   }};
   border: 1px solid
-    ${({ $status }) => {
+    ${({ $status, theme }) => {
       switch ($status) {
         case '未排定':
-          return 'var(--color-secondary)';
+          return theme.colors.secondary.main;
         case '已完成':
-          return 'var(--color-neutral-400)';
+          return theme.colors.neutral[400];
         default:
           return 'none';
       }
@@ -35,22 +35,22 @@ export const StatusTagContainer = styled.div<{ $status: string }>`
 `;
 
 export const StatusTagText = styled.span<{ $status: string }>`
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: ${({ $status }) => {
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  color: ${({ $status, theme }) => {
     switch ($status) {
       case '異常':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case '已排定':
-        return 'var(--color-text-primary)';
+        return theme.colors.text.primary;
       case '前往中':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case '已抵達':
-        return 'var(--color-text-primary)';
+        return theme.colors.text.primary;
       case '未排定':
-        return 'var(--color-secondary)';
+        return theme.colors.secondary.main;
       case '已完成':
-        return 'var(--color-text-tertiary)';
+        return theme.colors.text.tertiary;
     }
   }};
 `;

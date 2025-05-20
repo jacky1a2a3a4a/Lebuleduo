@@ -9,14 +9,14 @@ export const DeliveryOptionImageContainer = styled.div`
 export const DeliveryOptionImages = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 export const DeliveryOptionImage = styled.div`
   position: relative;
   width: 100px;
   height: 125px;
-  border-radius: var(--border-radius-xl);
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
 `;
 
@@ -51,28 +51,28 @@ export const DeleteImageButton = styled.button`
 export const DeliveryOptionImageUpload = styled.div`
   width: 100px;
   height: 125px;
-  background-color: var(--color-gray-200);
-  border: 2px dashed var(--color-gray-400);
-  border-radius: var(--border-radius-xl);
+  background-color: ${({ theme }) => theme.colors.gray[200]};
+  border: 2px dashed ${({ theme }) => theme.colors.gray[400]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--color-gray-500);
+  color: ${({ theme }) => theme.colors.gray[500]};
 
   &:hover {
-    background-color: var(--color-gray-300);
+    background-color: ${({ theme }) => theme.colors.gray[300]};
   }
 `;
 
 export const PhotoInstructions = styled.p`
-  font-size: var(--font-size-xs);
-  color: var(--color-gray-400);
-  margin-top: var(--spacing-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[400]};
+  margin-top: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const ErrorMessage = styled.p`
-  color: var(--color-red-500);
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-sm);
+  color: ${({ theme }) => theme.colors.red[500]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing.sm};
 `;

@@ -3,32 +3,32 @@ import { MdOutlineAddShoppingCart } from 'react-icons/md';
 import { ActionButton } from '../../common/Header';
 
 export const SubscribeButton = styled(ActionButton)`
-  background-color: var(--color-tertiary);
-  color: var(--color-text-primary);
-  border-radius: var(--border-radius-round);
+  background-color: ${({ theme }) => theme.colors.tertiary.main};
+  color: ${({ theme }) => theme.colors.text.primary};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   width: 100%;
-  padding: var(--spacing-20);
+  padding: ${({ theme }) => theme.spacing[20]};
   height: 30px;
 
   transition: all 0.2s ease-in-out;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   line-height: 1;
 
   &:hover {
-    background-color: var(--color-tertiary-hover);
+    background-color: ${({ theme }) => theme.colors.tertiary.hover};
     transform: translateY(-1px);
   }
 `;
 
 export const StyledPlusIcon = styled(MdOutlineAddShoppingCart)`
-  font-size: var(--font-size-md);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
   display: flex;
   align-items: center;
-  margin-right: var(--spacing-xs);
+  margin-right: ${({ theme }) => theme.spacing.xs};
 `;

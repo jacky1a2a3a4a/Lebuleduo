@@ -2,20 +2,20 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   max-width: 600px;
-  margin: var(--spacing-lg) auto;
-  padding: var(--spacing-lg);
-  margin: auto var(--spacing-md);
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-md);
-  background-color: var(--color-background-primary);
+  margin: ${({ theme }) => theme.spacing.lg} auto;
+  padding: ${({ theme }) => theme.spacing.lg};
+  margin: auto ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 `;
 
 export const Title = styled.h2`
-  margin-bottom: var(--spacing-lg);
-  color: var(--color-text-primary);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 export const InputGroup = styled.div`

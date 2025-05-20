@@ -12,8 +12,8 @@ export const FooterWrapper = styled.div`
 
 // 頁尾容器
 export const FooterContainer = styled.footer`
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.xl} ${({ theme }) => theme.borderRadius.xl} 0 0;
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
@@ -37,24 +37,24 @@ export const FooterNavLink = styled(NavLink)<{
   $disabled?: boolean;
 }>`
   color: ${(props) =>
-    props.$disabled ? 'var(--color-gray-400)' : 'var(--color-gray-400)'};
+    props.$disabled ? ({ theme }) => theme.colors.gray[400] : ({ theme }) => theme.colors.gray[400]};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   transition: color 0.1s ease;
   pointer-events: ${(props) => (props.$disabled ? 'none' : 'auto')};
 
   &:hover {
     color: ${(props) =>
-      props.$disabled ? 'var(--color-gray-400)' : 'var(--color-gray-600)'};
+      props.$disabled ? ({ theme }) => theme.colors.gray[400] : ({ theme }) => theme.colors.gray[600]};
   }
 
   &.active {
     color: ${(props) =>
-      props.$disabled ? 'var(--color-gray-400)' : 'var(--color-primary)'};
+      props.$disabled ? ({ theme }) => theme.colors.gray[400] : ({ theme }) => theme.colors.primary.main};
   }
 `;
 
@@ -73,6 +73,6 @@ export const IconContainer = styled.div`
 
 // 圖標文字
 export const IconText = styled.span`
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;

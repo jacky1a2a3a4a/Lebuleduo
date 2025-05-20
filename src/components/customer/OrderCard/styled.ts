@@ -10,7 +10,7 @@ export const OrderPhotoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-right: var(--spacing-12);
+  padding-right: ${({ theme }) => theme.spacing[12]};
   width: 100%;
 `;
 
@@ -18,19 +18,19 @@ export const OrderPhotoImage = styled.img`
   object-fit: cover;
   width: 100%;
   aspect-ratio: 3/4;
-  border-radius: var(--border-radius-lg);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
 `;
 
 export const OrderPhoto = styled.div`
-  background-color: var(--color-gray-200);
-  color: var(--color-gray-400);
+  background-color: ${({ theme }) => theme.colors.gray[200]};
+  color: ${({ theme }) => theme.colors.gray[400]};
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   aspect-ratio: 3/4;
-  border-radius: var(--border-radius-lg);
-  font-size: var(--font-size-xl);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
 `;
 
 export const OrderCardData = styled.div`
@@ -43,41 +43,41 @@ export const OrderCardData = styled.div`
 `;
 
 export const OrderCardTitle = styled.div`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-12);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  margin-bottom: ${({ theme }) => theme.spacing[12]};
 `;
 
 export const OrderCardItems = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: var(--spacing-xs);
+  gap: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const OrderCardItem = styled.div`
   display: flex;
   align-items: flex-start;
   width: 100%;
-  gap: var(--spacing-xs);
+  gap: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const OrderCardSubtitle = styled.div<{ $primary?: boolean }>`
-  color: ${({ $primary }) =>
-    $primary ? 'var(--color-primary)' : 'var(--color-neutral-400)'};
-  font-size: var(--font-size-xs);
+  color: ${({ $primary, theme }) =>
+    $primary ? theme.colors.primary.main : theme.colors.neutral[400]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   min-width: 70px;
   flex-shrink: 0;
 `;
 
 export const OrderCardDetail = styled.div<{ $primary?: boolean }>`
-  color: ${({ $primary }) =>
-    $primary ? 'var(--color-primary)' : 'var(--color-neutral-400)'};
+  color: ${({ $primary, theme }) =>
+    $primary ? theme.colors.primary.main : theme.colors.neutral[400]};
   text-align: right;
   overflow: hidden;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   flex: 1;
   white-space: nowrap;
   text-overflow: ellipsis;

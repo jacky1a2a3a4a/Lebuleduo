@@ -5,7 +5,6 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { useEffect } from 'react';
-import GlobalStyles from './styles/GlobalStyles';
 import { routes } from './routes';
 
 // 自定義 Hook 用於處理 LINE 授權檢查
@@ -50,12 +49,9 @@ const AppContent = () => {
 
 function App() {
   return (
-    <>
-      <GlobalStyles />
-      <Router>
-        <AppContent />
-      </Router>
-    </>
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 

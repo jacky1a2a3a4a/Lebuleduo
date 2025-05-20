@@ -5,23 +5,23 @@ export const OrderTaskStatusCardContainer = styled.div<{
   $status: string;
   $isOverweight?: boolean;
 }>`
-  background-color: ${(props) =>
-    props.$isOverweight
-      ? 'var(--color-background-error)'
-      : 'var(--color-white)'};
-  border: ${(props) =>
-    props.$isOverweight
-      ? '1px solid var(--color-error)'
-      : '1px solid var(--color-neutral-200)'};
-  border-radius: var(--border-radius-xl);
+  background-color: ${({ $isOverweight, theme }) =>
+    $isOverweight
+      ? theme.colors.error.background
+      : theme.colors.white};
+  border: ${({ $isOverweight, theme }) =>
+    $isOverweight
+      ? `1px solid ${theme.colors.error.main}`
+      : `1px solid ${theme.colors.neutral[200]}`};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  box-shadow: var(--shadow-sm);
+  padding: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  box-shadow: ${({ theme }) => theme.shadows.sm};
 `;
 
 // ===卡片內容區塊===
@@ -32,18 +32,18 @@ export const CardItem = styled.div`
 
 // ===卡片內容區塊===
 export const IconStyledLarge = styled.div`
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text.primary};
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--spacing-md);
+  margin-right: ${({ theme }) => theme.spacing.md};
 
-  font-size: var(--font-size-lg);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
 `;
 
 // ===日期區塊===
 export const Date = styled.div`
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text.primary};
 
   display: flex;
   flex-direction: column;
@@ -51,11 +51,11 @@ export const Date = styled.div`
 
 // 日期
 export const DateDisplay = styled.span`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 //時間範圍
 export const TimeRange = styled.span`
-  font-size: var(--font-size-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 `;

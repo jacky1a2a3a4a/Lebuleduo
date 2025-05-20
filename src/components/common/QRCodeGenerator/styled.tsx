@@ -20,10 +20,10 @@ export const QRCodeContainer = styled.div`
 `;
 
 export const QRCodeDownloadButton = styled.button`
-  background-color: var(--color-white);
-  color: var(--color-gray-700);
-  border-radius: var(--border-radius-round);
-  margin-top: 10px;
-  padding: 8px 16px;
+  background-color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.gray[700]};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
   cursor: pointer;
 `;

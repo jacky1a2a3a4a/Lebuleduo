@@ -1,47 +1,47 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  padding: var(--spacing-md) var(--spacing-sm);
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.sm};
 `;
 
 export const Title = styled.h2`
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-md);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.primary.main};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
   text-align: center;
 `;
 
 export const Section = styled.div`
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const Divider = styled.div`
-  background-color: var(--color-secondary);
+  background-color: ${({ theme }) => theme.colors.secondary};
   opacity: 0.5;
 
   width: 100%;
   height: 2px;
 
-  margin: var(--spacing-md) 0;
+  margin: ${({ theme }) => theme.spacing.md} 0;
 `;
 
 export const MethodTitle = styled.h3`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const Description = styled.p`
-  font-size: var(--font-size-sm);
-  color: var(--color-text-tertiary);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.text.tertiary};
   line-height: 1.5;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const Note = styled.p`
-  font-size: var(--font-size-xs);
-  color: var(--color-text-disabled);
-  margin-top: var(--spacing-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.text.disabled};
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;

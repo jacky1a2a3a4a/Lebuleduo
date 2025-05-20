@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const LoginSectionStyled = styled.div`
-  background: var(--color-primary);
+  background: ${({ theme }) => theme.colors.primary.main};
   display: flex;
   flex-direction: column;
   justify-content: center;

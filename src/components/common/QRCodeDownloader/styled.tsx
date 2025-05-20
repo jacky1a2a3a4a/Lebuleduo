@@ -1,18 +1,18 @@
 import styled from 'styled-components';
 
 export const DownloadButton = styled.button`
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border-radius: var(--border-radius-round);
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   max-width: 150px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  margin: var(--spacing-xs) auto;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  margin: ${({ theme }) => theme.spacing.xs} auto;
 
   cursor: pointer;
-  font-size: var(--font-size-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: var(--color-primary-hover);
+    background-color: ${({ theme }) => theme.colors.primary.hover};
   }
 `;

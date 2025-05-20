@@ -2,22 +2,22 @@ import styled from 'styled-components';
 import { StyledProps } from '../../../../pages/customer/Subscribe/types';
 
 export const ButtonCardContainer = styled.div<StyledProps>`
-  background-color: var(--color-gray-0);
+  background-color: ${({ theme }) => theme.colors.gray[0]};
   border: 1px solid
-    ${({ $active }) =>
-      $active ? 'var(--color-primary)' : 'var(--color-secondary)'};
-  border-radius: var(--border-radius-xl);
+    ${({ $active, theme }) =>
+      $active ? theme.colors.primary.main : theme.colors.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
 
   display: flex;
   align-items: center;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
 
   position: relative;
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ $active }) =>
-      $active ? 'var(--color-gray-0)' : 'var(--color-gray-100)'};
+    background-color: ${({ $active, theme }) =>
+      $active ? theme.colors.gray[0] : theme.colors.gray[100]};
   }
 `;
 
@@ -29,21 +29,21 @@ export const ButtonCardContent = styled.div`
 `;
 
 export const ButtonCardTitle = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 export const ButtonCardSubtitle = styled.div`
-  color: var(--color-secondary);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-normal);
+  color: ${({ theme }) => theme.colors.secondary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
 `;
 
 export const ButtonCardIcon = styled.div`
-  margin-left: var(--spacing-md);
-  font-size: var(--font-size-lg);
-  color: var(--color-gray-500);
+  margin-left: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  color: ${({ theme }) => theme.colors.gray[500]};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,9 +54,9 @@ export const ButtonCardRadio = styled.div<StyledProps>`
   height: 20px;
   border-radius: 50%;
   border: 2px solid
-    ${({ $active }) =>
-      $active ? 'var(--color-secondary)' : 'var(--color-secondary)'};
-  margin-right: var(--spacing-md);
+    ${({ $active, theme }) =>
+      $active ? theme.colors.secondary : theme.colors.secondary};
+  margin-right: ${({ theme }) => theme.spacing.md};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,7 +66,7 @@ export const ButtonCardRadio = styled.div<StyledProps>`
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: var(--color-gray-600);
+    background-color: ${({ theme }) => theme.colors.gray[600]};
     display: ${({ $active }) => ($active ? 'block' : 'none')};
   }
 `;

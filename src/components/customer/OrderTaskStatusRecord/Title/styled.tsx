@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 export const StatusHeader = styled.div`
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const StatusText = styled.span`
-  color: var(--color-success);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.success};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;

@@ -3,7 +3,7 @@ import { StyledProps } from './types';
 
 //// 整個頁面的容器
 export const PageWrapper = styled.div`
-  background-color: var(--color-background-secondary);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -16,8 +16,8 @@ export const FixedStepsContainer = styled.div`
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: var(--color-primary);
-  padding: var(--spacing-lg) 0 var(--spacing-md) 0;
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  padding: ${({ theme }) => theme.spacing.lg} 0 ${({ theme }) => theme.spacing.md} 0;
 `;
 
 // 步驟包裝器
@@ -44,8 +44,8 @@ export const StepConnector = styled.div`
 // 步驟連接線
 export const StepLine = styled.div<StyledProps>`
   background-color: ${(props) =>
-    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
-  border-radius: var(--border-radius-round);
+    props.$active ? props.theme.colors.white : props.theme.colors.secondary.main};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   height: 2px;
   width: 70px;
 `;
@@ -68,9 +68,9 @@ export const StepItem = styled.div<StyledProps>`
 // 步驟號碼
 export const StepNumber = styled.div<StyledProps>`
   background-color: ${(props) =>
-    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
+    props.$active ? props.theme.colors.white : props.theme.colors.secondary.main};
   color: ${(props) =>
-    props.$active ? 'var(--color-primary)' : 'var(--color-white)'};
+    props.$active ? props.theme.colors.primary.main : props.theme.colors.white};
   border-radius: 50%;
 
   width: 24px;
@@ -79,20 +79,20 @@ export const StepNumber = styled.div<StyledProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 
   z-index: 3; /* 確保數字在連接線上方 */
   position: relative; /* 添加相對定位 */
-  font-size: var(--font-size-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   line-height: 1; //重置行高，才能完全置中
 `;
 
 // 步驟文字
 export const StepText = styled.div<StyledProps>`
   color: ${(props) =>
-    props.$active ? 'var(--color-white)' : 'var(--color-secondary)'};
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+    props.$active ? props.theme.colors.white : props.theme.colors.secondary.main};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   text-align: center;
 `;
 
@@ -100,7 +100,7 @@ export const StepText = styled.div<StyledProps>`
 export const ScrollableContent = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
 
   &::-webkit-scrollbar {
     display: none;
@@ -109,7 +109,7 @@ export const ScrollableContent = styled.div`
 
 // 區段標題 模板
 export const SectionTitle = styled.div`
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 
   display: flex;
   flex-direction: column;
@@ -118,43 +118,43 @@ export const SectionTitle = styled.div`
 
 // 區段主標題 模板
 export const SectionMainTitle = styled.h2`
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text.primary};
 
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: ${({ theme }) => theme.spacing['2xs']};
 `;
 
 // 區段副標題 模板
 export const SectionSubtitle = styled.p`
-  color: var(--color-text-tertiary);
+  color: ${({ theme }) => theme.colors.text.tertiary};
 
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-normal);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
 `;
 
 // 已選定方案 最大容器
 export const PlanSelector = styled.div`
-  margin-bottom: var(--spacing-lg);
-  border-radius: var(--border-radius-lg);
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: ${({ theme }) => theme.shadows.sm};
 `;
 
 // 已選定方案 頭部
 export const PlanSelectorHeader = styled.div<StyledProps>`
-  background-color: var(--color-white);
-  border: 2px solid var(--color-secondary);
+  background-color: ${({ theme }) => theme.colors.white};
+  border: 2px solid ${({ theme }) => theme.colors.secondary.main};
   border-radius: ${(props) =>
     props.$open
-      ? 'var(--border-radius-lg) var(--border-radius-lg) 0 0'
-      : 'var(--border-radius-lg)'};
+      ? `${props.theme.borderRadius.lg} ${props.theme.borderRadius.lg} 0 0`
+      : props.theme.borderRadius.lg};
 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
   cursor: pointer;
 `;
 
@@ -165,8 +165,8 @@ export const PlanInfo = styled.div`
 
 // 下拉圖標
 export const DropdownIcon = styled.div`
-  font-size: var(--font-size-lg);
-  color: var(--color-gray-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  color: ${({ theme }) => theme.colors.gray[500]};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -174,19 +174,19 @@ export const DropdownIcon = styled.div`
 
 // 方案下拉菜單
 export const PlanDropdown = styled.div`
-  border: 1px solid var(--color-secondary);
+  border: 1px solid ${({ theme }) => theme.colors.secondary.main};
   border-top: none;
-  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+  border-radius: 0 0 ${({ theme }) => theme.borderRadius.lg} ${({ theme }) => theme.borderRadius.lg};
   overflow: hidden;
 `;
 
 // 方案選項
 export const PlanOption = styled.div<StyledProps>`
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
   background-color: ${(props) =>
-    props.$active ? 'var(--color-gray-200)' : 'var(--color-gray-0)'};
+    props.$active ? props.theme.colors.gray[200] : props.theme.colors.gray[0]};
   cursor: pointer;
-  border-bottom: 1px solid var(--color-secondary);
+  border-bottom: 1px solid ${({ theme }) => theme.colors.secondary.main};
 
   &:last-child {
     border-bottom: none;
@@ -194,15 +194,15 @@ export const PlanOption = styled.div<StyledProps>`
 
   &:hover {
     background-color: ${(props) =>
-      props.$active ? 'var(--color-gray-200)' : 'var(--color-gray-100)'};
+      props.$active ? props.theme.colors.gray[200] : props.theme.colors.gray[100]};
   }
 `;
 
 // 方案選項標題
 export const PlanOptionTitle = styled.div`
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  margin: 0 0 var(--spacing-xs) 0;
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  margin: 0 0 ${({ theme }) => theme.spacing['2xs']} 0;
 
   display: flex;
   align-items: center;
@@ -211,43 +211,43 @@ export const PlanOptionTitle = styled.div`
 
 // 方案選項主標題
 export const PlanOptionMainTitle = styled.div`
-  color: var(--color-text-tertiary);
+  color: ${({ theme }) => theme.colors.text.tertiary};
 
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 // 方案選項副標題
 export const PlanOptionSubtitle = styled.div`
-  color: var(--color-secondary);
+  color: ${({ theme }) => theme.colors.secondary.main};
 
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 方案標題
 export const PlanTitle = styled.div`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  margin: 0 0 var(--spacing-xs) 0;
+  margin: 0 0 ${({ theme }) => theme.spacing['2xs']} 0;
 `;
 
 // 預定期程 大容器
 export const ButtonCardOptions = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-lg);
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 // 預定期程 選項
 export const FrequencyOption = styled.div<StyledProps>`
-  background-color: var(--color-gray-0);
+  background-color: ${({ theme }) => theme.colors.gray[0]};
   border: 1px solid
     ${(props) =>
       props.$active ? 'var(--color-primary)' : 'var(--color-secondary)'};

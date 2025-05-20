@@ -38,12 +38,12 @@ export const ModalOverlay = styled.div<{ $isClosing: boolean }>`
 `;
 
 export const ModalContainer = styled.div<{ $isClosing: boolean }>`
-  background: var(--color-background-primary);
-  border: 2px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
-  box-shadow: var(--shadow-lg);
+  background: ${({ theme }) => theme.colors.background.primary};
+  border: 2px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => `${theme.borderRadius.xl} ${theme.borderRadius.xl} 0 0`};
+  box-shadow: ${({ theme }) => theme.shadows.lg};
   width: 100%;
-  max-width: var(--mobile-min-width);
+  max-width: ${({ theme }) => theme.breakpoints.mobile};
   max-height: 90vh;
   overflow-y: auto;
   position: fixed;
@@ -51,7 +51,7 @@ export const ModalContainer = styled.div<{ $isClosing: boolean }>`
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 1000;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
   animation: ${({ $isClosing }) => ($isClosing ? slideDown : slideUp)} 0.3s
     ease-out;
   animation-fill-mode: forwards;
@@ -64,32 +64,32 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const ModalTitle = styled.h2`
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.text.primary};
 `;
 
 export const ModalContent = styled.div`
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 export const CalendarContainer = styled.div`
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 
   .react-calendar {
     width: 100%;
     border: none;
-    border-radius: var(--border-radius-md);
-    background-color: var(--color-background-primary);
+    border-radius: ${({ theme }) => theme.borderRadius.md};
+    background-color: ${({ theme }) => theme.colors.background.primary};
     font-family: inherit;
   }
 
   .react-calendar__navigation {
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: ${({ theme }) => theme.spacing.sm};
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -98,22 +98,22 @@ export const CalendarContainer = styled.div`
   .react-calendar__navigation button {
     min-width: 44px;
     background: none;
-    font-size: var(--font-size-lg);
-    color: var(--color-text-tertiary);
+    font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+    color: ${({ theme }) => theme.colors.text.tertiary};
     transition: color 0.2s ease;
     padding: 0;
     line-height: 1;
     cursor: pointer;
 
     &:hover {
-      color: var(--color-primary);
+      color: ${({ theme }) => theme.colors.primary.main};
     }
   }
 
   .react-calendar__navigation__label {
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
+    font-size: ${({ theme }) => theme.typography.fontSizes.md};
+    font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+    color: ${({ theme }) => theme.colors.text.primary};
     margin: 0;
     pointer-events: none;
   }
@@ -126,10 +126,10 @@ export const CalendarContainer = styled.div`
   .react-calendar__month-view__weekdays {
     text-align: center;
     text-transform: uppercase;
-    font-weight: var(--font-weight-medium);
-    font-size: var(--font-size-xs);
-    color: var(--color-text-tertiary);
-    padding: var(--spacing-12) 0;
+    font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+    font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+    color: ${({ theme }) => theme.colors.text.tertiary};
+    padding: ${({ theme }) => theme.spacing[12]} 0;
   }
 
   .react-calendar__month-view__weekdays__weekday abbr {
@@ -138,74 +138,74 @@ export const CalendarContainer = styled.div`
 
   .react-calendar__tile {
     max-width: 100%;
-    padding: var(--spacing-12) 0;
+    padding: ${({ theme }) => theme.spacing[12]} 0;
     background: none;
     text-align: center;
-    font-size: var(--font-size-sm);
+    font-size: ${({ theme }) => theme.typography.fontSizes.sm};
     cursor: pointer;
-    border-radius: var(--border-radius-lg);
+    border-radius: ${({ theme }) => theme.borderRadius.lg};
     transition: all 0.2s ease;
   }
 
   .react-calendar__tile:enabled:hover,
   .react-calendar__tile:enabled:focus {
-    background-color: var(--color-background-secondary);
-    color: var(--color-primary);
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+    color: ${({ theme }) => theme.colors.primary.main};
   }
 
   .react-calendar__tile--now {
-    background: var(--color-secondary);
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-bold);
+    background: ${({ theme }) => theme.colors.secondary.main};
+    color: ${({ theme }) => theme.colors.text.primary};
+    font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   }
 
   .react-calendar__tile--active {
-    background: var(--color-primary);
-    color: var(--color-white);
-    font-weight: var(--font-weight-bold);
+    background: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.white};
+    font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   }
 
   .react-calendar__tile--active:enabled:hover,
   .react-calendar__tile--active:enabled:focus {
-    background: var(--color-primary-hover);
-    color: var(--color-white);
+    background: ${({ theme }) => theme.colors.primary.hover};
+    color: ${({ theme }) => theme.colors.white};
   }
 
   .booked-date {
-    background-color: var(--color-neutral-200);
-    color: var(--color-neutral-600);
+    background-color: ${({ theme }) => theme.colors.neutral[200]};
+    color: ${({ theme }) => theme.colors.neutral[600]};
     cursor: not-allowed;
   }
 
   .original-date {
-    background-color: var(--color-tertiary);
-    color: var(--color-primary);
+    background-color: ${({ theme }) => theme.colors.tertiary.main};
+    color: ${({ theme }) => theme.colors.primary.main};
   }
 `;
 
 export const DateInfo = styled.div`
-  margin-bottom: var(--spacing-sm);
-  padding: 0 var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding: 0 ${({ theme }) => theme.spacing.md};
 `;
 
 export const DateInfoTitle = styled.h3`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const DateInfoContent = styled.div`
-  background-color: var(--color-neutral-100);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-sm) 0;
+  background-color: ${({ theme }) => theme.colors.neutral[100]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.sm} 0;
 `;
 
 export const DateInfoItem = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--spacing-sm);
-  font-size: var(--font-size-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 
   &:last-child {
     margin-bottom: 0;
@@ -218,85 +218,81 @@ export const DateLabel = styled.span<{
   $tertiary?: boolean;
   $scheduled?: boolean;
 }>`
-  background-color: ${({ $primary, $tertiary, $scheduled }) =>
+  background-color: ${({ $primary, $tertiary, $scheduled, theme }) =>
     $primary
-      ? 'var(--color-primary)'
+      ? theme.colors.primary.main
       : $tertiary
-        ? 'var(--color-tertiary)'
+        ? theme.colors.tertiary.main
         : $scheduled
-          ? 'var(--color-neutral-200)'
+          ? theme.colors.neutral[200]
           : 'transparent'};
-  color: ${({ $primary, $tertiary, $scheduled }) =>
+  color: ${({ $primary, $tertiary, $scheduled, theme }) =>
     $primary
-      ? 'var(--color-white)'
+      ? theme.colors.white
       : $tertiary
-        ? 'var(--color-primary)'
+        ? theme.colors.primary.main
         : $scheduled
-          ? 'var(--color-neutral-600)'
+          ? theme.colors.neutral[600]
           : 'transparent'};
-  border-radius: var(--border-radius-sm);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-weight: ${({ $bold }) =>
-    $bold ? 'var(--font-weight-bold)' : 'var(--font-weight-normal)'};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.sm}`};
+  font-weight: ${({ $bold, theme }) =>
+    $bold ? theme.typography.fontWeights.bold : theme.typography.fontWeights.normal};
 `;
 
 export const DateValue = styled.span<{ $bold?: boolean }>`
-  color: var(--color-text-primary);
-  font-weight: ${({ $bold }) =>
-    $bold ? 'var(--font-weight-bold)' : 'var(--font-weight-normal)'};
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-weight: ${({ $bold, theme }) =>
+    $bold ? theme.typography.fontWeights.bold : theme.typography.fontWeights.normal};
 `;
 
 export const NoticeText = styled.div`
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-2xs);
-  padding: 0 var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  line-height: 1.5;
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;
 
 export const ButtonGroup = styled.div`
   display: grid;
   grid-template-columns: 1.5fr 2fr;
-  gap: var(--spacing-12);
-  margin-top: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing[12]};
+  margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
 export const CancelButton = styled.button`
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-tertiary);
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--color-background-secondary-hover);
+    background-color: ${({ theme }) => theme.colors.background.secondaryHover};
   }
 `;
 
 export const ConfirmButton = styled.button`
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   cursor: pointer;
   transition: background-color 0.2s ease;
 
   &:hover:not(:disabled) {
-    background-color: var(--color-primary-hover);
+    background-color: ${({ theme }) => theme.colors.primary.hover};
   }
 
   &:disabled {
-    background-color: var(--color-background-secondary);
+    background-color: ${({ theme }) => theme.colors.background.secondary};
     cursor: not-allowed;
   }
 `;
 
 export const StatusMessage = styled.div`
   text-align: center;
-  padding: var(--spacing-lg);
-  color: var(--color-text-secondary);
+  padding: ${({ theme }) => theme.spacing.lg};
+  color: ${({ theme }) => theme.colors.text.secondary};
 `;

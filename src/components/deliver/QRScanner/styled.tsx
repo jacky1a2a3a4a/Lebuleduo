@@ -6,7 +6,7 @@ export const ScannerContainer = styled.div`
   max-width: 500px;
   aspect-ratio: 1/1;
   margin: 0 auto;
-  border-radius: var(--border-radius-lg);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   position: relative;
 `;
 
@@ -19,7 +19,7 @@ export const ScannerPlaceholder = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--border-radius-lg);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   overflow: hidden;
 `;
 
@@ -107,7 +107,7 @@ export const ScannerWebcam = styled(Webcam)`
   aspect-ratio: 1/1;
   margin: 0 auto;
   object-fit: cover;
-  border-radius: var(--border-radius-lg);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
 `;
 
 export const ScannerCanvas = styled.canvas`
@@ -147,7 +147,7 @@ export const ScannerFrame = styled.div<{ $isSuccess: boolean }>`
       box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.3);
     }
     50% {
-      border-color: var(--color-tertiary);
+      border-color: ${({ theme }) => theme.colors.tertiary.main};
       box-shadow: 0 0 20px 1000px rgba(0, 0, 0, 0.3);
     }
     100% {
@@ -162,7 +162,7 @@ export const ScannerFrame = styled.div<{ $isSuccess: boolean }>`
       transform: scale(1);
     }
     50% {
-      border-color: var(--color-tertiary);
+      border-color: ${({ theme }) => theme.colors.tertiary.main};
       transform: scale(0.95);
     }
     100% {

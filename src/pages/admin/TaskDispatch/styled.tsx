@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 // === 最外層 ===
 export const Container = styled.div`
-  background-color: var(--color-background-secondary);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
   display: flex;
   height: 100vh;
 `;
@@ -20,7 +20,7 @@ export const MainContent = styled.div<{ $assignmentPanelOpen: boolean }>`
 // === 內容區域 ===
 export const ContentWrapper = styled.div`
   height: 100%;
-  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md} ${theme.spacing.md}`};
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -28,7 +28,7 @@ export const ContentWrapper = styled.div`
 
 // === 內容區域 ===
 export const Content = styled.div`
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -39,18 +39,18 @@ export const Content = styled.div`
 export const StatsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
   flex: 1;
-  margin: var(--spacing-sm) 0;
+  margin: ${({ theme }) => `${theme.spacing.sm} 0`};
 `;
 
 // === 表格容器 最外層 ===
 export const TableContainer = styled.div`
-  background-color: var(--color-background-primary);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--card-shadow);
+  background-color: ${({ theme }) => theme.colors.background.primary};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  box-shadow: ${({ theme }) => theme.shadows.card};
   width: 100%;
-  margin-top: var(--spacing-sm);
+  margin-top: ${({ theme }) => theme.spacing.sm};
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -62,13 +62,13 @@ export const TableContainer = styled.div`
 export const TableHeader = styled.div`
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-md) var(--spacing-md) 0;
+  padding: ${({ theme }) => `${theme.spacing.md} ${theme.spacing.md} 0`};
   flex-shrink: 0;
 
   h1 {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    margin-bottom: var(--spacing-xs);
+    font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+    font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+    margin-bottom: ${({ theme }) => theme.spacing.xs};
   }
 
   .header-container {
@@ -83,27 +83,27 @@ export const TableHeader = styled.div`
 
     .filters {
       display: flex;
-      gap: var(--spacing-sm);
+      gap: ${({ theme }) => theme.spacing.sm};
 
       select,
       input {
-        padding: var(--spacing-xs) var(--spacing-sm);
-        border: 1px solid var(--color-neutral-300);
-        border-radius: var(--border-radius-sm);
-        background-color: var(--color-background-primary);
-        font-size: var(--font-size-3xs);
+        padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.sm}`};
+        border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+        border-radius: ${({ theme }) => theme.borderRadius.sm};
+        background-color: ${({ theme }) => theme.colors.background.primary};
+        font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
         min-width: 80px;
 
         &:focus {
           outline: none;
-          border-color: var(--color-primary);
+          border-color: ${({ theme }) => theme.colors.primary.main};
         }
       }
 
       input {
         width: 150px;
         &::placeholder {
-          color: var(--color-neutral-500);
+          color: ${({ theme }) => theme.colors.neutral[500]};
         }
       }
     }
@@ -112,22 +112,22 @@ export const TableHeader = styled.div`
   .header-right {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: ${({ theme }) => theme.spacing.sm};
 
     p {
-      font-size: var(--font-size-3xs);
+      font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
     }
 
     select {
-      padding: var(--spacing-xs) var(--spacing-sm);
-      border: 1px solid var(--color-neutral-300);
-      border-radius: var(--border-radius-sm);
-      background-color: var(--color-background-primary);
-      font-size: var(--font-size-3xs);
+      padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.sm}`};
+      border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+      border-radius: ${({ theme }) => theme.borderRadius.sm};
+      background-color: ${({ theme }) => theme.colors.background.primary};
+      font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
 
       &:focus {
         outline: none;
-        border-color: var(--color-primary);
+        border-color: ${({ theme }) => theme.colors.primary.main};
       }
     }
   }

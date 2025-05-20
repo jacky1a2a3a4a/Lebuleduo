@@ -12,135 +12,135 @@ type StatusType =
 export const OrderListCardContainer = styled.div<{
   $status: StatusType;
 }>`
-  background-color: ${({ $status }) => {
+  background-color: ${({ $status, theme }) => {
     switch ($status) {
       case 'abnormal':
-        return 'var(--color-background-error)';
+        return theme.colors.error.background;
       case 'active':
       case 'ongoing':
       case 'arrived':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case 'finished':
-        return 'var(--color-neutral-200)';
+        return theme.colors.neutral[200];
       default:
-        return 'var(--color-white)';
+        return theme.colors.white;
     }
   }};
-  border: ${({ $status }) => {
+  border: ${({ $status, theme }) => {
     switch ($status) {
       case 'abnormal':
-        return '1px solid var(--color-error)';
+        return `1px solid ${theme.colors.error.main}`;
       case 'active':
       case 'ongoing':
       case 'arrived':
-        return '1px solid var(--color-primary)';
+        return `1px solid ${theme.colors.primary.main}`;
       case 'normal':
-        return '1px solid var(--color-secondary)';
+        return `1px solid ${theme.colors.secondary.main}`;
       default:
         return 'none';
     }
   }};
-  border-radius: var(--border-radius-lg);
-  box-shadow: ${({ $status }) =>
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: ${({ $status, theme }) =>
     $status === 'abnormal' ||
     $status === 'active' ||
     $status === 'ongoing' ||
     $status === 'arrived' ||
     $status === 'normal'
-      ? 'var(--card-shadow)'
+      ? theme.shadows.card
       : 'none'};
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-sm);
+  padding: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const CardItems = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 export const CardItem = styled.div`
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const Date = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const DateDisplay = styled.div`
-  color: var(--color-gray-800);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.gray[800]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 export const TimeRange = styled.div`
-  color: var(--color-gray-600);
-  font-size: var(--font-size-sm);
+  color: ${({ theme }) => theme.colors.gray[600]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 `;
 
 export const OrderStatus = styled.div`
   display: flex;
   align-items: center;
-  margin-right: var(--spacing-sm);
+  margin-right: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 訂單狀態文字
 export const StatusText = styled.div<{
   $status: StatusType;
 }>`
-  background-color: ${({ $status }) => {
+  background-color: ${({ $status, theme }) => {
     switch ($status) {
       case 'abnormal':
-        return 'var(--color-error)';
+        return theme.colors.error.main;
       case 'active':
-        return 'var(--color-tertiary)';
+        return theme.colors.tertiary.main;
       case 'ongoing':
         return '#1976D2';
       case 'arrived':
         return '#9DDACE';
       case 'finished':
-        return 'var(--color-neutral-200)';
+        return theme.colors.neutral[200];
       case 'normal':
-        return 'var(--color-white)';
+        return theme.colors.white;
     }
   }};
-  color: ${({ $status }) => {
+  color: ${({ $status, theme }) => {
     switch ($status) {
       case 'abnormal':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case 'active':
-        return 'var(--color-text-primary)';
+        return theme.colors.text.primary;
       case 'ongoing':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case 'arrived':
-        return 'var(--color-text-primary)';
+        return theme.colors.text.primary;
       case 'finished':
-        return 'var(--color-neutral-500)';
+        return theme.colors.neutral[500];
       case 'normal':
-        return 'var(--color-secondary)';
+        return theme.colors.secondary.main;
     }
   }};
-  border: ${({ $status }) => {
+  border: ${({ $status, theme }) => {
     switch ($status) {
       case 'abnormal':
         return '1px solid none';
       case 'finished':
-        return '1px solid var(--color-neutral-500)';
+        return `1px solid ${theme.colors.neutral[500]}`;
       case 'normal':
-        return '1px solid var(--color-secondary)';
+        return `1px solid ${theme.colors.secondary.main}`;
       default:
         return 'none';
     }
   }};
-  border-radius: var(--border-radius-round);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.sm}`};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
 `;
 
 // === 修改預約,查看紀錄,查看狀態按鈕 ===
@@ -148,56 +148,56 @@ export const ActionButton = styled.button<{
   $status: StatusType;
   $disabled: boolean;
 }>`
-  background-color: ${({ $status, $disabled }) => {
-    if ($disabled) return 'var(--color-neutral-200)';
+  background-color: ${({ $status, $disabled, theme }) => {
+    if ($disabled) return theme.colors.neutral[200];
     switch ($status) {
       case 'finished':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case 'abnormal':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case 'active':
       case 'ongoing':
       case 'arrived':
-        return 'var(--color-white)';
+        return theme.colors.white;
       case 'normal':
-        return 'var(--color-primary)';
+        return theme.colors.primary.main;
     }
   }};
-  color: ${({ $status, $disabled }) => {
-    if ($disabled) return 'var(--color-neutral-500)';
+  color: ${({ $status, $disabled, theme }) => {
+    if ($disabled) return theme.colors.neutral[500];
     switch ($status) {
       case 'finished':
-        return 'var(--color-neutral-600)';
+        return theme.colors.neutral[600];
       case 'abnormal':
-        return 'var(--color-error)';
+        return theme.colors.error.main;
       case 'active':
       case 'ongoing':
       case 'arrived':
-        return 'var(--color-primary)';
+        return theme.colors.primary.main;
       case 'normal':
-        return 'var(--color-white)';
+        return theme.colors.white;
     }
   }};
-  border: ${({ $status, $disabled }) => {
-    if ($disabled) return '1px solid var(--color-neutral-400)';
+  border: ${({ $status, $disabled, theme }) => {
+    if ($disabled) return `1px solid ${theme.colors.neutral[400]}`;
     switch ($status) {
       case 'finished':
-        return '1px solid var(--color-neutral-400)';
+        return `1px solid ${theme.colors.neutral[400]}`;
       case 'abnormal':
-        return '1px solid var(--color-error)';
+        return `1px solid ${theme.colors.error.main}`;
       case 'active':
       case 'ongoing':
       case 'arrived':
-        return '1px solid var(--color-primary)';
+        return `1px solid ${theme.colors.primary.main}`;
       case 'normal':
         return 'none';
     }
   }};
-  border-radius: var(--border-radius-round);
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   display: flex;
   align-items: center;
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   white-space: nowrap;
 
   pointer-events: ${({ $disabled }) => ($disabled ? 'auto' : 'none')};
@@ -205,7 +205,7 @@ export const ActionButton = styled.button<{
 
   transition: all 0.2s ease;
   svg {
-    font-size: var(--font-size-md);
+    font-size: ${({ theme }) => theme.typography.fontSizes.md};
   }
 `;
 
@@ -213,7 +213,7 @@ export const IconStyled = styled.div`
   display: flex;
   align-items: center;
   color: inherit;
-  margin-right: var(--spacing-xs);
+  margin-right: ${({ theme }) => theme.spacing.xs};
 
   svg {
     width: 16px;
@@ -225,7 +225,7 @@ export const IconStyledLarge = styled.div`
   display: flex;
   align-items: center;
   color: inherit;
-  margin-right: var(--spacing-xs);
+  margin-right: ${({ theme }) => theme.spacing.xs};
 
   svg {
     width: 20px;
@@ -234,8 +234,8 @@ export const IconStyledLarge = styled.div`
 `;
 
 export const ErrorText = styled.div`
-  color: var(--color-neutral-500);
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-sm);
-  padding: 0 var(--spacing-md);
+  color: ${({ theme }) => theme.colors.neutral[500]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+  padding: 0 ${({ theme }) => theme.spacing.md};
 `;

@@ -1,26 +1,26 @@
 import styled from 'styled-components';
 
 export const StatCardContainer = styled.div`
-  background-color: var(--color-background-primary);
-  border: 1px solid var(--color-neutral-200);
+  background-color: ${({ theme }) => theme.colors.background.primary};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[200]};
 
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
 
   width: 100%;
   height: 100%;
   max-height: 50px;
 
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--card-shadow);
+  padding: ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  box-shadow: ${({ theme }) => theme.shadows.card};
 `;
 
 export const Icon = styled.div`
-  background-color: var(--color-secondary);
-  color: var(--color-white);
+  background-color: ${({ theme }) => theme.colors.secondary.main};
+  color: ${({ theme }) => theme.colors.white};
 
   display: flex;
   align-items: center;
@@ -29,15 +29,15 @@ export const Icon = styled.div`
   width: 30px;
   height: 30px;
   aspect-ratio: 1/1;
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
+  padding: ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
 `;
 
 export const Content = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
   width: 100%;
 `;
 
@@ -51,9 +51,9 @@ export const Text = styled.div`
 `;
 
 export const Title = styled.div`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-3xs);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 export const Numbers = styled.div`
@@ -65,12 +65,12 @@ export const Numbers = styled.div`
 `;
 
 export const Value = styled.div`
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 export const Subtitle = styled.div`
-  font-size: var(--font-size-3xs);
-  color: var(--color-neutral-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
+  color: ${({ theme }) => theme.colors.neutral[500]};
   text-overflow: ellipsis;
 `;

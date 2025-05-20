@@ -30,7 +30,7 @@ export const Container = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-white);
+  background-color: ${({ theme }) => theme.colors.white};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,22 +40,22 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h2`
-  color: var(--color-primary);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-sm);
+  color: ${({ theme }) => theme.colors.primary.main};
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   animation: ${fadeIn} 0.5s ease-out 0.3s both;
 `;
 
 export const Message = styled.p`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-md);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
   text-align: center;
   animation: ${fadeIn} 0.5s ease-out 0.5s both;
 `;
 
 export const ImageWrapper = styled.div`
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   animation: ${fadeIn} 0.5s ease-out 0.7s both;
 
   img {

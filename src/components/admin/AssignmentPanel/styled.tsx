@@ -19,12 +19,12 @@ export const Panel = styled.div`
 
 // Panel Header
 export const PanelHeader = styled.div`
-  border-bottom: 1px solid var(--color-neutral-300);
-  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  padding-bottom: ${({ theme }) => theme.spacing.sm};
   h2 {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    margin-bottom: var(--spacing-xs);
+    font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+    font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+    margin-bottom: ${({ theme }) => theme.spacing.xs};
   }
 `;
 
@@ -171,8 +171,8 @@ export const PanelText = styled.div`
 `;
 
 export const Warning = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-2xs);
+  color: ${({ theme }) => theme.colors.error.main};
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xs']};
 `;
 
 // 平均分配按鈕

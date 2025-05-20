@@ -4,8 +4,8 @@ import styled from 'styled-components';
 export const UserCardSection = styled.section`
   display: grid;
   grid-template-columns: 1.6fr 1fr;
-  margin-bottom: var(--spacing-sm);
-  padding: 0 var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding: 0 ${({ theme }) => theme.spacing.md};
 `;
 
 // 狗圖容器
@@ -40,10 +40,10 @@ export const UserCard = styled.div`
 
 // 使用者卡片 問候語
 export const UserGreeting = styled.h1`
-  color: var(--color-white);
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-sm);
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 使用者卡片 項目
@@ -51,10 +51,10 @@ export const UserCardItem = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
   width: 100%;
   height: 100%;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const UserCardItemColumn = styled.div`
@@ -63,26 +63,26 @@ export const UserCardItemColumn = styled.div`
   align-items: flex-start;
   width: 100%;
 
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 // 使用者卡片 標題
 export const UserCardTitle = styled.div`
-  color: var(--color-tertiary);
+  color: ${({ theme }) => theme.colors.tertiary.main};
 
   display: flex;
   align-items: flex-end;
   height: 100%;
 
-  margin-right: var(--spacing-sm);
+  margin-right: ${({ theme }) => theme.spacing.sm};
 
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 使用者卡片 查看詳情按鈕
 export const UserCardButton = styled.button`
-  color: var(--color-tertiary);
+  color: ${({ theme }) => theme.colors.tertiary.main};
   opacity: 0.7;
 
   display: flex;
@@ -90,27 +90,27 @@ export const UserCardButton = styled.button`
   gap: 2px;
   height: 100%;
 
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   text-decoration: underline;
 
   svg {
     padding-top: 1px;
-    font-size: var(--font-size-xs);
+    font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   }
 `;
 
 // 使用者卡片 收運日期
 export const UserCardDate = styled.div`
-  color: var(--color-white);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-normal);
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
 `;
 
 // 使用者卡片 收運時間
 export const UserCardTime = styled.div`
-  color: var(--color-white);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   letter-spacing: 0.05em;
 `; 

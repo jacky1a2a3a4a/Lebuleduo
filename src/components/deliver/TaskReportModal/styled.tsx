@@ -23,10 +23,10 @@ const slideDown = keyframes`
 `;
 
 export const ReportModal = styled.div<{ $isOpen: boolean }>`
-  background: var(--color-background-primary);
-  border: 2px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
-  box-shadow: var(--shadow-lg);
+  background: ${({ theme }) => theme.colors.background.primary};
+  border: 2px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl} ${({ theme }) => theme.borderRadius.xl} 0 0;
+  box-shadow: ${({ theme }) => theme.shadows.lg};
 
   display: flex;
   flex-direction: column;
@@ -36,10 +36,10 @@ export const ReportModal = styled.div<{ $isOpen: boolean }>`
   left: 50%;
   transform: translate(-50%, 0);
   width: 100%;
-  max-width: var(--mobile-min-width);
+  max-width: ${({ theme }) => theme.breakpoints.mobile};
   z-index: 1000;
 
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
 
   animation: ${({ $isOpen }) => ($isOpen ? slideUp : slideDown)} 0.3s ease-out;
   animation-fill-mode: forwards;
@@ -49,109 +49,108 @@ export const ReportModal = styled.div<{ $isOpen: boolean }>`
 `;
 
 export const ReportModalTitle = styled.h2`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--spacing-md);
-  color: var(--color-text-primary);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  color: ${({ theme }) => theme.colors.text.primary};
 `;
 
 export const ReportSection = styled.div`
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const ReportSectionTitle = styled.h3`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-12);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  margin-bottom: ${({ theme }) => theme.spacing[12]};
 `;
 
 export const ReportOption = styled.div<{ $selected: boolean }>`
-  background-color: ${({ $selected }) =>
+  background-color: ${({ $selected, theme }) =>
     $selected
-      ? 'var(--color-background-error)'
-      : 'var(--color-background-primary)'};
-  color: ${({ $selected }) =>
-    $selected ? 'var(--color-error)' : 'var(--color-text-secondary)'};
+      ? theme.colors.background.error
+      : theme.colors.background.primary};
+  color: ${({ $selected, theme }) =>
+    $selected ? theme.colors.error.main : theme.colors.text.secondary};
   border: 1px solid
-    ${({ $selected }) =>
-      $selected ? 'var(--color-error)' : 'var(--color-neutral-300)'};
-  border-radius: var(--border-radius-lg);
+    ${({ $selected, theme }) =>
+      $selected ? theme.colors.error.main : theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
 
-  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm)
-    var(--spacing-md);
-  margin-bottom: var(--spacing-sm);
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.sm} ${theme.spacing.sm} ${theme.spacing.md}`};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 
-  font-size: var(--font-size-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: var(--color-error);
+    border-color: ${({ theme }) => theme.colors.error.main};
   }
 `;
 
 export const ReportTextarea = styled.textarea`
   width: 100%;
   min-height: 50px;
-  padding: var(--spacing-12);
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-lg);
+  padding: ${({ theme }) => theme.spacing[12]};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   resize: vertical;
-  font-size: var(--font-size-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   line-height: 1.5;
 
   &:focus {
     outline: none;
-    border-color: var(--color-error);
+    border-color: ${({ theme }) => theme.colors.error.main};
   }
 
   &::placeholder {
-    color: var(--color-text-disabled);
+    color: ${({ theme }) => theme.colors.text.disabled};
   }
 `;
 
 export const ReportButtonGroup = styled.div`
   display: grid;
   grid-template-columns: 1.5fr 2fr;
-  gap: var(--spacing-12);
-  margin-top: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing[12]};
+  margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
 export const ReportSubmitButton = styled.button`
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  border-radius: var(--border-radius-round);
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
 
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--color-primary-hover);
+    background-color: ${({ theme }) => theme.colors.primary.hover};
   }
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    background-color: var(--color-primary);
+    background-color: ${({ theme }) => theme.colors.primary.main};
   }
 `;
 
 export const ReportCancelButton = styled.button`
-  background-color: var(--color-background-secondary);
-  color: var(--color-text-tertiary);
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-round);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
 
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-sm);
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--color-background-secondary-hover);
+    background-color: ${({ theme }) => theme.colors.background.secondaryHover};
   }
 `;
