@@ -88,7 +88,7 @@ export const StyledThead = styled.thead`
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary.rgb}20;
+      box-shadow: 0 0 0 2px rgba(68, 93, 179, 0.2);
     }
 
     &:disabled {
@@ -201,7 +201,7 @@ export const StyledTd = styled.td`
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary.rgb}20;
+      box-shadow: 0 0 0 2px rgba(68, 93, 179, 0.2);
     }
 
     &:disabled {

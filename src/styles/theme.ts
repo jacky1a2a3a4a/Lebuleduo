@@ -52,6 +52,7 @@ export const theme = {
       main: '#445DB3',
       hover: '#334D99',
       light: '#E8EBF7',
+      rgb: '68, 93, 179',
     },
 
     secondary: {
@@ -83,6 +84,7 @@ export const theme = {
     error: {
       main: '#D99292',
       background: '#FFF4F4',
+      hover: '#C47A7A',
     },
 
     success: {
