@@ -59,7 +59,7 @@ export const OriginalPriceText = styled.span`
 `;
 
 export const DiscountText = styled.span`
-  color: ${({ theme }) => theme.colors.error};
+  color: ${({ theme }) => theme.colors.error.main};
   font-size: ${({ theme }) => theme.typography.fontSizes.xs};
 `;
 
