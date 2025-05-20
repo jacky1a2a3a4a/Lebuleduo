@@ -10,8 +10,8 @@ export const Container = styled.div`
 
 export const Sidebar = styled.div`
   width: 110px;
-  background-color: var(--color-primary);
-  color: var(--color-white);
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.white};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,41 +23,40 @@ export const Sidebar = styled.div`
 `;
 
 export const SidebarHeader = styled.div`
-  padding: var(--spacing-md);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  border-bottom: 1px solid var(--color-white);
+  padding: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.white};
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: ${({ theme }) => theme.spacing.xs};
 `;
 
 export const NavItems = styled.div`
   display: flex;
   flex-direction: column;
-
   width: 100%;
-  padding: 0 var(--spacing-sm);
-  margin-top: var(--spacing-md);
+  padding: 0 ${({ theme }) => theme.spacing.sm};
+  margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
 export const NavItem = styled.div<{ $active?: boolean }>`
-  background-color: ${(props) =>
-    props.$active ? 'var(--color-primary-hover)' : 'transparent'};
-  border-radius: var(--border-radius-lg);
+  background-color: ${({ theme, $active }) =>
+    $active ? theme.colors.primary.hover : 'transparent'};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  font-size: var(--font-size-3xs);
+  gap: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.sm};
+  font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
   cursor: pointer;
 
   &:hover {
-    background-color: var(--color-primary-hover);
+    background-color: ${({ theme }) => theme.colors.primary.hover};
   }
 
   &:active {
-    background-color: var(--color-primary-hover);
+    background-color: ${({ theme }) => theme.colors.primary.hover};
   }
 
   svg {
@@ -71,6 +70,6 @@ export const NavItem = styled.div<{ $active?: boolean }>`
 `;
 
 export const MainContent = styled.main<{ $assignmentPanelOpen: boolean }>`
-  background-color: var(--color-white);
+  background-color: ${({ theme }) => theme.colors.white};
   flex: 1;
 `;

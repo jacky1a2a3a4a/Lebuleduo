@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
   height: 100%;
   overflow: hidden; /* 容器本身不滾動 */
 `;
@@ -12,8 +12,8 @@ export const StyledTable = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: var(--color-white);
-  border-radius: var(--border-radius-md);
+  background: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   table-layout: fixed;
   height: 100%;
@@ -23,7 +23,7 @@ export const StyledTable = styled.table`
 `;
 
 export const StyledThead = styled.thead`
-  background: var(--color-neutral-100);
+  background: ${({ theme }) => theme.colors.neutral[100]};
   position: sticky;
   top: 0;
   z-index: 1;
@@ -33,20 +33,20 @@ export const StyledThead = styled.thead`
 
   tr {
     th {
-      padding: var(--spacing-sm);
-      font-size: var(--font-size-3xs);
-      font-weight: 600;
-      color: var(--color-neutral-700);
+      padding: ${({ theme }) => theme.spacing.sm};
+      font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
+      font-weight: ${({ theme }) => theme.typography.fontWeights.semibold};
+      color: ${({ theme }) => theme.colors.neutral[700]};
       text-align: center;
-      border-bottom: 2px solid var(--color-neutral-200);
+      border-bottom: 2px solid ${({ theme }) => theme.colors.neutral[200]};
       white-space: nowrap;
 
       &:first-child {
-        padding-left: var(--spacing-lg);
+        padding-left: ${({ theme }) => theme.spacing.lg};
       }
 
       &:last-child {
-        padding-right: var(--spacing-lg);
+        padding-right: ${({ theme }) => theme.spacing.lg};
       }
     }
   }
@@ -57,21 +57,21 @@ export const StyledThead = styled.thead`
     appearance: none;
     width: 14px;
     height: 14px;
-    border: 2px solid var(--color-neutral-300);
+    border: 2px solid ${({ theme }) => theme.colors.neutral[300]};
     border-radius: 3px;
-    background-color: var(--color-white);
+    background-color: ${({ theme }) => theme.colors.white};
     cursor: pointer;
     position: relative;
     transition: all 0.2s ease-in-out;
 
     &:hover {
-      border-color: var(--color-primary);
-      background-color: var(--color-neutral-50);
+      border-color: ${({ theme }) => theme.colors.primary.main};
+      background-color: ${({ theme }) => theme.colors.neutral[50]};
     }
 
     &:checked {
-      background-color: var(--color-primary);
-      border-color: var(--color-primary);
+      background-color: ${({ theme }) => theme.colors.primary.main};
+      border-color: ${({ theme }) => theme.colors.primary.main};
 
       &::after {
         content: '';
@@ -80,7 +80,7 @@ export const StyledThead = styled.thead`
         top: 0;
         width: 4px;
         height: 7px;
-        border: solid var(--color-white);
+        border: solid ${({ theme }) => theme.colors.white};
         border-width: 0 2px 2px 0;
         transform: rotate(45deg);
       }
@@ -88,13 +88,13 @@ export const StyledThead = styled.thead`
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.2);
+      box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary.rgb}20;
     }
 
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-      background-color: var(--color-neutral-100);
+      background-color: ${({ theme }) => theme.colors.neutral[100]};
     }
   }
 `;
@@ -147,21 +147,21 @@ export const StyledTbody = styled.tbody`
 `;
 
 export const StyledTd = styled.td`
-  padding: var(--spacing-sm);
-  font-size: var(--font-size-3xs);
-  color: var(--color-neutral-600);
-  border-bottom: 1px solid var(--color-neutral-200);
+  padding: ${({ theme }) => theme.spacing.sm};
+  font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
+  color: ${({ theme }) => theme.colors.neutral[600]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.neutral[200]};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
 
   &:first-child {
-    padding-left: var(--spacing-lg);
+    padding-left: ${({ theme }) => theme.spacing.lg};
   }
 
   &:last-child {
-    padding-right: var(--spacing-lg);
+    padding-right: ${({ theme }) => theme.spacing.lg};
   }
 
   input[type='checkbox'] {
@@ -170,21 +170,21 @@ export const StyledTd = styled.td`
     appearance: none;
     width: 14px;
     height: 14px;
-    border: 2px solid var(--color-neutral-300);
+    border: 2px solid ${({ theme }) => theme.colors.neutral[300]};
     border-radius: 3px;
-    background-color: var(--color-white);
+    background-color: ${({ theme }) => theme.colors.white};
     cursor: pointer;
     position: relative;
     transition: all 0.2s ease-in-out;
 
     &:hover {
-      border-color: var(--color-primary);
-      background-color: var(--color-neutral-50);
+      border-color: ${({ theme }) => theme.colors.primary.main};
+      background-color: ${({ theme }) => theme.colors.neutral[50]};
     }
 
     &:checked {
-      background-color: var(--color-primary);
-      border-color: var(--color-primary);
+      background-color: ${({ theme }) => theme.colors.primary.main};
+      border-color: ${({ theme }) => theme.colors.primary.main};
 
       &::after {
         content: '';
@@ -193,7 +193,7 @@ export const StyledTd = styled.td`
         top: 0;
         width: 4px;
         height: 7px;
-        border: solid var(--color-white);
+        border: solid ${({ theme }) => theme.colors.white};
         border-width: 0 2px 2px 0;
         transform: rotate(45deg);
       }
@@ -201,29 +201,29 @@ export const StyledTd = styled.td`
 
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.2);
+      box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary.rgb}20;
     }
 
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-      background-color: var(--color-neutral-100);
+      background-color: ${({ theme }) => theme.colors.neutral[100]};
     }
   }
 `;
 
 export const ViewDetailsButton = styled.button`
-  color: var(--color-primary);
-  padding: var(--spacing-2xs) var(--spacing-xs);
+  color: ${({ theme }) => theme.colors.primary.main};
+  padding: ${({ theme }) => theme.spacing['2xs']} ${({ theme }) => theme.spacing.xs};
   background: none;
-  border: 1px solid var(--color-primary);
-  border-radius: var(--border-radius-sm);
+  border: 1px solid ${({ theme }) => theme.colors.primary.main};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   cursor: pointer;
-  font-size: var(--font-size-3xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--color-primary);
-    color: var(--color-white);
+    background-color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.white};
   }
 `;

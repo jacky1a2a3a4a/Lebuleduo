@@ -4,25 +4,24 @@ export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-sm);
-  background-color: var(--color-white);
-  border-bottom: 1px solid var(--color-gray-200);
+  padding: ${({ theme }) => theme.spacing.sm};
+  background-color: ${({ theme }) => theme.colors.white};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[200]};
 `;
 
 export const SearchInput = styled.div`
   display: flex;
   align-items: center;
-  background-color: var(--color-gray-100);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
   width: 200px;
-
-  font-size: var(--font-size-2xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xs']};
 
   input {
     border: none;
     background: none;
-    margin-left: var(--spacing-sm);
+    margin-left: ${({ theme }) => theme.spacing.sm};
     width: 100%;
     outline: none;
   }
