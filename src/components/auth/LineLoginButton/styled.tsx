@@ -30,8 +30,8 @@ export const LineButton = styled.button<{
 }>`
   background: linear-gradient(
     135deg,
-    ${({ theme }) => theme.colors.green.line.light} 0%,
-    ${({ theme }) => theme.colors.green.line[0]} 100%
+    ${({ theme }) => theme.colors.greenLine.light} 0%,
+    ${({ theme }) => theme.colors.greenLine[0]} 100%
   );
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
