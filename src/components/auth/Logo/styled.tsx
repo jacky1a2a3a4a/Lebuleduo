@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Logo = styled.img`
   width: 185px;
   height: 100%;
-  margin-bottom: var(--spacing-12);
+  margin-bottom: ${({ theme }) => theme.spacing[12]};
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
   transition: transform 0.3s ease;
 
@@ -17,21 +17,21 @@ export const WelcomeText = styled.h1`
   flex-direction: column;
   align-items: center;
   width: 200px;
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: ${({ theme }) => theme.spacing['2xl']};
 `;
 
 export const LogoType = styled.img`
-  color: var(--color-white);
+  color: ${({ theme }) => theme.colors.white};
   width: 100%;
   max-width: 160px;
-  margin: var(--spacing-md) 0 var(--spacing-sm);
+  margin: ${({ theme }) => theme.spacing.md} 0 ${({ theme }) => theme.spacing.sm};
 `;
 
 export const TextSub = styled.span`
-  color: var(--color-white);
+  color: ${({ theme }) => theme.colors.white};
   width: 100%;
   text-align: center;
-  font-size: var(--font-size-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   display: flex;
   justify-content: space-between;
   align-items: center;

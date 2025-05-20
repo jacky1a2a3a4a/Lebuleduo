@@ -24,8 +24,8 @@ export const PhotoUploadBox = styled.div`
 
 export const PlusIcon = styled.div`
   font-size: 24px;
-  color: var(--color-neutral-500);
-  margin-bottom: var(--spacing-sm);
+  color: ${({ theme }) => theme.colors.neutral[500]};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const UploadText = styled.div`
@@ -65,7 +65,7 @@ export const DeleteButton = styled.button`
 `;
 
 export const ValidationMessage = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-xs);
+  color: ${({ theme }) => theme.colors.error};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;

@@ -11,40 +11,40 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
 `;
 
 export const ModalContent = styled.div`
-  background: var(--color-background-primary);
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius-xl);
+  background: ${({ theme }) => theme.colors.background.primary};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   width: 90%;
   max-width: 1200px;
   max-height: 90vh;
   position: relative;
   margin: auto;
-  box-shadow: var(--shadow-lg);
+  box-shadow: ${({ theme }) => theme.shadows.lg};
 `;
 
 export const CloseButton = styled.button`
   position: fixed;
-  bottom: var(--spacing-lg);
+  bottom: ${({ theme }) => theme.spacing.lg};
   left: 50%;
   transform: translateX(-50%);
-  background: var(--color-background-primary);
+  background: ${({ theme }) => theme.colors.background.primary};
   border: none;
-  border-radius: var(--border-radius-round);
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   width: 32px;
   height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: var(--font-size-lg);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
   z-index: 1001;
-  box-shadow: var(--btn-shadow);
+  box-shadow: ${({ theme }) => theme.shadows.button};
 
   &:hover {
-    box-shadow: var(--btn-shadow-hover);
+    box-shadow: ${({ theme }) => theme.shadows.buttonHover};
   }
 `;

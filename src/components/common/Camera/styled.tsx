@@ -16,12 +16,12 @@ export const CameraPreview = styled.div`
 
 export const CloseButton = styled.button`
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: ${({ theme }) => theme.spacing.md};
+  right: ${({ theme }) => theme.spacing.md};
   background: none;
   border: none;
-  color: white;
-  font-size: 24px;
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
   cursor: pointer;
   z-index: 1001;
 `;

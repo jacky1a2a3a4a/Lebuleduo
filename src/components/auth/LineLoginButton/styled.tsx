@@ -3,25 +3,25 @@ import styled from 'styled-components';
 export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-4);
+  gap: ${({ theme }) => theme.spacing[4]};
   width: 100%;
   max-width: 200px;
 `;
 
 export const RoleText = styled.div`
-  color: var(--color-secondary);
+  color: ${({ theme }) => theme.colors.secondary.main};
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
   letter-spacing: 0.1em;
-  font-weight: var(--font-weight-medium);
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 export const IconStyled = styled.div`
-  margin-right: var(--spacing-12);
-  font-size: var(--font-size-xs);
+  margin-right: ${({ theme }) => theme.spacing[12]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
 `;
 
 export const LineButton = styled.button<{
@@ -30,15 +30,15 @@ export const LineButton = styled.button<{
 }>`
   background: linear-gradient(
     135deg,
-    var(--color-green-line-light) 0%,
-    var(--color-green-line-0) 100%
+    ${({ theme }) => theme.colors.green.line.light} 0%,
+    ${({ theme }) => theme.colors.green.line[0]} 100%
   );
-  color: white;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  padding: var(--spacing-md) var(--spacing-2xl);
-  margin-bottom: var(--spacing-md);
-  border-radius: var(--border-radius-round);
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing['2xl']};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   cursor: pointer;
   display: flex;
   align-items: center;
