@@ -11,18 +11,18 @@ export const ErrorReportContainer = styled.div`
 `;
 
 export const ErrorTitle = styled.div<{ color?: string }>`
-  color: ${(props) => props.color || ({ theme }) => theme.colors.error};
+  color: ${({ color, theme }) => color || theme.colors.error};
   margin-right: ${({ theme }) => theme.spacing.sm};
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 export const ErrorMessage = styled.div<{ color?: string }>`
-  color: ${(props) => props.color || ({ theme }) => theme.colors.error};
+  color: ${({ color, theme }) => color || theme.colors.error};
 `;
 
 export const ErrorImage = styled.img`
   width: 100px;
   height: auto;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;

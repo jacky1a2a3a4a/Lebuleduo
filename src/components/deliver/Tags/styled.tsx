@@ -9,12 +9,12 @@ type CategoryTabProps = {
 };
 
 export const TaskCategoryWrapper = styled.div<CategoryPositionProps>`
-  background-color: var(--color-background-secondary);
-  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.xl} ${({ theme }) => theme.borderRadius.xl} 0 0;
 
   width: 100%;
-  max-width: var(--mobile-min-width);
-  padding: var(--spacing-md) 0;
+  max-width: ${({ theme }) => theme.breakpoints.mobile};
+  padding: ${({ theme }) => `${theme.spacing.md} 0`};
   transition: top 0.3s ease;
 `;
 
@@ -23,7 +23,7 @@ export const TaskCategoryContainer = styled.div`
   width: 100%;
   margin: 0 auto;
   display: flex;
-  gap: 0.75rem;
+  gap: ${({ theme }) => theme.spacing.sm};
 
   overflow-x: auto;
   overflow-y: hidden;
@@ -34,23 +34,23 @@ export const TaskCategoryContainer = styled.div`
 
   &::after {
     content: '';
-    padding-right: 2rem;
+    padding-right: ${({ theme }) => theme.spacing.md};
   }
 `;
 
 export const CategoryTab = styled.button<CategoryTabProps>`
-  background-color: ${({ $isActive }) =>
-    $isActive ? 'var(--color-tertiary)' : 'var(--color-white)'};
-  color: ${({ $isActive }) =>
-    $isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)'};
-  border: ${({ $isActive }) =>
-    $isActive ? 'none' : '1px solid var(--color-neutral-300)'};
-  border-radius: var(--border-radius-round);
+  background-color: ${({ $isActive, theme }) =>
+    $isActive ? theme.colors.tertiary.main : theme.colors.white};
+  color: ${({ $isActive, theme }) =>
+    $isActive ? theme.colors.text.primary : theme.colors.text.secondary};
+  border: ${({ $isActive, theme }) =>
+    $isActive ? 'none' : `1px solid ${theme.colors.neutral[300]}`};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
 
-  padding: 0.5rem 1rem;
-  font-size: var(--font-size-sm);
-  font-weight: ${({ $isActive }) =>
-    $isActive ? 'var(--font-weight-medium)' : 'var(--font-weight-normal)'};
+  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.md}`};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ $isActive, theme }) =>
+    $isActive ? theme.typography.fontWeights.medium : theme.typography.fontWeights.normal};
   white-space: nowrap;
 
   cursor: pointer;
@@ -58,10 +58,10 @@ export const CategoryTab = styled.button<CategoryTabProps>`
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: ${(props) =>
-      props.$isActive
-        ? 'var(--color-tertiary-hover)'
-        : 'var(--color-gray-100)'};
+    background-color: ${({ $isActive, theme }) =>
+      $isActive
+        ? theme.colors.tertiary.hover
+        : theme.colors.gray[100]};
   }
 
   &:active {
