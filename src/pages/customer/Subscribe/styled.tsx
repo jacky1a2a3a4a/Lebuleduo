@@ -250,12 +250,12 @@ export const FrequencyOption = styled.div<StyledProps>`
   background-color: ${({ theme }) => theme.colors.gray[0]};
   border: 1px solid
     ${(props) =>
-      props.$active ? 'var(--color-primary)' : 'var(--color-secondary)'};
-  border-radius: var(--border-radius-xl);
+      props.$active ? props.theme.colors.primary.main : props.theme.colors.secondary.main};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
 
   display: flex;
   align-items: center;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
 
   position: relative;
   cursor: pointer;
@@ -268,8 +268,8 @@ export const RadioButton = styled.div<StyledProps>`
   border-radius: 50%;
   border: 2px solid
     ${(props) =>
-      props.$active ? 'var(--color-secondary)' : 'var(--color-secondary)'};
-  margin-right: var(--spacing-md);
+      props.$active ? props.theme.colors.secondary.main : props.theme.colors.secondary.main};
+  margin-right: ${({ theme }) => theme.spacing.md};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -279,7 +279,7 @@ export const RadioButton = styled.div<StyledProps>`
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: var(--color-gray-600);
+    background-color: ${({ theme }) => theme.colors.gray[600]};
     display: ${(props) => (props.$active ? 'block' : 'none')};
   }
 `;
@@ -293,49 +293,49 @@ export const FrequencyTextContainer = styled.div`
 
 // 預定期程 文字
 export const FrequencyText = styled.span`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 預定期程 子文字
 export const FrequencySubtext = styled.span`
-  font-size: var(--font-size-sm);
-  color: var(--color-gray-400);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.gray[400]};
 `;
 
 // 預定期程 折扣標籤
 export const DiscountTag = styled.span`
-  color: var(--color-white);
-  background-color: var(--color-secondary);
-  border-radius: var(--border-radius-sm);
+  color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.secondary.main};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
 
   position: absolute;
-  right: var(--spacing-md);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-size-xs);
+  right: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
 `;
 
 //// 每周收運日 大容器
 export const WeekdaysContainer = styled.div<StyledProps>`
-  background-color: var(--color-white);
+  background-color: ${({ theme }) => theme.colors.white};
   border: 1px solid
     ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-secondary)'};
-  border-radius: var(--border-radius-lg);
+      props.$error ? props.theme.colors.red[500] : props.theme.colors.secondary.main};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   display: flex;
   justify-content: space-between;
   margin-bottom: ${(props) =>
-    props.$error ? 'var(--spacing-xs)' : 'var(--spacing-lg)'};
-  padding: var(--spacing-md);
+    props.$error ? props.theme.spacing.xs : props.theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.md};
 `;
 
 // 每周收運日 按鈕
 export const WeekdayButton = styled.button<StyledProps>`
   background-color: ${(props) =>
-    props.$active ? 'var(--color-primary)' : 'var(--color-neutral-200)'};
+    props.$active ? props.theme.colors.primary.main : props.theme.colors.neutral[200]};
   color: ${(props) =>
-    props.$active ? 'var(--color-white)' : 'var(--color-text-secondary)'};
-  border: 1px solid var(--color-secondary);
+    props.$active ? props.theme.colors.white : props.theme.colors.text.secondary};
+  border: 1px solid ${({ theme }) => theme.colors.secondary.main};
   border-radius: 50%;
 
   width: 36px;
@@ -345,66 +345,66 @@ export const WeekdayButton = styled.button<StyledProps>`
   align-items: center;
   justify-content: center;
 
-  font-size: var(--font-size-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 
   &:hover {
     background-color: ${(props) =>
       props.$active
-        ? 'var(--color-primary-hover)'
-        : 'var(--color-neutral-300)'};
+        ? props.theme.colors.primary.hover
+        : props.theme.colors.neutral[300]};
   }
 `;
 
 //// 日期選擇器 大容器
 export const DatePickerContainer = styled.div`
   width: 100%;
-  padding: var(--spacing-sm);
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-lg);
+  padding: ${({ theme }) => theme.spacing.sm};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   cursor: pointer;
-  background-color: var(--color-background-primary);
+  background-color: ${({ theme }) => theme.colors.background.primary};
   transition: border-color 0.2s ease;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 
   &:hover {
-    border-color: var(--color-primary);
+    border-color: ${({ theme }) => theme.colors.primary.main};
   }
 `;
 
 export const DateDisplay = styled.div`
-  font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
-  padding: var(--spacing-12);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.text.primary};
+  padding: ${({ theme }) => theme.spacing[12]};
 `;
 
 //// 總計價格與下一步 大容器
 export const BottomInfoContainer = styled.div`
-  background-color: var(--color-white);
-  border-top: 1px solid var(--color-secondary);
+  background-color: ${({ theme }) => theme.colors.white};
+  border-top: 1px solid ${({ theme }) => theme.colors.secondary.main};
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
 `;
 
 //// 總計價格 最外容器
 export const TotalPrice = styled.div`
-  font-weight: var(--font-weight-bold);
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 總計價格 文字
 export const TotalPriceText = styled.div`
-  font-size: var(--font-size-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   line-height: 1;
-  margin-right: var(--spacing-md);
+  margin-right: ${({ theme }) => theme.spacing.md};
 `;
 
 // 價格容器
@@ -422,51 +422,51 @@ export const PriceDetails = styled.div`
 
 // 總計價格 數字
 export const TotalPriceTCount = styled.div`
-  color: var(--color-primary);
-  font-size: var(--font-size-2xl);
+  color: ${({ theme }) => theme.colors.primary.main};
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
 `;
 
 // 原始價格（有刪除線）
 export const OriginalPriceText = styled.div`
-  font-size: var(--font-size-xs);
-  color: var(--color-text-tertiary);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.text.tertiary};
   text-decoration: line-through;
 
-  margin-right: var(--spacing-xs);
+  margin-right: ${({ theme }) => theme.spacing.xs};
 `;
 
 // 折扣金額
 export const DiscountText = styled.div`
-  font-size: var(--font-size-xs);
-  color: var(--color-red-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.red[500]};
 `;
 
 // 下一步按鈕
 export const NextButton = styled.button<StyledProps>`
   width: 100%;
-  padding: var(--spacing-sm);
+  padding: ${({ theme }) => theme.spacing.sm};
   background-color: ${(props) =>
-    props.$active ? 'var(--color-primary)' : 'var(--color-text-disabled)'};
-  color: var(--color-white);
+    props.$active ? props.theme.colors.primary.main : props.theme.colors.text.disabled};
+  color: ${({ theme }) => theme.colors.white};
   border: none;
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-md);
-  margin-top: var(--spacing-md);
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  margin-top: ${({ theme }) => theme.spacing.md};
   cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
     background-color: ${(props) =>
-      props.$active ? 'var(--color-gray-600)' : 'var(--color-gray-300)'};
+      props.$active ? props.theme.colors.gray[600] : props.theme.colors.gray[300]};
   }
 `;
 
 // 錯誤提示
 export const ErrorMessage = styled.div`
-  color: var(--color-red-500);
-  font-size: var(--font-size-xs);
-  margin-bottom: var(--spacing-lg);
-  padding-left: var(--spacing-sm);
+  color: ${({ theme }) => theme.colors.red[500]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  padding-left: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const IconButton = styled.button`
@@ -474,8 +474,8 @@ export const IconButton = styled.button`
   height: 100%;
 
   svg {
-    color: var(--color-secondary);
-    font-size: var(--font-size-lg);
+    color: ${({ theme }) => theme.colors.secondary.main};
+    font-size: ${({ theme }) => theme.typography.fontSizes.lg};
     width: 24px;
     height: 24px;
   }

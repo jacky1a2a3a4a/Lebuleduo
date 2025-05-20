@@ -55,7 +55,7 @@ export const ButtonCardRadio = styled.div<StyledProps>`
   border-radius: 50%;
   border: 2px solid
     ${({ $active, theme }) =>
-      $active ? theme.colors.secondary : theme.colors.secondary};
+      $active ? theme.colors.primary.main : theme.colors.secondary.main};
   margin-right: ${({ theme }) => theme.spacing.md};
   display: flex;
   align-items: center;
@@ -66,7 +66,7 @@ export const ButtonCardRadio = styled.div<StyledProps>`
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: ${({ theme }) => theme.colors.gray[600]};
+    background-color: ${({ theme }) => theme.colors.primary.main};
     display: ${({ $active }) => ($active ? 'block' : 'none')};
   }
 `;
