@@ -31,7 +31,8 @@ import ButtonCard from '../../../components/customer/Subscribe/ButtonCard';
 import { SubscriptionData } from './types';
 import { getFormattedDateWithDay } from '../../../utils/formatDate';
 import { SubscribeSteps } from '../../../components/customer/Subscribe/SubscribeSteps';
-import { createOrder } from '../../../apis/customer/PostOrder'; //api 建立訂單
+import { postOrder } from '../../../apis/customer/PostOrder';
+import { createPayment } from '../../../apis/customer/postCreatePayment';
 
 const userId = localStorage.getItem('UsersID');
 
@@ -117,7 +118,7 @@ const SubscribeCheckout = () => {
       }
 
       // api 建立訂單
-      const response = await createOrder(subscriptionData);
+      const response = await postOrder(subscriptionData);
       console.log('api提交成功:', response);
       console.log('訂單id:', response.orders.OrdersID);
 
@@ -132,37 +133,9 @@ const SubscribeCheckout = () => {
       sessionStorage.setItem('subscriptionData', JSON.stringify(updatedData));
 
       if (response) {
-        // 呼叫藍新金流 API
         try {
-          // 先檢查藍新金流是否在維護中
-          try {
-            const maintenanceCheck = await axios.get(
-              'https://cwww.newebpay.com/maintain/index',
-              {
-                timeout: 5000, // 5秒超時
-              },
-            );
-            if (maintenanceCheck.status === 200) {
-              setError('藍新金流系統正在維護中，請稍後再試');
-              return;
-            }
-          } catch (maintenanceError) {
-            // 如果無法訪問維護頁面，表示系統正常運作
-            console.log('藍新金流系統正常運作');
-          }
-
-          const paymentResponse = await axios.post(
-            'api/Post/bluenew/createPayment',
-            {
-              orderId: orderId,
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            },
-          );
-          console.log('藍新金流 API 回應:', paymentResponse.data);
+          const paymentResponse = await createPayment(orderId);
+          console.log('藍新金流 API 回應:', paymentResponse);
 
           // 確保頁面已完全載入
           if (document.readyState !== 'complete') {
@@ -177,31 +150,31 @@ const SubscribeCheckout = () => {
           // 建立表單並自動提交
           const form = document.createElement('form');
           form.method = 'POST';
-          form.action = paymentResponse.data.paymentData.PaymentUrl;
+          form.action = paymentResponse.paymentData.PaymentUrl;
 
           // 建立隱藏的輸入欄位
           const merchantId = document.createElement('input');
           merchantId.type = 'hidden';
           merchantId.name = 'MerchantID';
-          merchantId.value = paymentResponse.data.paymentData.MerchantID;
+          merchantId.value = paymentResponse.paymentData.MerchantID;
           form.appendChild(merchantId);
 
           const tradeInfo = document.createElement('input');
           tradeInfo.type = 'hidden';
           tradeInfo.name = 'TradeInfo';
-          tradeInfo.value = paymentResponse.data.paymentData.TradeInfo;
+          tradeInfo.value = paymentResponse.paymentData.TradeInfo;
           form.appendChild(tradeInfo);
 
           const tradeSha = document.createElement('input');
           tradeSha.type = 'hidden';
           tradeSha.name = 'TradeSha';
-          tradeSha.value = paymentResponse.data.paymentData.TradeSha;
+          tradeSha.value = paymentResponse.paymentData.TradeSha;
           form.appendChild(tradeSha);
 
           const version = document.createElement('input');
           version.type = 'hidden';
           version.name = 'Version';
-          version.value = paymentResponse.data.paymentData.Version || '1.6';
+          version.value = paymentResponse.paymentData.Version || '1.6';
           form.appendChild(version);
 
           // 確保 document.body 存在
@@ -215,16 +188,7 @@ const SubscribeCheckout = () => {
           return;
         } catch (paymentError) {
           console.error('藍新金流 API 呼叫失敗:', paymentError);
-          if (axios.isAxiosError(paymentError) && paymentError.response) {
-            console.error('錯誤詳情:', paymentError.response.data);
-            setError(
-              `付款處理失敗: ${paymentError.response.data.message || '請稍後再試'}`,
-            );
-          } else if (paymentError.code === 'ECONNABORTED') {
-            setError('藍新金流系統連線逾時，請稍後再試');
-          } else {
-            setError('付款處理失敗，請稍後再試');
-          }
+          setError(paymentError.message);
           return;
         }
       }
