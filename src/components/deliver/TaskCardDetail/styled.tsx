@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 // === 最外層容器 ===
 export const FullHeightContainer = styled.div`
-  background-color: var(--color-background-primary);
+  background-color: ${({ theme }) => theme.colors.background.primary};
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: var(--mobile-min-width);
+  max-width: ${({ theme }) => theme.breakpoints.mobile};
   min-height: 100vh;
-  padding: 0 var(--spacing-md);
+  padding: 0 ${({ theme }) => theme.spacing.md};
   margin: 0 auto;
 
   &::-webkit-scrollbar {
@@ -19,36 +19,32 @@ export const FullHeightContainer = styled.div`
 
 // === 通用大標題文字 ===
 export const Title = styled.div`
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text.primary};
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-
-  margin-bottom: var(--spacing-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 // === 通用容器卡片 ===
 export const DetailCard = styled.div`
-  background-color: var(--color-gray-0);
-  border: 1.5px solid var(--color-gray-300);
-  border-radius: var(--border-radius-lg);
-
+  background-color: ${({ theme }) => theme.colors.gray[0]};
+  border: 1.5px solid ${({ theme }) => theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 100%;
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-
-  font-size: var(--font-size-sm);
+  padding: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 `;
 
 // 通用容器 卡片內容
 export const CardSection = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 通用容器 水平分散
@@ -56,7 +52,7 @@ export const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 // 通用容器 普通
@@ -64,59 +60,56 @@ export const DetailFlex = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 //時間
 export const DetailTime = styled.div`
-  color: var(--color-text-primary);
-
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 export const DetailLabel = styled.div`
-  color: var(--color-neutral-600);
+  color: ${({ theme }) => theme.colors.neutral[600]};
   display: flex;
   align-items: center;
-  font-weight: var(--font-weight-medium);
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 export const DetailSign = styled.div`
-  color: var(--color-text-primary);
-
+  color: ${({ theme }) => theme.colors.text.primary};
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
-  margin-right: var(--spacing-xs);
-  font-size: var(--font-size-xl);
+  margin-right: ${({ theme }) => theme.spacing.xs};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
 `;
 
 export const DetailValue = styled.div`
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   text-align: right;
 `;
 
 export const Divider = styled.hr`
   border: none;
-  border-top: 1px solid var(--color-gray-300);
-  margin: var(--spacing-md) 0;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  margin: ${({ theme }) => theme.spacing.md} 0;
 `;
 
 export const DetailImgContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
   width: 100%;
-  margin-top: var(--spacing-md);
+  margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
 export const DetailImg = styled.div`
-  background-color: var(--color-gray-200);
-  border-radius: var(--border-radius-lg);
+  background-color: ${({ theme }) => theme.colors.gray[200]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 80px;
   aspect-ratio: 3/4;
   overflow: hidden;
@@ -128,14 +121,14 @@ export const DetailImg = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: var(--border-radius);
+    border-radius: ${({ theme }) => theme.borderRadius.md};
   }
 `;
 
 export const DetailAddress = styled.div`
-  color: var(--color-neutral-500);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.neutral[500]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   text-decoration: underline;
   letter-spacing: 0.05em;
 `;
@@ -144,58 +137,56 @@ export const DetailAddress = styled.div`
 export const MapContainer = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: var(--border-radius-xl);
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
 `;
 
 // 方案標題
 export const PlanTitle = styled.div`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 方案內容
 export const PlanContent = styled.div`
-  color: var(--color-neutral-400);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.neutral[400]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 卡片內標題
 export const PageTitle = styled.div`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 卡片內內容
 export const PageContent = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  margin-top: var(--spacing-xs);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;
 
 // ===拍照上傳 大容器===
 export const PhotoContainer = styled.div`
-  color: var(--color-text-tertiary);
-
+  color: ${({ theme }) => theme.colors.text.tertiary};
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-xs);
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;
 
 // ===照片 容器===
 export const PhotoBox = styled.div`
-  background-color: var(--color-gray-100);
-  border-radius: var(--border-radius-lg);
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
-
   aspect-ratio: 3/4;
   overflow: hidden;
 
@@ -208,11 +199,11 @@ export const PhotoBox = styled.div`
 
 // ===異常回報區塊===
 export const ReportBlock = styled.div`
-  background-color: var(--color-background-error);
-  border: 1px solid var(--color-error);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  margin-top: var(--spacing-sm);
+  background-color: ${({ theme }) => theme.colors.background.error};
+  border: 1px solid ${({ theme }) => theme.colors.error};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.sm};
   width: 100%;
   text-align: left;
   cursor: pointer;
@@ -220,7 +211,7 @@ export const ReportBlock = styled.div`
   position: relative;
 
   &:hover {
-    background-color: var(--color-background-error);
+    background-color: ${({ theme }) => theme.colors.background.error};
     opacity: 0.9;
   }
 `;
@@ -235,25 +226,24 @@ export const ReportContent = styled.div`
 
 // 異常回報區塊 標題
 export const ReportBlockTitle = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.error};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding-right: var(--spacing-xl);
+  gap: ${({ theme }) => theme.spacing.xs};
+  padding-right: ${({ theme }) => theme.spacing.xl};
 `;
 
 // 異常回報區塊 內容
 export const ReportBlockContent = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-xs);
+  color: ${({ theme }) => theme.colors.error};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 `;
 
 // 異常回報區塊 描述
 export const ReportBlockDescription = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-xs);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;

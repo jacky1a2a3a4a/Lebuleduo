@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 // === 最外層容器 ===
 export const FullHeightContainer = styled.div`
-  background-color: var(--color-background-primary);
+  background-color: ${({ theme }) => theme.colors.background.primary};
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: var(--mobile-min-width);
+  max-width: ${({ theme }) => theme.breakpoints.mobile};
   min-height: 100vh;
-  padding: 0 var(--spacing-md) var(--spacing-md);
+  padding: 0 ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.md};
   margin: 0 auto;
 
   &::-webkit-scrollbar {
@@ -23,34 +23,30 @@ export const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: var(--mobile-min-width);
-
-  margin: var(--spacing-sm) 0 var(--spacing-lg);
+  max-width: ${({ theme }) => theme.breakpoints.mobile};
+  margin: ${({ theme }) => theme.spacing.sm} 0 ${({ theme }) => theme.spacing.lg};
 `;
 
 // === 通用大標題文字 ===
 export const Title = styled.div`
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text.primary};
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-
-  margin-bottom: var(--spacing-xs);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 // 導航 文字容器
 export const NavTitle = styled.div`
-  color: var(--color-text-primary);
+  color: ${({ theme }) => theme.colors.text.primary};
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   line-height: 1.2;
 `;
 
@@ -60,12 +56,11 @@ export const IconStyled = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-
   height: 24px;
   width: 24px;
   position: relative;
   top: 1px;
-  margin-right: var(--spacing-xs);
+  margin-right: ${({ theme }) => theme.spacing.xs};
 `;
 
 // 導航 標題文字
@@ -78,29 +73,27 @@ export const NavTitleText = styled.div`
 
 // 導航 副標題
 export const NavSubtitle = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-normal);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
 `;
 
 // === 通用容器卡片 ===
 export const DetailCard = styled.div`
-  background-color: var(--color-gray-0);
-  border: 1.5px solid var(--color-gray-300);
-  border-radius: var(--border-radius-lg);
-
+  background-color: ${({ theme }) => theme.colors.gray[0]};
+  border: 1.5px solid ${({ theme }) => theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 100%;
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-
-  font-size: var(--font-size-sm);
+  padding: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 `;
 
 // 通用容器 卡片內容
 export const CardSection = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 通用容器 水平分散
@@ -108,7 +101,7 @@ export const DetailRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
 // 通用容器 普通
@@ -116,59 +109,56 @@ export const DetailFlex = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 //時間
 export const DetailTime = styled.div`
-  color: var(--color-text-primary);
-
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 export const DetailLabel = styled.div`
-  color: var(--color-neutral-600);
+  color: ${({ theme }) => theme.colors.neutral[600]};
   display: flex;
   align-items: center;
-  font-weight: var(--font-weight-medium);
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 export const DetailSign = styled.div`
-  color: var(--color-text-primary);
-
+  color: ${({ theme }) => theme.colors.text.primary};
   display: flex;
   justify-content: flex-start;
   align-items: center;
-
-  margin-right: var(--spacing-xs);
-  font-size: var(--font-size-xl);
+  margin-right: ${({ theme }) => theme.spacing.xs};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xl};
 `;
 
 export const DetailValue = styled.div`
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   text-align: right;
 `;
 
 export const Divider = styled.hr`
   border: none;
-  border-top: 1px solid var(--color-gray-300);
-  margin: var(--spacing-md) 0;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  margin: ${({ theme }) => theme.spacing.md} 0;
 `;
 
 export const DetailImgContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
   width: 100%;
-  margin-top: var(--spacing-md);
+  margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
 export const DetailImg = styled.div`
-  background-color: var(--color-gray-200);
-  border-radius: var(--border-radius-lg);
+  background-color: ${({ theme }) => theme.colors.gray[200]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 80px;
   height: 100px;
   overflow: hidden;
@@ -184,9 +174,9 @@ export const DetailImg = styled.div`
 `;
 
 export const DetailAddress = styled.div`
-  color: var(--color-neutral-500);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.neutral[500]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   text-decoration: underline;
   letter-spacing: 0.05em;
 `;
@@ -195,40 +185,40 @@ export const DetailAddress = styled.div`
 export const MapContainer = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: var(--border-radius-xl);
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   overflow: hidden;
 `;
 
 // 方案標題
 export const PlanTitle = styled.div`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 卡片內標題
 export const PageTitle = styled.div`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 卡片內副標題
 export const PageSubtitle = styled.div`
-  color: var(--color-neutral-400);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  margin-top: var(--spacing-xs);
+  color: ${({ theme }) => theme.colors.neutral[400]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;
 
 // 方案內容
 export const PlanContent = styled.div`
-  color: var(--color-neutral-400);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.neutral[400]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 錯誤訊息
 export const ErrorMessage = styled.div`
-  background-color: var(--color-gray-100);
+  background-color: ${({ theme }) => theme.colors.gray[100]};
   width: 100%;
   height: 100%;
   display: flex;
@@ -238,26 +228,25 @@ export const ErrorMessage = styled.div`
 
 // 重量輸入框
 export const WeightInput = styled.input`
-  background-color: var(--color-background-primary);
-  color: var(--color-primary);
+  background-color: ${({ theme }) => theme.colors.background.primary};
+  color: ${({ theme }) => theme.colors.primary.main};
   width: 100%;
-  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm)
-    var(--spacing-md);
-  margin-top: var(--spacing-sm);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-sm);
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+  border: 1px solid ${({ theme }) => theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   transition: border-color 0.2s ease;
   line-height: normal;
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: ${({ theme }) => theme.colors.primary.main};
   }
 
   &::placeholder {
-    color: var(--color-neutral-400);
-    font-size: var(--font-size-sm);
+    color: ${({ theme }) => theme.colors.neutral[400]};
+    font-size: ${({ theme }) => theme.typography.fontSizes.sm};
     vertical-align: middle;
   }
 `;
@@ -267,7 +256,7 @@ export const DetailButtons = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
   width: 100%;
   margin-top: auto;
 `;
@@ -278,39 +267,39 @@ export const Button = styled.button<{
   $isCancel?: boolean;
 }>`
   padding: 0.75rem 1rem;
-  border-radius: var(--border-radius-round);
-  font-weight: var(--font-weight-medium);
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border: none;
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 
   &:first-child {
-    background-color: var(--color-gray-200);
-    color: var(--color-neutral-600);
+    background-color: ${({ theme }) => theme.colors.gray[200]};
+    color: ${({ theme }) => theme.colors.neutral[600]};
     flex: 1;
 
     &:hover {
       background-color: ${(props) =>
-        props.disabled ? 'var(--color-gray-200)' : 'var(--color-gray-300)'};
+        props.disabled ? props.theme.colors.gray[200] : props.theme.colors.gray[300]};
     }
   }
 
   &:last-child {
     background-color: ${(props) =>
-      props.$isCancel ? 'var(--color-gray-200)' : 'var(--color-neutral-600)'};
+      props.$isCancel ? props.theme.colors.gray[200] : props.theme.colors.neutral[600]};
     color: ${(props) =>
-      props.$isCancel ? 'var(--color-neutral-600)' : 'var(--color-gray-0)'};
+      props.$isCancel ? props.theme.colors.neutral[600] : props.theme.colors.gray[0]};
     flex: 2;
 
     &:hover {
       background-color: ${(props) =>
         props.disabled
           ? props.$isCancel
-            ? 'var(--color-gray-300)'
-            : 'var(--color-gray-700)'
+            ? props.theme.colors.gray[300]
+            : props.theme.colors.gray[700]
           : props.$isCancel
-            ? 'var(--color-gray-400)'
-            : 'var(--color-gray-800)'};
+            ? props.theme.colors.gray[400]
+            : props.theme.colors.gray[800]};
     }
   }
 `;
@@ -319,14 +308,14 @@ export const Button = styled.button<{
 export const PhotoUploadContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
 // ===照片 容器===
 export const PhotoUploadBox = styled.div`
-  background-color: var(--color-gray-100);
-  border-radius: var(--border-radius-lg);
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 100%;
   aspect-ratio: 3/4;
   display: flex;
@@ -339,20 +328,20 @@ export const PhotoUploadBox = styled.div`
 
 export const PlusIcon = styled.div`
   font-size: 24px;
-  color: var(--color-neutral-500);
-  margin-bottom: var(--spacing-sm);
+  color: ${({ theme }) => theme.colors.neutral[500]};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const UploadText = styled.div`
-  font-size: var(--font-size-sm);
-  color: var(--color-neutral-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.neutral[500]};
 `;
 
 export const PreviewImage = styled.img`
   width: 100%;
   aspect-ratio: 3/4;
   object-fit: cover;
-  border-radius: var(--border-radius-lg);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
 `;
 
 export const CameraPreview = styled.div`
@@ -373,7 +362,7 @@ export const CameraContainer = styled.div`
   width: 100%;
   height: 75vh;
   position: relative;
-  background-color: var(--color-text-black);
+  background-color: ${({ theme }) => theme.colors.text.black};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -387,45 +376,44 @@ export const CameraVideo = styled.video`
 
 export const CameraControls = styled.div`
   display: flex;
-  gap: var(--spacing-lg);
-  margin-top: var(--spacing-lg);
+  gap: ${({ theme }) => theme.spacing.lg};
+  margin-top: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const CameraButton = styled.button`
   width: 60px;
   height: 60px;
-  border-radius: var(--border-radius-round);
-  background-color: var(--color-background-primary);
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  background-color: ${({ theme }) => theme.colors.background.primary};
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--font-size-2xl);
-  color: var(--color-text-black);
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
+  color: ${({ theme }) => theme.colors.text.black};
 `;
 
 export const CloseButton = styled.button`
   position: absolute;
-  top: var(--spacing-lg);
-  right: var(--spacing-lg);
+  top: ${({ theme }) => theme.spacing.lg};
+  right: ${({ theme }) => theme.spacing.lg};
   background: none;
   border: none;
-  color: var(--color-background-primary);
-  font-size: var(--font-size-2xl);
+  color: ${({ theme }) => theme.colors.background.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
   cursor: pointer;
   z-index: 1001;
 `;
 
 // 刪除按鈕
 export const DeleteButton = styled.button`
-  background: var(--color-white);
-  color: var(--color-text-secondary);
-  border-radius: var(--border-radius-round);
-
+  background: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   position: absolute;
-  top: var(--spacing-xs);
-  right: var(--spacing-xs);
+  top: ${({ theme }) => theme.spacing.xs};
+  right: ${({ theme }) => theme.spacing.xs};
   border: none;
   width: 24px;
   height: 24px;
@@ -444,7 +432,7 @@ export const DeleteButton = styled.button`
 export const ReportButton = styled.button`
   background: none;
   border: none;
-  color: var(--color-text-disabled);
+  color: ${({ theme }) => theme.colors.text.disabled};
   font-size: 14px;
   text-decoration: underline;
   cursor: pointer;
@@ -458,7 +446,7 @@ export const ReportButton = styled.button`
   gap: 8px;
 
   svg {
-    color: var(--color-error);
+    color: ${({ theme }) => theme.colors.error};
     font-size: 18px;
   }
 
@@ -472,102 +460,101 @@ export const ReportModal = styled.div<{ $isOpen: boolean }>`
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--color-white);
-  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-  padding: var(--spacing-lg);
+  background: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.lg} ${({ theme }) => theme.borderRadius.lg} 0 0;
+  padding: ${({ theme }) => theme.spacing.lg};
   transform: translateY(${({ $isOpen }) => ($isOpen ? '0' : '100%')});
   transition: transform 0.3s ease-out;
   z-index: 1000;
-  box-shadow: var(--shadow-lg);
+  box-shadow: ${({ theme }) => theme.shadows.lg};
 `;
 
 export const ReportModalTitle = styled.h3`
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-lg);
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const ReportSection = styled.div`
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const ReportSectionTitle = styled.h4`
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const ReportOption = styled.div<{ $selected: boolean }>`
-  padding: var(--spacing-md);
-  border: 1px solid
-    ${({ $selected }) =>
-      $selected ? 'var(--color-primary)' : 'var(--color-neutral-300)'};
-  border-radius: var(--border-radius-md);
-  margin-bottom: var(--spacing-sm);
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ $selected, theme }) =>
+    $selected ? theme.colors.primary.main : theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   cursor: pointer;
-  background-color: ${({ $selected }) =>
-    $selected ? 'var(--color-background-secondary)' : 'var(--color-white)'};
+  background-color: ${({ $selected, theme }) =>
+    $selected ? theme.colors.background.secondary : theme.colors.white};
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--color-background-secondary);
+    background-color: ${({ theme }) => theme.colors.background.secondary};
   }
 `;
 
 export const ReportTextarea = styled.textarea`
   width: 100%;
   min-height: 100px;
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-md);
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   resize: vertical;
-  font-size: var(--font-size-sm);
-  margin-bottom: var(--spacing-lg);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: ${({ theme }) => theme.colors.primary.main};
   }
 `;
 
 export const ReportButtonGroup = styled.div`
   display: flex;
-  gap: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 export const ReportSubmitButton = styled.button`
   flex: 1;
-  padding: var(--spacing-md);
-  background-color: var(--color-primary);
-  color: var(--color-white);
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.white};
   border: none;
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--color-primary-hover);
+    background-color: ${({ theme }) => theme.colors.primary.hover};
   }
 `;
 
 export const ReportCancelButton = styled.button`
   flex: 1;
-  padding: var(--spacing-md);
-  background-color: var(--color-neutral-200);
-  color: var(--color-text-tertiary);
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: ${({ theme }) => theme.colors.neutral[200]};
+  color: ${({ theme }) => theme.colors.text.tertiary};
   border: none;
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:hover {
-    background-color: var(--color-neutral-300);
+    background-color: ${({ theme }) => theme.colors.neutral[300]};
   }
 `;
 
@@ -644,28 +631,28 @@ export const ReportBlockDescription = styled.div`
 // 完成收運按鈕
 export const CompleteButton = styled.button<{ $disabled: boolean }>`
   width: 100%;
-  padding: var(--spacing-12);
-  background-color: ${({ $disabled }) =>
-    $disabled ? 'var(--color-neutral-300)' : 'var(--color-primary)'};
-  color: var(--color-white);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  padding: ${({ theme }) => theme.spacing[12]};
+  background-color: ${({ $disabled, theme }) =>
+    $disabled ? theme.colors.neutral[300] : theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
   transition: all 0.2s ease;
-  margin-top: var(--spacing-sm);
+  margin-top: ${({ theme }) => theme.spacing.sm};
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xs);
+  gap: ${({ theme }) => theme.spacing.xs};
   line-height: 1;
 `;
 
 // 完成收運按鈕圖示
 export const CompleteIcon = styled.div`
-  font-size: var(--font-size-md);
-  color: var(--color-white);
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  color: ${({ theme }) => theme.colors.white};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -674,7 +661,7 @@ export const CompleteIcon = styled.div`
 `;
 
 export const ValidationMessage = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-xs);
-  margin-top: var(--spacing-xs);
+  color: ${({ theme }) => theme.colors.error};
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  margin-top: ${({ theme }) => theme.spacing.xs};
 `;

@@ -2,12 +2,12 @@ import styled from 'styled-components';
 
 // 最外層 大容器
 export const ScanOrderSectionStyled = styled.section`
-  background-color: var(--color-primary);
+  background-color: ${({ theme }) => theme.colors.primary.main};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-xl);
+  padding: ${({ theme }) => theme.spacing.xl};
   min-height: 100%;
 `;
 
@@ -23,30 +23,29 @@ export const ScannerContainer = styled.div`
 
 // 掃描文字
 export const ScanText = styled.div`
-  color: var(--color-white);
-  font-size: var(--font-size-md);
-  margin: var(--spacing-md) 0;
-
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  margin: ${({ theme }) => theme.spacing.md} 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
   line-height: 1;
 
   svg {
     display: flex;
     align-items: center;
     margin-bottom: -2px;
-    font-size: var(--font-size-lg);
+    font-size: ${({ theme }) => theme.typography.fontSizes.lg};
     line-height: 1;
   }
 `;
 
 // 狀態訊息
 export const StatusMessage = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-sm);
+  color: ${({ theme }) => theme.colors.error};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   text-align: left;
   white-space: pre-line;
-  padding: 0 var(--spacing-xl);
+  padding: 0 ${({ theme }) => theme.spacing.xl};
 `;

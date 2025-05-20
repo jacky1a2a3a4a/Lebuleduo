@@ -7,19 +7,19 @@ export const CallbackContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f5f5f5;
-  padding: 20px;
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  padding: ${({ theme }) => theme.spacing.lg};
 `;
 
 // 登入頁面 載入中
 export const LoadingSpinner = styled.div`
   width: 50px;
   height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
-  border-radius: 50%;
+  border: 5px solid ${({ theme }) => theme.colors.gray[200]};
+  border-top: 5px solid ${({ theme }) => theme.colors.primary.main};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   animation: spin 1s linear infinite;
-  margin-bottom: 20px;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 
   @keyframes spin {
     0% {
@@ -33,55 +33,55 @@ export const LoadingSpinner = styled.div`
 
 // 登入頁面 訊息
 export const Message = styled.p`
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  color: ${({ theme }) => theme.colors.text.primary};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 登入頁面 錯誤訊息
 export const ErrorMessage = styled.p`
-  color: #e74c3c;
-  font-size: 16px;
-  margin: 10px 0;
+  color: ${({ theme }) => theme.colors.red[500]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  margin: ${({ theme }) => theme.spacing.sm} 0;
 `;
 
 // 除錯資訊區塊
 export const DebugSection = styled.div`
-  margin-top: 30px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.lg};
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  box-shadow: ${({ theme }) => theme.shadows.card};
   width: 100%;
   max-width: 600px;
 
   h3 {
-    color: #333;
-    margin-bottom: 15px;
+    color: ${({ theme }) => theme.colors.text.primary};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
   }
 `;
 
 // 除錯資訊內容
 export const DebugInfo = styled.div`
   font-family: monospace;
-  font-size: 14px;
-  color: #666;
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.text.tertiary};
   line-height: 1.5;
 
   div {
-    margin-bottom: 10px;
+    margin-bottom: ${({ theme }) => theme.spacing.sm};
   }
 
   strong {
-    color: #333;
-    margin-right: 10px;
+    color: ${({ theme }) => theme.colors.text.primary};
+    margin-right: ${({ theme }) => theme.spacing.sm};
   }
 
   pre {
-    background-color: #f8f8f8;
-    padding: 10px;
-    border-radius: 4px;
+    background-color: ${({ theme }) => theme.colors.background.secondary};
+    padding: ${({ theme }) => theme.spacing.sm};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
     overflow-x: auto;
-    margin-top: 5px;
+    margin-top: ${({ theme }) => theme.spacing['2xs']};
   }
 `;
