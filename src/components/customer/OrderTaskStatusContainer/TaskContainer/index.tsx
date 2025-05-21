@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 
-interface TaskContainerProps {
+type TaskContainerProps = {
   children: React.ReactNode;
-}
+};
 
 const Container = styled.div`
-  background-color: var(--color-background-secondary);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
   min-height: calc(100vh - var(--header-height));
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
 
   overflow: auto;
   &::-webkit-scrollbar {

@@ -5,30 +5,8 @@ import {
   OrderListCal,
   TabContent,
 } from './styled';
-
+import { TabContentProps } from './types';
 import OrderListCard from '../Card';
-
-interface OrderData {
-  OrdersID: number;
-  OrderDetails: OrderDetail[];
-}
-
-interface OrderDetail {
-  OrderDetailID: number;
-  ServiceDate: string;
-  ServiceTime: string;
-  Status: string;
-}
-
-interface TabContentProps {
-  activeTab: string;
-  abnormalOrders: OrderDetail[];
-  scheduledOrders: OrderDetail[];
-  unscheduledOrders: OrderDetail[];
-  completedOrders: OrderDetail[];
-  totalOrders: number;
-  orderData: OrderData;
-}
 
 const OrderDetailTabContent = ({
   activeTab,

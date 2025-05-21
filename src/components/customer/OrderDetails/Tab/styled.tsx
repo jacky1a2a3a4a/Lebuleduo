@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 export const TabContainer = styled.div`
-  background-color: var(--color-background-secondary);
+  background-color: ${({ theme }) => theme.colors.background.secondary};
   display: flex;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) 0 var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => `${theme.spacing.sm} 0 ${theme.spacing.md}`};
 
   position: sticky;
   top: 0;
@@ -17,19 +17,19 @@ export const TabContainer = styled.div`
 `;
 
 export const Tab = styled.button<{ $active: boolean }>`
-  background-color: ${({ $active }) =>
-    $active ? 'var(--color-tertiary)' : 'var(--color-neutral-200)'};
-  color: ${({ $active }) =>
-    $active ? 'var(--color-text-primary)' : 'var(--color-text-tertiary)'};
-  border: ${({ $active }) =>
-    $active ? 'none' : '1px solid var(--color-neutral-300)'};
-  border-radius: var(--border-radius-round);
+  background-color: ${({ $active, theme }) =>
+    $active ? theme.colors.tertiary.main : theme.colors.neutral[200]};
+  color: ${({ $active, theme }) =>
+    $active ? theme.colors.text.primary : theme.colors.text.tertiary};
+  border: ${({ $active, theme }) =>
+    $active ? 'none' : `1px solid ${theme.colors.neutral[300]}`};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
 
   padding: 8px 16px;
 
-  font-size: var(--font-size-sm);
-  font-weight: ${({ $active }) =>
-    $active ? 'var(--font-weight-bold)' : 'var(--font-weight-normal)'};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ $active, theme }) =>
+    $active ? theme.typography.fontWeights.bold : theme.typography.fontWeights.normal};
   text-align: center;
   white-space: nowrap;
 
