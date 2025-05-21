@@ -4,14 +4,14 @@ import styled from 'styled-components';
 export const PhotoUploadContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-md);
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
 // ===照片 容器===
 export const PhotoUploadBox = styled.div`
-  background-color: var(--color-gray-100);
-  border-radius: var(--border-radius-lg);
+  background-color: ${({ theme }) => theme.colors.gray[100]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   width: 100%;
   aspect-ratio: 3/4;
   display: flex;
@@ -29,26 +29,26 @@ export const PlusIcon = styled.div`
 `;
 
 export const UploadText = styled.div`
-  font-size: var(--font-size-sm);
-  color: var(--color-neutral-500);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.neutral[500]};
 `;
 
 export const PreviewImage = styled.img`
   width: 100%;
   aspect-ratio: 3/4;
   object-fit: cover;
-  border-radius: var(--border-radius-lg);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
 `;
 
 // 刪除按鈕
 export const DeleteButton = styled.button`
-  background: var(--color-white);
-  color: var(--color-text-secondary);
-  border-radius: var(--border-radius-round);
+  background: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
 
   position: absolute;
-  top: var(--spacing-xs);
-  right: var(--spacing-xs);
+  top: ${({ theme }) => theme.spacing.xs};
+  right: ${({ theme }) => theme.spacing.xs};
   border: none;
   width: 24px;
   height: 24px;

@@ -10,10 +10,10 @@ export const Panel = styled.div`
   z-index: 100;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
-  background-color: var(--color-background-primary);
-  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+  gap: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: ${({ theme }) => theme.colors.background.primary};
+  border-radius: ${({ theme }) => theme.borderRadius.lg} 0 0 ${({ theme }) => theme.borderRadius.lg};
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.08);
 `;
 
@@ -35,14 +35,14 @@ export const DeliverHeader = styled.div`
   align-items: center;
 
   h2 {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    margin-bottom: var(--spacing-xs);
+    font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+    font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
+    margin-bottom: ${({ theme }) => theme.spacing.xs};
   }
 
   p {
-    font-size: var(--font-size-3xs);
-    color: var(--color-text-tertiary);
+    font-size: ${({ theme }) => theme.typography.fontSizes['3xs']};
+    color: ${({ theme }) => theme.colors.text.tertiary};
   }
 `;
 
@@ -60,32 +60,32 @@ export const DeliverListContainer = styled.div`
 
 // Deliver Item
 export const DeliverItem = styled.div`
-  background-color: var(--color-neutral-200);
-  border: 1px solid var(--color-neutral-300);
-  border-radius: var(--border-radius-xl);
+  background-color: ${({ theme }) => theme.colors.neutral[200]};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
   align-items: center;
   min-height: 60px;
-  padding: var(--spacing-sm) var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 代收員卡片資訊
 export const DeliverInfo = styled.div`
   p {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
+    font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+    font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   }
 
   span {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-tertiary);
+    font-size: ${({ theme }) => theme.typography.fontSizes['2xs']};
+    color: ${({ theme }) => theme.colors.text.tertiary};
   }
 
   .task-count {
-    color: var(--color-text-primary);
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 `;
 
@@ -97,19 +97,19 @@ interface InputProps {
 // 輸入框
 export const StyledInput = styled.input<InputProps>`
   width: 50px;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid
-    ${(props) => (props.error ? 'var(--color-error)' : 'var(--color-border)')};
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border: 1px solid ${({ theme, error }) => 
+    error ? theme.colors.error.main : theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   transition: all 0.2s;
-  background-color: var(--color-background-primary);
+  background-color: ${({ theme }) => theme.colors.background.primary};
   text-align: center;
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.1);
+    border-color: ${({ theme }) => theme.colors.primary.main};
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary.light};
   }
 
   &:disabled {
@@ -118,29 +118,29 @@ export const StyledInput = styled.input<InputProps>`
   }
 
   &::placeholder {
-    color: var(--color-text-secondary);
+    color: ${({ theme }) => theme.colors.text.secondary};
   }
 `;
 
 export const DeliverControls = styled.div`
   display: flex;
-  gap: var(--spacing-xs);
+  gap: ${({ theme }) => theme.spacing.xs};
   align-items: center;
 `;
 
 // 加減號按鈕容器
 export const QuantityControls = styled.div`
   display: flex;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
   align-items: center;
 `;
 
 // 加減號按鈕
 export const QuantityButton = styled.button`
-  background-color: var(--color-neutral-200);
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-text-secondary);
-  border-radius: var(--border-radius-round);
+  background-color: ${({ theme }) => theme.colors.neutral[200]};
+  color: ${({ theme }) => theme.colors.text.secondary};
+  border: 1px solid ${({ theme }) => theme.colors.text.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   width: 24px;
   height: 24px;
   display: flex;
@@ -150,7 +150,7 @@ export const QuantityButton = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: var(--color-neutral-300);
+    background-color: ${({ theme }) => theme.colors.neutral[300]};
   }
 
   &:disabled {
@@ -166,7 +166,7 @@ export const PanelText = styled.div`
   align-items: flex-end;
 
   p {
-    font-size: var(--font-size-xs);
+    font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   }
 `;
 
@@ -177,16 +177,16 @@ export const Warning = styled.div`
 
 // 平均分配按鈕
 export const DistributeButton = styled.button`
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-2xs);
+  background-color: ${({ theme }) => theme.colors.primary.main};
+  color: ${({ theme }) => theme.colors.white};
+  padding: ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xs']};
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background-color: var(--color-primary-hover);
+    background-color: ${({ theme }) => theme.colors.primary.hover};
   }
 
   &:disabled {
@@ -199,35 +199,35 @@ export const DistributeButton = styled.button`
 export const PanelFooter = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-top: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 底部按鈕
 export const FooterButton = styled.button<{ $variant?: 'primary' | 'outline' }>`
-  background-color: ${({ $variant }) =>
+  background-color: ${({ theme, $variant }) =>
     $variant === 'outline'
-      ? 'var(--color-neutral-200)'
-      : 'var(--color-primary)'};
-  color: ${({ $variant }) =>
+      ? theme.colors.neutral[200]
+      : theme.colors.primary.main};
+  color: ${({ theme, $variant }) =>
     $variant === 'outline'
-      ? 'var(--color-text-secondary)'
-      : 'var(--color-white)'};
-  border: ${({ $variant }) =>
-    $variant === 'outline' ? '1px solid var(--color-text-tertiary)' : 'none'};
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-2xs);
+      ? theme.colors.text.secondary
+      : theme.colors.white};
+  border: ${({ theme, $variant }) =>
+    $variant === 'outline' ? `1px solid ${theme.colors.text.tertiary}` : 'none'};
+  padding: ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xs']};
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 80px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background-color: ${({ $variant }) =>
+    background-color: ${({ theme, $variant }) =>
       $variant === 'outline'
-        ? 'var(--color-neutral-300)'
-        : 'var(--color-primary-hover)'};
+        ? theme.colors.neutral[300]
+        : theme.colors.primary.hover};
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }

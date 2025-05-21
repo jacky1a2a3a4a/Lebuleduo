@@ -21,31 +21,31 @@ export const Title = styled.h2`
 export const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const Input = styled.input`
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--color-neutral-300);
-  font-size: var(--font-size-md);
-  color: var(--color-text-secondary);
+  padding: ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border: 1px solid ${({ theme }) => theme.colors.neutral[300]};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  color: ${({ theme }) => theme.colors.text.secondary};
 
   &:focus {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
     outline-offset: -1px;
   }
 
   &::placeholder {
-    color: var(--color-text-disabled);
+    color: ${({ theme }) => theme.colors.text.disabled};
   }
 `;
 
 export const QRContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: var(--spacing-lg);
-  padding: var(--spacing-md);
-  background-color: var(--color-background-secondary);
-  border-radius: var(--border-radius-md);
+  margin-top: ${({ theme }) => theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
 `;

@@ -432,7 +432,7 @@ export const DeleteButton = styled.button`
 export const ReportButton = styled.button`
   background: none;
   border: none;
-  color: ${({ theme }) => theme.colors.text.disabled};
+  color: ${({ theme }) => theme.colors.error.main};
   font-size: 14px;
   text-decoration: underline;
   cursor: pointer;
@@ -446,7 +446,7 @@ export const ReportButton = styled.button`
   gap: 8px;
 
   svg {
-    color: ${({ theme }) => theme.colors.error};
+    color: ${({ theme }) => theme.colors.error.main};
     font-size: 18px;
   }
 
@@ -560,35 +560,35 @@ export const ReportCancelButton = styled.button`
 
 // ==異常回報 標題==
 export const ReportBlockTitle = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.error.main};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding-right: var(--spacing-xl);
+  gap: ${({ theme }) => theme.spacing.xs};
+  padding-right: ${({ theme }) => theme.spacing.xl};
 `;
 
 // ==異常回報 內容容器==
 export const ReportBlock = styled.button`
-  background-color: var(--color-background-error);
-  border: 1px solid var(--color-error);
-  border-radius: var(--border-radius-md);
+  background-color: ${({ theme }) => theme.colors.error.background};
+  border: 1px solid ${({ theme }) => theme.colors.error.main};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
-  padding: var(--spacing-sm) var(--spacing-md);
-  margin-top: var(--spacing-sm);
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.sm};
   width: 100%;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
 
   &:hover {
-    background-color: var(--color-background-error);
+    background-color: ${({ theme }) => theme.colors.error.background};
     opacity: 0.9;
   }
 `;
@@ -602,13 +602,13 @@ export const ReportContent = styled.div`
 
 // 異常回報 內容
 export const ReportBlockContent = styled.div`
-  color: var(--color-error);
-  font-size: var(--font-size-sm);
+  color: ${({ theme }) => theme.colors.error.main};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
 `;
 
 // 異常回報 編輯按鈕
 export const EditIcon = styled.div`
-  color: var(--color-error);
+  color: ${({ theme }) => theme.colors.error.main};
   width: 20px;
   height: 20px;
   display: flex;
@@ -618,14 +618,13 @@ export const EditIcon = styled.div`
 
 // 異常回報 其他問題
 export const ReportBlockDescription = styled.div`
-  color: var(--color-text-tertiary);
+  color: ${({ theme }) => theme.colors.text.tertiary};
   display: flex;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  margin: var(--spacing-md) 0;
-  font-size: var(--font-size-xs);
-  
+  margin: ${({ theme }) => theme.spacing.md} 0;
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
 `;
 
 // 完成收運按鈕
@@ -661,7 +660,7 @@ export const CompleteIcon = styled.div`
 `;
 
 export const ValidationMessage = styled.div`
-  color: ${({ theme }) => theme.colors.error};
+  color: ${({ theme }) => theme.colors.error.main};
   font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   margin-top: ${({ theme }) => theme.spacing.xs};
 `;

@@ -1,29 +1,7 @@
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { HiBell } from 'react-icons/hi2';
-
 import CommonHeader from '../../common/Header';
 import logo from '../../../assets/logos/logo-deliver-white.png';
-
-// 鈴鐺容器，控制位置
-const BellContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-`;
-
-// 鈴鐺圖標按鈕
-const BellIcon = styled(HiBell)`
-  width: 1.5rem;
-  height: 1.5rem;
-  color: var(--color-tertiary);
-  cursor: pointer;
-  pointer-events: none;
-
-  &:hover {
-    color: var(--color-tertiary-hover);
-  }
-`;
+import { BellContainer, BellIcon } from './styled';
 
 //外送員專用頁首 包含鈴鐺通知圖標
 function DeliverHeader() {
