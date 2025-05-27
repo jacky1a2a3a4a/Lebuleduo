@@ -13,7 +13,7 @@ import {
   CalendarCancelButton,
   CalendarNavButton,
   CalendarNavButtonGroup,
-} from './styles';
+} from './styled';
 
 interface CalendarProps {
   isOpen: boolean;
