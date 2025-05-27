@@ -61,13 +61,14 @@ function OrderDetail() {
 
       console.log('API 回傳數據：', data);
 
-      if (data.status) {
+      if (data.status && data.result && data.result.length > 0) {
         console.log('訂單詳情數據：', data.result[0]);
         console.log('OrderDetail 數據：', data.result[0].OrderDetails);
         setOrderData(data.result[0]);
       } else {
-        console.error('API 回傳錯誤：', data.message);
-        setError(data.message);
+        const errorMessage = data.message || '未找到訂單數據';
+        console.error('API 回傳錯誤：', errorMessage);
+        setError(errorMessage);
       }
     } catch (error) {
       console.error('獲取訂單數據時出錯：', error);

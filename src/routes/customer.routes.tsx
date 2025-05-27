@@ -25,6 +25,7 @@ import AnimationLoading from '../components/common/AnimationLoading'; //載入�
 
 //臨時頁面
 import ContactUs from '../pages/customer/ContactUs'; //聯絡我們
+import MockPayment from '../mock/payment/MockPayment';
 
 export const customerRoutes: RouteConfig[] = [
   {
@@ -145,5 +146,9 @@ export const customerRoutes: RouteConfig[] = [
         <CompletedFinishedTask />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: 'mock-payment',
+    element: <MockPayment />,
   },
 ];
