@@ -5,10 +5,11 @@ type LinePayResponse = {
   transactionId: string;
 };
 
-export const postLinePay = async (orderId: string): Promise<LinePayResponse> => {
+export const postLinePay = async (orderId: string, amount: number): Promise<LinePayResponse> => {
   try {
     const response = await axios.post(`api/Post/linePay/Reserve`, {
       orderId,
+      amount,
     });
     return response.data;
   } catch (error) {

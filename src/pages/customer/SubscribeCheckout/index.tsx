@@ -141,7 +141,7 @@ const SubscribeCheckout = () => {
           switch (paymentMethod) {
             case 'linePay':
               // 使用 LINE Pay
-              const linePayResponse = await postLinePay(orderId);
+              const linePayResponse = await postLinePay(orderId, subscriptionData.price);
               console.log('LINE Pay API 回應:', linePayResponse);
               window.location.href = linePayResponse.paymentUrl;
               return;

@@ -13,6 +13,7 @@ import Subscribe from '../pages/customer/Subscribe'; //訂閱
 import SubscribeData from '../pages/customer/SubscribeData'; //訂閱資料
 import SubscribeCheckout from '../pages/customer/SubscribeCheckout'; //訂閱結帳
 import SubscribeSuccess from '../pages/customer/SubscribeSuccess'; //訂閱成功
+import SubscribeFail from '../pages/customer/SubscribeFail'; //付款失敗
 import AbnormalTask from '../pages/customer/OrderTaskStatus/AbnormalTask'; //異常訂單
 import ScheduledTask from '../pages/customer/OrderTaskStatus/ScheduledTask'; //已排定訂單
 import UnScheduledTask from '../pages/customer/OrderTaskStatus/unScheduledTask'; //未排定訂單
@@ -25,7 +26,6 @@ import AnimationLoading from '../components/common/AnimationLoading'; //載入�
 
 //臨時頁面
 import ContactUs from '../pages/customer/ContactUs'; //聯絡我們
-import MockPayment from '../mock/payment/MockPayment';
 
 export const customerRoutes: RouteConfig[] = [
   {
@@ -100,6 +100,14 @@ export const customerRoutes: RouteConfig[] = [
     ),
   },
   {
+    path: '/customer/subscribe/fail', //付款失敗
+    element: (
+      <ProtectedRoute role="customer">
+        <SubscribeFail />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: '/customer/order-task/abnormal-task/:orderId/:orderDetailId', //異常訂單
     element: (
       <ProtectedRoute role="customer">
@@ -146,9 +154,5 @@ export const customerRoutes: RouteConfig[] = [
         <CompletedFinishedTask />
       </ProtectedRoute>
     ),
-  },
-  {
-    path: 'mock-payment',
-    element: <MockPayment />,
-  },
+  }
 ];

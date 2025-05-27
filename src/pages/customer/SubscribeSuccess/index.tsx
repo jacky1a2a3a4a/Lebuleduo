@@ -90,16 +90,20 @@ const SubscribeSuccess = () => {
         // 呼叫 訂單詳情 API
         getOrderDetails(userId, parsedData.orderId)
           .then((response) => {
-            if (response.status && response.result.length > 0) {
-              setOrderDetails(response.result[0].OrderDetails);
+            if (response?.status && response?.result && Array.isArray(response.result) && response.result.length > 0) {
+              setOrderDetails(response.result[0].OrderDetails || []);
+            } else {
+              console.warn('訂單詳情 API 回傳資料格式不正確:', response);
+              setOrderDetails([]);
             }
             console.log(
               '訂單詳情 API 回傳資料:',
-              response.result[0].OrderDetails,
+              response?.result?.[0]?.OrderDetails || [],
             );
           })
           .catch((error) => {
             console.error('訂單詳情 API 呼叫失敗:', error);
+            setOrderDetails([]);
           });
       }
     }
