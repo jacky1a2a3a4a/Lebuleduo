@@ -81,6 +81,8 @@ const SubscribeSuccess = () => {
     if (!orderId) return;
     
     const userId = getUsersID();
+    console.log('userId:', userId);
+    
     if (!userId) {
       console.error('未找到用戶ID');
       return;
