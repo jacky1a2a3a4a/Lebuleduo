@@ -5,7 +5,7 @@ export const ButtonCardContainer = styled.div<StyledProps>`
   background-color: ${({ theme }) => theme.colors.gray[0]};
   border: 1px solid
     ${({ $active, theme }) =>
-      $active ? theme.colors.primary.main : theme.colors.secondary};
+      $active ? theme.colors.primary.main : theme.colors.secondary.main};
   border-radius: ${({ theme }) => theme.borderRadius.xl};
 
   display: flex;
