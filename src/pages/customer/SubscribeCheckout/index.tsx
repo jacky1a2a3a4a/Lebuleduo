@@ -31,9 +31,9 @@ import ButtonCard from '../../../components/customer/Subscribe/ButtonCard';
 import { SubscriptionData } from './types';
 import { getFormattedDateWithDay } from '../../../utils/formatDate';
 import { SubscribeSteps } from '../../../components/customer/Subscribe/SubscribeSteps';
-import { postOrder } from '../../../apis/customer/postOrder.ts';
-import { createPayment } from '../../../apis/customer/postBlueNew.ts';
-import { postLinePay } from '../../../apis/customer/postLinePay.ts';
+import { postOrder } from '../../../apis/customer/postOrder';
+import { createPayment } from '../../../apis/customer/postBlueNew';
+import { postLinePay } from '../../../apis/customer/postLinePay';
 
 const userId = localStorage.getItem('UsersID');
 
