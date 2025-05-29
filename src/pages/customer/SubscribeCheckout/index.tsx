@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
-import CommonLoading from '../../../components/common/CommonLoading';
+import SubscribeBottom from '@/components/customer/Subscribe/Bottom';
+import CommonLoading from '@/components/common/CommonLoading';
 import {
   PageWrapper,
   ScrollableContent,
@@ -24,14 +24,16 @@ import {
   FixedPointImage,
 } from './styled';
 
-import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
-import SectionTitle from '../../../components/customer/Subscribe/SectionTitle';
-import ButtonCard from '../../../components/customer/Subscribe/ButtonCard';
+import ProgressSteps from '@/components/customer/Subscribe/ProgressSteps';
+import SectionTitle from '@/components/customer/Subscribe/SectionTitle';
+import ButtonCard from '@/components/customer/Subscribe/ButtonCard';
 
 import { SubscriptionData } from './types';
-import { getFormattedDateWithDay } from '../../../utils/formatDate';
-import { SubscribeSteps } from '../../../components/customer/Subscribe/SubscribeSteps';
-import { createOrder } from '../../../apis/customer/PostOrder'; //api 建立訂單
+import { getFormattedDateWithDay } from '@/utils/formatDate';
+import { SubscribeSteps } from '@/components/customer/Subscribe/SubscribeSteps';
+import { postOrder } from '@/apis/customer/postOrder';
+import { createPayment } from '@/apis/customer/postBlueNew';
+import { postLinePay } from '@/apis/customer/postLinePay';
 
 const userId = localStorage.getItem('UsersID');
 
@@ -117,7 +119,7 @@ const SubscribeCheckout = () => {
       }
 
       // api 建立訂單
-      const response = await createOrder(subscriptionData);
+      const response = await postOrder(subscriptionData);
       console.log('api提交成功:', response);
       console.log('訂單id:', response.orders.OrdersID);
 
@@ -132,99 +134,76 @@ const SubscribeCheckout = () => {
       sessionStorage.setItem('subscriptionData', JSON.stringify(updatedData));
 
       if (response) {
-        // 呼叫藍新金流 API
         try {
-          // 先檢查藍新金流是否在維護中
-          try {
-            const maintenanceCheck = await axios.get(
-              'https://cwww.newebpay.com/maintain/index',
-              {
-                timeout: 5000, // 5秒超時
-              },
-            );
-            if (maintenanceCheck.status === 200) {
-              setError('藍新金流系統正在維護中，請稍後再試');
-              return;
-            }
-          } catch (maintenanceError) {
-            // 如果無法訪問維護頁面，表示系統正常運作
-            console.log('藍新金流系統正常運作');
-          }
-
-          const paymentResponse = await axios.post(
-            'api/Post/bluenew/createPayment',
-            {
-              orderId: orderId,
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            },
-          );
-          console.log('藍新金流 API 回應:', paymentResponse.data);
-
-          // 確保頁面已完全載入
-          if (document.readyState !== 'complete') {
-            await new Promise((resolve) => {
-              window.addEventListener('load', resolve);
-            });
-          }
-
           // 顯示付款載入中
           setShowPaymentLoading(true);
 
-          // 建立表單並自動提交
-          const form = document.createElement('form');
-          form.method = 'POST';
-          form.action = paymentResponse.data.paymentData.PaymentUrl;
+          switch (paymentMethod) {
+            case 'linePay':
+              // 使用 LINE Pay
+              const linePayResponse = await postLinePay(orderId, subscriptionData.price);
+              console.log('LINE Pay API 回應:', linePayResponse);
+              window.location.href = linePayResponse.paymentUrl;
+              return;
 
-          // 建立隱藏的輸入欄位
-          const merchantId = document.createElement('input');
-          merchantId.type = 'hidden';
-          merchantId.name = 'MerchantID';
-          merchantId.value = paymentResponse.data.paymentData.MerchantID;
-          form.appendChild(merchantId);
+            case 'creditCard':
+              // 使用藍新金流
+              const paymentResponse = await createPayment(orderId);
+              console.log('藍新金流 API 回應:', paymentResponse);
 
-          const tradeInfo = document.createElement('input');
-          tradeInfo.type = 'hidden';
-          tradeInfo.name = 'TradeInfo';
-          tradeInfo.value = paymentResponse.data.paymentData.TradeInfo;
-          form.appendChild(tradeInfo);
+              // 確保頁面已完全載入
+              if (document.readyState !== 'complete') {
+                await new Promise((resolve) => {
+                  window.addEventListener('load', resolve);
+                });
+              }
 
-          const tradeSha = document.createElement('input');
-          tradeSha.type = 'hidden';
-          tradeSha.name = 'TradeSha';
-          tradeSha.value = paymentResponse.data.paymentData.TradeSha;
-          form.appendChild(tradeSha);
+              // 建立表單並自動提交
+              const form = document.createElement('form');
+              form.method = 'POST';
+              form.action = paymentResponse.paymentData.PaymentUrl;
 
-          const version = document.createElement('input');
-          version.type = 'hidden';
-          version.name = 'Version';
-          version.value = paymentResponse.data.paymentData.Version || '1.6';
-          form.appendChild(version);
+              // 建立隱藏的輸入欄位
+              const merchantId = document.createElement('input');
+              merchantId.type = 'hidden';
+              merchantId.name = 'MerchantID';
+              merchantId.value = paymentResponse.paymentData.MerchantID;
+              form.appendChild(merchantId);
 
-          // 確保 document.body 存在
-          if (!document.body) {
-            throw new Error('Document body not found');
+              const tradeInfo = document.createElement('input');
+              tradeInfo.type = 'hidden';
+              tradeInfo.name = 'TradeInfo';
+              tradeInfo.value = paymentResponse.paymentData.TradeInfo;
+              form.appendChild(tradeInfo);
+
+              const tradeSha = document.createElement('input');
+              tradeSha.type = 'hidden';
+              tradeSha.name = 'TradeSha';
+              tradeSha.value = paymentResponse.paymentData.TradeSha;
+              form.appendChild(tradeSha);
+
+              const version = document.createElement('input');
+              version.type = 'hidden';
+              version.name = 'Version';
+              version.value = paymentResponse.paymentData.Version || '1.6';
+              form.appendChild(version);
+
+              // 確保 document.body 存在
+              if (!document.body) {
+                throw new Error('Document body not found');
+              }
+
+              // 將表單加入頁面並提交
+              document.body.appendChild(form);
+              form.submit();
+              return;
+
+            default:
+              throw new Error('不支援的付款方式');
           }
-
-          // 將表單加入頁面並提交
-          document.body.appendChild(form);
-          form.submit();
-          return;
         } catch (paymentError) {
-          console.error('藍新金流 API 呼叫失敗:', paymentError);
-          if (axios.isAxiosError(paymentError) && paymentError.response) {
-            console.error('錯誤詳情:', paymentError.response.data);
-            setError(
-              `付款處理失敗: ${paymentError.response.data.message || '請稍後再試'}`,
-            );
-          } else if (paymentError.code === 'ECONNABORTED') {
-            setError('藍新金流系統連線逾時，請稍後再試');
-          } else {
-            setError('付款處理失敗，請稍後再試');
-          }
+          console.error('付款 API 呼叫失敗:', paymentError);
+          setError(paymentError.message);
           return;
         }
       }

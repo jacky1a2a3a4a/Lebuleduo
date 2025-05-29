@@ -42,7 +42,7 @@ export const StepConnector = styled.div`
 // 步驟連接線
 export const StepLine = styled.div<StyledProps>`
   background-color: ${({ $active, theme }) =>
-    $active ? theme.colors.white : theme.colors.secondary};
+    $active ? theme.colors.white : theme.colors.secondary.main};
   border-radius: ${({ theme }) => theme.borderRadius.round};
   height: 2px;
   width: 70px;
@@ -63,7 +63,7 @@ export const StepItem = styled.div<StyledProps>`
 // 步驟號碼
 export const StepNumber = styled.div<StyledProps>`
   background-color: ${({ $active, theme }) =>
-    $active ? theme.colors.white : theme.colors.secondary};
+    $active ? theme.colors.white : theme.colors.secondary.main};
   color: ${({ $active, theme }) =>
     $active ? theme.colors.primary.main : theme.colors.white};
   border-radius: ${({ theme }) => theme.borderRadius.round};
@@ -81,7 +81,7 @@ export const StepNumber = styled.div<StyledProps>`
 // 步驟文字
 export const StepText = styled.div<StyledProps>`
   color: ${({ $active, theme }) =>
-    $active ? theme.colors.white : theme.colors.secondary};
+    $active ? theme.colors.white : theme.colors.secondary.main};
   font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
   text-align: center;

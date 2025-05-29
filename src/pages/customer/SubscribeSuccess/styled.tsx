@@ -56,7 +56,7 @@ export const OrderInfoContainer = styled.div`
 `;
 
 // 訂單號碼
-export const OrderNumber = styled.div`
+export const OrderNumberTitle = styled.div`
   color: ${({ theme }) => theme.colors.text.primary};
   font-size: ${({ theme }) => theme.typography.fontSizes.md};
   font-weight: ${({ theme }) => theme.typography.fontWeights.bold};

@@ -1,7 +1,14 @@
 import axios from 'axios';
-import { SubscriptionData } from '../../pages/customer/SubscribeCheckout/types';
+import type { SubscriptionData } from '@/pages/customer/SubscribeCheckout/types';
 
-export const createOrder = async (subscriptionData: SubscriptionData) => {
+type OrderResponse = {
+  orders: {
+    OrdersID: string;
+    [key: string]: any;
+  };
+};
+
+export const postOrder = async (subscriptionData: SubscriptionData): Promise<OrderResponse> => {
   const userId = localStorage.getItem('UsersID');
 
   if (!userId) {

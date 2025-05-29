@@ -254,28 +254,28 @@ export const OrderListTitle = styled.h2`
 
 // 收運次數
 export const OrderListCal = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 表單區塊
 export const FormSection = styled.div`
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
 // 表單群組
 export const FormGroup = styled.div`
-  margin-bottom: var(--spacing-md);
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 // 輸入標籤
 export const InputLabel = styled.label`
-  color: var(--color-neutral-600);
+  color: ${({ theme }) => theme.colors.neutral[600]};
   display: block;
-  margin-bottom: var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 輸入框群組
@@ -289,39 +289,39 @@ export const SelectGroup = styled.div`
 // 下拉式選單容器
 export const DeliverySelect = styled.select<{ $error?: boolean }>`
   width: 100%;
-  padding: var(--spacing-md);
-  padding-right: 40px; /* 為圖標預留空間 */
+  padding: ${({ theme }) => theme.spacing.md};
+  padding-right: 40px;
   border: 1px solid
     ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-primary);
-  background-color: var(--color-background);
+      props.$error ? props.theme.colors.error : props.theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.text.primary};
+  background-color: ${({ theme }) => theme.colors.background};
   cursor: pointer;
   transition: all 0.3s;
-  appearance: none; /* 移除原生下拉箭頭 */
+  appearance: none;
 
   &::placeholder {
-    color: var(--color-gray-400);
-    font-size: var(--font-size-sm);
+    color: ${({ theme }) => theme.colors.gray[400]};
+    font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   }
 
   &:focus {
     outline: 1px solid
       ${(props) =>
-        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
+        props.$error ? props.theme.colors.error : props.theme.colors.gray[400]};
     outline-offset: 0px;
   }
 
   option {
-    padding: var(--spacing-sm);
+    padding: ${({ theme }) => theme.spacing.sm};
   }
 `;
 
 // 下拉選單圖標
 export const SelectIcon = styled.div`
-  color: var(--color-gray-500);
+  color: ${({ theme }) => theme.colors.gray[500]};
   width: 20px;
   height: 20px;
   display: flex;
@@ -335,42 +335,42 @@ export const SelectIcon = styled.div`
 // 文字區域
 export const StyledTextarea = styled.textarea<{ $error?: boolean }>`
   width: 100%;
-  padding: var(--spacing-sm) var(--spacing-12);
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing[12]};
   border: 1px solid
     ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-neutral-400)'};
-  border-radius: var(--border-radius-lg);
-  font-size: var(--font-size-sm);
+      props.$error ? props.theme.colors.error : props.theme.colors.neutral[400]};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   min-height: 100px;
   resize: vertical;
   transition: all 0.3s;
 
   &:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(68, 93, 179, 0.2);
+    border-color: ${({ theme }) => theme.colors.primary.main};
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary.light};
   }
 
   &::placeholder {
-    color: var(--color-neutral-500);
+    color: ${({ theme }) => theme.colors.neutral[500]};
   }
 `;
 
 // 刪除圖片按鈕
 export const DeleteImageButton = styled.button`
   position: absolute;
-  top: var(--spacing-xs);
-  right: var(--spacing-xs);
+  top: ${({ theme }) => theme.spacing.xs};
+  right: ${({ theme }) => theme.spacing.xs};
   background-color: rgba(0, 0, 0, 0.5);
   border: none;
-  border-radius: var(--border-radius-round);
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   width: 24px;
   height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--color-white);
+  color: ${({ theme }) => theme.colors.white};
   transition: all 0.3s;
 
   &:hover {
@@ -382,8 +382,8 @@ export const DeleteImageButton = styled.button`
 export const DeliveryOptionImageUpload = styled.div`
   width: 100%;
   aspect-ratio: 3/4;
-  border: 1px dashed var(--color-neutral-400);
-  border-radius: var(--border-radius-sm);
+  border: 1px dashed ${({ theme }) => theme.colors.neutral[400]};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -391,29 +391,29 @@ export const DeliveryOptionImageUpload = styled.div`
   transition: all 0.3s;
 
   &:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    border-color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.primary.main};
   }
 `;
 
 // 照片說明文字
 export const PhotoInstructions = styled.p`
-  font-size: var(--font-size-xs);
-  color: var(--color-text-tertiary);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.text.tertiary};
   margin: 0;
 `;
 
 // 收運選項圖片容器
 export const DeliveryOptionImageContainer = styled.div`
-  margin-top: var(--spacing-md);
+  margin-top: ${({ theme }) => theme.spacing.md};
 `;
 
 // 收運選項圖片列表
 export const DeliveryOptionImages = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 收運選項圖片
@@ -422,7 +422,7 @@ export const DeliveryOptionImage = styled.div`
   width: 100%;
   aspect-ratio: 3/4;
   object-fit: cover;
-  border-radius: var(--border-radius-lg);
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
   overflow: hidden;
 `;
 
@@ -436,29 +436,29 @@ export const DeliveryOptionImagePhoto = styled.div`
 
 // 輸入框
 export const StyledInput = styled.input<{ $error?: boolean }>`
-  background-color: var(--color-white);
-  color: var(--color-text-primary);
+  background-color: ${({ theme }) => theme.colors.white};
+  color: ${({ theme }) => theme.colors.text.primary};
   border: 1px solid
     ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
-  border-radius: var(--border-radius-round);
+      props.$error ? props.theme.colors.error : props.theme.colors.gray[300]};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   width: 100%;
-  padding: var(--spacing-md);
-  font-size: var(--font-size-sm);
+  padding: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   transition: border-color 0.2s ease;
 
   &:focus {
     outline: none;
     border-color: ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-primary)'};
+      props.$error ? props.theme.colors.error : props.theme.colors.primary.main};
   }
 
   &::placeholder {
-    color: var(--color-gray-400);
+    color: ${({ theme }) => theme.colors.gray[400]};
   }
 
   &:disabled {
-    background-color: var(--color-gray-100);
+    background-color: ${({ theme }) => theme.colors.gray[100]};
     cursor: not-allowed;
   }
 `;
@@ -466,26 +466,26 @@ export const StyledInput = styled.input<{ $error?: boolean }>`
 // 儲存按鈕
 export const SaveButton = styled.button`
   width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.round};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
   cursor: pointer;
   transition: all 0.2s ease;
 
   &:disabled {
-    background-color: var(--color-primary);
-    color: var(--color-white);
+    background-color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.white};
     opacity: 0.5;
     cursor: not-allowed;
   }
 
   &:not(:disabled) {
-    background-color: var(--color-primary);
-    color: var(--color-white);
+    background-color: ${({ theme }) => theme.colors.primary.main};
+    color: ${({ theme }) => theme.colors.white};
 
     &:hover {
-      background-color: var(--color-primary-hover);
+      background-color: ${({ theme }) => theme.colors.primary.hover};
       opacity: 0.8;
       transform: translateY(-1px);
     }

@@ -255,30 +255,30 @@ export const DeleteImageButton = styled.button`
 export const DeliveryOptionImageUpload = styled.div`
   width: 100px;
   height: 125px;
-  background-color: var(--color-gray-200);
-  border: 2px dashed var(--color-gray-400);
-  border-radius: var(--border-radius-xl);
+  background-color: ${({ theme }) => theme.colors.gray[200]};
+  border: 2px dashed ${({ theme }) => theme.colors.gray[400]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--color-gray-500);
+  color: ${({ theme }) => theme.colors.gray[500]};
 
   &:hover {
-    background-color: var(--color-gray-300);
+    background-color: ${({ theme }) => theme.colors.gray[300]};
   }
 `;
 
 // 照片上傳說明
 export const PhotoInstructions = styled.p`
-  font-size: var(--font-size-xs);
-  color: var(--color-gray-400);
-  margin-top: var(--spacing-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.gray[400]};
+  margin-top: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 總計價格
 export const TotalPrice = styled.div`
-  font-weight: var(--font-weight-bold);
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -286,37 +286,37 @@ export const TotalPrice = styled.div`
 
 // 總計價格文字
 export const TotalPriceText = styled.div`
-  font-size: var(--font-size-sm);
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   line-height: 1;
-  margin-right: var(--spacing-sm);
+  margin-right: ${({ theme }) => theme.spacing.sm};
 `;
 
 // 總計價格數字
 export const TotalPriceTCount = styled.div`
-  font-size: var(--font-size-2xl);
+  font-size: ${({ theme }) => theme.typography.fontSizes['2xl']};
 `;
 
 // 下一步按鈕
 export const NextButton = styled.button<StyledProps>`
-  background-color: ${(props) =>
-    props.$active ? 'var(--color-gray-600)' : 'var(--color-gray-300)'};
-  color: var(--color-gray-0);
+  background-color: ${({ $active, theme }) =>
+    $active ? theme.colors.gray[600] : theme.colors.gray[300]};
+  color: ${({ theme }) => theme.colors.gray[0]};
   border: none;
-  border-radius: var(--border-radius-round);
+  border-radius: ${({ theme }) => theme.borderRadius.round};
   width: 100%;
-  padding: var(--spacing-md);
-  font-size: var(--font-size-md);
-  margin-top: var(--spacing-md);
+  padding: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.typography.fontSizes.md};
+  margin-top: ${({ theme }) => theme.spacing.md};
   transition: background-color 0.2s;
-  cursor: ${(props) => (props.$active ? 'pointer' : 'not-allowed')};
+  cursor: ${({ $active }) => ($active ? 'pointer' : 'not-allowed')};
 
   &:hover {
-    background-color: ${(props) =>
-      props.$active ? 'var(--color-gray-700)' : 'var(--color-gray-400)'};
+    background-color: ${({ $active, theme }) =>
+      $active ? theme.colors.gray[700] : theme.colors.gray[400]};
   }
 
   &:disabled {
-    background-color: var(--color-gray-300);
+    background-color: ${({ theme }) => theme.colors.gray[300]};
     cursor: not-allowed;
   }
 `;

@@ -208,14 +208,17 @@ const LineCallback = () => {
         setLoading(false);
 
         // 獲取用戶角色
-        const userRole = localStorage.getItem('line_login_role');
+        const userRole = getLoginRole();
 
-        // 立即清除相關的 localStorage 資料
+        // 清除相關的 localStorage 資料
         localStorage.removeItem('line_login_state');
         localStorage.removeItem('line_login_role');
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user_role');
         localStorage.removeItem('user_data');
+
+        // 清除 URL 參數，避免重複觸發登入流程
+        window.history.replaceState({}, '', window.location.pathname);
 
         // 3 秒後根據角色返回對應的登入頁面
         setTimeout(() => {

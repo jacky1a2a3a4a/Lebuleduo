@@ -47,7 +47,7 @@ export const CategoryTab = styled.button<CategoryTabProps>`
     $isActive ? 'none' : `1px solid ${theme.colors.neutral[300]}`};
   border-radius: ${({ theme }) => theme.borderRadius.round};
 
-  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.md}`};
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   font-weight: ${({ $isActive, theme }) =>
     $isActive ? theme.typography.fontWeights.medium : theme.typography.fontWeights.normal};

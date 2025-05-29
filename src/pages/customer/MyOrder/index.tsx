@@ -28,7 +28,6 @@ import {
 import { getUsersID } from '../../../utils/getUserLocalData';
 
 // 照片用URL
-const BASE_URL = import.meta.env.VITE_API_URL;
 const userID = getUsersID();
 
 // 組件本體

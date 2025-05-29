@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import styled from 'styled-components';
 import { IoLocationSharp } from 'react-icons/io5';
 import { IoIosArrowDown } from 'react-icons/io';
 import {
@@ -8,13 +7,17 @@ import {
   Marker,
   Libraries,
 } from '@react-google-maps/api';
-
-// 為styled-components定義類型
-interface StyledProps {
-  $active?: boolean;
-  $light?: boolean;
-  $open?: boolean;
-}
+import {
+  Container,
+  StatusMessageItem,
+  InputGroup,
+  StyledInputWithIcon,
+  InputIcon,
+  SuggestionsDropdown,
+  SuggestionItem,
+  SuggestionText,
+  MapContainer,
+} from './styled';
 
 // 定義地址下拉選單的Props類型
 interface AddressAutocompleteProps {
@@ -275,161 +278,9 @@ const AddressAutocomplete = ({
         >
           <Marker position={mapLocation} />
         </GoogleMap>
-        {/* <MapOverlay>
-          <EditButton onClick={() => {}}>
-            <BsPencil />
-            <span>編輯地址</span>
-          </EditButton>
-        </MapOverlay> */}
       </MapContainer>
     </Container>
   );
 };
-
-// 容器樣式
-const Container = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
-// 狀態訊息
-const StatusMessageItem = styled.div`
-  padding: var(--spacing-sm) var(--spacing-md);
-  color: var(--color-gray-400);
-  text-align: center;
-  font-size: var(--font-size-sm);
-`;
-
-// 輸入框群組
-const InputGroup = styled.div`
-  position: relative;
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-`;
-
-// 帶有圖標的輸入框
-const StyledInputWithIcon = styled.input<{ $error?: boolean }>`
-  width: 100%;
-  padding: var(--spacing-md);
-  padding-right: 40px; /* 為圖標預留空間 */
-  border: 1px solid
-    ${(props) =>
-      props.$error ? 'var(--color-red-500)' : 'var(--color-gray-300)'};
-  border-radius: var(--border-radius-round);
-  font-size: var(--font-size-sm);
-
-  &::placeholder {
-    color: var(--color-gray-400);
-    font-size: var(--font-size-sm);
-  }
-
-  &:focus {
-    outline: 1px solid
-      ${(props) =>
-        props.$error ? 'var(--color-red-500)' : 'var(--color-gray-400)'};
-    outline-offset: 0px;
-  }
-`;
-
-// 下拉選單圖標
-const InputIcon = styled.div<StyledProps>`
-  color: var(--color-gray-500);
-
-  width: 20px;
-  height: 20px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  position: absolute;
-  right: 12px;
-
-  cursor: pointer;
-  transform: ${(props) => (props.$open ? 'rotate(180deg)' : 'rotate(0deg)')};
-  transform-origin: center center;
-  transition: transform 0.2s ease-in-out;
-`;
-
-//// 建議下拉選單
-const SuggestionsDropdown = styled.div`
-  background-color: var(--color-gray-0);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-xl);
-  box-shadow: var(--box-shadow-md);
-
-  margin-top: 4px;
-
-  z-index: 100;
-  position: relative;
-  top: 100%;
-  left: 0;
-  right: 0;
-  max-height: 200px;
-  overflow-y: auto;
-`;
-
-// 建議地址
-const SuggestionItem = styled.div`
-  color: var(--color-gray-600);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) var(--spacing-md);
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--color-gray-100);
-  }
-`;
-
-// 建議文字
-const SuggestionText = styled.div`
-  font-size: var(--font-size-sm);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-// google地圖
-const MapContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 150px;
-  margin-top: var(--spacing-md);
-  border-radius: var(--border-radius-xl);
-  overflow: hidden;
-`;
-
-// const MapOverlay = styled.div`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   bottom: 0;
-//   background-color: rgba(0, 0, 0, 0.5);
-//   border-radius: var(--border-radius-xl);
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
-
-// const EditButton = styled.button`
-//   background-color: white;
-//   border: none;
-//   border-radius: var(--border-radius-round);
-//   padding: var(--spacing-sm) var(--spacing-md);
-//   cursor: pointer;
-//   display: flex;
-//   align-items: center;
-//   gap: var(--spacing-sm);
-//   color: var(--color-gray-600);
-
-//   &:hover {
-//     background-color: var(--color-gray-100);
-//   }
-// `;
 
 export default AddressAutocomplete;

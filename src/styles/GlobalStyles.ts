@@ -25,13 +25,13 @@ body {
 /* 全局 */
 html,body {
   font-family: 'Noto Sans TC',"Poppins", "Noto Sans", sans-serif;
-  color: var(--color-gray-700);
+  color: ${({ theme }) => theme.colors.gray[700]};
 
   transition: color 0.3s, background-color 0.3s;
   min-height: 100vh;
   line-height: 1.5;
   font-size: 16px;
-  font-weight: var(--font-weight-normal);
+  font-weight: ${({ theme }) => theme.typography.fontWeights.normal};
 }
 
 /* 連接 */
@@ -102,7 +102,7 @@ input:focus,
 textarea:focus,
 select:focus {
   appearance: none;
-  outline: 2px solid var(--color-brand-600);
+  outline: 2px solid ${({ theme }) => theme.colors.primary.main};
   outline-offset: -1px;
 }
 
@@ -118,8 +118,8 @@ button:focus {
 /* 禁用 */
 select:disabled,
 input:disabled {
-  background-color: var(--color-gray-200);
-  color: var(--color-gray-500);
+  background-color: ${({ theme }) => theme.colors.gray[200]};
+  color: ${({ theme }) => theme.colors.gray[500]};
 }
 
 /* 滾動條 */
@@ -128,16 +128,16 @@ input:disabled {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-gray-100);
+  background: ${({ theme }) => theme.colors.gray[100]};
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-gray-300);
+  background: ${({ theme }) => theme.colors.gray[300]};
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gray-400);
+  background: ${({ theme }) => theme.colors.gray[400]};
 }
 `;
 

@@ -30,25 +30,25 @@ export const SearchInput = styled.div`
 export const UserInfo = styled.div`
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  margin-right: var(--spacing-sm);
+  gap: ${({ theme }) => theme.spacing.sm};
+  margin-right: ${({ theme }) => theme.spacing.sm};
 
   .avatar {
-    color: var(--color-white);
+    color: ${({ theme }) => theme.colors.white};
     width: 25px;
     height: 25px;
-    background-color: var(--color-primary);
-    border-radius: var(--border-radius-round);
+    background-color: ${({ theme }) => theme.colors.primary.main};
+    border-radius: ${({ theme }) => theme.borderRadius.round};
 
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
+    font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+    font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
   }
 
   span {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-primary);
+    font-size: ${({ theme }) => theme.typography.fontSizes['2xs']};
+    color: ${({ theme }) => theme.colors.text.primary};
   }
 `;

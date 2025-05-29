@@ -4,9 +4,9 @@ import styled from 'styled-components';
 export const OrderList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-12);
+  gap: ${({ theme }) => theme.spacing[12]};
   width: 100%;
-  padding: 0 var(--spacing-xs);
+  padding: 0 ${({ theme }) => theme.spacing.xs};
 `;
 
 // 收運列表標題區塊
@@ -14,22 +14,22 @@ export const OrderListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: var(--spacing-sm);
-  padding: var(--spacing-sm) 0;
+  margin: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.sm} 0;
 `;
 
 // 收運列表標題
 export const OrderListTitle = styled.h2`
-  color: var(--color-text-primary);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  color: ${({ theme }) => theme.colors.text.primary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.lg};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.bold};
 `;
 
 // 收運次數
 export const OrderListCal = styled.div`
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: ${({ theme }) => theme.colors.text.tertiary};
+  font-size: ${({ theme }) => theme.typography.fontSizes.sm};
+  font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 // 收運列表 任務內容大容器
@@ -38,7 +38,7 @@ export const TabContent = styled.div`
   overflow-y: auto;
   flex: 1;
   height: 100%;
-  padding-bottom: var(--spacing-md);
+  padding-bottom: ${({ theme }) => theme.spacing.md};
 
   &::-webkit-scrollbar {
     display: none;

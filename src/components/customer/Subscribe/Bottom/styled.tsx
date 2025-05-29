@@ -9,7 +9,7 @@ export const BottomInfoContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   padding: ${({ theme }) => theme.spacing.md};
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  z-index: ${({ theme }) => theme.zIndex.fixed};
+  z-index: 1000;
 `;
 
 // 底部空白容器 增加高度 避免遮擋上方資訊
@@ -59,7 +59,7 @@ export const OriginalPriceText = styled.span`
 `;
 
 export const DiscountText = styled.span`
-  color: ${({ theme }) => theme.colors.error};
+  color: ${({ theme }) => theme.colors.error.main};
   font-size: ${({ theme }) => theme.typography.fontSizes.xs};
 `;
 

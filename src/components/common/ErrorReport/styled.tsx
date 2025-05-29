@@ -11,14 +11,14 @@ export const ErrorReportContainer = styled.div`
 `;
 
 export const ErrorTitle = styled.div<{ color?: string }>`
-  color: ${({ color, theme }) => color || theme.colors.error};
+  color: ${({ color, theme }) => color || theme.colors.error.main};
   margin-right: ${({ theme }) => theme.spacing.sm};
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   font-weight: ${({ theme }) => theme.typography.fontWeights.medium};
 `;
 
 export const ErrorMessage = styled.div<{ color?: string }>`
-  color: ${({ color, theme }) => color || theme.colors.error};
+  color: ${({ color, theme }) => color || theme.colors.error.main};
 `;
 
 export const ErrorImage = styled.img`
