@@ -34,6 +34,7 @@ export const ResultIcon = styled.div`
 
 export const ButtonGroup = styled.div`
   display: flex;
+  justify-content: center;
   gap: ${({ theme }) => theme.spacing.md};
   margin-top: ${({ theme }) => theme.spacing.lg};
 `;
