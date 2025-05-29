@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 export type ConfirmPaymentParams = {
-  transactionId: string;
-  orderId: string;
+  ordersID: string;
+  transactionId: number;
+  amount: number;
 };
 
 export type ConfirmPaymentResponse = {

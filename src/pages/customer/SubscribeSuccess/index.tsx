@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -13,7 +12,7 @@ import {
   SuccessImage,
   SuccessTitle,
   OrderInfoContainer,
-  OrderNumber,
+  OrderNumberTitle,
   OrderItem,
   OrderItemLabel,
   OrderItemValue,
@@ -29,94 +28,86 @@ import {
 
 import successImage from '../../../assets/images/img-Lebuledou-score.png';
 import QRCodeDownloader from '../../../components/common/QRCodeDownloader';
+import { getOrderReceipt, type OrderReceipt } from '../../../apis/customer/getOrderReceipt';
 import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
 import { OrderDetail } from '../../../components/customer/QRcodeData/types';
+import { getUsersID } from '../../../utils/getUserLocalData';
 import {
   getFormattedDateTime,
-  formatNumbersToWeekdays,
+  // formatNumbersToWeekdays,
 } from '../../../utils/formatDate';
 import { formatPaymentMethod } from '../../../utils/formatPaymentMethod';
 
-interface OrderData {
-  orderId: string;
-  days: number;
-}
-
-interface ApiResponse {
-  OrderNumber: string;
-  TotalAmount: number;
-  PaymentStatus: number;
-  LinePayMethod: string;
-  Months: number;
-  PlanName: string;
-  Liter: number;
-  PlanKG: number;
-  CreatedAt: string;
-  UpdatedAt: string;
-}
-
-const userId = localStorage.getItem('UsersID');
-
 const SubscribeSuccess = () => {
   const navigate = useNavigate();
-  const [orderNumber, setOrderNumber] = useState(''); //訂單編號
-  const [orderData, setOrderData] = useState<OrderData | null>(null);
-  const [apiData, setApiData] = useState<ApiResponse | null>(null);
+  const [orderId, setOrderId] = useState(''); //儲存orderId
+  const [receiptData, setReceiptData] = useState<OrderReceipt | null>(null); //儲存api回傳資料
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
 
-  // 從session storage獲取數據並呼叫API
+  // 從 sessionStorage 獲取訂單 ID
   useEffect(() => {
-    const storedData = sessionStorage.getItem('subscriptionData');
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      setOrderData(parsedData);
-      console.log('session storage 訂單資料:', parsedData);
-
-      // 呼叫 明細 API
-      if (parsedData.orderId) {
-        axios
-          .get(`api/Get/Orders/${parsedData.orderId}`)
-          .then((response) => {
-            if (response.data.status) {
-              setApiData(response.data.result);
-              setOrderNumber(response.data.result.OrderNumber);
-            }
-            console.log('明細 API 回傳資料:', response.data.result);
-          })
-          .catch((error) => {
-            console.error('明細 API 呼叫失敗:', error);
-          });
-
-        // 呼叫 訂單詳情 API
-        getOrderDetails(userId, parsedData.orderId)
-          .then((response) => {
-            if (response?.status && response?.result && Array.isArray(response.result) && response.result.length > 0) {
-              setOrderDetails(response.result[0].OrderDetails || []);
-            } else {
-              console.warn('訂單詳情 API 回傳資料格式不正確:', response);
-              setOrderDetails([]);
-            }
-            console.log(
-              '訂單詳情 API 回傳資料:',
-              response?.result?.[0]?.OrderDetails || [],
-            );
-          })
-          .catch((error) => {
-            console.error('訂單詳情 API 呼叫失敗:', error);
-            setOrderDetails([]);
-          });
+    const subscriptionData = sessionStorage.getItem('subscriptionData');
+    if (subscriptionData) {
+      try {
+        const parsedData = JSON.parse(subscriptionData);
+        setOrderId(parsedData.orderId);
+        console.log('訂單id:', parsedData.orderId);
+      } catch (error) {
+        console.error('解析 subscriptionData 失敗:', error);
       }
     }
   }, []);
+
+  // 獲取訂單收據
+  useEffect(() => {
+    if (!orderId) return;
+
+    getOrderReceipt(orderId)
+      .then((response) => {
+        if (response?.status && response?.result) {
+          setReceiptData(response.result);
+          console.log('訂單明細 API 回傳資料:', response.result);
+        } else {
+          console.warn('訂單明細 API 回傳資料格式不正確:', response);
+        }
+      })
+      .catch((error) => {
+        console.error('訂單明細 API 呼叫失敗:', error);
+      });
+  }, [orderId]);
+
+  // 獲取訂單詳情
+  useEffect(() => {
+    if (!orderId) return;
+    
+    const userId = getUsersID();
+    if (!userId) {
+      console.error('未找到用戶ID');
+      return;
+    }
+
+    getOrderDetails(userId.toString(), orderId)
+      .then((response) => {
+        if (response?.status && response?.result?.[0]?.OrderDetails) {
+          setOrderDetails(response.result[0].OrderDetails);
+          console.log('訂單詳情 API 回傳資料:', response.result[0].OrderDetails);
+        } else {
+          console.warn('訂單詳情 API 回傳資料格式不正確:', response);
+        }
+      })
+      .catch((error) => {
+        console.error('訂單詳情 API 呼叫失敗:', error);
+      });
+  }, [orderId]);
 
   // 返回首頁
   const handleBackToHome = () => {
     navigate('/customer');
   };
 
-  const { days } = orderData || {};
 
   const {
+    OrderNumber,
     PlanName,
     Liter,
     PlanKG,
@@ -124,7 +115,7 @@ const SubscribeSuccess = () => {
     LinePayMethod,
     TotalAmount,
     CreatedAt,
-  } = apiData || {};
+  } = receiptData || {};
 
   return (
     <PageWrapper>
@@ -133,7 +124,7 @@ const SubscribeSuccess = () => {
         <SuccessTitle>預定成功囉!</SuccessTitle>
 
         <OrderInfoContainer>
-          <OrderNumber>訂單編號： {orderNumber}</OrderNumber>
+          <OrderNumberTitle>訂單編號： {OrderNumber}</OrderNumberTitle>
           <Divider />
 
           <OrderItem>
@@ -148,11 +139,11 @@ const SubscribeSuccess = () => {
             <OrderItemValue>{Months} 個月</OrderItemValue>
           </OrderItem>
 
-          <OrderItem>
+          {/* <OrderItem>
             <OrderItemLabel>收運日</OrderItemLabel>
             <OrderItemValue>
               {days ? (
-                formatNumbersToWeekdays(days.toString()).map(
+                formatNumbersToWeekdays(days).map(
                   (day, index, array) => (
                     <span key={day}>
                       週{day}
@@ -164,7 +155,7 @@ const SubscribeSuccess = () => {
                 <span>無收運日</span>
               )}
             </OrderItemValue>
-          </OrderItem>
+          </OrderItem> */}
 
           <OrderItem>
             <OrderItemLabel>支付方式</OrderItemLabel>
@@ -190,7 +181,7 @@ const SubscribeSuccess = () => {
           <HomeButton onClick={handleBackToHome}>返回我的訂單</HomeButton>
           <CustomQRCodeDownloadButton as="div">
             <QRCodeDownloader
-              orderNumber={orderNumber}
+              orderNumber={OrderNumber}
               orderDetails={orderDetails}
               buttonText="下載所有 QR Code"
             />

@@ -5,32 +5,41 @@ import  CommonLoading  from '@/components/common/CommonLoading';
 import { confirmLinePay } from '@/apis/customer/confirmLinePay';
 
 const SubscribeConfirm = () => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
     const confirmPayment = async () => {
       const transactionId = searchParams.get('transactionId');
-      const orderId = searchParams.get('orderId');
+      console.log('transactionId:', transactionId);
+      const subscriptionData = sessionStorage.getItem('subscriptionData');
+      
+      if (!subscriptionData) {
+        navigate('/customer/subscribe/fail');
+        return;
+      }
 
-      console.log('Transaction ID:', transactionId);
-      console.log('Order ID:', orderId);
+      const { orderId, price } = JSON.parse(subscriptionData);
+      console.log('orderId:', orderId);
+      console.log('price:', price);
 
-      if (!transactionId || !orderId) {
+
+      if (!transactionId || !orderId || !price) {
         navigate('/customer/subscribe/fail');
         return;
       }
 
       try {
         const response = await confirmLinePay({
-          transactionId,
-          orderId
+          ordersID: orderId,
+          transactionId: parseInt(transactionId),
+          amount: price,
         });
 
         if (response.success) {
-          // 清除 session storage
-          sessionStorage.removeItem('subscriptionData');
+          // 暫時保留 session storage 資料
+          // sessionStorage.removeItem('subscriptionData');
           
           // 導向成功頁面
           navigate('/customer/subscribe/success', {

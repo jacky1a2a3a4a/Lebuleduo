@@ -12,6 +12,7 @@ import OrderEdit from '../pages/customer/OrderEdit'; //訂單編輯
 import Subscribe from '../pages/customer/Subscribe'; //訂閱
 import SubscribeData from '../pages/customer/SubscribeData'; //訂閱資料
 import SubscribeCheckout from '../pages/customer/SubscribeCheckout'; //訂閱結帳
+import SubscribeConfirm from '../pages/customer/SubscribeConfirm'; //訂閱確認
 import SubscribeSuccess from '../pages/customer/SubscribeSuccess'; //訂閱成功
 import SubscribeFail from '../pages/customer/SubscribeFail'; //付款失敗
 import AbnormalTask from '../pages/customer/OrderTaskStatus/AbnormalTask'; //異常訂單
@@ -92,6 +93,14 @@ export const customerRoutes: RouteConfig[] = [
     ),
   },
   {
+    path: '/customer/subscribe-confirm', //訂閱確認
+    element: (
+      <ProtectedRoute role="customer">
+        <SubscribeConfirm />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: '/customer/subscribe-success', //訂閱成功
     element: (
       <ProtectedRoute role="customer">
@@ -100,7 +109,7 @@ export const customerRoutes: RouteConfig[] = [
     ),
   },
   {
-    path: '/customer/subscribe/fail', //付款失敗
+    path: '/customer/subscribe/subscribe-fail', //付款失敗
     element: (
       <ProtectedRoute role="customer">
         <SubscribeFail />
