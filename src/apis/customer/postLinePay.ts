@@ -7,7 +7,7 @@ type LinePayResponse = {
 
 export const postLinePay = async (orderId: string, amount: number): Promise<LinePayResponse> => {
   try {
-    const response = await axios.post(`api/Post/linePay/Reserve`, {
+    const response = await axios.post(`/api/Post/linePay/Reserve`, {
       orderId,
       amount,
     });
