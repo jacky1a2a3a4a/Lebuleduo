@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SubscriptionData } from '../../pages/customer/SubscribeCheckout/types';
+import type { SubscriptionData } from '@/pages/customer/SubscribeCheckout/types';
 
 type OrderResponse = {
   orders: {
