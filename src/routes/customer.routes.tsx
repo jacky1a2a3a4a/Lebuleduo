@@ -109,7 +109,7 @@ export const customerRoutes: RouteConfig[] = [
     ),
   },
   {
-    path: '/customer/subscribe/subscribe-fail', //付款失敗
+    path: '/customer/subscribe/fail', //付款失敗
     element: (
       <ProtectedRoute role="customer">
         <SubscribeFail />
