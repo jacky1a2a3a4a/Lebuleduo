@@ -33,8 +33,9 @@
     
     /* Additional Settings */
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "src/layouts/AdminLayout/index.tsx"],
+  "include": ["src/**/*", "src/layouts/AdminLayout/index.tsx"],
   "exclude": ["node_modules"]
 }
