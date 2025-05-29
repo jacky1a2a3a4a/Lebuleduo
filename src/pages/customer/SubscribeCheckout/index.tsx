@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import SubscribeBottom from '../../../components/customer/Subscribe/Bottom';
-import CommonLoading from '../../../components/common/CommonLoading';
+import SubscribeBottom from '@/components/customer/Subscribe/Bottom';
+import CommonLoading from '@/components/common/CommonLoading';
 import {
   PageWrapper,
   ScrollableContent,
@@ -24,16 +24,16 @@ import {
   FixedPointImage,
 } from './styled';
 
-import ProgressSteps from '../../../components/customer/Subscribe/ProgressSteps';
-import SectionTitle from '../../../components/customer/Subscribe/SectionTitle';
-import ButtonCard from '../../../components/customer/Subscribe/ButtonCard';
+import ProgressSteps from '@/components/customer/Subscribe/ProgressSteps';
+import SectionTitle from '@/components/customer/Subscribe/SectionTitle';
+import ButtonCard from '@/components/customer/Subscribe/ButtonCard';
 
 import { SubscriptionData } from './types';
-import { getFormattedDateWithDay } from '../../../utils/formatDate';
-import { SubscribeSteps } from '../../../components/customer/Subscribe/SubscribeSteps';
-import { postOrder } from '../../../apis/customer/postOrder';
-import { createPayment } from '../../../apis/customer/postBlueNew';
-import { postLinePay } from '../../../apis/customer/postLinePay';
+import { getFormattedDateWithDay } from '@/utils/formatDate';
+import { SubscribeSteps } from '@/components/customer/Subscribe/SubscribeSteps';
+import { postOrder } from '@/apis/customer/postOrder';
+import { createPayment } from '@/apis/customer/postBlueNew';
+import { postLinePay } from '@/apis/customer/postLinePay';
 
 const userId = localStorage.getItem('UsersID');
 
