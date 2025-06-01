@@ -21,6 +21,78 @@ const LineCallback = () => {
   const dispatch = useAppDispatch();
   const hasProcessed = useRef(false);
 
+  // 清除 URL 參數的通用函數
+  const clearUrlParams = () => {
+    window.history.replaceState({}, '', window.location.pathname);
+  };
+
+  // 延遲跳轉的通用函數
+  const navigateWithDelay = (targetPath: string, delay: number = 3000) => {
+    setTimeout(() => {
+      navigate(targetPath, { replace: true });
+    }, delay);
+  };
+
+  // 處理登入成功
+  const handleLoginSuccess = (roleName: string) => {
+    // 清除 LINE 登入狀態（登入流程完成）
+    dispatch(clearLineLoginState());
+
+    console.log('登入成功，資料已保存到 Redux');
+
+    // 標記為已處理，避免重複請求token，第二次會失敗
+    hasProcessed.current = true;
+
+    // 顯示成功訊息
+    setLoading(false);
+    setError(null);
+
+    // 清除 URL 參數
+    window.history.replaceState({}, '', '/');
+
+    // 根據角色跳轉
+    console.log('準備跳轉，角色資訊:', {
+      roleName,
+      typeof_roleName: typeof roleName,
+      isCustomer: roleName === 'customer',
+      isDeliver: roleName === 'deliver',
+    });
+
+    if (roleName === 'customer') {
+      console.log('跳轉到顧客頁面: /customer');
+      navigateWithDelay('/customer');
+    } else if (roleName === 'deliver') {
+      console.log('跳轉到汪汪員頁面: /deliver');
+      navigateWithDelay('/deliver');
+    } else {
+      console.error('未知的角色:', roleName);
+      navigateWithDelay('/auth/line-login-customer');
+    }
+  };
+
+  // 處理登入失敗
+  const handleLoginError = (errorMessage: string) => {
+    setError(errorMessage);
+    setLoading(false);
+
+    // 獲取用戶角色
+    const userRole = getLoginRole();
+
+    // 清除 Redux 中的認證相關資料
+    dispatch(logout());
+    dispatch(clearLineLoginState());
+
+    // 清除 URL 參數
+    clearUrlParams();
+
+    // 根據角色跳轉到對應的登入頁面
+    if (userRole === 'deliver') {
+      navigateWithDelay('/auth/line-login-deliver');
+    } else {
+      navigateWithDelay('/auth/line-login-customer');
+    }
+  };
+
   useEffect(() => {
     const handleCallback = async () => {
       try {
@@ -112,41 +184,9 @@ const LineCallback = () => {
             },
           }));
 
-          // 清除 LINE 登入狀態（登入流程完成）
-          dispatch(clearLineLoginState());
+          // 處理登入成功
+          handleLoginSuccess(roleName);
 
-          console.log('登入成功，資料已保存到 Redux');
-
-          // 標記為已處理，避免重複請求token，第二次會失敗
-          hasProcessed.current = true;
-
-          // 顯示成功訊息
-          setLoading(false);
-          setError(null);
-
-          // 清除 URL 參數
-          window.history.replaceState({}, '', '/');
-
-          // 3 秒後根據角色導向不同頁面
-          setTimeout(() => {
-            console.log('準備跳轉，角色資訊:', {
-              roleName,
-              typeof_roleName: typeof roleName,
-              isCustomer: roleName === 'customer',
-              isDeliver: roleName === 'deliver',
-            });
-            
-            if (roleName === 'customer') {
-              console.log('跳轉到顧客頁面: /customer');
-              navigate('/customer', { replace: true });
-            } else if (roleName === 'deliver') {
-              console.log('跳轉到汪汪員頁面: /deliver');
-              navigate('/deliver', { replace: true });
-            } else {
-              console.error('未知的角色:', roleName);
-              navigate('/auth/line-login', { replace: true });
-            }
-          }, 3000);
         } catch (apiError: unknown) {
           console.error('LINE 登入處理失敗:', apiError);
           if (apiError instanceof Error) {
@@ -157,31 +197,8 @@ const LineCallback = () => {
         }
       } catch (err: unknown) {
         console.error('LINE 登入失敗:', err);
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('登入過程中發生錯誤');
-        }
-        setLoading(false);
-
-        // 獲取用戶角色
-        const userRole = getLoginRole();
-
-        // 清除 Redux 中的認證相關資料
-        dispatch(logout());
-        dispatch(clearLineLoginState());
-
-        // 清除 URL 參數，避免重複觸發登入流程
-        window.history.replaceState({}, '', window.location.pathname);
-
-        // 3 秒後根據角色返回對應的登入頁面
-        setTimeout(() => {
-          if (userRole === 'deliver') {
-            navigate('/auth/line-login-deliver', { replace: true });
-          } else {
-            navigate('/auth/line-login-customer', { replace: true });
-          }
-        }, 3000);
+        const errorMessage = err instanceof Error ? err.message : '登入過程中發生錯誤';
+        handleLoginError(errorMessage);
       }
     };
 

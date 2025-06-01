@@ -11,9 +11,12 @@ export const useUser = () => {
   return useAppSelector((state) => state.user);
 };
 
-// 取得 user id
-export const useUserId = () => {
-  return useAppSelector((state) => state.user.userId);
+// 取得 user id（轉換為數字）
+export const useUserId = (): number | null => {
+  return useAppSelector((state) => {
+    const userId = state.user.userId;
+    return userId ? Number(userId) : null;
+  });
 };
 
 // 取得 user 是否已驗證

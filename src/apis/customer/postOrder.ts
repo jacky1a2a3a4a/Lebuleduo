@@ -1,6 +1,8 @@
 import axios from 'axios';
 import type { SubscriptionData } from '@/pages/customer/SubscribeCheckout/types';
 
+import { getUsersID } from '@/utils/authUtils';
+
 type OrderResponse = {
   orders: {
     OrdersID: string;
@@ -9,7 +11,7 @@ type OrderResponse = {
 };
 
 export const postOrder = async (subscriptionData: SubscriptionData): Promise<OrderResponse> => {
-  const userId = localStorage.getItem('UsersID');
+  const userId = getUsersID();
 
   if (!userId) {
     throw new Error('請先登入');
@@ -23,7 +25,7 @@ export const postOrder = async (subscriptionData: SubscriptionData): Promise<Ord
   const paymentMethod = subscriptionData.paymentMethod || 'linePay';
 
   const formData = new FormData();
-  formData.append('UsersID', userId);
+  formData.append('UsersID', userId.toString());
   formData.append('PlanID', subscriptionData.planId.toString());
   formData.append('DiscountID', subscriptionData.frequency.toString());
   formData.append('OrderName', subscriptionData.name);

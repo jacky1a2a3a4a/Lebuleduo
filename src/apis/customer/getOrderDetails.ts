@@ -28,7 +28,7 @@ interface OrderDetailsResponse {
   message?: string;
 }
 
-export const getOrderDetails = async (userId: string, orderId: string) => {
+export const getOrderDetails = async (userId: number, orderId: string) => {
   try {
     const path = `/api/GET/user/orders/${userId}/${orderId}`;
     const response = await axios.get<OrderDetailsResponse>(path);

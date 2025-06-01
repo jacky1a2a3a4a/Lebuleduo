@@ -8,6 +8,8 @@ import {
 import { TabContentProps } from './types';
 import OrderListCard from '../Card';
 
+import { useUserId } from '@/store/hooks';
+
 const OrderDetailTabContent = ({
   activeTab,
   abnormalOrders,
@@ -17,6 +19,9 @@ const OrderDetailTabContent = ({
   totalOrders,
   orderData,
 }: TabContentProps) => {
+  // 從 Redux 獲取 UsersID
+  const userId = useUserId();
+
   // 渲染訂單列表
   const renderOrderList = (orders) => {
     // 如果是未排定任務或全部標籤下的未排定任務，則按照時間順序排序
@@ -42,7 +47,7 @@ const OrderDetailTabContent = ({
             status={order.Status}
             orderDetailId={order.OrderDetailID}
             ordersId={orderData.OrdersID}
-            usersId={parseInt(localStorage.getItem('UsersID') || '0')}
+            usersId={userId}
             onDateModified={() => {}}
           />
         ))}
