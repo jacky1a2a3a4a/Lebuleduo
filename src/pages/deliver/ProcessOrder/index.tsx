@@ -58,7 +58,7 @@ import { formatTime } from '../../../utils/formatTime';
 import { getIssueText } from '../../../utils/getIssueText';
 import { getFormattedDateDash } from '../../../utils/formatDate';
 import { getTomorrowDate } from '../../../utils/getDate';
-import { getUsersID } from '../../../utils/getUserLocalData';
+import { getUsersID } from '../../../utils/authUtils';
 
 const userId = getUsersID(); // 從 localStorage 獲取使用者 ID
 

@@ -13,7 +13,7 @@ import {
 
 import dogImage from '../../../assets/images/img-Lebuledou-lying.png';
 import { getCustomerGreeting } from '../../../utils/getGreeting';
-import { getUserName } from '../../../utils/getUserLocalData';
+import { getUserName } from '../../../utils/authUtils';
 import { ApiTodayOrder } from '../../../pages/customer/MyOrder/types';
 
 type UserCardProps = {

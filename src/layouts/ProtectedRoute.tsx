@@ -1,7 +1,8 @@
 // src/layouts/ProtectedRoute.tsx
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import authService, { UserRole } from '../services/authService';
+import { useAppSelector } from '@/store/hooks';
+import type { UserRole } from '@/store/types';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -9,43 +10,36 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
-  const isAuthenticated = authService.isAuthenticated();
-  const userRole = authService.getUserRole();
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+  const userRole = useAppSelector((state) => state.user.userRole);
 
-  useEffect(() => {
-    // 如果使用者已登入但localStorage中沒有用戶資料，則嘗試獲取
-    if (isAuthenticated && !authService.getCachedUserData()) {
-      authService
-        .getUserInfo()
-        .then((userData) => {
-          localStorage.setItem('user_data', JSON.stringify(userData));
-        })
-        .catch((err) => {
-          console.error('獲取用戶資料失敗:', err);
-          // 如果獲取失敗，清除登入狀態，強制用戶重新登入
-          // authService.logout();
-        });
-    }
-  }, [isAuthenticated]);
+  console.log('ProtectedRoute 檢查:', {
+    isAuthenticated,
+    userRole,
+    requiredRole: role,
+  });
 
   // 如果未登入，重定向到登入頁面
   if (!isAuthenticated) {
-    return <Navigate to="/auth/line-login" replace />;
+    console.log('未登入，重定向到登入頁面');
+    return <Navigate to="/auth/line-login-customer" replace />;
   }
 
   // 如果角色不符，重定向到對應角色的首頁
   if (userRole !== role) {
+    console.log('角色不符，重定向:', { userRole, requiredRole: role });
     if (userRole === 'customer') {
-      return <Navigate to="/customer/my-order" replace />;
+      return <Navigate to="/customer" replace />;
     } else if (userRole === 'deliver') {
       return <Navigate to="/deliver" replace />;
     } else {
-      // 角色未知，登出並重定向至登入頁面
-      // authService.logout();
-      return <Navigate to="/auth/line-login" replace />;
+      // 角色未知，重定向至登入頁面
+      console.log('角色未知，重定向到登入頁面');
+      return <Navigate to="/auth/line-login-customer" replace />;
     }
   }
 
+  console.log('認證通過，渲染子元件');
   // 如果已登入且角色符合，渲染子元件
   return <>{children}</>;
 };

@@ -1,4 +1,4 @@
-import { getUsersID } from '../../utils/getUserLocalData';
+import { getUsersID } from '../../utils/authUtils';
 import { ApiCompletedOrder } from '../../pages/customer/MyOrder/types';
 
 interface UserOrdersCompletedResponse {

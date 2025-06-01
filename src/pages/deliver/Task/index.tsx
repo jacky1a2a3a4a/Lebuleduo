@@ -36,7 +36,7 @@ import ErrorReport from '../../../components/common/ErrorReport';
 import CommonLoading from '../../../components/common/CommonLoading';
 import CategoryTags from '../../../components/deliver/Tags';
 
-import { getUsersID } from '../../../utils/getUserLocalData';
+import { getUsersID } from '../../../utils/authUtils';
 import { getDeliverGreeting } from '../../../utils/getGreeting';
 import { getTodayDate, getTomorrowDate } from '../../../utils/getDate';
 import { getFormattedDateWithDay } from '../../../utils/formatDate';
