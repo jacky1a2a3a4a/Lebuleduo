@@ -8,7 +8,7 @@ import {
 import { TabContentProps } from './types';
 import OrderListCard from '../Card';
 
-import { useUserId } from '@/store/hooks';
+import { getUsersID } from '@/utils/authUtils';
 
 const OrderDetailTabContent = ({
   activeTab,
@@ -20,7 +20,7 @@ const OrderDetailTabContent = ({
   orderData,
 }: TabContentProps) => {
   // 從 Redux 獲取 UsersID
-  const userId = useUserId();
+  const userId = getUsersID();
 
   // 渲染訂單列表
   const renderOrderList = (orders) => {

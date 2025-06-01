@@ -13,6 +13,8 @@ import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTa
 import AnimationLoading from '../../../../components/common/AnimationLoading'; //加載中
 import { getFormattedDateTime } from '../../../../utils/formatDate'; // 時間格式化工具
 
+import { getUsersID } from '@/utils/authUtils';
+
 // 訂單詳情
 interface OrderDetail {
   Addresses: string;
@@ -45,8 +47,8 @@ interface OrderTaskDetail {
   CompletedAt: string | null;
 }
 
-function FinishedTask() {
-  const userId = localStorage.getItem('UsersID'); //獲取使用者ID
+function ScheduledTask() {
+  const userId = getUsersID(); //獲取使用者ID
   const { orderId, orderDetailId } = useParams(); //從URL獲取訂單ID
 
   const [loading, setLoading] = useState(true);
@@ -182,4 +184,4 @@ function FinishedTask() {
   );
 }
 
-export default FinishedTask;
+export default ScheduledTask;

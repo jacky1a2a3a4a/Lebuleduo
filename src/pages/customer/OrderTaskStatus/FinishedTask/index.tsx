@@ -13,6 +13,8 @@ import OrderTaskStatusRecordStatus from '../../../../components/customer/OrderTa
 import OrderTaskStatusRecordPhotos from '../../../../components/customer/OrderTaskStatusRecord/Photos/index.tsx'; //收運紀錄照片
 import AnimationLoading from '../../../../components/common/AnimationLoading'; //加載中
 
+import { getUsersID } from '@/utils/authUtils';
+
 // 訂單詳情
 interface OrderDetail {
   Addresses: string;
@@ -46,7 +48,7 @@ interface OrderTaskDetail {
 }
 
 function FinishedTask() {
-  const userId = localStorage.getItem('UsersID'); //獲取使用者ID
+  const userId = getUsersID(); //獲取使用者ID
   const { orderId, orderDetailId } = useParams(); //從URL獲取訂單ID
 
   const [loading, setLoading] = useState(true);
