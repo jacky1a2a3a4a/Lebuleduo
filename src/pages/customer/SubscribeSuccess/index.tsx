@@ -88,7 +88,7 @@ const SubscribeSuccess = () => {
       return;
     }
 
-    getOrderDetails(userId.toString(), orderId)
+    getOrderDetails(userId, orderId)
       .then((response) => {
         if (response?.status && response?.result?.[0]?.OrderDetails) {
           setOrderDetails(response.result[0].OrderDetails);
