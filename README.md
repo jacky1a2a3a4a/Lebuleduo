@@ -1,7 +1,7 @@
 # 垃不垃多 Lebu-leduo
 
 <div align="center">
-  <img src="./public/assets/images/Lebuledou_truck_login_border.png" width="180" alt="垃不垃多圖片" />
+  <img src="./public/assets/imgs/img-Lebuledou-truck-login-border.png" width="180" alt="垃不垃多圖片" />
 </div>
 
 ## 專業垃圾代收平台

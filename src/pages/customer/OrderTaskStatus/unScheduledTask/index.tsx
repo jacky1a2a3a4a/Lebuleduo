@@ -13,7 +13,7 @@ import AnimationLoading from '../../../../components/common/AnimationLoading'; /
 
 import { Notification, NotificationText } from './styled';
 
-import { getUsersID } from '@/utils/authUtils';
+import { useUserId } from '@/store/hooks';
 
 // 訂單詳情
 interface OrderDetail {
@@ -48,7 +48,7 @@ interface OrderTaskDetail {
 }
 
 function UnScheduledTask() {
-  const userId = getUsersID(); //獲取使用者ID
+  const userId = useUserId(); //獲取使用者ID
   const { orderId, orderDetailId } = useParams(); //從URL獲取訂單ID
 
   const [loading, setLoading] = useState(true);

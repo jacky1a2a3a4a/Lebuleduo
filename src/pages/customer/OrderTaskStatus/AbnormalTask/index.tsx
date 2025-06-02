@@ -14,7 +14,7 @@ import OrderTaskStatusRecordPhotos from '../../../../components/customer/OrderTa
 import AdditionalFee from '../../../../components/customer/OrderTaskStatusRecord/AdditionalFee'; //補繳金額
 import AnimationLoading from '../../../../components/common/AnimationLoading'; //加載中
 
-import { getUsersID } from '@/utils/authUtils';
+import { useUserId } from '@/store/hooks';
 
 // 訂單詳情
 interface OrderDetail {
@@ -49,7 +49,7 @@ interface OrderTaskDetail {
 }
 
 function FinishedTask() {
-  const userId = getUsersID(); //獲取使用者ID
+  const userId = useUserId(); //獲取使用者ID
   const { orderId, orderDetailId } = useParams(); //從URL獲取訂單ID
 
   const [loading, setLoading] = useState(true);
