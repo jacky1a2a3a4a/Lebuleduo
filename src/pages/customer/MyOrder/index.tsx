@@ -25,7 +25,7 @@ import {
   OrderListSection,
 } from './styled';
 
-import { getUsersID } from '../../../utils/getUserLocalData';
+import { getUsersID } from '../../../utils/authUtils';
 
 // 照片用URL
 const userID = getUsersID();

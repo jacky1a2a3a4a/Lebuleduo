@@ -1,4 +1,4 @@
-import { getUsersID } from '../../utils/getUserLocalData';
+import { getUsersID } from '../../utils/authUtils';
 
 interface TodayOrderResponse {
   result: {

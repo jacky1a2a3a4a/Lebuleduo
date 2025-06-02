@@ -34,8 +34,7 @@ import { SubscribeSteps } from '@/components/customer/Subscribe/SubscribeSteps';
 import { postOrder } from '@/apis/customer/postOrder';
 import { createPayment } from '@/apis/customer/postBlueNew';
 import { postLinePay } from '@/apis/customer/postLinePay';
-
-const userId = localStorage.getItem('UsersID');
+import { getUsersID } from '@/utils/authUtils';
 
 // 將星期幾轉換為中文
 const convertDaysToChinese = (days: string) => {
@@ -112,6 +111,7 @@ const SubscribeCheckout = () => {
     setError(null);
 
     try {
+      const userId = getUsersID();
       if (!userId) {
         setError('請先登入');
         setIsLoading(false);
@@ -141,7 +141,7 @@ const SubscribeCheckout = () => {
           switch (paymentMethod) {
             case 'linePay':
               // 使用 LINE Pay
-              const linePayResponse = await postLinePay(orderId, subscriptionData.price);
+              const linePayResponse = await postLinePay(orderId, subscriptionData.totalPrice);
               console.log('LINE Pay API 回應:', linePayResponse);
               window.location.href = linePayResponse.paymentUrl;
               return;

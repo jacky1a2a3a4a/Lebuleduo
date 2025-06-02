@@ -15,7 +15,7 @@ import QRScanner from '../../../components/deliver/QRScanner';
 // import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
 import { getSpecificDayOrders } from '../../../apis/deliver/getSpecificDayOrders'; // 獲取特定日期 任務api
 import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
-import { getUsersID } from '../../../utils/getUserLocalData';
+import { getUsersID } from '../../../utils/authUtils';
 import { getTomorrowDate } from '../../../utils/getDate';
 import { getFormattedDateDash } from '../../../utils/formatDate';
 

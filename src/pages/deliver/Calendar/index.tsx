@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { getSpecificDayOrders } from '../../../apis/deliver/getSpecificDayOrders';
-import { getUsersID } from '../../../utils/getUserLocalData';
+import { getUsersID } from '../../../utils/authUtils';
 import { getFormattedDateDash } from '../../../utils/formatDate';
 import {
   FullHeightContainer,

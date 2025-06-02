@@ -1,6 +1,12 @@
 // src/configs/lineConfig.ts
 //專注於 LINE 登入的配置和安全性
 
+import { 
+  setLineLoginStateUtil, 
+  getLineLoginState 
+} from '../utils/authUtils';
+import type { UserRole } from '../store/types';
+
 // LINE 登入配置
 interface LineConfig {
   CLIENT_ID: string;
@@ -44,24 +50,26 @@ export const getLineConfig = (role: 'customer' | 'deliver'): LineConfig => {
   return role === 'customer' ? CUSTOMER_CONFIG : DELIVER_CONFIG;
 };
 
-// 保存 state 至 localStorage，用於防止 CSRF 攻擊
+// 保存 state 至 Redux，用於防止 CSRF 攻擊
 export const saveLineState = (role: 'customer' | 'deliver'): void => {
   const config = getLineConfig(role);
-  localStorage.setItem('line_login_state', config.STATE);
-  localStorage.setItem('line_login_role', role);
+  
+  // 使用 Redux 保存
+  setLineLoginStateUtil(config.STATE, role as UserRole);
 };
 
-// 驗證 state
+// 驗證 state（從 Redux 獲取）
 export const validateLineState = (state: string): boolean => {
-  const savedState = localStorage.getItem('line_login_state');
-  return state === savedState;
+  const reduxState = getLineLoginState();
+  return reduxState.state === state;
 };
 
-// 取得登入角色
+// 取得 LINE 登入流程中的角色（從 Redux 獲取）
 export const getLoginRole = (): 'customer' | 'deliver' | null => {
-  const role = localStorage.getItem('line_login_role');
-  if (role === 'customer' || role === 'deliver') {
-    return role;
+  const lineLoginState = getLineLoginState();
+  if (lineLoginState.role && (lineLoginState.role === 'customer' || lineLoginState.role === 'deliver')) {
+    return lineLoginState.role;
   }
+  
   return null;
 };

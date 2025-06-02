@@ -31,7 +31,7 @@ import QRCodeDownloader from '../../../components/common/QRCodeDownloader';
 import { getOrderReceipt, type OrderReceipt } from '../../../apis/customer/getOrderReceipt';
 import { getOrderDetails } from '../../../apis/customer/getOrderDetails';
 import { OrderDetail } from '../../../components/customer/QRcodeData/types';
-import { getUsersID } from '../../../utils/getUserLocalData';
+import { getUsersID } from '../../../utils/authUtils';
 import {
   getFormattedDateTime,
   // formatNumbersToWeekdays,
@@ -88,7 +88,7 @@ const SubscribeSuccess = () => {
       return;
     }
 
-    getOrderDetails(userId.toString(), orderId)
+    getOrderDetails(userId, orderId)
       .then((response) => {
         if (response?.status && response?.result?.[0]?.OrderDetails) {
           setOrderDetails(response.result[0].OrderDetails);

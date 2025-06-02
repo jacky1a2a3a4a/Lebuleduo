@@ -18,8 +18,8 @@ import {
 import { OrderResult, OrderDetail } from './types';
 
 interface QRcodeDataProps {
+  userId: number;
   orderId: string;
-  userId: string;
 }
 
 const QRcodeData: React.FC<QRcodeDataProps> = ({ orderId, userId }) => {
