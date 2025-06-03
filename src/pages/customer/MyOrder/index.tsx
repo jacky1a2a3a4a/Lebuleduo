@@ -9,6 +9,7 @@ import { getUserOrders } from '../../../apis/customer/getUserOrders';
 import { getUserOrdersCompleted } from '../../../apis/customer/getUserOrdersCompleted';
 import CurrentOrderList from '../../../components/customer/CurrentOrderList';
 import CompletedOrderList from '../../../components/customer/CompletedOrderList';
+import { theme } from '../../../styles/theme';
 
 import {
   OrderStep,
@@ -107,37 +108,59 @@ function MyOrder() {
         setError(null);
 
         // API 獲取使用者今日數據
-        const TodayData = await getUserTodayData();
-        setTodayData(TodayData.result);
-        console.log('使用者今日數據:', TodayData.result);
+        let todayResult = null;
+        try {
+          const TodayData = await getUserTodayData();
+          todayResult = TodayData.result;
+          setTodayData(todayResult);
+          console.log('使用者今日數據:', todayResult);
+        } catch (err) {
+          console.error('獲取今日數據失敗:', err);
+          // 今日數據失敗不影響方案顯示
+        }
 
         // API 獲取當前方案數據
-        const currentData = await getUserOrders();
-        if (!currentData || !currentData.result) {
+        let currentResult = null;
+        try {
+          const currentData = await getUserOrders();
+          if (currentData && currentData.result && Array.isArray(currentData.result)) {
+            currentResult = currentData.result;
+            setCurrentOrders(currentResult);
+          } else {
+            setCurrentOrders([]);
+          }
+          console.log('當前方案數據:', currentResult);
+        } catch (err) {
+          console.error('獲取當前方案數據失敗:', err);
           setCurrentOrders([]);
-        } else if (Array.isArray(currentData.result)) {
-          setCurrentOrders(currentData.result);
         }
-        console.log('當前方案數據:', currentData.result);
 
         // API 獲取已完成方案數據
-        const completedData = await getUserOrdersCompleted();
-        if (!completedData || !completedData.result) {
+        let completedResult = null;
+        try {
+          const completedData = await getUserOrdersCompleted();
+          if (completedData && completedData.result && Array.isArray(completedData.result)) {
+            completedResult = completedData.result;
+            setCompletedOrders(completedResult);
+          } else {
+            setCompletedOrders([]);
+          }
+          console.log('已完成方案數據:', completedResult);
+        } catch (err) {
+          console.error('獲取已完成方案數據失敗:', err);
+          // 已完成方案失敗不影響當前方案顯示
           setCompletedOrders([]);
-        } else if (Array.isArray(completedData.result)) {
-          setCompletedOrders(completedData.result);
         }
-        console.log('已完成方案數據:', completedData.result);
 
-        // 檢查是否有任何方案數據
-        const hasCurrentOrders =
-          Array.isArray(currentData?.result) && currentData.result.length > 0;
-        const hasCompletedOrders =
-          Array.isArray(completedData?.result) && completedData.result.length > 0;
+        // 檢查是否有任何方案數據 - 只有當兩個都沒有數據時才顯示錯誤
+        const hasCurrentOrders = Array.isArray(currentResult) && currentResult.length > 0;
+        const hasCompletedOrders = Array.isArray(completedResult) && completedResult.length > 0;
 
-        if (!hasCurrentOrders && !hasCompletedOrders) {
-          setError('目前沒有方案數據');
-        }
+        // 移除統一的錯誤設置，讓各個標籤頁自己處理空狀態
+        // if (!hasCurrentOrders && !hasCompletedOrders) {
+        //   setError('目前沒有方案數據');
+        // }
+
       } catch (err) {
         console.error('獲取方案數據失敗:', err);
         setError(
@@ -186,21 +209,39 @@ function MyOrder() {
             <AnimationLoading size="mini" animationType="moving" />
           ) : error ? (
             <ErrorReport
-              title="目前沒有方案"
-              error=""
+              title="載入失敗"
+              error={error}
               showImage={true}
-              titleColor="var(--color-primary)"
+              titleColor={theme.colors.primary.main}
             />
           ) : activeTab === 'current' ? (
-            <CurrentOrderList
-              orders={currentOrders}
-              onOrderClick={handleOrderDetailCurrentClick}
-            />
+            currentOrders.length > 0 ? (
+              <CurrentOrderList
+                orders={currentOrders}
+                onOrderClick={handleOrderDetailCurrentClick}
+              />
+            ) : (
+              <ErrorReport
+                title="目前沒有當前方案"
+                error=""
+                showImage={true}
+                titleColor={theme.colors.primary.main}
+              />
+            )
           ) : (
-            <CompletedOrderList
-              orders={completedOrders}
-              onOrderClick={handleOrderDetailCompletedClick}
-            />
+            completedOrders.length > 0 ? (
+              <CompletedOrderList
+                orders={completedOrders}
+                onOrderClick={handleOrderDetailCompletedClick}
+              />
+            ) : (
+              <ErrorReport
+                title="目前沒有已結束方案"
+                error=""
+                showImage={true}
+                titleColor={theme.colors.primary.main}
+              />
+            )
           )}
         </OrderListSection>
       </OrderContainer>
