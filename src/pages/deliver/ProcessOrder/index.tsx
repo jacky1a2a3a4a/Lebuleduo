@@ -60,12 +60,11 @@ import { getFormattedDateDash } from '../../../utils/formatDate';
 import { getTomorrowDate } from '../../../utils/getDate';
 import { getUsersID } from '../../../utils/authUtils';
 
-const userId = getUsersID(); // 從 localStorage 獲取使用者 ID
-
 function OrderDetails() {
   const navigate = useNavigate();
   const { taskId } = useParams(); // 從 URL 獲取任務 ID
   const tomorrow = getFormattedDateDash(getTomorrowDate());
+  const userId = getUsersID();
 
   const [task, setTask] = useState<TaskItem | null>(null); // 任務資料
   const [loading, setLoading] = useState(true); // 載入狀態
@@ -91,14 +90,27 @@ function OrderDetails() {
     const fetchTaskDetails = async () => {
       try {
         setLoading(true);
+        
+        // 檢查 userId 是否存在
+        if (!userId) {
+          setError('用戶未登入，請重新登入');
+          return;
+        }
+
         const response = await getSpecificDayOrderDetails(
-          Number(userId),
+          userId,
           tomorrow,
           Number(taskId), // 使用 taskId 而不是 orderId
         ); //api 獲取明天特定任務詳情
         console.log('api 原始資訊:', response);
 
-        if (response.Orders.length > 0) {
+        // 檢查 API 回應是否有效
+        if (!response) {
+          setError('API 請求失敗，請重試');
+          return;
+        }
+
+        if (response.Orders && response.Orders.length > 0) {
           const apiTask = response.Orders[0];
           console.log('api 特定任務資訊:', apiTask);
           const TaskDetail: TaskItem = {
@@ -136,7 +148,7 @@ function OrderDetails() {
     if (taskId) {
       fetchTaskDetails();
     }
-  }, [taskId, tomorrow]);
+  }, [taskId, tomorrow, userId]);
 
   // 將 API 接收到的狀態(中文) 轉成英文(狀態組件吃英文)
   const mapApiStatusToTaskStatus = (apiStatus: string): TaskStatus => {
@@ -338,6 +350,11 @@ function OrderDetails() {
   // 錯誤狀態
   if (error) {
     return <ErrorReport error={error} />;
+  }
+
+  // 如果沒有任務資料，顯示錯誤
+  if (!task) {
+    return <ErrorReport error="無法載入任務資料" />;
   }
 
   return (
