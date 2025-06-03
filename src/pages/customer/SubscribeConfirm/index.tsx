@@ -20,18 +20,32 @@ const SubscribeConfirm = () => {
       }
 
       const parsedData = JSON.parse(subscriptionData);
-      const { orderId, price, transactionId } = parsedData;
+      const { orderId, totalPrice, transactionId } = parsedData;
       
+      console.log('sessionStorage 中的資料:', parsedData);
       console.log('sessionStorage 中的 transactionId:', transactionId);
       console.log('orderId (原始):', orderId, typeof orderId);
-      console.log('price:', price, typeof price);
+      console.log('totalPrice:', totalPrice, typeof totalPrice);
 
       // 確保 orderId 轉換為字串
       const orderIdString = String(orderId);
       console.log('orderId (轉換後):', orderIdString, typeof orderIdString);
 
-      if (!transactionId || !orderId || !price) {
-        console.error('缺少必要參數:', { transactionId, orderId, price });
+      // 加強參數驗證
+      if (!transactionId || !orderId || !totalPrice) {
+        console.error('缺少必要參數:', { transactionId, orderId, totalPrice });
+        console.error('完整的 parsedData:', parsedData);
+        navigate('/customer/subscribe/fail');
+        return;
+      }
+
+      // 驗證參數類型
+      if (typeof transactionId !== 'number') {
+        console.error('transactionId 應該是數字類型，實際類型:', typeof transactionId);
+      }
+      
+      if (typeof totalPrice !== 'number' || totalPrice <= 0) {
+        console.error('totalPrice 應該是正數，實際值:', totalPrice);
         navigate('/customer/subscribe/fail');
         return;
       }
@@ -40,13 +54,13 @@ const SubscribeConfirm = () => {
         console.log('準備呼叫 confirmLinePay，參數:', {
           orderId: orderIdString,
           transactionId: transactionId,
-          amount: price,
+          amount: totalPrice,
         });
 
         const response = await confirmLinePay({
           orderId: orderIdString,
           transactionId: transactionId,
-          amount: price,
+          amount: totalPrice,
         });
 
         console.log('confirmLinePay 回應:', response);
