@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 type LinePayResponse = {
+  success: boolean;
+  message: string;
   paymentUrl: string;
-  transactionId: string;
+  transactionId: number;
 };
 
 export const postLinePay = async (orderId: string, amount: number): Promise<LinePayResponse> => {

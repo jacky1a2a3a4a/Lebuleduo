@@ -143,6 +143,22 @@ const SubscribeCheckout = () => {
               // 使用 LINE Pay
               const linePayResponse = await postLinePay(orderId, subscriptionData.totalPrice);
               console.log('LINE Pay API 回應:', linePayResponse);
+              
+              // 檢查 API 回應是否成功
+              if (!linePayResponse.success) {
+                throw new Error(linePayResponse.message || 'LINE Pay 建立付款失敗');
+              }
+              
+              // 將 transactionId 儲存到 sessionStorage，供付款確認時使用
+              const updatedSubscriptionData = {
+                ...subscriptionData,
+                transactionId: linePayResponse.transactionId,
+                orderId: orderId
+              };
+              
+              sessionStorage.setItem('subscriptionData', JSON.stringify(updatedSubscriptionData));
+              console.log('已儲存 transactionId 到 sessionStorage:', linePayResponse.transactionId);
+              
               window.location.href = linePayResponse.paymentUrl;
               return;
 

@@ -11,8 +11,6 @@ const SubscribeConfirm = () => {
 
   useEffect(() => {
     const confirmPayment = async () => {
-      const transactionId = searchParams.get('transactionId');
-      console.log('transactionId:', transactionId);
       const subscriptionData = sessionStorage.getItem('subscriptionData');
       
       if (!subscriptionData) {
@@ -21,7 +19,10 @@ const SubscribeConfirm = () => {
         return;
       }
 
-      const { orderId, price } = JSON.parse(subscriptionData);
+      const parsedData = JSON.parse(subscriptionData);
+      const { orderId, price, transactionId } = parsedData;
+      
+      console.log('sessionStorage 中的 transactionId:', transactionId);
       console.log('orderId (原始):', orderId, typeof orderId);
       console.log('price:', price, typeof price);
 
@@ -38,13 +39,13 @@ const SubscribeConfirm = () => {
       try {
         console.log('準備呼叫 confirmLinePay，參數:', {
           orderId: orderIdString,
-          transactionId: parseInt(transactionId),
+          transactionId: transactionId,
           amount: price,
         });
 
         const response = await confirmLinePay({
           orderId: orderIdString,
-          transactionId: parseInt(transactionId),
+          transactionId: transactionId,
           amount: price,
         });
 
@@ -52,8 +53,8 @@ const SubscribeConfirm = () => {
 
         if (response.success) {
           console.log('付款確認成功，導向成功頁面');
-          // 暫時保留 session storage 資料
-          // sessionStorage.removeItem('subscriptionData');
+          // 清除 session storage 資料
+          sessionStorage.removeItem('subscriptionData');
           
           // 導向成功頁面
           navigate('/customer/subscribe/success', {
@@ -77,7 +78,7 @@ const SubscribeConfirm = () => {
     };
 
     confirmPayment();
-  }, [searchParams, navigate]);
+  }, [navigate]);
 
   if (!isProcessing) {
     return null;
