@@ -27,9 +27,13 @@ import {
 } from './styled';
 import OrderNavHeader from '../../../components/customer/OrderNavHeader';
 import AnimationLoading from '../../../components/common/AnimationLoading';
-// import Modal from '../../../components/common/Modal';
-// 虛擬機URL
-const BASE_URL = 'https://lebuleduo.rocket-coding.com';
+import { 
+  getUserOrdersCompletedDetails,
+  type CompletedOrderDetailsData,
+  type CompletedOrderDetail
+} from '../../../apis/customer/getUserOrdersCompletedDetails';
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 function OrderDetail() {
   const navigate = useNavigate();
@@ -37,36 +41,35 @@ function OrderDetail() {
     orderId: string;
     orderDetailId: string;
   }>();
-  const [orderData, setOrderData] = useState(null);
-  const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
+  const [orderData, setOrderData] = useState<CompletedOrderDetailsData | null>(null);
+  const [selectedOrderDetail, setSelectedOrderDetail] = useState<CompletedOrderDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // 獲取訂單數據的函數
   const fetchOrderData = useCallback(async () => {
+    if (!orderId) {
+      setError('訂單 ID 不存在');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       setIsLoading(true);
-      const usersId = localStorage.getItem('UsersID');
-      console.log('正在請求訂單數據，參數：', {
-        usersId,
-        orderId,
-      });
+      console.log('正在請求訂單數據，訂單 ID：', orderId);
 
-      const response = await fetch(
-        `/api/GET/user/orders/completed/${usersId}/${orderId}`,
-      );
-      const data = await response.json();
-
+      const data = await getUserOrdersCompletedDetails(orderId);
       console.log('API 回傳數據：', data);
 
-      if (data.status) {
-        console.log('訂單詳情數據：', data.result[0]);
-        console.log('OrderDetail 數據：', data.result[0].OrderDetail);
-        setOrderData(data.result[0]);
+      if (data.result && data.result.length > 0) {
+        const orderDetails = data.result[0];
+        console.log('訂單詳情數據：', orderDetails);
+        console.log('OrderDetail 數據：', orderDetails.OrderDetail);
+        setOrderData(orderDetails);
 
         // 如果有 orderDetailId，找到對應的訂單詳情
         if (orderDetailId) {
-          const detail = data.result[0].OrderDetail.find(
+          const detail = orderDetails.OrderDetail.find(
             (detail) => detail.OrderDetailID.toString() === orderDetailId,
           );
           if (detail) {
@@ -74,12 +77,11 @@ function OrderDetail() {
           }
         }
       } else {
-        console.error('API 回傳錯誤：', data.message);
-        setError(data.message);
+        setError('沒有找到訂單數據');
       }
     } catch (error) {
       console.error('獲取訂單數據時出錯：', error);
-      setError('獲取訂單數據時出錯');
+      setError(error instanceof Error ? error.message : '獲取訂單數據時出錯');
     } finally {
       setIsLoading(false);
     }
@@ -87,10 +89,8 @@ function OrderDetail() {
 
   // 馬上載入訂單數據
   useEffect(() => {
-    if (orderId) {
-      fetchOrderData();
-    }
-  }, [orderId, fetchOrderData]);
+    fetchOrderData();
+  }, [fetchOrderData]);
 
   // 載入中
   if (isLoading) {
@@ -161,7 +161,7 @@ function OrderDetail() {
   const totalOrders = orderData.OrderDetail?.length || 0;
 
   // 渲染訂單列表
-  const renderOrderList = (orders) => {
+  const renderOrderList = (orders: CompletedOrderDetail[]) => {
     const sortedOrders = [...orders].sort((a, b) => {
       const dateA = new Date(a.ServiceDate.replace(/\//g, '-'));
       const dateB = new Date(b.ServiceDate.replace(/\//g, '-'));
