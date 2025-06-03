@@ -43,7 +43,7 @@ export const ScanText = styled.div`
 
 // 狀態訊息
 export const StatusMessage = styled.div`
-  color: ${({ theme }) => theme.colors.error};
+  color: ${({ theme }) => theme.colors.error.main};
   font-size: ${({ theme }) => theme.typography.fontSizes.sm};
   text-align: left;
   white-space: pre-line;

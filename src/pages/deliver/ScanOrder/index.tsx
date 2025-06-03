@@ -15,13 +15,11 @@ import QRScanner from '../../../components/deliver/QRScanner';
 // import { getTodayOrders } from '../../../apis/deliver/getTodayOrders'; // 獲取今日任務api
 import { getSpecificDayOrders } from '../../../apis/deliver/getSpecificDayOrders'; // 獲取特定日期 任務api
 import { updateOrderStatus } from '../../../apis/deliver/updateOrderStatus'; // 更新任務狀態api
-import { getUsersID } from '../../../utils/authUtils';
 import { getTomorrowDate } from '../../../utils/getDate';
 import { getFormattedDateDash } from '../../../utils/formatDate';
+import { useAppSelector } from '../../../store/hooks';
 
 const tomorrow = getFormattedDateDash(getTomorrowDate());
-
-const userId = getUsersID();
 
 function ScanOrder() {
   const navigate = useNavigate();
@@ -30,15 +28,25 @@ function ScanOrder() {
   ); // 執行中的任務資料
   const [scanError, setScanError] = useState<string | null>(null); // 掃描錯誤訊息
 
+  // 從 Redux 獲取認證狀態
+  const { userId, isAuthenticated } = useAppSelector((state) => ({
+    userId: state.user.userId,
+    isAuthenticated: state.user.isAuthenticated,
+  }));
+
   useEffect(() => {
     const fetchTodayOrders = async () => {
-      if (!userId) {
-        console.error('用戶ID不存在');
+      // 如果用戶未認證或沒有用戶ID，直接返回
+      if (!isAuthenticated || !userId) {
+        console.log('用戶未認證或ID不存在，跳過API調用');
         return;
       }
 
       try {
-        const ordersData = await getSpecificDayOrders(userId, tomorrow); //api獲取明日任務(demo用)
+        const userIdNumber = Number(userId);
+        console.log('獲取用戶任務，用戶ID:', userIdNumber);
+
+        const ordersData = await getSpecificDayOrders(userIdNumber, tomorrow); //api獲取明日任務(demo用)
         console.log('API 原始資料:', ordersData);
 
         const executingOrder = ordersData.Orders.find(
@@ -52,11 +60,12 @@ function ScanOrder() {
         }
       } catch (error) {
         console.error('獲取今日訂單失敗:', error);
+        setScanError('載入任務資料失敗，請重試');
       }
     };
 
     fetchTodayOrders();
-  }, []);
+  }, [userId, isAuthenticated]); // 依賴 userId 和 isAuthenticated
 
   // 處理QR碼掃描結果
   const handleScanResult = useCallback(
@@ -115,6 +124,17 @@ function ScanOrder() {
     },
     [navigate, executingOrderData],
   );
+
+  // 如果用戶未認證，顯示提示訊息 (可選：也可以移除這個檢查，讓 ProtectedRoute 處理)
+  if (!isAuthenticated || !userId) {
+    return (
+      <ScanOrderSectionStyled>
+        <StatusMessage>
+          認證狀態異常，請重新登入
+        </StatusMessage>
+      </ScanOrderSectionStyled>
+    );
+  }
 
   return (
     <ScanOrderSectionStyled>
