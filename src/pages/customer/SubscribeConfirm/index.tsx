@@ -32,7 +32,7 @@ const SubscribeConfirm = () => {
 
       try {
         const response = await confirmLinePay({
-          ordersID: orderId,
+          orderId: orderId,
           transactionId: parseInt(transactionId),
           amount: price,
         });
