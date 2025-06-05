@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export type ConfirmPaymentParams = {
   orderId: string;
-  transactionId: number;
+  transactionId: string;
   amount: number;
 };
 

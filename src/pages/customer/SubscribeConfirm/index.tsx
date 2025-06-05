@@ -31,6 +31,10 @@ const SubscribeConfirm = () => {
       const orderIdString = String(orderId);
       console.log('orderId (轉換後):', orderIdString, typeof orderIdString);
 
+      // 確保 transactionId 轉換為字串（解決 JavaScript 精度問題）
+      const transactionIdString = String(transactionId);
+      console.log('transactionId (轉換後):', transactionIdString, typeof transactionIdString);
+
       // 加強參數驗證
       if (!transactionId || !orderId || !totalPrice) {
         console.error('缺少必要參數:', { transactionId, orderId, totalPrice });
@@ -40,8 +44,10 @@ const SubscribeConfirm = () => {
       }
 
       // 驗證參數類型
-      if (typeof transactionId !== 'number') {
-        console.error('transactionId 應該是數字類型，實際類型:', typeof transactionId);
+      if (!transactionIdString || transactionIdString === 'undefined' || transactionIdString === 'null') {
+        console.error('transactionId 無效:', transactionIdString);
+        navigate('/customer/subscribe/fail');
+        return;
       }
       
       if (typeof totalPrice !== 'number' || totalPrice <= 0) {
@@ -53,13 +59,13 @@ const SubscribeConfirm = () => {
       try {
         console.log('準備呼叫 confirmLinePay，參數:', {
           orderId: orderIdString,
-          transactionId: transactionId,
+          transactionId: transactionIdString,
           amount: totalPrice,
         });
 
         const response = await confirmLinePay({
           orderId: orderIdString,
-          transactionId: transactionId,
+          transactionId: transactionIdString,
           amount: totalPrice,
         });
 

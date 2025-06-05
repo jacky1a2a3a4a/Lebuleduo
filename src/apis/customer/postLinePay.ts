@@ -4,7 +4,7 @@ type LinePayResponse = {
   success: boolean;
   message: string;
   paymentUrl: string;
-  transactionId: number;
+  transactionId: string;
 };
 
 export const postLinePay = async (orderId: string, amount: number): Promise<LinePayResponse> => {
