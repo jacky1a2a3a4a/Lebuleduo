@@ -7,8 +7,18 @@ export type ConfirmPaymentParams = {
 };
 
 export type ConfirmPaymentResponse = {
-  success: boolean;
-  message?: string;
+  statusCode: number;
+  status: boolean;
+  message: string;
+  result: {
+    orderId: string;
+    transactionId: string;
+    amount: number;
+    paymentStatus: string;
+    orderNumber: string;
+    returnCode: string;
+    returnMessage: string;
+  };
 };
 
 export const confirmLinePay = async (

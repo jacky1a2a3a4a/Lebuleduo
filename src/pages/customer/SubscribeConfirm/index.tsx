@@ -71,18 +71,21 @@ const SubscribeConfirm = () => {
 
         console.log('confirmLinePay 回應:', response);
 
-        if (response.success) {
+        if (response.status) {
           console.log('付款確認成功，導向成功頁面');
+          console.log('付款詳情:', response.result);
           // 清除 session storage 資料
           sessionStorage.removeItem('subscriptionData');
           
           // 導向成功頁面
-          navigate('/customer/subscribe/success', {
+          navigate('/customer/subscribe-success', {
             state: { orderId: orderIdString }
           });
         } else {
           console.error('付款確認失敗，回應:', response);
           console.error('失敗訊息:', response.message);
+          console.error('LinePay 錯誤碼:', response.result?.returnCode);
+          console.error('LinePay 錯誤訊息:', response.result?.returnMessage);
           navigate('/customer/subscribe/fail');
         }
       } catch (error) {
