@@ -124,11 +124,13 @@ const SubscribeCheckout = () => {
       console.log('訂單id:', response.orders.OrdersID);
 
       const orderId = response.orders.OrdersID;
+      // 確保 orderId 是字串格式，因為 postLinePay API 預期字串
+      const orderIdString = String(orderId);
 
       // 更新 subscriptionData 並存入 session storage
       const updatedData = {
         ...subscriptionData,
-        orderId: orderId,
+        orderId: orderIdString,
       };
       setSubscriptionData(updatedData);
       sessionStorage.setItem('subscriptionData', JSON.stringify(updatedData));
@@ -141,7 +143,7 @@ const SubscribeCheckout = () => {
           switch (paymentMethod) {
             case 'linePay':
               // 使用 LINE Pay
-              const linePayResponse = await postLinePay(orderId, subscriptionData.totalPrice);
+              const linePayResponse = await postLinePay(orderIdString, subscriptionData.totalPrice);
               console.log('LINE Pay API 回應:', linePayResponse);
               
               // 檢查 API 回應是否成功
@@ -153,7 +155,7 @@ const SubscribeCheckout = () => {
               const updatedSubscriptionData = {
                 ...subscriptionData,
                 transactionId: linePayResponse.transactionId,
-                orderId: orderId
+                orderId: orderIdString
               };
               
               sessionStorage.setItem('subscriptionData', JSON.stringify(updatedSubscriptionData));
@@ -164,7 +166,7 @@ const SubscribeCheckout = () => {
 
             case 'creditCard':
               // 使用藍新金流
-              const paymentResponse = await createPayment(orderId);
+              const paymentResponse = await createPayment(orderIdString);
               console.log('藍新金流 API 回應:', paymentResponse);
 
               // 確保頁面已完全載入

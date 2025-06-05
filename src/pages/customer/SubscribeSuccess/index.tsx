@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   IoMdWalk,
   IoMdQrScanner,
@@ -40,34 +40,23 @@ import { formatPaymentMethod } from '../../../utils/formatPaymentMethod';
 
 const SubscribeSuccess = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const [orderId, setOrderId] = useState(''); //儲存orderId
   const [receiptData, setReceiptData] = useState<OrderReceipt | null>(null); //儲存api回傳資料
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
 
-  // 從 URL 參數或 sessionStorage 獲取訂單 ID
+  // 從 sessionStorage 獲取訂單 ID
   useEffect(() => {
-    // 首先嘗試從 URL 參數獲取 orderId
-    const orderIdFromUrl = searchParams.get('orderId');
-    
-    if (orderIdFromUrl) {
-      setOrderId(orderIdFromUrl);
-      console.log('從 URL 參數獲取訂單 ID:', orderIdFromUrl);
-      return;
-    }
-
-    // 如果 URL 參數沒有，則從 sessionStorage 獲取（備用方案）
     const subscriptionData = sessionStorage.getItem('subscriptionData');
     if (subscriptionData) {
       try {
         const parsedData = JSON.parse(subscriptionData);
         setOrderId(parsedData.orderId);
-        console.log('從 sessionStorage 獲取訂單 ID:', parsedData.orderId);
+        console.log('訂單id:', parsedData.orderId);
       } catch (error) {
         console.error('解析 subscriptionData 失敗:', error);
       }
     }
-  }, [searchParams]);
+  }, []);
 
   // 獲取訂單收據
   useEffect(() => {
