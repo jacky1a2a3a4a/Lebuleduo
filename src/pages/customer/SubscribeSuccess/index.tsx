@@ -56,6 +56,12 @@ const SubscribeSuccess = () => {
         console.error('解析 subscriptionData 失敗:', error);
       }
     }
+
+    // 組件卸載時清除 sessionStorage 資料
+    return () => {
+      sessionStorage.removeItem('subscriptionData');
+      console.log('已清除 subscriptionData');
+    };
   }, []);
 
   // 獲取訂單收據
