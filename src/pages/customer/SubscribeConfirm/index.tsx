@@ -77,10 +77,8 @@ const SubscribeConfirm = () => {
           // 清除 session storage 資料
           sessionStorage.removeItem('subscriptionData');
           
-          // 導向成功頁面
-          navigate('/customer/subscribe-success', {
-            state: { orderId: orderIdString }
-          });
+          // 導向成功頁面，將 orderId 作為 URL 參數傳遞
+          navigate(`/customer/subscribe-success?orderId=${orderIdString}`);
         } else {
           console.error('付款確認失敗，回應:', response);
           console.error('失敗訊息:', response.message);
