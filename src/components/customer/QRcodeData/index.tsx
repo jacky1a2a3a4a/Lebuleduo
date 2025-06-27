@@ -96,6 +96,7 @@ const QRcodeData: React.FC<QRcodeDataProps> = ({ orderId, userId }) => {
                 data={{
                   OrderDetailID: Number(task.OrderDetailID),
                   OrderDetailsNumber: task.OrderDetailsNumber,
+                  CustomerNumber: task.UserNumber?.Number || 'N/A',
                 }}
                 size={80}
                 showDownloadButton={false}

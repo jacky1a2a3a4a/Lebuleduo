@@ -93,6 +93,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                 value={JSON.stringify({
                   OrderDetailID: Number(task.OrderDetailID),
                   OrderDetailsNumber: task.OrderDetailsNumber,
+                  CustomerNumber: task.UserNumber?.Number || 'N/A',
                 })}
                 size={100}
                 level="H"
@@ -234,6 +235,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                         value={JSON.stringify({
                           OrderDetailID: Number(task.OrderDetailID),
                           OrderDetailsNumber: task.OrderDetailsNumber,
+                          CustomerNumber: task.UserNumber?.Number || 'N/A',
                         })}
                         size={100}
                         level="H"
@@ -566,6 +568,7 @@ const QRCodeDownloader: React.FC<QRCodeDownloaderProps> = ({
                         value={JSON.stringify({
                           OrderDetailID: Number(task.OrderDetailID),
                           OrderDetailsNumber: task.OrderDetailsNumber,
+                          CustomerNumber: task.UserNumber?.Number || 'N/A',
                         })}
                         size={100}
                         level="H"

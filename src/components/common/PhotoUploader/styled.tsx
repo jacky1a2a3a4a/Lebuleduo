@@ -65,7 +65,7 @@ export const DeleteButton = styled.button`
 `;
 
 export const ValidationMessage = styled.div`
-  color: ${({ theme }) => theme.colors.error};
+  color: ${({ theme }) => theme.colors.error.main};
   font-size: ${({ theme }) => theme.typography.fontSizes.xs};
   margin-top: ${({ theme }) => theme.spacing.xs};
 `;
